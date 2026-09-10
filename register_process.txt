@@ -1,0 +1,26 @@
+<?php
+include 'db.php'; // Ensure database connection
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $username = mysqli_real_escape_string($conn, trim($_POST['username']));
+    $password = password_hash(trim($_POST['password']), PASSWORD_DEFAULT);
+    $role = mysqli_real_escape_string($conn, trim($_POST['role']));
+
+    // Check if user already exists
+    $checkQuery = "SELECT id FROM users WHERE username = '$username'";
+    $result = mysqli_query($conn, $checkQuery);
+
+    if (mysqli_num_rows($result) > 0) {
+        echo "<script>alert('Username already exists!'); window.location='register.php';</script>";
+        exit();
+    }
+
+    // Insert new user
+    $query = "INSERT INTO users (username, password, role) VALUES ('$username', '$password', '$role')";
+    if (mysqli_query($conn, $query)) {
+        echo "<script>alert('Registration successful! Redirecting to login...'); window.location='login.php';</script>";
+    } else {
+        echo "<script>alert('Error: " . mysqli_error($conn) . "'); window.location='register.php';</script>";
+    }
+}
+?>
