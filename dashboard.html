@@ -1,141 +1,167 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard - Smart Training System</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="sedco-saas.css?v=20260930-14">
-  <link rel="stylesheet" href="sedco-shell.css?v=20260930-14">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard - Smart Training System</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <link rel="stylesheet" href="sedco-saas.css?v=20260930-55">
+  <link rel="stylesheet" href="sedco-shell.css?v=20260930-55">
 </head>
-<body class="app-page dashboard-page" data-page="dashboard">
+<body class="app-page dashboard-page dashboard-v4" data-page="dashboard">
 
-    <main class="content">
-        <div class="dashboard-shell">
-            <div class="page-heading">
-                <div>
-                    <div class="eyebrow">Dashboard</div>
-                    <h1 class="welcome-message">Welcome, Guest!</h1>
-                    <p class="page-subtitle">Here is an overview of your training tasks and schedule.</p>
-                </div>
-            </div>
+<main class="content">
+  <div class="dashboard-shell">
 
-            <div class="dashboard-grid">
-                <section class="tasks-panel">
-                    <div class="panel-heading">
-                        <h2 class="panel-title">My tasks</h2>
-                        <span class="panel-meta">2 tasks</span>
-                    </div>
-
-                    <div class="search-wrap">
-                        <i class="bi bi-search"></i>
-                        <input type="text" id="searchBar" class="form-control" placeholder="Search tasks..." onkeyup="filterTasks()">
-                    </div>
-
-                    <div id="taskList">
-                        <div class="task-card overdue">
-                            <span class="task-date">Monday, 17 March 2025</span>
-                            <div class="task-title danger">
-                                Submission of Log Book
-                                <span class="status-badge">Overdue</span>
-                            </div>
-                            <p>BORANG PENILAIAN KEBERKESANAN KURSUS IS DUE</p>
-                        </div>
-
-                        <div class="task-card upcoming">
-                            <span class="task-date">Thursday, 20 March 2025</span>
-                            <div class="task-title info">Submission of LI Report</div>
-                            <p>KD44212 LATIHAN INDUSTRI [1-2024/2025]: Assignment is due</p>
-                        </div>
-                    </div>
-                </section>
-
-                <aside class="calendar-container">
-                    <div class="calendar-topline">
-                        <div>
-                            <h5>Calendar</h5>
-                            <span>Plan your schedule</span>
-                        </div>
-                        <i class="bi bi-calendar3 calendar-icon"></i>
-                    </div>
-                    <div class="calendar-header" id="calendar-header"></div>
-                    <table class="calendar-table" id="calendar"></table>
-                    <div id="selected-date"></div>
-                    <button class="reset-btn mt-2" onclick="resetCalendar()">
-                        <i class="bi bi-arrow-counterclockwise me-1"></i> Reset calendar
-                    </button>
-                </aside>
-            </div>
+    <section class="dashboard-hero-v4">
+      <div class="dashboard-hero-copy">
+        <div class="dashboard-role-chip">
+          <span></span>
+          Smart Training System
         </div>
-    </main>
+        <h1>Welcome to your training workspace</h1>
+        <p>Submit training forms, follow approval progress and keep every training record organised in one place.</p>
 
-    <script>
-        let currentDate = new Date();
+        <div class="dashboard-hero-actions">
+          <a href="task.html" class="dashboard-primary-action">
+            <i class="bi bi-plus-lg"></i>
+            New application
+          </a>
+          <a href="application-status.html" class="dashboard-secondary-action">
+            <i class="bi bi-clipboard-check"></i>
+            Track application
+          </a>
+        </div>
+      </div>
 
-        function changeMonth(direction) {
-            currentDate.setMonth(currentDate.getMonth() + direction);
-            generateCalendar();
-        }
+      <div class="dashboard-hero-visual" aria-hidden="true">
+        <div class="dashboard-orbit dashboard-orbit-one"></div>
+        <div class="dashboard-orbit dashboard-orbit-two"></div>
+        <div class="dashboard-hero-icon">
+          <i class="bi bi-mortarboard-fill"></i>
+        </div>
+        <span class="dashboard-floating-chip chip-one"><i class="bi bi-check2-circle"></i> Approval</span>
+        <span class="dashboard-floating-chip chip-two"><i class="bi bi-file-earmark-text"></i> Training</span>
+      </div>
+    </section>
 
-        function generateCalendar() {
-            let month = currentDate.toLocaleString('default', { month: 'long' });
-            let year = currentDate.getFullYear();
-            let today = new Date();
-            let firstDay = new Date(year, currentDate.getMonth(), 1).getDay();
-            let lastDate = new Date(year, currentDate.getMonth() + 1, 0).getDate();
+    <section class="dashboard-stats-v4">
+      <article class="dashboard-stat-v4">
+        <span class="dashboard-stat-icon-v4 tone-brand"><i class="bi bi-files"></i></span>
+        <div>
+          <span class="dashboard-stat-label">Applications</span>
+          <strong>—</strong>
+          <small>Your submitted training forms</small>
+        </div>
+      </article>
 
-            document.getElementById("calendar-header").innerHTML = `
-                <span onclick="changeMonth(-1)"><i class="bi bi-chevron-left"></i></span>
-                <span>${month} ${year}</span>
-                <span onclick="changeMonth(1)"><i class="bi bi-chevron-right"></i></span>
-            `;
+      <article class="dashboard-stat-v4">
+        <span class="dashboard-stat-icon-v4 tone-warning"><i class="bi bi-clock-history"></i></span>
+        <div>
+          <span class="dashboard-stat-label">Pending review</span>
+          <strong>—</strong>
+          <small>Waiting for approval action</small>
+        </div>
+      </article>
 
-            let calendarHTML = "<tr>";
-            let weekdays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-            calendarHTML += weekdays.map(day => `<th>${day}</th>`).join("") + "</tr><tr>";
+      <article class="dashboard-stat-v4">
+        <span class="dashboard-stat-icon-v4 tone-success"><i class="bi bi-check2-circle"></i></span>
+        <div>
+          <span class="dashboard-stat-label">Approved</span>
+          <strong>—</strong>
+          <small>Completed applications</small>
+        </div>
+      </article>
 
-            for (let i = 0; i < firstDay; i++) {
-                calendarHTML += "<td></td>";
-            }
+      <article class="dashboard-stat-v4">
+        <span class="dashboard-stat-icon-v4 tone-neutral"><i class="bi bi-bell"></i></span>
+        <div>
+          <span class="dashboard-stat-label">Notifications</span>
+          <strong>—</strong>
+          <small>Recent workflow updates</small>
+        </div>
+      </article>
+    </section>
 
-            for (let date = 1; date <= lastDate; date++) {
-                if ((firstDay + date - 1) % 7 === 0) calendarHTML += "</tr><tr>";
-                let isToday = (date === today.getDate() && currentDate.getMonth() === today.getMonth() && currentDate.getFullYear() === today.getFullYear()) ? "today" : "";
-                calendarHTML += `<td class="${isToday}" onclick="selectDate(this, ${date})">${date}</td>`;
-            }
+    <div class="dashboard-v4-grid">
+      <section class="dashboard-main-card">
+        <div class="dashboard-card-heading-v4">
+          <div>
+            <span class="dashboard-card-kicker">Quick start</span>
+            <h2>Getting started</h2>
+            <p>Everything you need to manage your training journey.</p>
+          </div>
+          <a href="task.html">View forms <i class="bi bi-arrow-up-right"></i></a>
+        </div>
 
-            calendarHTML += "</tr>";
-            document.getElementById("calendar").innerHTML = calendarHTML;
-        }
+        <div class="dashboard-quick-list">
+          <a href="profile.html" class="dashboard-quick-item">
+            <span class="dashboard-quick-number">01</span>
+            <span class="dashboard-quick-icon"><i class="bi bi-person"></i></span>
+            <div>
+              <strong>Complete your profile</strong>
+              <p>Keep your staff, department and contact details up to date.</p>
+            </div>
+            <i class="bi bi-chevron-right"></i>
+          </a>
 
-        function selectDate(element, date) {
-            document.querySelectorAll(".calendar-table td").forEach(td => td.classList.remove("selected-date"));
-            element.classList.add("selected-date");
-            document.getElementById("selected-date").innerText = `Selected Date: ${date} ${document.getElementById("calendar-header").querySelector("span:nth-child(2)").innerText}`;
-        }
+          <a href="task.html" class="dashboard-quick-item">
+            <span class="dashboard-quick-number">02</span>
+            <span class="dashboard-quick-icon"><i class="bi bi-file-earmark-text"></i></span>
+            <div>
+              <strong>Submit a training form</strong>
+              <p>Start BPL, PKK or TEA based on your assigned role.</p>
+            </div>
+            <i class="bi bi-chevron-right"></i>
+          </a>
 
-        function resetCalendar() {
-            currentDate = new Date();
-            generateCalendar();
-            document.getElementById("selected-date").innerText = "";
-        }
+          <a href="application-status.html" class="dashboard-quick-item">
+            <span class="dashboard-quick-number">03</span>
+            <span class="dashboard-quick-icon"><i class="bi bi-diagram-3"></i></span>
+            <div>
+              <strong>Track approval progress</strong>
+              <p>Follow every stage from submission until final completion.</p>
+            </div>
+            <i class="bi bi-chevron-right"></i>
+          </a>
+        </div>
+      </section>
 
-        generateCalendar();
+      <aside class="dashboard-calendar-card-v4">
+        <div class="dashboard-card-heading-v4">
+          <div>
+            <span class="dashboard-card-kicker">Schedule</span>
+            <h2>Training calendar</h2>
+            <p>View upcoming training activity.</p>
+          </div>
+          <span class="dashboard-calendar-badge"><i class="bi bi-calendar3"></i></span>
+        </div>
 
-        function filterTasks() {
-            const input = document.getElementById("searchBar").value.toLowerCase();
-            const taskCards = document.querySelectorAll("#taskList .task-card");
+        <div class="calendar-header" id="calendar-header"></div>
+        <table class="calendar-table" id="calendar"></table>
+        <div id="selected-date" class="dashboard-calendar-detail"></div>
+      </aside>
+    </div>
 
-            taskCards.forEach(card => {
-                const text = card.textContent.toLowerCase();
-                card.style.display = text.includes(input) ? "" : "none";
-            });
-        }
-    </script>
-<script src="sedco-shell.js?v=20260930-23"></script>
+    <section class="dashboard-bottom-strip">
+      <div class="dashboard-bottom-copy">
+        <span class="dashboard-bottom-icon"><i class="bi bi-shield-check"></i></span>
+        <div>
+          <strong>Structured approval workflow</strong>
+          <p>BPL applications move securely through HoD, Training Department and General Manager review.</p>
+        </div>
+      </div>
+      <a href="application-status.html">View application status <i class="bi bi-arrow-right"></i></a>
+    </section>
+
+  </div>
+</main>
+
+<script>
+  window.STS_CALENDAR_EVENTS = [];
+</script>
+<script src="dashboard.js?v=20260930-55"></script>
+<script src="sedco-shell.js?v=20260930-55"></script>
 </body>
 </html>
