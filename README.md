@@ -18,7 +18,7 @@ The repository contains two delivery modes:
 - `includes/db.php` — single database connection.
 - `includes/auth.php` — session/auth helpers.
 - `submit_application.php` — saves BPL, PKK and TEA forms.
-- `SQL.sql` — canonical MySQL schema.
+- `SQL.sql` — canonical MySQL schema; import it into the database selected in your hosting panel.
 
 ### Database environment variables
 
@@ -35,3 +35,11 @@ Local XAMPP defaults are used only when the variables are not set.
 ## Important
 
 GitHub Pages cannot execute PHP. Use the `.html` pages only for preview. Deploy the PHP files to a PHP/MySQL host for the real application.
+
+
+## Security notes
+
+- PHP POST forms use session-based CSRF protection.
+- Passwords are stored with PHP `password_hash()`.
+- Public signup creates Staff accounts only; privileged roles should be assigned by an administrator.
+- Database credentials are read from environment variables and are not committed to the repository.
