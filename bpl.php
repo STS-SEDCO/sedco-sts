@@ -96,8 +96,8 @@ require_login();
                     <td>i. Kenderaan</td>
                     <td colspan="3">
                         <label><input type="checkbox" name="kenderaan[]" value="Kapal Terbang"> Kapal Terbang</label>
-                        <label><input type="checkbox" name="kenderaan[]" value="Kapal Terbang"> Kenderaan Pejabat</label>
-                        <label><input type="checkbox" name="kenderaan[]" value="Kapal Terbang"> Kenderaan sendiri</label>
+                        <label><input type="checkbox" name="kenderaan[]" value="Kenderaan Pejabat"> Kenderaan Pejabat</label>
+                        <label><input type="checkbox" name="kenderaan[]" value="Kenderaan Sendiri"> Kenderaan sendiri</label>
                         <label><input type="checkbox" name="kenderaan[]" value="Lain-lain"> Lain-lain</label>
                     </td>
                 </tr>
