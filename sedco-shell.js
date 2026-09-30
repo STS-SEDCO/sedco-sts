@@ -46,7 +46,7 @@
 
           <a class="navbar-brand sedco-brand" href="${pageUrl('dashboard')}">
             <span class="brand-mark"><i class="bi bi-mortarboard-fill"></i></span>
-            <span>TRAINING MANAGEMENT SYSTEM</span>
+            <span>SMART TRAINING SYSTEM</span>
           </a>
         </div>
 
