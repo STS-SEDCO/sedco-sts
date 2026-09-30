@@ -9,6 +9,8 @@ if (!$user) {
     exit;
 }
 
+$sedcoDepartments = sts_sedco_departments();
+
 $parent = null;
 $parentPayload = [];
 $parentId = max(0, (int) ($_GET['parent'] ?? 0));
@@ -39,7 +41,7 @@ if ($parentId > 0) {
       window.print();
     }
   </script>
-    <link rel="stylesheet" href="sedco-saas.css?v=20260930-61">
+    <link rel="stylesheet" href="sedco-saas.css?v=20260930-71">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
   <link rel="stylesheet" href="sedco-shell.css?v=20260930-56">
 </head>
@@ -61,7 +63,14 @@ if ($parentId > 0) {
       <table>
         <tr>
           <td class="no-border" colspan="2">Employee Name: <input type="text" name="employee_name" class="input-field" required value="<?= e((string) ($parentPayload['nama'] ?? '')) ?>"></td>
-          <td class="no-border" colspan="2">Division/Section: <input type="text" name="division" class="input-field" required value="<?= e((string) ($parent['department'] ?? $parentPayload['bahagian'] ?? '')) ?>"></td>
+          <td class="no-border" colspan="2">Division/Section:
+            <?php $selectedDivision = (string) ($parent['department'] ?? $parentPayload['bahagian'] ?? ''); ?>
+            <select name="division" class="input-field sts-department-select" required>
+              <option value="">Select division / section</option>
+              <?php foreach ($sedcoDepartments as $departmentName): ?>
+              <option value="<?= e($departmentName) ?>" <?= $selectedDivision === $departmentName ? 'selected' : '' ?>><?= e($departmentName) ?></option>
+              <?php endforeach; ?>
+            </select></td>
         </tr>
         <tr>
           <td class="no-border" colspan="4">
