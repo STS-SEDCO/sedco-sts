@@ -113,12 +113,15 @@ try {
     );
 
     $userId = (int) $user['id'];
-    $department = trim((string) (
-        $payload['bahagian']
-        ?? $payload['division']
-        ?? $user['department']
-        ?? ''
-    ));
+    $department = trim((string) ($user['department'] ?? ''));
+
+    if ($department === '') {
+        $department = trim((string) (
+            $payload['bahagian']
+            ?? $payload['division']
+            ?? ''
+        ));
+    }
     $departmentValue = $department !== '' ? $department : null;
     $assignedHodId = null;
     $status = 'approved';
