@@ -145,6 +145,11 @@
 
       if (result.data) {
         hydrate(result.data);
+
+        form.querySelectorAll('input[type="checkbox"],input[type="radio"],select').forEach(control => {
+          control.dispatchEvent(new Event('change', { bubbles: true }));
+        });
+
         restored = true;
         state.innerHTML = '<i class="bi bi-arrow-counterclockwise"></i> Draft restored';
       }
