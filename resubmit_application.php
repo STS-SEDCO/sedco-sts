@@ -31,7 +31,8 @@ $db->begin_transaction();
 
 try {
     $stmt = $db->prepare(
-        'SELECT id, user_id, form_type, payload, status, current_stage
+        'SELECT id, application_no, user_id, form_type, department, assigned_hod_id,
+                payload, status, current_stage
          FROM applications
          WHERE application_no = ?
          LIMIT 1
@@ -65,6 +66,13 @@ try {
     $payload = json_decode((string) $application['payload'], true);
     $payload = is_array($payload) ? $payload : [];
 
+    sts_save_version(
+        (int) $application['id'],
+        (int) $user['id'],
+        'before_correction',
+        $payload
+    );
+
     $submittedFields = array_intersect_key($_POST, array_flip($allowedKeys));
 
     foreach ($submittedFields as $key => $value) {
@@ -75,23 +83,68 @@ try {
         }
     }
 
+    foreach (['nama', 'bahagian', 'jawatan', 'tajuk', 'tarikh_mula', 'tarikh_tamat', 'tempat'] as $requiredKey) {
+        if (trim((string) ($payload[$requiredKey] ?? '')) === '') {
+            throw new RuntimeException('Please complete all required fields before resubmitting.');
+        }
+    }
+
     $payloadJson = json_encode(
         $payload,
         JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR
     );
 
     $applicationId = (int) $application['id'];
+    $slaDueAt = sts_review_sla_due();
 
     $update = $db->prepare(
         'UPDATE applications
-         SET payload = ?, status = "pending", review_note = NULL
+         SET payload = ?, status = "pending", review_note = NULL,
+             sla_due_at = ?, training_start = ?, training_end = ?
          WHERE id = ?'
     );
-    $update->bind_param('si', $payloadJson, $applicationId);
+
+    $trainingStart = trim((string) ($payload['tarikh_mula'] ?? '')) ?: null;
+    $trainingEnd = trim((string) ($payload['tarikh_tamat'] ?? '')) ?: null;
+
+    $update->bind_param(
+        'ssssi',
+        $payloadJson,
+        $slaDueAt,
+        $trainingStart,
+        $trainingEnd,
+        $applicationId
+    );
     $update->execute();
     $update->close();
 
+    sts_save_version(
+        $applicationId,
+        (int) $user['id'],
+        'correction_resubmitted',
+        $payload
+    );
+
+    sts_store_attachments($applicationId, (int) $user['id']);
+
     $db->commit();
+
+    sts_audit(
+        'application_resubmitted',
+        'application',
+        $applicationNo,
+        ['stage' => $application['current_stage']],
+        (int) $user['id']
+    );
+
+    sts_notify_stage(
+        (string) $application['current_stage'],
+        $applicationNo,
+        $application['department'] ?? null,
+        !empty($application['assigned_hod_id'])
+            ? (int) $application['assigned_hod_id']
+            : null
+    );
 
     header(
         'Location: application-status.php?resubmitted=1&application='
