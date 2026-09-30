@@ -25,7 +25,6 @@
 
   const items = [
     ['dashboard', 'Dashboard', 'bi-grid-1x2-fill', pageUrl('dashboard')],
-    ['profile', 'Profile', 'bi-person', pageUrl('profile')],
     ['task', 'Training Forms', 'bi-file-earmark-text', pageUrl('task')],
     ['application-status', 'Application status', 'bi-clipboard-check', pageUrl('application-status')],
     ['submissions', 'Submissions', 'bi-inbox', pageUrl('submissions')],
@@ -75,6 +74,14 @@
           <span class="nav-link is-disabled" aria-disabled="true">Contact Us</span>
           <a class="nav-link" href="${logoutUrl}">
             <i class="bi bi-box-arrow-right me-1"></i>Log out
+          </a>
+          <a
+            class="sedco-top-profile${activePage === 'profile' ? ' active' : ''}"
+            href="${pageUrl('profile')}"
+            aria-label="Open profile"
+            title="Profile"
+          >
+            <i class="bi bi-person-fill"></i>
           </a>
         </nav>
       </div>
