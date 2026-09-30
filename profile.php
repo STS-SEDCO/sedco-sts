@@ -17,9 +17,9 @@ if (!$user) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Profile - Training Management System</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-<link rel="stylesheet" href="sedco-saas.css?v=20260930-12">
+<link rel="stylesheet" href="sedco-saas.css?v=20260930-14">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-  <link rel="stylesheet" href="sedco-shell.css?v=20260930-12">
+  <link rel="stylesheet" href="sedco-shell.css?v=20260930-14">
 </head>
 <body class="app-page profile-page" data-page="profile">
 <main class="profile-content">
@@ -66,6 +66,6 @@ if (!$user) {
         </div>
     </div>
 </main>
-<script src="sedco-shell.js?v=20260930-12"></script>
+<script src="sedco-shell.js?v=20260930-14"></script>
 </body>
 </html>
