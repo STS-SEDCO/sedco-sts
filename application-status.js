@@ -125,7 +125,13 @@
              View details <i class="bi bi-arrow-up-right"></i>
            </button>`;
 
-      const cancelAction = application.canCancel
+      const canCancel = application.canCancel === true
+        || (
+          window.SEDCO_STATIC_MODE === true
+          && ['pending','correction'].includes(String(application.status || 'pending').toLowerCase())
+        );
+
+      const cancelAction = canCancel
         ? `<button class="cancel-app-btn" type="button" data-cancel-id="${escapeHtml(application.id)}">
              <i class="bi bi-x-circle"></i> Cancel
            </button>`
@@ -234,6 +240,63 @@
     bootstrap.Modal.getOrCreateInstance($('applicationModal')).show();
   }
 
+  function showToastMessage(message, isError = false) {
+    const toast = isError ? $('errorToast') : $('successToast');
+    const text = isError ? $('errorToastText') : $('successToastText');
+
+    if (text) text.textContent = message;
+    if (!toast) return;
+
+    toast.classList.add('show');
+    setTimeout(() => toast.classList.remove('show'), 4000);
+  }
+
+  function setupStaticCancellation() {
+    if (window.SEDCO_STATIC_MODE !== true) return;
+
+    const form = $('cancelApplicationForm');
+    if (!form) return;
+
+    form.addEventListener('submit', event => {
+      event.preventDefault();
+
+      const applicationNo = String($('cancelApplicationNo')?.value || '').trim();
+      const reason = String($('cancelReason')?.value || '').trim();
+
+      if (reason.length < 5) {
+        showToastMessage('Cancellation reason must be at least 5 characters.', true);
+        $('cancelReason')?.focus();
+        return;
+      }
+
+      const index = applications.findIndex(item => item.id === applicationNo);
+      if (index < 0) return;
+
+      const current = applications[index];
+      if (!['pending','correction'].includes(String(current.status || '').toLowerCase())) {
+        showToastMessage('This application can no longer be cancelled.', true);
+        return;
+      }
+
+      applications[index] = {
+        ...current,
+        status: 'cancelled',
+        currentStage: 'completed',
+        stageLabel: 'Completed',
+        canCancel: false,
+        editUrl: null,
+        cancellationReason: reason,
+        cancelledAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString()
+      };
+
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(applications));
+      bootstrap.Modal.getInstance($('cancelApplicationModal'))?.hide();
+      showToastMessage('Application cancelled successfully. It remains in your history.');
+      render();
+    });
+  }
+
   function setFilter(nextFilter) {
     filter = nextFilter;
 
@@ -246,6 +309,7 @@
 
   document.addEventListener('DOMContentLoaded', () => {
     loadApplications();
+    setupStaticCancellation();
 
     const params = new URLSearchParams(location.search);
 
