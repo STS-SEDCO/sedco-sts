@@ -30,6 +30,7 @@ require_login();
         <h2>BORANG PERMOHONAN LATIHAN (BPL)</h2>
 
         <form method="post" action="submit_application.php?type=BPL">
+      <?= csrf_field() ?>
 
             <!-- A. MAKLUMAT PEMOHON -->
             <table>
