@@ -12,17 +12,14 @@ require_login();
 
   <!-- Bootstrap CSS and Font Awesome -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-  <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
-
-  <script>
+<script>
     function printForm() {
       window.print();
     }
   </script>
-    <link rel="stylesheet" href="sedco-saas.css?v=20260930-10">
+    <link rel="stylesheet" href="sedco-saas.css?v=20260930-11">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-  <link rel="stylesheet" href="sedco-shell.css?v=20260930-10">
+  <link rel="stylesheet" href="sedco-shell.css?v=20260930-11">
 </head>
 <body class="app-page form-page tea-page" data-page="task">
 
@@ -129,6 +126,6 @@ require_login();
       </div>
     </form>
   </div>
-<script src="sedco-shell.js?v=20260930-10"></script>
+<script src="sedco-shell.js?v=20260930-11"></script>
 </body>
 </html>
