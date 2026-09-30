@@ -128,8 +128,9 @@
             }
         }
     </style>
+    <link rel="stylesheet" href="sedco-saas.css">
 </head>
-<body>
+<body class="app-page task-page">
 
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-dark">
