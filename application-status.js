@@ -22,7 +22,23 @@
 
     try {
       const value = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
-      applications = Array.isArray(value) ? value : [];
+      const stored = Array.isArray(value) ? value : [];
+
+      if (window.SEDCO_STATIC_MODE === true) {
+        let previewUser = null;
+        try {
+          previewUser = JSON.parse(localStorage.getItem('sedcoPreviewUser') || 'null');
+        } catch {
+          previewUser = null;
+        }
+
+        const email = String(previewUser?.email || '').trim().toLowerCase();
+        applications = email
+          ? stored.filter(item => String(item.ownerEmail || '').trim().toLowerCase() === email)
+          : [];
+      } else {
+        applications = stored;
+      }
     } catch {
       applications = [];
     }
@@ -278,7 +294,7 @@
         return;
       }
 
-      applications[index] = {
+      const updatedApplication = {
         ...current,
         status: 'cancelled',
         currentStage: 'completed',
@@ -290,7 +306,21 @@
         updatedAt: new Date().toISOString()
       };
 
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(applications));
+      applications[index] = updatedApplication;
+
+      const allStored = (() => {
+        try {
+          const raw = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+          return Array.isArray(raw) ? raw : [];
+        } catch {
+          return [];
+        }
+      })();
+
+      const globalIndex = allStored.findIndex(item => item.id === applicationNo);
+      if (globalIndex >= 0) allStored[globalIndex] = updatedApplication;
+
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(allStored));
       bootstrap.Modal.getInstance($('cancelApplicationModal'))?.hide();
       showToastMessage('Application cancelled successfully. It remains in your history.');
       render();
