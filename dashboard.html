@@ -6,7 +6,7 @@
   <title>Dashboard - Smart Training System</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-  <link rel="stylesheet" href="sedco-saas.css?v=20260930-67">
+  <link rel="stylesheet" href="sedco-saas.css?v=20260930-70">
   <link rel="stylesheet" href="sedco-shell.css?v=20260930-56">
 </head>
 <body class="app-page dashboard-page dashboard-v4" data-page="dashboard">
@@ -51,7 +51,7 @@
         <span class="dashboard-stat-icon-v4 tone-brand"><i class="bi bi-files"></i></span>
         <div>
           <span class="dashboard-stat-label">Applications</span>
-          <strong>—</strong>
+          <strong id="dashboardStatApplications">0</strong>
           <small>Your submitted training forms</small>
         </div>
       </article>
@@ -60,7 +60,7 @@
         <span class="dashboard-stat-icon-v4 tone-warning"><i class="bi bi-clock-history"></i></span>
         <div>
           <span class="dashboard-stat-label">Pending review</span>
-          <strong>—</strong>
+          <strong id="dashboardStatPending">0</strong>
           <small>Waiting for approval action</small>
         </div>
       </article>
@@ -69,7 +69,7 @@
         <span class="dashboard-stat-icon-v4 tone-success"><i class="bi bi-check2-circle"></i></span>
         <div>
           <span class="dashboard-stat-label">Approved</span>
-          <strong>—</strong>
+          <strong id="dashboardStatApproved">0</strong>
           <small>Completed applications</small>
         </div>
       </article>
@@ -77,9 +77,9 @@
       <article class="dashboard-stat-v4">
         <span class="dashboard-stat-icon-v4 tone-neutral"><i class="bi bi-bell"></i></span>
         <div>
-          <span class="dashboard-stat-label">Notifications</span>
-          <strong>—</strong>
-          <small>Recent workflow updates</small>
+          <span class="dashboard-stat-label">Needs attention</span>
+          <strong id="dashboardStatAttention">0</strong>
+          <small>Correction or rejected applications</small>
         </div>
       </article>
     </section>
@@ -88,43 +88,19 @@
       <section class="dashboard-main-card">
         <div class="dashboard-card-heading-v4">
           <div>
-            <span class="dashboard-card-kicker">Quick start</span>
-            <h2>Getting started</h2>
-            <p>Everything you need to manage your training journey.</p>
+            <span class="dashboard-card-kicker">Recent activity</span>
+            <h2>Your applications</h2>
+            <p>Your latest training records and workflow updates.</p>
           </div>
-          <a href="task.html">View forms <i class="bi bi-arrow-up-right"></i></a>
+          <a href="application-status.html">View all <i class="bi bi-arrow-right"></i></a>
         </div>
 
-        <div class="dashboard-quick-list">
-          <a href="profile.html" class="dashboard-quick-item">
-            <span class="dashboard-quick-number">01</span>
-            <span class="dashboard-quick-icon"><i class="bi bi-person"></i></span>
-            <div>
-              <strong>Complete your profile</strong>
-              <p>Keep your staff, department and contact details up to date.</p>
-            </div>
-            <i class="bi bi-chevron-right"></i>
-          </a>
-
-          <a href="task.html" class="dashboard-quick-item">
-            <span class="dashboard-quick-number">02</span>
-            <span class="dashboard-quick-icon"><i class="bi bi-file-earmark-text"></i></span>
-            <div>
-              <strong>Submit a training form</strong>
-              <p>Start BPL, PKK or TEA based on your assigned role.</p>
-            </div>
-            <i class="bi bi-chevron-right"></i>
-          </a>
-
-          <a href="application-status.html" class="dashboard-quick-item">
-            <span class="dashboard-quick-number">03</span>
-            <span class="dashboard-quick-icon"><i class="bi bi-diagram-3"></i></span>
-            <div>
-              <strong>Track approval progress</strong>
-              <p>Follow every stage from submission until final completion.</p>
-            </div>
-            <i class="bi bi-chevron-right"></i>
-          </a>
+        <div id="dashboardPreviewQueue" class="dashboard-queue"></div>
+        <div id="dashboardPreviewEmpty" class="dashboard-empty-v3 d-none">
+          <i class="bi bi-inbox"></i>
+          <strong>No applications yet</strong>
+          <span>Submit a training form and it will appear here automatically.</span>
+          <a href="task.html" class="dashboard-primary-action mt-3">New application</a>
         </div>
       </section>
 
@@ -160,8 +136,9 @@
 
 <script>
   window.STS_CALENDAR_EVENTS = [];
+  window.STS_DASHBOARD_STATIC = true;
 </script>
-<script src="dashboard.js?v=20260930-55"></script>
-<script src="sedco-shell.js?v=20260930-68"></script>
+<script src="dashboard.js?v=20260930-70"></script>
+<script src="sedco-shell.js?v=20260930-70"></script>
 </body>
 </html>
