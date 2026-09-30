@@ -59,6 +59,8 @@ if ($mode === 'new') {
     ];
 }
 
+$sedcoDepartments = sts_sedco_departments();
+
 $canResubmitCorrection = $mode === 'review'
     && $isOwner
     && $applicationStatus === 'correction';
@@ -87,7 +89,7 @@ $canReviewCurrentStage = $mode === 'review'
             window.print();
         }
     </script>
-    <link rel="stylesheet" href="sedco-saas.css?v=20260930-61">
+    <link rel="stylesheet" href="sedco-saas.css?v=20260930-71">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
   <link rel="stylesheet" href="sedco-shell.css?v=20260930-56">
 </head>
