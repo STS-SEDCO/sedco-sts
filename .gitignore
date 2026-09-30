@@ -11,3 +11,7 @@ vendor/
 node_modules/
 
 *.log
+
+# Runtime application uploads
+uploads/applications/*
+!uploads/applications/.gitkeep
