@@ -114,9 +114,10 @@
     tbody.innerHTML = rows.map(application => {
       const status = statusMeta(application.status);
       const stage = application.stageLabel || stageLabel(application.currentStage);
-      const action = application.viewUrl
-        ? `<a class="view-btn${application.status === 'correction' ? ' is-correction' : ''}" href="${escapeHtml(application.viewUrl)}">
-             ${application.status === 'correction' ? 'Correct form' : 'View form'} <i class="bi bi-arrow-up-right"></i>
+      const actionUrl = application.editUrl || application.viewUrl;
+      const action = actionUrl
+        ? `<a class="view-btn${application.editUrl ? ' is-correction' : ''}" href="${escapeHtml(actionUrl)}">
+             ${application.editUrl ? 'Correct form' : 'View details'} <i class="bi bi-arrow-up-right"></i>
            </a>`
         : `<button class="view-btn" type="button" data-view-id="${escapeHtml(application.id)}">
              View details <i class="bi bi-arrow-up-right"></i>
