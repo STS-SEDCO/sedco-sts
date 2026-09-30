@@ -148,6 +148,6 @@ if (!$user) {
             });
         }
     </script>
-<script src="sedco-shell.js?v=20260930-18"></script>
+<script src="sedco-shell.js?v=20260930-23"></script>
 </body>
 </html>
