@@ -94,3 +94,34 @@ function verify_csrf(): void
         exit('Your session has expired. Please refresh the page and try again.');
     }
 }
+
+
+function normalized_role(?string $role): string
+{
+    return match ($role) {
+        'head_of_division' => 'head_of_department',
+        'pengerusi_besar' => 'general_manager',
+        default => (string) $role,
+    };
+}
+
+function user_can_submit_form_type(string $formType, ?array $user = null): bool
+{
+    $user ??= current_user();
+
+    if (!$user) {
+        return false;
+    }
+
+    $role = normalized_role($user['role'] ?? '');
+
+    if ($role === 'admin') {
+        return true;
+    }
+
+    return match (strtoupper($formType)) {
+        'BPL', 'PKK' => $role === 'staff',
+        'TEA' => $role === 'head_of_department',
+        default => false,
+    };
+}
