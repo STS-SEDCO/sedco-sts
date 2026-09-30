@@ -304,7 +304,7 @@ $unreadNotifications = sts_unread_notifications($userId);
   <title>Dashboard - Smart Training System</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-  <link rel="stylesheet" href="sedco-saas.css?v=20260930-67">
+  <link rel="stylesheet" href="sedco-saas.css?v=20260930-70">
   <link rel="stylesheet" href="sedco-shell.css?v=20260930-56">
 </head>
 <body class="app-page dashboard-page dashboard-v4" data-page="dashboard" data-role="<?= e($role) ?>">
@@ -472,7 +472,7 @@ window.STS_CALENDAR_EVENTS = <?= json_encode(
     JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_HEX_TAG | JSON_HEX_AMP
 ) ?>;
 </script>
-<script src="dashboard.js?v=20260930-55"></script>
-<script src="sedco-shell.js?v=20260930-56"></script>
+<script src="dashboard.js?v=20260930-70"></script>
+<script src="sedco-shell.js?v=20260930-70"></script>
 </body>
 </html>
