@@ -127,7 +127,8 @@ while ($row = $versionResult->fetch_assoc()) {
 $versionStmt->close();
 
 $canCancelApplication =
-    (int) $application['user_id'] === (int) $user['id']
+    sts_cancel_application_supported()
+    && (int) $application['user_id'] === (int) $user['id']
     && in_array((string) $application['status'], ['pending', 'correction'], true);
 
 $statusClass = match ((string) $application['status']) {
