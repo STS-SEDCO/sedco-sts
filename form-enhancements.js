@@ -2,10 +2,13 @@
   const context = window.SEDCO_FORM_CONTEXT || {};
   const formType = String(context.formType || '').toUpperCase();
   const mode = String(context.mode || 'new').toLowerCase();
+  const status = String(context.status || '').toLowerCase();
+  const draftEnabled = mode === 'new';
+  const correctionSupport = formType === 'BPL' && mode === 'review' && status === 'correction';
 
-  if (!['BPL','PKK','TEA'].includes(formType) || mode !== 'new') return;
+  if (!['BPL','PKK','TEA'].includes(formType) || (!draftEnabled && !correctionSupport)) return;
 
-  const form = document.querySelector('form[action*="submit_application.php"]');
+  const form = document.querySelector('form');
   if (!form) return;
 
   form.enctype = 'multipart/form-data';
@@ -24,7 +27,7 @@
         <span>Submission support</span>
         <strong>Draft & attachments</strong>
       </div>
-      <span class="sts-draft-state" data-draft-state><i class="bi bi-cloud-check"></i> Ready</span>
+      <span class="sts-draft-state" data-draft-state><i class="bi ${draftEnabled ? "bi-cloud-check" : "bi-paperclip"}"></i> ${draftEnabled ? "Ready" : "Attachments ready"}</span>
     </div>
     <div class="sts-form-support-grid">
       <label class="sts-upload-box">
@@ -36,10 +39,10 @@
         <input type="file" name="attachments[]" multiple accept=".pdf,.jpg,.jpeg,.png,.docx,.xlsx">
       </label>
       <div class="sts-autosave-box">
-        <span class="sts-upload-icon"><i class="bi bi-cloud-arrow-up"></i></span>
+        <span class="sts-upload-icon"><i class="bi ${draftEnabled ? "bi-cloud-arrow-up" : "bi-shield-check"}"></i></span>
         <span>
-          <strong>Autosave enabled</strong>
-          <small>Your latest form values are saved automatically while you work.</small>
+          <strong>${draftEnabled ? "Autosave enabled" : "Correction upload"}</strong>
+          <small>${draftEnabled ? "Your latest form values are saved automatically while you work." : "You can attach updated supporting documents when resubmitting."}</small>
         </span>
       </div>
     </div>
@@ -181,13 +184,13 @@
   }
 
   form.addEventListener('input', event => {
-    if (event.target.matches('input[type="file"]')) return;
+    if (!draftEnabled || event.target.matches('input[type="file"]')) return;
     dirty = true;
     state.innerHTML = '<i class="bi bi-cloud-arrow-up"></i> Unsaved changes';
   });
 
   form.addEventListener('change', event => {
-    if (event.target.matches('input[type="file"]')) return;
+    if (!draftEnabled || event.target.matches('input[type="file"]')) return;
     dirty = true;
   });
 
@@ -204,12 +207,14 @@
     }
   });
 
-  loadDraft().finally(() => {
-    if (!restored) state.innerHTML = '<i class="bi bi-cloud-check"></i> Ready';
-  });
+  if (draftEnabled) {
+    loadDraft().finally(() => {
+      if (!restored) state.innerHTML = '<i class="bi bi-cloud-check"></i> Ready';
+    });
 
-  setInterval(saveDraft, 8000);
-  window.addEventListener('beforeunload', () => {
-    if (dirty) saveDraft();
-  });
+    setInterval(saveDraft, 8000);
+    window.addEventListener('beforeunload', () => {
+      if (dirty) saveDraft();
+    });
+  }
 })();
