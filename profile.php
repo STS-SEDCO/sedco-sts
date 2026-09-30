@@ -1,3 +1,15 @@
+<?php
+declare(strict_types=1);
+require_once __DIR__ . '/includes/auth.php';
+require_login();
+
+$user = current_user();
+
+if (!$user) {
+    header('Location: login.php');
+    exit;
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,9 +18,9 @@
     <title>My Profile - Training Management System</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-    <link rel="stylesheet" href="sedco-saas.css?v=20260930-6">
+    <link rel="stylesheet" href="sedco-saas.css?v=20260930-8">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-  <link rel="stylesheet" href="sedco-shell.css?v=20260930-6">
+  <link rel="stylesheet" href="sedco-shell.css?v=20260930-8">
 </head>
 <body class="app-page profile-page" data-page="profile">
 <main class="profile-content">
@@ -21,22 +33,22 @@
                 <div class="profile-image d-flex align-items-center justify-content-center" style="background:#f4f4f5;color:#8f1010;font-size:34px;">
                     <i class="fas fa-user"></i>
                 </div>
-                <h3 class="text-primary-custom"><?php echo isset($user['fullname']) ? htmlspecialchars($user['fullname']) : 'Guest'; ?></h3>
+                <h3 class="text-primary-custom"><?= e($user['fullname']) ?></h3>
                 <p class="text-muted mb-0">Training Management System Member</p>
             </div>
 
             <div class="row profile-info">
                 <div class="col-md-6 mb-3">
                     <label>Email</label>
-                    <p><?php echo isset($user['email']) ? htmlspecialchars($user['email']) : '—'; ?></p>
+                    <p><?= e($user['email']) ?></p>
                 </div>
                 <div class="col-md-6 mb-3">
                     <label>Phone Number</label>
-                    <p><?php echo isset($user['phone_number']) ? htmlspecialchars($user['phone_number']) : '—'; ?></p>
+                    <p><?= e($user['phone_number'] ?: '—') ?></p>
                 </div>
                 <div class="col-md-6 mb-3">
                     <label>Role</label>
-                    <p><?php echo isset($user['block']) ? htmlspecialchars($user['block']) : '—'; ?></p>
+                    <p><?= e(ucwords(str_replace('_', ' ', $user['role']))) ?></p>
                 </div>
                 <div class="col-md-6 mb-3">
                     <label>Member Since</label>
@@ -48,14 +60,14 @@
                 <a href="dashboard.php" class="btn btn-outline-secondary">
                     <i class="fas fa-arrow-left me-1"></i> Back
                 </a>
-                <a href="#" class="btn btn-edit">
+                <button type="button" class="btn btn-edit" disabled title="Profile editing is not enabled yet">
                     <i class="fas fa-edit me-1"></i> Edit Profile
-                </a>
+                </button>
             </div>
         </div>
     </div>
 </main>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-<script src="sedco-shell.js?v=20260930-6"></script>
+<script src="sedco-shell.js?v=20260930-8"></script>
 </body>
 </html>
