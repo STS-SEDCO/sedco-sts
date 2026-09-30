@@ -1,58 +1,60 @@
-//v2 DB 
+-- SEDCO Training Management System
+-- Canonical MySQL schema
+-- Import this file into an empty database named `sts`.
 
-//Create Submissions Table (For Assignments & Reports)
-CREATE TABLE submissions (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    user_id INT NOT NULL,
-    title VARCHAR(255) NOT NULL,
-    due_date DATE NOT NULL,
-    status ENUM('Pending', 'Submitted', 'Overdue') DEFAULT 'Pending',
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
-);
+CREATE DATABASE IF NOT EXISTS sts
+    CHARACTER SET utf8mb4
+    COLLATE utf8mb4_unicode_ci;
 
-CREATE TABLE users (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    username VARCHAR(50) NOT NULL UNIQUE,
+USE sts;
+
+CREATE TABLE IF NOT EXISTS users (
+    id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    fullname VARCHAR(120) NOT NULL,
+    email VARCHAR(190) NOT NULL UNIQUE,
+    phone_number VARCHAR(30) DEFAULT NULL,
+    role ENUM(
+        'admin',
+        'staff',
+        'head_of_division',
+        'training_section',
+        'pengerusi_besar',
+        'head_of_department'
+    ) NOT NULL DEFAULT 'staff',
     password VARCHAR(255) NOT NULL,
-    role ENUM('admin', 'staff', 'head_of_division', 'training_section', 'pengerusi_besar', 'head_of_department') NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) ENGINE=InnoDB;
 
- //Create task Table (For Training Programs)
- 
- CREATE TABLE task (
-    id INT AUTO_INCREMENT PRIMARY KEY,
+CREATE TABLE IF NOT EXISTS tasks (
+    id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     task_name VARCHAR(255) NOT NULL,
-    description TEXT,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
+    description TEXT DEFAULT NULL,
+    due_date DATE DEFAULT NULL,
+    status ENUM('active', 'inactive') NOT NULL DEFAULT 'active',
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) ENGINE=InnoDB;
 
-//Example Submissions
-INSERT INTO submissions (user_id, title, due_date, status) 
-VALUES 
-(1, 'Penilaian Keberkesanan Kursus', '2025-03-17', 'Overdue'),
-(2, 'Training Effectiveness Assessment Form', '2025-03-20', 'Pending');
+CREATE TABLE IF NOT EXISTS applications (
+    id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    application_no VARCHAR(40) NOT NULL UNIQUE,
+    user_id INT UNSIGNED NOT NULL,
+    form_type ENUM('BPL', 'PKK', 'TEA') NOT NULL,
+    title VARCHAR(255) NOT NULL,
+    payload JSON NOT NULL,
+    status ENUM('pending', 'approved', 'correction', 'rejected') NOT NULL DEFAULT 'pending',
+    review_note TEXT DEFAULT NULL,
+    submitted_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    CONSTRAINT fk_applications_user
+        FOREIGN KEY (user_id) REFERENCES users(id)
+        ON DELETE CASCADE,
+    INDEX idx_applications_user (user_id),
+    INDEX idx_applications_status (status),
+    INDEX idx_applications_type (form_type),
+    INDEX idx_applications_submitted_at (submitted_at)
+) ENGINE=InnoDB;
 
-//Example task
-INSERT INTO task (task_name, description) 
-VALUES ('Penilaian Keberkesanan Kursus', 'Training Effectiveness Assessment Form');
-
-use sts;
--- User Table
-CREATE TABLE users (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    username VARCHAR(50) NOT NULL UNIQUE,
-    password VARCHAR(255) NOT NULL,
-    role ENUM('admin', 'staff', 'head_of_division', 'training_section', 'pengerusi_besar', 'head_of_department') NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-
-
-INSERT INTO users (name, email, password, role) 
-VALUES 
-('wani', 'wani.gmail.com', 'hashed_password', 'staff'),
-('Siti', 'siti@gmail.com', 'hashed_password', 'head_of_department');
-
-ALTER TABLE users ADD COLUMN fullname VARCHAR(100) NOT NULL;
-ALTER TABLE users ADD COLUMN phone_number VARCHAR(20) NOT NULL;
+-- Create the first account through signup.php so the password is stored
+-- with PHP's password_hash(). Change its role in phpMyAdmin if required.
