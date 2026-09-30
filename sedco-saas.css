@@ -6277,3 +6277,285 @@ body{
     width:52px !important;
   }
 }
+
+
+/* ===== FORM WRITING EXPERIENCE V2 ===== */
+.form-page .sts-smart-form{
+  --form-input-bg:#fbfbfc;
+  --form-input-border:#d9dade;
+  --form-input-focus:#8f1010;
+  --form-input-text:#2e2f33;
+}
+
+/* Comfortable premium writing fields */
+.form-page .sts-smart-form .sts-writing-field:not([type="radio"]):not([type="checkbox"]){
+  width:100% !important;
+  min-width:0 !important;
+  min-height:46px !important;
+  padding:11px 13px !important;
+  border:1px solid var(--form-input-border) !important;
+  border-radius:12px !important;
+  background:
+    linear-gradient(180deg,#fff 0%,var(--form-input-bg) 100%) !important;
+  color:var(--form-input-text) !important;
+  font-size:11px !important;
+  font-weight:520 !important;
+  line-height:1.45 !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.95),
+    0 1px 2px rgba(20,20,20,.025) !important;
+}
+
+.form-page .sts-smart-form textarea.sts-writing-field{
+  min-height:92px !important;
+  padding:13px 14px !important;
+  line-height:1.62 !important;
+}
+
+.form-page .sts-smart-form .sts-writing-field:hover:not(:disabled){
+  border-color:#c8c9ce !important;
+  background:#fff !important;
+}
+
+.form-page .sts-smart-form .sts-writing-field:focus:not(:disabled){
+  border-color:rgba(143,16,16,.58) !important;
+  background:#fff !important;
+  box-shadow:
+    0 0 0 4px rgba(143,16,16,.07),
+    0 7px 18px rgba(61,15,15,.045) !important;
+  transform:translateY(-1px);
+}
+
+.form-page .sts-smart-form .sts-writing-field::placeholder{
+  color:#a7a8ae !important;
+  font-weight:450 !important;
+}
+
+.form-page .sts-smart-form select.sts-writing-field{
+  cursor:pointer;
+  padding-right:34px !important;
+}
+
+/* BPL - use answer space properly instead of tiny boxes */
+.bpl-page .sts-smart-form table{
+  width:100% !important;
+}
+
+.bpl-page .sts-smart-form table:has(tr > td:nth-child(4)){
+  table-layout:fixed !important;
+}
+
+.bpl-page .sts-smart-form table:has(tr > td:nth-child(4)) tr > td:nth-child(1),
+.bpl-page .sts-smart-form table:has(tr > td:nth-child(4)) tr > td:nth-child(3){
+  width:18% !important;
+}
+
+.bpl-page .sts-smart-form table:has(tr > td:nth-child(4)) tr > td:nth-child(2),
+.bpl-page .sts-smart-form table:has(tr > td:nth-child(4)) tr > td:nth-child(4){
+  width:32% !important;
+}
+
+.bpl-page .sts-smart-form td:has(.sts-writing-field){
+  padding:12px 14px !important;
+  vertical-align:top !important;
+}
+
+.bpl-page .sts-smart-form td > .sts-writing-field{
+  width:100% !important;
+  max-width:none !important;
+}
+
+.bpl-page .sts-smart-form td:has(textarea.sts-writing-field){
+  padding-top:13px !important;
+  padding-bottom:13px !important;
+}
+
+.bpl-page .sts-smart-form td:not(:has(input,textarea,select,label)){
+  color:#56575c !important;
+  font-size:10.5px !important;
+  font-weight:620 !important;
+  line-height:1.45 !important;
+}
+
+.bpl-page .sts-smart-form table tr td:first-child,
+.bpl-page .sts-smart-form table tr td:nth-child(3){
+  color:#56575c !important;
+  font-size:10.5px !important;
+  font-weight:620 !important;
+}
+
+/* Give option groups breathing room */
+.bpl-page .sts-smart-form td:has(input[type="radio"]),
+.bpl-page .sts-smart-form td:has(input[type="checkbox"]){
+  padding:11px 13px !important;
+}
+
+.bpl-page .sts-smart-form .sts-other-inline{
+  width:min(100%,520px);
+  margin-top:11px;
+}
+
+/* PKK - turn the text-heavy sections into proper writing surfaces */
+.pkk-page .sts-smart-form > .row{
+  padding:14px !important;
+  margin-left:0 !important;
+  margin-right:0 !important;
+  border:1px solid #ededf0;
+  border-radius:14px;
+  background:#fcfcfd;
+}
+
+.pkk-page .sts-smart-form .form-label{
+  margin-bottom:7px !important;
+  color:#55565b !important;
+  font-size:9.5px !important;
+  font-weight:700 !important;
+}
+
+.pkk-page .sts-smart-form .mb-3:has(textarea),
+.pkk-page .sts-smart-form .mb-4:has(textarea){
+  padding:14px;
+  border:1px solid #ededf0;
+  border-radius:14px;
+  background:#fcfcfd;
+}
+
+.pkk-page .sts-smart-form ol{
+  margin:6px 0 0 !important;
+}
+
+.pkk-page .sts-smart-form ol li{
+  margin:8px 0 !important;
+  padding-left:5px;
+  color:#7e7e84;
+  font-size:9px;
+  font-weight:700;
+}
+
+.pkk-page .sts-smart-form ol li textarea{
+  margin:5px 0 0 !important;
+}
+
+.pkk-page .sts-smart-form h5 + .row{
+  display:grid !important;
+  grid-template-columns:repeat(3,minmax(0,1fr)) !important;
+  gap:9px !important;
+}
+
+.pkk-page .sts-smart-form h5 + .row > .col{
+  width:auto !important;
+  max-width:none !important;
+  padding:0 !important;
+}
+
+.pkk-page .sts-smart-form .score-input{
+  width:64px !important;
+  min-width:64px !important;
+  max-width:64px !important;
+  min-height:42px !important;
+  border-radius:10px !important;
+  background:#fff !important;
+  font-size:11px !important;
+}
+
+/* TEA - clearer data entry cells */
+.tea-page .sts-smart-form table{
+  border-radius:13px !important;
+  overflow:hidden;
+}
+
+.tea-page .sts-smart-form .no-border{
+  padding:13px 14px !important;
+  background:#fcfcfd !important;
+}
+
+.tea-page .sts-smart-form .no-border .sts-writing-field{
+  display:inline-block !important;
+  width:min(100%,360px) !important;
+  margin-left:8px !important;
+}
+
+.tea-page .sts-smart-form .score-input-small{
+  width:58px !important;
+  min-width:58px !important;
+  max-width:58px !important;
+  min-height:42px !important;
+  padding:8px 5px !important;
+  border-radius:10px !important;
+  background:#fff !important;
+  font-size:11px !important;
+}
+
+.tea-page .sts-smart-form input[name^="comments_"]{
+  min-width:150px !important;
+}
+
+.tea-page .sts-smart-form select[name^="competency_level_"]{
+  min-width:115px !important;
+}
+
+/* Better disabled/read-only contrast without looking dead */
+.form-page .sts-smart-form .form-section-locked .sts-writing-field,
+.form-page .sts-smart-form .sts-writing-field:disabled{
+  border-color:#e6e6e9 !important;
+  background:#f3f4f5 !important;
+  color:#9a9ba0 !important;
+  box-shadow:none !important;
+  transform:none !important;
+}
+
+.form-page .sts-smart-form .sts-calculated-field{
+  border-color:#d7e4db !important;
+  background:#f4faf6 !important;
+  color:#2f7350 !important;
+  font-weight:700 !important;
+}
+
+@media(max-width:900px){
+  .bpl-page .sts-smart-form table:has(tr > td:nth-child(4)){
+    table-layout:auto !important;
+  }
+
+  .pkk-page .sts-smart-form h5 + .row{
+    grid-template-columns:repeat(2,minmax(0,1fr)) !important;
+  }
+}
+
+@media(max-width:640px){
+  .bpl-page .sts-smart-form table,
+  .bpl-page .sts-smart-form tbody,
+  .bpl-page .sts-smart-form tr,
+  .bpl-page .sts-smart-form td{
+    display:block !important;
+    width:100% !important;
+  }
+
+  .bpl-page .sts-smart-form tr{
+    padding:8px 0;
+    border-bottom:1px solid #efeff1;
+  }
+
+  .bpl-page .sts-smart-form tr > td{
+    border:0 !important;
+    padding:5px 0 !important;
+  }
+
+  .bpl-page .sts-smart-form tr > td:first-child,
+  .bpl-page .sts-smart-form tr > td:nth-child(3){
+    padding-top:8px !important;
+    color:#6b6b71 !important;
+    font-size:9px !important;
+    text-transform:uppercase;
+    letter-spacing:.045em;
+  }
+
+  .pkk-page .sts-smart-form h5 + .row{
+    grid-template-columns:1fr !important;
+  }
+
+  .tea-page .sts-smart-form .no-border .sts-writing-field{
+    display:block !important;
+    width:100% !important;
+    margin:8px 0 0 !important;
+  }
+}
