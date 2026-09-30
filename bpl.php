@@ -50,11 +50,16 @@ if ($applicationNo !== '') {
     $applicationStatus = (string) $application['status'];
 }
 
-$formAction = $mode === 'review'
-    ? 'review_application.php'
-    : 'submit_application.php?type=BPL';
+$canResubmitCorrection = $mode === 'review'
+    && $isOwner
+    && $applicationStatus === 'correction';
+
+$formAction = $mode === 'new'
+    ? 'submit_application.php?type=BPL'
+    : ($canResubmitCorrection ? 'resubmit_application.php' : 'review_application.php');
 
 $canReviewCurrentStage = $mode === 'review'
+    && !$canResubmitCorrection
     && !in_array($applicationStatus, ['approved', 'rejected'], true)
     && $currentStage !== 'completed'
     && user_can_review_stage($currentStage, $user);
@@ -73,7 +78,7 @@ $canReviewCurrentStage = $mode === 'review'
             window.print();
         }
     </script>
-    <link rel="stylesheet" href="sedco-saas.css?v=20260930-27">
+    <link rel="stylesheet" href="sedco-saas.css?v=20260930-28">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
   <link rel="stylesheet" href="sedco-shell.css?v=20260930-18">
 </head>
@@ -293,8 +298,8 @@ window.SEDCO_FORM_CONTEXT = {
   status: <?= json_encode($applicationStatus) ?>
 };
 </script>
-<script src="bpl-workflow.js?v=20260930-27"></script>
-<script src="form-permissions.js?v=20260930-27"></script>
+<script src="bpl-workflow.js?v=20260930-28"></script>
+<script src="form-permissions.js?v=20260930-28"></script>
 <script src="sedco-shell.js?v=20260930-23"></script>
 </body>
 </html>
