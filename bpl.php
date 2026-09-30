@@ -18,7 +18,7 @@ $user = current_user();
             window.print();
         }
     </script>
-    <link rel="stylesheet" href="sedco-saas.css?v=20260930-24">
+    <link rel="stylesheet" href="sedco-saas.css?v=20260930-26">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
   <link rel="stylesheet" href="sedco-shell.css?v=20260930-18">
 </head>
@@ -29,12 +29,13 @@ $user = current_user();
     <!-- Form Content -->
     <div class="content">
         <h2>BORANG PERMOHONAN LATIHAN (BPL)</h2>
+        <div class="form-permission-notice" data-form-permission-notice></div>
 
         <form method="post" action="submit_application.php?type=BPL">
       <?= csrf_field() ?>
 
             <!-- A. MAKLUMAT PEMOHON -->
-            <table>
+            <table data-form-owner="staff">
                 <tr><th colspan="4">A. MAKLUMAT PEMOHON</th></tr>
                 <tr>
                     <td>01. Nama</td>
@@ -57,7 +58,7 @@ $user = current_user();
             </table>
 
             <!-- B. MAKLUMAT KURSUS/SEMINAR -->
-            <table>
+            <table data-form-owner="staff">
                 <tr><th colspan="4">B. MAKLUMAT KURSUS/SEMINAR</th></tr>
                 <tr>
                     <td>01. Tajuk Kursus</td>
@@ -88,7 +89,7 @@ $user = current_user();
             </table>
 
             <!-- C. MAKLUMAT TUGAS LUAR DAERAH -->
-            <table>
+            <table data-form-owner="staff">
                 <tr><th colspan="4">C. MAKLUMAT TUGAS LUAR DAERAH</th></tr>
                 <tr>
                     <td>08. Tempat Bertugas</td>
@@ -119,7 +120,7 @@ $user = current_user();
             </table>
 
             <!-- ULASAN C - F -->
-            <table>
+            <table data-form-owner="training_section">
                 <tr><th colspan="2">C. ULASAN PENGURUS SEKSYEN LATIHAN</th></tr>
                 <tr>
                     <td>Ulasan</td>
@@ -135,7 +136,7 @@ $user = current_user();
                 </tr>
             </table>
 
-            <table>
+            <table data-form-owner="head_of_department">
                 <tr><th colspan="2">D. ULASAN KETUA/PENGURUS BAHAGIAN</th></tr>
                 <tr>
                     <td>Ulasan</td>
@@ -151,7 +152,7 @@ $user = current_user();
                 </tr>
             </table>
 
-            <table>
+            <table data-form-owner="general_manager">
                 <tr><th colspan="2">E. ULASAN PENGURUS BESAR KUMPULAN SEDCO</th></tr>
                 <tr>
                     <td>Kelulusan</td>
@@ -170,7 +171,7 @@ $user = current_user();
                 </tr>
             </table>
 
-            <table>
+            <table data-form-owner="admin">
                 <tr><th colspan="2">F. ULASAN PENGURUS SEDCO</th></tr>
                 <tr>
                     <td>Kelulusan</td>
@@ -190,7 +191,7 @@ $user = current_user();
             </table>
 
             <!-- FINAL CHECKLIST -->
-            <table>
+            <table data-form-owner="training_section">
                 <tr><th colspan="2">ULASAN KEWANGAN</th></tr>
                 <tr>
                     <td>a) Bayaran Kursus</td>
@@ -219,8 +220,8 @@ $user = current_user();
 
         </form>
 </div>
-<script>window.SEDCO_FORM_CONTEXT = { role: <?= json_encode($user['role'] ?? 'staff') ?>, mode: 'new' };</script>
-<script src="form-permissions.js?v=20260930-24"></script>
+<script>window.SEDCO_FORM_CONTEXT = { role: <?= json_encode($user['role'] ?? 'staff') ?>, mode: 'new', formType: 'BPL' };</script>
+<script src="form-permissions.js?v=20260930-26"></script>
 <script src="sedco-shell.js?v=20260930-23"></script>
 </body>
 </html>
