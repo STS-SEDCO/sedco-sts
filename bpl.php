@@ -1,3 +1,8 @@
+<?php
+declare(strict_types=1);
+require_once __DIR__ . '/includes/auth.php';
+require_login();
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -146,17 +151,14 @@
     }
 </style>
 
-<button onclick="printPage()" class="btn-print">Print</button>
-
-
-    <script>
+<script>
         function printPage() {
             window.print();
         }
     </script>
-    <link rel="stylesheet" href="sedco-saas.css?v=20260930-6">
+    <link rel="stylesheet" href="sedco-saas.css?v=20260930-8">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-  <link rel="stylesheet" href="sedco-shell.css?v=20260930-6">
+  <link rel="stylesheet" href="sedco-shell.css?v=20260930-8">
 </head>
 <body class="app-page form-page bpl-page" data-page="task">
 
@@ -166,7 +168,7 @@
     <div class="content">
         <h2>BORANG PERMOHONAN LATIHAN (BPL)</h2>
 
-        <form method="POST" action="form.php">
+        <form method="post" action="submit_application.php?type=BPL">
 
             <!-- A. MAKLUMAT PEMOHON -->
             <table>
@@ -353,16 +355,8 @@
             </div>
 
         </form>
-
-        <?php
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            echo "<h3>Maklumat Diterima:</h3>";
-            echo "<pre>";
-            print_r($_POST);
-            echo "</pre>";
-        }
-        ?>
-    </div>
-<script src="sedco-submission.js"></script>\n<script src="sedco-shell.js?v=20260930-6"></script>
+</div>
+<script src="sedco-submission.js"></script>
+<script src="sedco-shell.js?v=20260930-8"></script>
 </body>
 </html>
