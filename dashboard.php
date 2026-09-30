@@ -532,8 +532,9 @@ if (!isset($_SESSION['user_id'])) {
             .tasks-panel, .calendar-container { border-radius: 14px; }
         }
     </style>
+    <link rel="stylesheet" href="sedco-saas.css">
 </head>
-<body>
+<body class="app-page dashboard-page">
 
     <nav class="navbar navbar-expand-lg">
         <div class="container-fluid px-0">
