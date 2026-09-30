@@ -36,7 +36,7 @@ require_login();
         </div>
     </div>
 
-<script src="sedco-shell.js?v=20260930-14"></script>
+<script src="sedco-shell.js?v=20260930-18"></script>
 </body>
 </html>
    
