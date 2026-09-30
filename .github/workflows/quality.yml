@@ -27,6 +27,8 @@ jobs:
           node --check sedco-submission.js
           node --check application-status.js
           node --check submissions.js
+          node --check form-permissions.js
+          node --check bpl-workflow.js
 
       - name: Legacy reference check
         shell: bash
