@@ -203,39 +203,39 @@
     ];
 
     controls.forEach(control => {
-      let isOther = false;
+      const controlValue = String(control.value || '').trim();
+      const explicitTarget = control.dataset.otherTrigger || '';
+      const isOtherChoice = /^(other|others|lain-lain|lain lain)$/i.test(controlValue);
 
-      if (control.tagName === 'SELECT') {
-        const option = control.options[control.selectedIndex];
-        isOther = option && /^(other|others|lain-lain|lain lain)$/i.test(option.value.trim());
-      } else {
-        isOther = /^(other|others|lain-lain|lain lain)$/i.test(String(control.value).trim());
-      }
-
-      if (control.tagName !== 'SELECT' && !/^(other|others|lain-lain|lain lain)$/i.test(String(control.value).trim())) return;
+      if (!explicitTarget && control.tagName !== 'SELECT' && !isOtherChoice) return;
 
       const base = String(control.name || 'other')
         .replace(/\[\]$/, '')
         .replace(/[^A-Za-z0-9_]/g,'_');
-      const otherName = base + '_other';
+      const otherName = explicitTarget || (base + '_other');
 
-      if (fieldByName(otherName)) return;
+      let otherInput = fieldByName(otherName);
+      let box = otherInput?.closest('.sts-other-field') || null;
 
-      const host = control.closest('td, .mb-3, .col, .col-md-4, .form-group') || control.parentElement;
-      if (!host) return;
+      if (!box) {
+        const host = control.closest('td, .mb-3, .col, .col-md-4, .form-group') || control.parentElement;
+        if (!host) return;
 
-      const box = document.createElement('div');
-      box.className = 'sts-other-field';
-      box.hidden = true;
-      box.innerHTML = `
-        <label>
-          <span>Nyatakan lain-lain</span>
-          <input type="text" name="${otherName}" maxlength="120" placeholder="Taip jawapan di sini...">
-        </label>
-      `;
-      host.appendChild(box);
+        box = document.createElement('div');
+        box.className = 'sts-other-field';
+        box.dataset.otherField = otherName;
+        box.hidden = true;
+        box.innerHTML = `
+          <label>
+            <span>Nyatakan lain-lain <b>*</b></span>
+            <input type="text" name="${otherName}" maxlength="120" placeholder="Taip jawapan di sini..." disabled>
+          </label>
+        `;
+        host.appendChild(box);
+        otherInput = box.querySelector('input');
+      }
 
-      const otherInput = box.querySelector('input');
+      if (!otherInput) return;
 
       const sync = () => {
         let active = false;
@@ -252,7 +252,13 @@
         otherInput.dataset.stsRequired = active ? '1' : '0';
         otherInput.setAttribute('aria-required', active ? 'true' : 'false');
 
-        if (!active) {
+        if (active) {
+          box.classList.add('is-visible');
+          window.setTimeout(() => {
+            otherInput.focus({ preventScroll: true });
+          }, 80);
+        } else {
+          box.classList.remove('is-visible');
           clearFieldError(otherInput);
           otherInput.value = '';
         }
