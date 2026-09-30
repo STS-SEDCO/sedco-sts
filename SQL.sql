@@ -14,6 +14,7 @@ CREATE TABLE IF NOT EXISTS users (
         'head_of_division',
         'training_section',
         'pengerusi_besar',
+        'general_manager',
         'head_of_department'
     ) NOT NULL DEFAULT 'staff',
     password VARCHAR(255) NOT NULL,
