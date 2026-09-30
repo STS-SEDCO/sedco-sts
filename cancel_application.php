@@ -19,6 +19,11 @@ if (!$user) {
     exit;
 }
 
+if (!sts_cancel_application_supported()) {
+    header('Location: application-status.php?cancel_setup=1');
+    exit;
+}
+
 $applicationNo = trim((string) ($_POST['application_no'] ?? ''));
 $reason = trim((string) ($_POST['cancellation_reason'] ?? ''));
 
