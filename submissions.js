@@ -41,6 +41,21 @@
     }
   }
 
+  function stageMeta(stage) {
+    switch (String(stage || '').toLowerCase()) {
+      case 'hod':
+        return { label:'Head of Department', cls:'hod', icon:'bi-person-check' };
+      case 'training':
+        return { label:'Training Department', cls:'training', icon:'bi-briefcase' };
+      case 'gm':
+        return { label:'General Manager', cls:'gm', icon:'bi-person-badge' };
+      case 'completed':
+        return { label:'Completed', cls:'completed', icon:'bi-check2-all' };
+      default:
+        return { label:'—', cls:'none', icon:'bi-dash' };
+    }
+  }
+
   function formatDate(value, includeTime = false) {
     if (!value) return '—';
     const date = new Date(value);
@@ -86,7 +101,9 @@
         item.title,
         item.formName,
         item.applicant,
-        status
+        status,
+        item.stageLabel,
+        item.currentStage
       ].some(value => String(value || '').toLowerCase().includes(query));
     });
   }
@@ -110,6 +127,15 @@
 
     tbody.innerHTML = rows.map(item => {
       const meta = statusMeta(item.status);
+      const stage = stageMeta(item.currentStage);
+      const action = item.reviewUrl
+        ? `<a class="submission-review-btn${item.canReview ? ' is-ready' : ''}" href="${escapeHtml(item.reviewUrl)}">
+             ${item.canReview ? 'Review' : 'View form'} <i class="bi bi-arrow-up-right"></i>
+           </a>`
+        : `<button class="submission-view-btn" type="button" data-submission-id="${escapeHtml(item.id)}">
+             View <i class="bi bi-arrow-up-right"></i>
+           </button>`;
+
       return `
         <tr>
           <td>
@@ -130,10 +156,11 @@
           <td>
             <span class="status-pill status-${meta.cls}"><i class="bi ${meta.icon}"></i>${meta.label}</span>
           </td>
+          <td>
+            <span class="submission-stage-pill stage-${stage.cls}"><i class="bi ${stage.icon}"></i>${stage.label}</span>
+          </td>
           <td class="text-end">
-            <button class="submission-view-btn" type="button" data-submission-id="${escapeHtml(item.id)}">
-              View <i class="bi bi-arrow-up-right"></i>
-            </button>
+            ${action}
           </td>
         </tr>
       `;
@@ -161,6 +188,9 @@
     $('submissionModalApplicant').textContent = item.applicant || 'Guest';
     $('submissionModalType').textContent = item.type || 'FORM';
     $('submissionModalDate').textContent = formatDate(item.submittedAt, true);
+    if ($('submissionModalStage')) {
+      $('submissionModalStage').textContent = item.stageLabel || stageMeta(item.currentStage).label;
+    }
 
     const entries = Object.entries(item.data || {}).filter(([,value]) => {
       if (Array.isArray(value)) return value.some(v => String(v || '').trim());
