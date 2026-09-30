@@ -423,7 +423,6 @@ body{
 
 /* ===== TASKS ===== */
 .task-page .card-container{
-  width:calc(100% - 244px) !important;
   min-height:100vh !important;
   padding:110px 28px 36px !important;
   gap:16px !important;
@@ -463,7 +462,6 @@ body{
 .form-page .content,
 .form-page .main-content,
 .form-page .form-container{
-  width:calc(100% - 244px) !important;
   max-width:none !important;
   min-height:100vh !important;
   margin-right:0 !important;
@@ -535,7 +533,6 @@ body{
 
 /* ===== PROFILE ===== */
 .profile-page .profile-content{
-  margin-left:244px;
   min-height:100vh;
   padding:108px 28px 40px;
 }
@@ -640,55 +637,8 @@ body{
   box-shadow:var(--sedco-shadow) !important;
 }
 
-/* ===== RESPONSIVE ===== */
-@media (max-width:900px){
-  .app-page .sidebar{
-    width:72px !important;
-    padding:18px 10px !important;
-  }
-  .app-page .sidebar h4{display:none !important}
-  .app-page .sidebar a{
-    justify-content:center !important;
-    padding:10px !important;
-    font-size:0 !important;
-  }
-  .app-page .sidebar a i{
-    width:auto !important;
-    font-size:17px !important;
-  }
-  .app-page .content,
-  .app-page .main-content,
-  .app-page .form-container,
-  .app-page .card-container,
-  .profile-page .profile-content{
-    margin-left:72px !important;
-    width:calc(100% - 72px) !important;
-  }
-}
-@media (max-width:600px){
-  .app-page .navbar{padding:0 15px !important}
-  .app-page .navbar-brand{font-size:13px !important}
-  .app-page .navbar-nav{display:none !important}
-  .app-page .sidebar{display:none !important}
-  .app-page .content,
-  .app-page .main-content,
-  .app-page .form-container,
-  .app-page .card-container,
-  .profile-page .profile-content{
-    margin-left:0 !important;
-    width:100% !important;
-    padding-left:14px !important;
-    padding-right:14px !important;
-  }
-  .task-page .card-container .card{width:100% !important}
-  .auth-page .card-body{padding:28px 22px !important}
-}
-
-
 /* ===== APPLICATION STATUS ===== */
 .status-page .status-content{
-  margin-left:244px;
-  width:calc(100% - 244px);
   min-height:100vh;
   padding:104px 28px 42px;
 }
@@ -1014,11 +964,9 @@ body{
   .status-page .status-toolbar{align-items:stretch;flex-direction:column}
   .status-page .status-search{width:100%}
 }
-@media(max-width:900px){
-  .status-page .status-content{margin-left:72px;width:calc(100% - 72px)}
-}
+
 @media(max-width:650px){
-  .status-page .status-content{margin-left:0;width:100%;padding:96px 14px 28px}
+  .status-page .status-content{padding:96px 14px 28px}
   .status-page .status-stats{grid-template-columns:1fr 1fr;gap:9px}
   .status-page .modal-summary{grid-template-columns:1fr 1fr}
   .status-page .detail-grid{grid-template-columns:1fr}
