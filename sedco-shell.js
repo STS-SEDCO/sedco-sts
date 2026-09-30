@@ -34,8 +34,12 @@
     <header class="navbar sedco-navbar">
       <div class="sedco-navbar-inner">
         <div class="sedco-brand-wrap">
-          <button class="sedco-mobile-toggle" id="sedcoMobileToggle" type="button" aria-label="Open navigation">
-            <i class="bi bi-list"></i>
+          <button class="sedco-mobile-toggle" id="sedcoMobileToggle" type="button" aria-label="Toggle navigation" aria-expanded="true">
+            <span class="sedco-burger-lines" aria-hidden="true">
+              <span></span>
+              <span></span>
+              <span></span>
+            </span>
           </button>
 
           <a class="navbar-brand sedco-brand" href="${pageUrl('dashboard')}">
@@ -89,10 +93,58 @@
 
   const closeMenu = () => body.classList.remove('sedco-menu-open');
 
-  toggle?.addEventListener('click', () => body.classList.toggle('sedco-menu-open'));
-  backdrop?.addEventListener('click', closeMenu);
+  const syncToggleState = () => {
+    const mobile = window.innerWidth <= 760;
+    const expanded = mobile
+      ? body.classList.contains('sedco-menu-open')
+      : !body.classList.contains('sedco-sidebar-collapsed');
+
+    toggle?.setAttribute('aria-expanded', String(expanded));
+  };
+
+  try {
+    if (window.innerWidth > 900 && localStorage.getItem('sedcoSidebarCollapsed') === '1') {
+      body.classList.add('sedco-sidebar-collapsed');
+    }
+  } catch {}
+
+  toggle?.addEventListener('click', () => {
+    if (window.innerWidth <= 760) {
+      body.classList.toggle('sedco-menu-open');
+    } else {
+      body.classList.toggle('sedco-sidebar-collapsed');
+
+      try {
+        localStorage.setItem(
+          'sedcoSidebarCollapsed',
+          body.classList.contains('sedco-sidebar-collapsed') ? '1' : '0'
+        );
+      } catch {}
+    }
+
+    syncToggleState();
+  });
+
+  backdrop?.addEventListener('click', () => {
+    closeMenu();
+    syncToggleState();
+  });
 
   window.addEventListener('resize', () => {
     if (window.innerWidth > 760) closeMenu();
+
+    if (window.innerWidth <= 900) {
+      body.classList.remove('sedco-sidebar-collapsed');
+    } else {
+      try {
+        if (localStorage.getItem('sedcoSidebarCollapsed') === '1') {
+          body.classList.add('sedco-sidebar-collapsed');
+        }
+      } catch {}
+    }
+
+    syncToggleState();
   });
+
+  syncToggleState();
 })();
