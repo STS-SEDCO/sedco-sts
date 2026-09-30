@@ -380,7 +380,7 @@ function sts_can_review_application(array $application, array $user): bool
         return false;
     }
 
-    return !in_array((string) ($application['status'] ?? ''), ['approved', 'rejected'], true)
+    return (string) ($application['status'] ?? '') === 'pending'
         && $stage !== 'completed';
 }
 
