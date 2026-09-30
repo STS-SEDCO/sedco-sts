@@ -78,8 +78,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             cursor: pointer;
         }
     </style>
+    <link rel="stylesheet" href="sedco-saas.css">
 </head>
-<body>
+<body class="auth-page login-page">
     <section class="vh-100">
         <div class="container h-100">
             <div class="row d-flex justify-content-center align-items-center h-100">
