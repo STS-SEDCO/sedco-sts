@@ -64,11 +64,11 @@ if ($parentId > 0) {
           </div>
           <div class="col-md-4">
             <label class="form-label fw-semibold">Bahagian</label>
-            <input type="text" class="form-control" name="bahagian" value="<?= e((string) ($parentPayload['bahagian'] ?? $user['department'] ?? '')) ?>">
+            <input type="text" class="form-control" name="bahagian" value="<?= e((string) ($parentPayload['bahagian'] ?? $user['department'] ?? '')) ? required>">
           </div>
           <div class="col-md-4">
             <label class="form-label fw-semibold">Jawatan</label>
-            <input type="text" class="form-control" name="jawatan" value="<?= e((string) ($parentPayload['jawatan'] ?? $user['job_title'] ?? '')) ?>">
+            <input type="text" class="form-control" name="jawatan" value="<?= e((string) ($parentPayload['jawatan'] ?? $user['job_title'] ?? '')) ? required>">
           </div>
         </div>
 
@@ -83,7 +83,7 @@ if ($parentId > 0) {
           </div>
           <div class="col-md-4">
             <label class="form-label fw-semibold">Tempat</label>
-            <input type="text" class="form-control" name="tempat" value="<?= e((string) ($parentPayload['tempat'] ?? '')) ?>">
+            <input type="text" class="form-control" name="tempat" value="<?= e((string) ($parentPayload['tempat'] ?? '')) ? required>">
           </div>
         </div>
 
@@ -91,26 +91,26 @@ if ($parentId > 0) {
 
         <div class="mb-3 page-break">
           <label class="form-label fw-semibold">1. Objektif menghadiri kursus:</label>
-          <textarea class="form-control" name="objektif" rows="3"></textarea>
+          <textarea class="form-control" name="objektif" rows="3" required></textarea>
         </div>
 
         <div class="mb-3">
           <label class="form-label fw-semibold">2. Lima (5) perkara yang anda pelajari:</label>
           <ol class="ps-3">
-            <li><textarea class="form-control my-2" name="perkara1" rows="2"></textarea></li>
-            <li><textarea class="form-control my-2" name="perkara2" rows="2"></textarea></li>
-            <li><textarea class="form-control my-2" name="perkara3" rows="2"></textarea></li>
-            <li><textarea class="form-control my-2" name="perkara4" rows="2"></textarea></li>
-            <li><textarea class="form-control my-2" name="perkara5" rows="2"></textarea></li>
+            <li><textarea class="form-control my-2" name="perkara1" rows="2" required></textarea></li>
+            <li><textarea class="form-control my-2" name="perkara2" rows="2" required></textarea></li>
+            <li><textarea class="form-control my-2" name="perkara3" rows="2" required></textarea></li>
+            <li><textarea class="form-control my-2" name="perkara4" rows="2" required></textarea></li>
+            <li><textarea class="form-control my-2" name="perkara5" rows="2" required></textarea></li>
           </ol>
         </div>
 
         <div class="mb-4">
           <label class="form-label fw-semibold">3. Cadangan/Penambahbaikan:</label>
           <ol class="ps-3">
-            <li><textarea class="form-control my-2" name="cadangan1" rows="2"></textarea></li>
-            <li><textarea class="form-control my-2" name="cadangan2" rows="2"></textarea></li>
-            <li><textarea class="form-control my-2" name="cadangan3" rows="2"></textarea></li>
+            <li><textarea class="form-control my-2" name="cadangan1" rows="2" required></textarea></li>
+            <li><textarea class="form-control my-2" name="cadangan2" rows="2" required></textarea></li>
+            <li><textarea class="form-control my-2" name="cadangan3" rows="2" required></textarea></li>
           </ol>
         </div>
 
@@ -118,7 +118,7 @@ if ($parentId > 0) {
 
         <h5 class="fw-bold page-break">Penceramah</h5>
         <div class="row g-3 mb-4">
-          <div class="col"><input type="text" class="form-control" name="p1" placeholder="Penceramah 1"></div>
+          <div class="col"><input type="text" class="form-control" name="p1" placeholder="Penceramah 1" required></div>
           <div class="col"><input type="text" class="form-control" name="p2" placeholder="Penceramah 2"></div>
           <div class="col"><input type="text" class="form-control" name="p3" placeholder="Penceramah 3"></div>
           <div class="col"><input type="text" class="form-control" name="p4" placeholder="Penceramah 4"></div>
@@ -142,11 +142,11 @@ if ($parentId > 0) {
               </tr>
             </thead>
             <tbody>
-<tr><td class="text-start">i. Kefahaman/Penguasaan terhadap subjek</td><td><input type="text" class="form-control text-center score-input" name="aspect0_p1"></td><td><input type="text" class="form-control text-center score-input" name="aspect0_p2"></td><td><input type="text" class="form-control text-center score-input" name="aspect0_p3"></td><td><input type="text" class="form-control text-center score-input" name="aspect0_p4"></td><td><input type="text" class="form-control text-center score-input" name="aspect0_p5"></td></tr>
-<tr><td class="text-start">ii. Penyampaian</td><td><input type="text" class="form-control text-center score-input" name="aspect1_p1"></td><td><input type="text" class="form-control text-center score-input" name="aspect1_p2"></td><td><input type="text" class="form-control text-center score-input" name="aspect1_p3"></td><td><input type="text" class="form-control text-center score-input" name="aspect1_p4"></td><td><input type="text" class="form-control text-center score-input" name="aspect1_p5"></td></tr>
-<tr><td class="text-start">iii. Penyediaan bahan/slaid</td><td><input type="text" class="form-control text-center score-input" name="aspect2_p1"></td><td><input type="text" class="form-control text-center score-input" name="aspect2_p2"></td><td><input type="text" class="form-control text-center score-input" name="aspect2_p3"></td><td><input type="text" class="form-control text-center score-input" name="aspect2_p4"></td><td><input type="text" class="form-control text-center score-input" name="aspect2_p5"></td></tr>
-<tr><td class="text-start">iv. Perhubungan dan penglibatan peserta</td><td><input type="text" class="form-control text-center score-input" name="aspect3_p1"></td><td><input type="text" class="form-control text-center score-input" name="aspect3_p2"></td><td><input type="text" class="form-control text-center score-input" name="aspect3_p3"></td><td><input type="text" class="form-control text-center score-input" name="aspect3_p4"></td><td><input type="text" class="form-control text-center score-input" name="aspect3_p5"></td></tr>
-<tr><td class="text-start">v. Penggunaan contoh-contoh yang diselitkan dalam ceramah</td><td><input type="text" class="form-control text-center score-input" name="aspect4_p1"></td><td><input type="text" class="form-control text-center score-input" name="aspect4_p2"></td><td><input type="text" class="form-control text-center score-input" name="aspect4_p3"></td><td><input type="text" class="form-control text-center score-input" name="aspect4_p4"></td><td><input type="text" class="form-control text-center score-input" name="aspect4_p5"></td></tr>
+<tr><td class="text-start">i. Kefahaman/Penguasaan terhadap subjek</td><td><input type="text" class="form-control text-center score-input" name="aspect0_p1" required></td><td><input type="text" class="form-control text-center score-input" name="aspect0_p2"></td><td><input type="text" class="form-control text-center score-input" name="aspect0_p3"></td><td><input type="text" class="form-control text-center score-input" name="aspect0_p4"></td><td><input type="text" class="form-control text-center score-input" name="aspect0_p5"></td></tr>
+<tr><td class="text-start">ii. Penyampaian</td><td><input type="text" class="form-control text-center score-input" name="aspect1_p1" required></td><td><input type="text" class="form-control text-center score-input" name="aspect1_p2"></td><td><input type="text" class="form-control text-center score-input" name="aspect1_p3"></td><td><input type="text" class="form-control text-center score-input" name="aspect1_p4"></td><td><input type="text" class="form-control text-center score-input" name="aspect1_p5"></td></tr>
+<tr><td class="text-start">iii. Penyediaan bahan/slaid</td><td><input type="text" class="form-control text-center score-input" name="aspect2_p1" required></td><td><input type="text" class="form-control text-center score-input" name="aspect2_p2"></td><td><input type="text" class="form-control text-center score-input" name="aspect2_p3"></td><td><input type="text" class="form-control text-center score-input" name="aspect2_p4"></td><td><input type="text" class="form-control text-center score-input" name="aspect2_p5"></td></tr>
+<tr><td class="text-start">iv. Perhubungan dan penglibatan peserta</td><td><input type="text" class="form-control text-center score-input" name="aspect3_p1" required></td><td><input type="text" class="form-control text-center score-input" name="aspect3_p2"></td><td><input type="text" class="form-control text-center score-input" name="aspect3_p3"></td><td><input type="text" class="form-control text-center score-input" name="aspect3_p4"></td><td><input type="text" class="form-control text-center score-input" name="aspect3_p5"></td></tr>
+<tr><td class="text-start">v. Penggunaan contoh-contoh yang diselitkan dalam ceramah</td><td><input type="text" class="form-control text-center score-input" name="aspect4_p1" required></td><td><input type="text" class="form-control text-center score-input" name="aspect4_p2"></td><td><input type="text" class="form-control text-center score-input" name="aspect4_p3"></td><td><input type="text" class="form-control text-center score-input" name="aspect4_p4"></td><td><input type="text" class="form-control text-center score-input" name="aspect4_p5"></td></tr>
             </tbody>
           </table>
         </div>
@@ -154,11 +154,11 @@ if ($parentId > 0) {
         <div class="row g-3 mt-4">
           <div class="col-md-6">
             <label class="form-label fw-semibold">Tandatangan</label>
-            <input type="text" class="form-control" name="tandatangan">
+            <input type="text" class="form-control" name="tandatangan" required>
           </div>
           <div class="col-md-6">
             <label class="form-label fw-semibold">Tarikh</label>
-            <input type="date" class="form-control" name="tarikh_penilaian">
+            <input type="date" class="form-control" name="tarikh_penilaian" required>
           </div>
         </div>
 
@@ -175,7 +175,7 @@ if ($parentId > 0) {
 window.SEDCO_FORM_CONTEXT = { role: <?= json_encode($user['role'] ?? 'staff') ?>, mode: 'new', formType: 'PKK' };
 </script>
 <script src="form-permissions.js?v=20260930-59"></script>
-<script src="form-ux.js?v=20260930-61"></script>
+<script src="form-ux.js?v=20260930-62"></script>
 <script src="form-enhancements.js?v=20260930-59"></script>
 <script src="sedco-shell.js?v=20260930-56"></script>
 </body>
