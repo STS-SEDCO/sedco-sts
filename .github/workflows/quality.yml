@@ -1,0 +1,35 @@
+name: Code Quality
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: PHP syntax check
+        run: |
+          find . -type f -name '*.php' -print0             | xargs -0 -n1 php -l
+
+      - name: Legacy reference check
+        run: |
+          if grep -RInE             --exclude-dir=.git             --exclude='README.md'             'localhost/STS|form\.php|submit_form\.php|login_process\.php|db_connect\.php|register_user\.php' .; then
+            echo "Legacy references found."
+            exit 1
+          fi
+
+      - name: Duplicate inline style block check
+        run: |
+          if grep -RIn '<style'             --include='*.html'             --include='*.php' .; then
+            echo "Inline style blocks found. Move styles to shared CSS."
+            exit 1
+          fi
