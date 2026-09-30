@@ -155,14 +155,15 @@
         }
     </script>
     <link rel="stylesheet" href="sedco-saas.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 </head>
 <body class="app-page form-page bpl-page">
 
     <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-dark">
-        <div class="container-fluid">
-            <span class="navbar-brand fw-bold d-flex align-items-center gap-2">
-                <span class="brand-mark" style="width:34px;height:34px;border-radius:10px;display:inline-flex;align-items:center;justify-content:center;">T</span>
+    <nav class="navbar navbar-expand-lg">
+        <div class="container-fluid px-0">
+            <span class="navbar-brand">
+                <span class="brand-mark"><i class="bi bi-mortarboard-fill"></i></span>
                 TRAINING MANAGEMENT SYSTEM
             </span>
             <div class="collapse navbar-collapse justify-content-end">
@@ -170,7 +171,7 @@
                     <li class="nav-item"><a class="nav-link" href="dashboard.php">Dashboard</a></li>
                     <li class="nav-item"><a class="nav-link" href="#">About Us</a></li>
                     <li class="nav-item"><a class="nav-link" href="#">Contact Us</a></li>
-                    <li class="nav-item"><a class="nav-link" href="logout.php">Log out</a></li>
+                    <li class="nav-item"><a class="nav-link" href="logout.php"><i class="bi bi-box-arrow-right me-1"></i> Log out</a></li>
                 </ul>
             </div>
         </div>
