@@ -227,6 +227,10 @@ $stmt->close();
             <span>Submitted</span>
             <strong id="submissionModalDate">—</strong>
           </div>
+          <div>
+            <span>Current stage</span>
+            <strong id="submissionModalStage">—</strong>
+          </div>
         </div>
 
         <div id="submissionModalFields" class="submission-detail-grid"></div>
@@ -247,7 +251,7 @@ window.SEDCO_SUBMISSIONS = <?= json_encode(
     | JSON_HEX_QUOT
 ) ?>;
 </script>
-<script src="submissions.js?v=20260930-29"></script>
+<script src="submissions.js?v=20260930-30"></script>
 <script src="sedco-shell.js?v=20260930-23"></script>
 </body>
 </html>
