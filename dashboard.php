@@ -558,7 +558,7 @@ if (!isset($_SESSION['user_id'])) {
         <a href="#" class="active"><i class="bi bi-grid-1x2-fill"></i><span>Dashboard</span></a>
         <a href="profile.php"><i class="bi bi-person"></i><span>Profile</span></a>
         <a href="task.php"><i class="bi bi-check2-square"></i><span>Tasks</span></a>
-        <a href="#"><i class="bi bi-clipboard-check"></i><span>Application status</span></a>
+        <a href="application-status.php"><i class="bi bi-clipboard-check"></i><span>Application status</span></a>
         <a href="#"><i class="bi bi-inbox"></i><span>Submissions</span></a>
         <div class="sidebar-footer">
             <a href="logout.php"><i class="bi bi-box-arrow-left"></i><span>Logout</span></a>
