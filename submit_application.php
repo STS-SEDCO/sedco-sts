@@ -196,14 +196,19 @@ try {
     );
 
     $userId = (int) $user['id'];
-    $department = trim((string) ($user['department'] ?? ''));
 
-    if ($department === '') {
-        $department = trim((string) (
-            $payload['bahagian']
-            ?? $payload['division']
-            ?? ''
-        ));
+    if ($type === 'BPL') {
+        $department = trim((string) ($payload['bahagian'] ?? ''));
+    } else {
+        $department = trim((string) ($user['department'] ?? ''));
+
+        if ($department === '') {
+            $department = trim((string) (
+                $payload['bahagian']
+                ?? $payload['division']
+                ?? ''
+            ));
+        }
     }
     $departmentValue = $department !== '' ? $department : null;
     $assignedHodId = null;
