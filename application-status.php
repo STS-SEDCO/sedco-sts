@@ -191,6 +191,8 @@ $stmt->close();
           <div class="modal-summary-item"><span>Applicant</span><strong id="modalApplicant">—</strong></div>
           <div class="modal-summary-item"><span>Submitted</span><strong id="modalSubmitted">—</strong></div>
           <div class="modal-summary-item"><span>Application date</span><strong id="modalApplicationDate">—</strong></div>
+          <div class="modal-summary-item"><span>Workflow stage</span><strong id="modalWorkflowStage">—</strong></div>
+          <div class="modal-summary-item"><span>Review note</span><strong id="modalReviewNote">—</strong></div>
         </div>
 
         <div class="detail-grid" id="modalFields"></div>
@@ -211,7 +213,7 @@ window.SEDCO_APPLICATIONS = <?= json_encode(
     | JSON_HEX_QUOT
 ) ?>;
 </script>
-<script src="application-status.js?v=20260930-31"></script>
+<script src="application-status.js?v=20260930-32"></script>
 <script src="sedco-shell.js?v=20260930-18"></script>
 </body>
 </html>
