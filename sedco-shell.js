@@ -16,6 +16,7 @@
 
   const pageUrl = name => `${name}.${extension}`;
   const logoutUrl = isPhp ? 'logout.php' : 'index.html';
+  const userRole = String(body.dataset.role || '').toLowerCase();
 
   const items = [
     ['dashboard', 'Dashboard', 'bi-grid-1x2-fill', pageUrl('dashboard')],
@@ -25,7 +26,12 @@
     ['submissions', 'Submissions', 'bi-inbox', pageUrl('submissions')]
   ];
 
-  const sidebarLinks = items.map(([key, label, icon, href]) => `
+  const visibleItems = items.filter(([key]) => {
+    if (key !== 'submissions') return true;
+    return userRole === '' || userRole !== 'staff';
+  });
+
+  const sidebarLinks = visibleItems.map(([key, label, icon, href]) => `
     <a class="sedco-nav-item${key === activePage ? ' active' : ''}" href="${href}">
       <i class="bi ${icon}"></i>
       <span>${label}</span>
