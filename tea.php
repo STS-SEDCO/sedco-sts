@@ -66,7 +66,7 @@ if ($parentId > 0) {
         <tr>
           <td class="no-border" colspan="4">
             Evaluation Period:
-            <label><input type="radio" name="month" value="June"> January / June</label>
+            <label><input type="radio" name="month" value="June" required> January / June</label>
             <label><input type="radio" name="month" value="December" checked> July / December</label>
             <br><small class="text-muted">(Please tick (√) the applicable evaluation period)</small>
           </td>
@@ -97,7 +97,7 @@ if ($parentId > 0) {
         </thead>
         <tbody>
           <tr>
-                <td><?= e((string) ($parent['title'] ?? 'Bengkel Klasifikasi Sistem Fail Fungsian')) ?></td><td><input type="number" name="score_0[]" min="1" max="4" class="score-input-small"></td><td><input type="number" name="score_0[]" min="1" max="4" class="score-input-small"></td><td><input type="number" name="score_0[]" min="1" max="4" class="score-input-small"></td><td><input type="number" name="score_0[]" min="1" max="4" class="score-input-small"></td><td><input type="number" name="score_0[]" min="1" max="4" class="score-input-small"></td>
+                <td><?= e((string) ($parent['title'] ?? 'Bengkel Klasifikasi Sistem Fail Fungsian')) ?></td><td><input type="number" name="score_0[]" min="1" max="4" class="score-input-small" required></td><td><input type="number" name="score_0[]" min="1" max="4" class="score-input-small" required></td><td><input type="number" name="score_0[]" min="1" max="4" class="score-input-small" required></td><td><input type="number" name="score_0[]" min="1" max="4" class="score-input-small" required></td><td><input type="number" name="score_0[]" min="1" max="4" class="score-input-small" required></td>
                 <td><input type="text" name="total_score_0" class="score-input-small"></td>
                 <td>
                   <select name='competency_level_0'>
@@ -110,7 +110,7 @@ if ($parentId > 0) {
                 <td><input type='text' name='comments_0'></td>
               </tr>
 <tr>
-                <td>Public Speaking & Presentation Skill</td><td><input type="number" name="score_1[]" min="1" max="4" class="score-input-small"></td><td><input type="number" name="score_1[]" min="1" max="4" class="score-input-small"></td><td><input type="number" name="score_1[]" min="1" max="4" class="score-input-small"></td><td><input type="number" name="score_1[]" min="1" max="4" class="score-input-small"></td><td><input type="number" name="score_1[]" min="1" max="4" class="score-input-small"></td>
+                <td>Public Speaking & Presentation Skill</td><td><input type="number" name="score_1[]" min="1" max="4" class="score-input-small" required></td><td><input type="number" name="score_1[]" min="1" max="4" class="score-input-small" required></td><td><input type="number" name="score_1[]" min="1" max="4" class="score-input-small" required></td><td><input type="number" name="score_1[]" min="1" max="4" class="score-input-small" required></td><td><input type="number" name="score_1[]" min="1" max="4" class="score-input-small" required></td>
                 <td><input type="text" name="total_score_1" class="score-input-small"></td>
                 <td>
                   <select name='competency_level_1'>
@@ -154,7 +154,7 @@ if ($parentId > 0) {
   </div>
 <script>window.SEDCO_FORM_CONTEXT = { role: <?= json_encode($user['role'] ?? 'staff') ?>, mode: 'new', formType: 'TEA' };</script>
 <script src="form-permissions.js?v=20260930-59"></script>
-<script src="form-ux.js?v=20260930-61"></script>
+<script src="form-ux.js?v=20260930-62"></script>
 <script src="form-enhancements.js?v=20260930-59"></script>
 <script src="sedco-shell.js?v=20260930-56"></script>
 </body>
