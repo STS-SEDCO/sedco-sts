@@ -3,6 +3,27 @@ declare(strict_types=1);
 require_once __DIR__ . '/includes/auth.php';
 require_login();
 $user = current_user();
+
+if (!$user) {
+    header('Location: login.php');
+    exit;
+}
+
+$parent = null;
+$parentPayload = [];
+$parentId = max(0, (int) ($_GET['parent'] ?? 0));
+
+if ($parentId > 0) {
+    $parent = sts_validate_parent_bpl($parentId, $user, 'TEA');
+
+    if (!$parent) {
+        http_response_code(403);
+        exit('This training record is not available for TEA follow-up.');
+    }
+
+    $parentPayload = json_decode((string) $parent['payload'], true);
+    $parentPayload = is_array($parentPayload) ? $parentPayload : [];
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -18,9 +39,9 @@ $user = current_user();
       window.print();
     }
   </script>
-    <link rel="stylesheet" href="sedco-saas.css?v=20260930-26">
+    <link rel="stylesheet" href="sedco-saas.css?v=20260930-45">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-  <link rel="stylesheet" href="sedco-shell.css?v=20260930-18">
+  <link rel="stylesheet" href="sedco-shell.css?v=20260930-45">
 </head>
 <body class="app-page form-page tea-page" data-page="task" data-role="<?= e(normalized_role($user['role'] ?? '')) ?>">
 
@@ -39,8 +60,8 @@ $user = current_user();
       <?= csrf_field() ?>
       <table>
         <tr>
-          <td class="no-border" colspan="2">Employee Name: <input type="text" name="employee_name" class="input-field" required></td>
-          <td class="no-border" colspan="2">Division/Section: <input type="text" name="division" class="input-field" required></td>
+          <td class="no-border" colspan="2">Employee Name: <input type="text" name="employee_name" class="input-field" required value="<?= e((string) ($parentPayload['nama'] ?? '')) ?>"></td>
+          <td class="no-border" colspan="2">Division/Section: <input type="text" name="division" class="input-field" required value="<?= e((string) ($parent['department'] ?? $parentPayload['bahagian'] ?? '')) ?>"></td>
         </tr>
         <tr>
           <td class="no-border" colspan="4">
@@ -76,7 +97,7 @@ $user = current_user();
         </thead>
         <tbody>
           <tr>
-                <td>Bengkel Klasifikasi Sistem Fail Fungsian</td><td><input type="number" name="score_0[]" min="1" max="4" class="score-input-small"></td><td><input type="number" name="score_0[]" min="1" max="4" class="score-input-small"></td><td><input type="number" name="score_0[]" min="1" max="4" class="score-input-small"></td><td><input type="number" name="score_0[]" min="1" max="4" class="score-input-small"></td><td><input type="number" name="score_0[]" min="1" max="4" class="score-input-small"></td>
+                <td><?= e((string) ($parent['title'] ?? 'Bengkel Klasifikasi Sistem Fail Fungsian')) ?></td><td><input type="number" name="score_0[]" min="1" max="4" class="score-input-small"></td><td><input type="number" name="score_0[]" min="1" max="4" class="score-input-small"></td><td><input type="number" name="score_0[]" min="1" max="4" class="score-input-small"></td><td><input type="number" name="score_0[]" min="1" max="4" class="score-input-small"></td><td><input type="number" name="score_0[]" min="1" max="4" class="score-input-small"></td>
                 <td><input type="text" name="total_score_0" class="score-input-small"></td>
                 <td>
                   <select name='competency_level_0'>
@@ -120,7 +141,7 @@ $user = current_user();
 
       <table>
         <tr><td class="no-border">Evaluated by: <strong></strong></td></tr>
-        <tr><td class="no-border">Head of Division/Section: <input type="text" name="head_division" class="input-field" required></td></tr>
+        <tr><td class="no-border">Head of Division/Section: <input type="text" name="head_division" class="input-field" required value="<?= e($user['fullname']) ?>"></td></tr>
         <tr><td class="no-border">Date of Evaluation: <input type="date" name="date" class="input-field" required></td></tr>
         <tr><td class="no-border">Signature: <input type="text" name="signature" class="input-field" required></td></tr>
       </table>
@@ -132,7 +153,8 @@ $user = current_user();
     </form>
   </div>
 <script>window.SEDCO_FORM_CONTEXT = { role: <?= json_encode($user['role'] ?? 'staff') ?>, mode: 'new', formType: 'TEA' };</script>
-<script src="form-permissions.js?v=20260930-26"></script>
-<script src="sedco-shell.js?v=20260930-33"></script>
+<script src="form-permissions.js?v=20260930-45"></script>
+<script src="form-enhancements.js?v=20260930-45"></script>
+<script src="sedco-shell.js?v=20260930-45"></script>
 </body>
 </html>
