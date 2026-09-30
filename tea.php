@@ -17,9 +17,9 @@ require_login();
       window.print();
     }
   </script>
-    <link rel="stylesheet" href="sedco-saas.css?v=20260930-12">
+    <link rel="stylesheet" href="sedco-saas.css?v=20260930-13">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-  <link rel="stylesheet" href="sedco-shell.css?v=20260930-12">
+  <link rel="stylesheet" href="sedco-shell.css?v=20260930-13">
 </head>
 <body class="app-page form-page tea-page" data-page="task">
 
@@ -71,31 +71,32 @@ require_login();
           </tr>
         </thead>
         <tbody>
-          <?php
-            $trainings = [
-              "Bengkel Klasifikasi Sistem Fail Fungsian",
-              "Public Speaking & Presentation Skill"
-            ];
-            foreach ($trainings as $index => $training) {
-              echo "<tr>
-                <td>$training</td>";
-              for ($i = 0; $i < 5; $i++) {
-                echo "<td><input type="number" name="score_{$index}[]" min="1" max="4" class="score-input-small"></td>";
-              }
-              echo "
-                <td><input type="text" name="total_score_$index" class="score-input-small"></td>
+          <tr>
+                <td>Bengkel Klasifikasi Sistem Fail Fungsian</td><td><input type="number" name="score_0[]" min="1" max="4" class="score-input-small"></td><td><input type="number" name="score_0[]" min="1" max="4" class="score-input-small"></td><td><input type="number" name="score_0[]" min="1" max="4" class="score-input-small"></td><td><input type="number" name="score_0[]" min="1" max="4" class="score-input-small"></td><td><input type="number" name="score_0[]" min="1" max="4" class="score-input-small"></td>
+                <td><input type="text" name="total_score_0" class="score-input-small"></td>
                 <td>
-                  <select name='competency_level_$index'>
+                  <select name='competency_level_0'>
                     <option value='Fail'>Fail</option>
                     <option value='Probation'>Probation</option>
                     <option value='Pass'>Pass</option>
                     <option value='Merit'>Merit</option>
                   </select>
                 </td>
-                <td><input type='text' name='comments_$index'></td>
-              </tr>";
-            }
-          ?>
+                <td><input type='text' name='comments_0'></td>
+              </tr>
+<tr>
+                <td>Public Speaking & Presentation Skill</td><td><input type="number" name="score_1[]" min="1" max="4" class="score-input-small"></td><td><input type="number" name="score_1[]" min="1" max="4" class="score-input-small"></td><td><input type="number" name="score_1[]" min="1" max="4" class="score-input-small"></td><td><input type="number" name="score_1[]" min="1" max="4" class="score-input-small"></td><td><input type="number" name="score_1[]" min="1" max="4" class="score-input-small"></td>
+                <td><input type="text" name="total_score_1" class="score-input-small"></td>
+                <td>
+                  <select name='competency_level_1'>
+                    <option value='Fail'>Fail</option>
+                    <option value='Probation'>Probation</option>
+                    <option value='Pass'>Pass</option>
+                    <option value='Merit'>Merit</option>
+                  </select>
+                </td>
+                <td><input type='text' name='comments_1'></td>
+              </tr>
         </tbody>
       </table>
 
@@ -126,6 +127,6 @@ require_login();
       </div>
     </form>
   </div>
-<script src="sedco-shell.js?v=20260930-12"></script>
+<script src="sedco-shell.js?v=20260930-13"></script>
 </body>
 </html>
