@@ -15,126 +15,9 @@ require_login();
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
 
-    <style>
-        body {
-            min-height: 100vh; 
-            margin: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-
-        .navbar {
-            background-color: #800000;
-            padding: 15px 30px;
-            position: fixed;
-            width: 100%;
-            top: 0;
-            left: 0;
-            z-index: 1000;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
-        }
-
-        .navbar .nav-link {
-            color: white !important;
-            font-weight: 500;
-            margin: 0 10px;
-        }
-
-        .navbar .nav-link:hover {
-            text-decoration: underline;
-        }
-
-        .sidebar {
-            height: 100vh;
-            width: 250px;
-            position: fixed;
-            top: 65px;
-            left: 0;
-            background-color: #800000;
-            padding-top: 20px;
-            box-shadow: 2px 0 8px rgba(0,0,0,0.1);
-        }
-
-        .sidebar a {
-            padding: 12px 20px;
-            text-decoration: none;
-            font-size: 16px;
-            color: white;
-            display: flex;
-            align-items: center;
-            transition: background 0.2s ease;
-        }
-
-        .sidebar a:hover {
-            background-color: #a31515;
-        }
-
-        .sidebar a i {
-            margin-right: 10px;
-            width: 20px;
-            text-align: center;
-        }
-
-        .card-container {
-            margin-left: 270px;
-            margin-top: 100px;
-            padding: 30px;
-            display: flex;
-            justify-content: center;
-            flex-wrap: wrap;
-            gap: 30px;
-        }
-
-        .card {
-            background-color: white;
-            color: #333;
-            border-radius: 12px;
-            width: 300px;
-            box-shadow: 0 6px 15px rgba(0,0,0,0.1);
-            text-align: center;
-            padding: 25px;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-
-        .card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
-        }
-
-        .card h5 {
-            margin-bottom: 20px;
-            font-size: 18px;
-        }
-
-        .card button {
-            background-color: #ffc107;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 6px;
-            font-weight: bold;
-            color: #333;
-            transition: background-color 0.3s ease;
-        }
-
-        .card button:hover {
-            background-color: #e0a800;
-        }
-
-        @media screen and (max-width: 768px) {
-            .sidebar {
-                width: 100%;
-                height: auto;
-                position: relative;
-            }
-            .card-container {
-                margin-left: 0;
-                margin-top: 140px;
-                padding: 20px;
-            }
-        }
-    </style>
-    <link rel="stylesheet" href="sedco-saas.css?v=20260930-8">
+    <link rel="stylesheet" href="sedco-saas.css?v=20260930-9">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-  <link rel="stylesheet" href="sedco-shell.css?v=20260930-8">
+  <link rel="stylesheet" href="sedco-shell.css?v=20260930-9">
 </head>
 <body class="app-page task-page" data-page="task">
 
@@ -156,7 +39,7 @@ require_login();
         </div>
     </div>
 
-<script src="sedco-shell.js?v=20260930-8"></script>
+<script src="sedco-shell.js?v=20260930-9"></script>
 </body>
 </html>
    
