@@ -243,9 +243,7 @@ function sts_notify_role(
                 WHERE is_active = 1 AND role IN (' . $placeholders . ')';
 
         $stmt = db()->prepare($sql);
-        $types = str_repeat('s', count($roles));
-        $stmt->bind_param($types, ...$roles);
-        $stmt->execute();
+        $stmt->execute($roles);
         $result = $stmt->get_result();
 
         while ($row = $result->fetch_assoc()) {
