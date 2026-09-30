@@ -532,7 +532,8 @@ if (!isset($_SESSION['user_id'])) {
             .tasks-panel, .calendar-container { border-radius: 14px; }
         }
     </style>
-    <link rel="stylesheet" href="sedco-saas.css?v=20260930-3">
+    <link rel="stylesheet" href="sedco-saas.css?v=20260930-6">
+  <link rel="stylesheet" href="sedco-shell.css?v=20260930-6">
 </head>
 <body class="app-page dashboard-page" data-page="dashboard">
 
@@ -658,6 +659,6 @@ if (!isset($_SESSION['user_id'])) {
             });
         }
     </script>
-<script src="sedco-shell.js?v=20260930-3"></script>
+<script src="sedco-shell.js?v=20260930-6"></script>
 </body>
 </html>
