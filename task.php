@@ -19,7 +19,7 @@ $canTea = in_array($role, ['head_of_department', 'admin'], true);
   <link rel="stylesheet" href="sedco-saas.css?v=20260930-25">
   <link rel="stylesheet" href="sedco-shell.css?v=20260930-18">
 </head>
-<body class="app-page task-page" data-page="task">
+<body class="app-page task-page" data-page="task" data-role="<?= e(normalized_role($user['role'] ?? '')) ?>">
 
 <main class="task-content">
   <div class="task-shell">
@@ -96,6 +96,6 @@ $canTea = in_array($role, ['head_of_department', 'admin'], true);
   </div>
 </main>
 
-<script src="sedco-shell.js?v=20260930-23"></script>
+<script src="sedco-shell.js?v=20260930-33"></script>
 </body>
 </html>
