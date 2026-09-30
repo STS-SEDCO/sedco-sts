@@ -6559,3 +6559,189 @@ body{
     margin:8px 0 0 !important;
   }
 }
+
+
+/* ===== APPLICATION CANCELLATION ===== */
+.status-pill.status-cancelled{
+  border:1px solid #dedee2 !important;
+  background:#f4f4f5 !important;
+  color:#717178 !important;
+}
+
+.status-pill.status-cancelled i{
+  color:#85858c !important;
+}
+
+.sts-danger-btn,
+.cancel-app-btn{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:6px;
+  border-radius:10px;
+  font-weight:720;
+  transition:transform .16s ease,background .16s ease,border-color .16s ease,box-shadow .16s ease;
+}
+
+.sts-danger-btn{
+  min-height:39px;
+  padding:0 13px;
+  border:1px solid #c83a3a;
+  background:linear-gradient(180deg,#d94b4b,#bd3030);
+  color:#fff;
+  font-size:10px;
+  box-shadow:0 6px 14px rgba(181,45,45,.13);
+}
+
+.sts-danger-btn:hover{
+  transform:translateY(-1px);
+  border-color:#b82d2d;
+  background:linear-gradient(180deg,#cf4141,#ae2929);
+  color:#fff;
+  box-shadow:0 9px 18px rgba(181,45,45,.18);
+}
+
+.status-row-actions{
+  display:flex;
+  align-items:center;
+  justify-content:flex-end;
+  gap:6px;
+  flex-wrap:wrap;
+}
+
+.cancel-app-btn{
+  min-height:32px;
+  padding:0 9px;
+  border:1px solid #ead1d1;
+  background:#fff8f8;
+  color:#b13131;
+  font-size:8.5px;
+}
+
+.cancel-app-btn:hover{
+  transform:translateY(-1px);
+  border-color:#dfb6b6;
+  background:#fff1f1;
+  color:#9f2929;
+}
+
+.cancel-application-modal .modal-dialog{
+  max-width:510px;
+}
+
+.cancel-application-modal .modal-content{
+  overflow:hidden;
+  border:1px solid #e6e6e9;
+  border-radius:16px;
+  box-shadow:0 24px 70px rgba(33,24,24,.16);
+}
+
+.cancel-warning-card{
+  display:flex;
+  align-items:flex-start;
+  gap:10px;
+  margin-bottom:15px;
+  padding:11px 12px;
+  border:1px solid #efd0d0;
+  border-radius:11px;
+  background:#fff7f7;
+}
+
+.cancel-warning-card > span{
+  width:31px;
+  height:31px;
+  flex:0 0 31px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  border-radius:9px;
+  background:#ffe9e9;
+  color:#b62f2f;
+  font-size:12px;
+}
+
+.cancel-warning-card strong{
+  display:block;
+  margin-bottom:3px;
+  color:#8f2929;
+  font-size:9.5px;
+  font-weight:740;
+}
+
+.cancel-warning-card p{
+  margin:0;
+  color:#9b6868;
+  font-size:8.5px;
+  line-height:1.5;
+}
+
+.cancel-reason-field{
+  display:block;
+}
+
+.cancel-reason-field > span{
+  display:block;
+  margin-bottom:6px;
+  color:#55555b;
+  font-size:9px;
+  font-weight:720;
+}
+
+.cancel-reason-field > span b{
+  color:#c02c2c;
+}
+
+.cancel-reason-field textarea{
+  width:100%;
+  min-height:105px;
+  padding:11px 12px;
+  border:1px solid #dedee2;
+  border-radius:10px;
+  background:#fff;
+  color:#333338;
+  font-size:10px;
+  line-height:1.55;
+  resize:vertical;
+  outline:none;
+}
+
+.cancel-reason-field textarea:focus{
+  border-color:rgba(180,45,45,.55);
+  box-shadow:0 0 0 3px rgba(180,45,45,.075);
+}
+
+.cancel-reason-field small{
+  display:block;
+  margin-top:5px;
+  color:#9b9ba1;
+  font-size:8px;
+}
+
+.status-error-toast{
+  border-color:#efcaca !important;
+  background:#fff3f3 !important;
+  color:#a82d2d !important;
+}
+
+.workflow-step.is-cancelled > span{
+  border-color:#dedee2;
+  background:#f4f4f5;
+  color:#727279;
+}
+
+.workflow-step.is-cancelled blockquote{
+  border-left-color:#c7c7cc;
+  background:#f7f7f8;
+}
+
+@media(max-width:640px){
+  .status-row-actions{
+    align-items:stretch;
+    flex-direction:column;
+  }
+
+  .status-row-actions .view-btn,
+  .status-row-actions .cancel-app-btn{
+    width:100%;
+  }
+}
