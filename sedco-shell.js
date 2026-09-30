@@ -21,7 +21,24 @@
 
   const pageUrl = name => `${name}.${extension}`;
   const logoutUrl = isPhp ? 'logout.php' : 'index.html';
-  const userRole = String(body.dataset.role || '').toLowerCase();
+
+  let previewUser = null;
+  if (!isPhp) {
+    try {
+      previewUser = JSON.parse(localStorage.getItem('sedcoPreviewUser') || 'null');
+    } catch {
+      previewUser = null;
+    }
+
+    if (!previewUser?.email) {
+      location.replace('index.html');
+      return;
+    }
+  }
+
+  const userRole = String(
+    body.dataset.role || (!isPhp ? previewUser?.role : '') || ''
+  ).toLowerCase();
 
   const items = [
     ['dashboard', 'Dashboard', 'bi-grid-1x2-fill', pageUrl('dashboard')],
@@ -114,6 +131,16 @@
 
   const toggle = document.getElementById('sedcoMobileToggle');
   const backdrop = document.getElementById('sedcoSidebarBackdrop');
+
+  if (!isPhp) {
+    body.dataset.role = userRole || 'staff';
+
+    document.querySelectorAll(`a[href="${logoutUrl}"]`).forEach(link => {
+      link.addEventListener('click', () => {
+        localStorage.removeItem('sedcoPreviewUser');
+      });
+    });
+  }
 
   const closeMenu = () => body.classList.remove('sedco-menu-open');
 
