@@ -19,7 +19,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $error = 'Please enter a valid email and password.';
     } else {
         $stmt = db()->prepare(
-            'SELECT id, fullname, email, password, role
+            'SELECT id, fullname, email, password, role, is_active
              FROM users
              WHERE email = ?
              LIMIT 1'
@@ -30,7 +30,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $user = $stmt->get_result()->fetch_assoc();
         $stmt->close();
 
-        if ($user && password_verify($password, $user['password'])) {
+        if ($user && (int) ($user['is_active'] ?? 1) !== 1) {
+            $error = 'This account is inactive. Please contact the system administrator.';
+        } elseif ($user && password_verify($password, $user['password'])) {
             session_regenerate_id(true);
 
             $_SESSION['user_id'] = (int) $user['id'];
@@ -48,6 +50,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             } else {
                 setcookie('sedco_email', '', time() - 3600, '/');
             }
+
+            sts_audit('login_success', 'user', (int) $user['id'], [], (int) $user['id']);
 
             header('Location: dashboard.php');
             exit;
@@ -67,7 +71,7 @@ $rememberedEmail = (string) ($_COOKIE['sedco_email'] ?? '');
   <title>Login - Smart Training System</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-  <link rel="stylesheet" href="sedco-saas.css?v=20260930-14">
+  <link rel="stylesheet" href="sedco-saas.css?v=20260930-46">
 </head>
 <body class="auth-page login-page">
   <section class="vh-100 d-flex align-items-center">
