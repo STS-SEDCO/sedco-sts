@@ -2,6 +2,7 @@
 declare(strict_types=1);
 require_once __DIR__ . '/includes/auth.php';
 require_login();
+$user = current_user();
 ?>
 <!DOCTYPE html>
 <html lang="ms">
@@ -11,7 +12,7 @@ require_login();
   <title>Smart Training System - Borang Penilaian</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-  <link rel="stylesheet" href="sedco-saas.css?v=20260930-19">
+  <link rel="stylesheet" href="sedco-saas.css?v=20260930-24">
   <link rel="stylesheet" href="sedco-shell.css?v=20260930-18">
 </head>
 <body class="app-page form-page pkk-page" data-page="task">
@@ -22,7 +23,9 @@ require_login();
         <em>Borang ini hendaklah diisi dalam masa tujuh (7) hari bekerja selepas menghadiri kursus/seminar.</em>
       </p>
 
-      <form method="post" action="submit_application.php?type=PKK">
+      <div class="form-permission-notice" data-form-permission-notice></div>
+
+      <form data-form-owner="staff" method="post" action="submit_application.php?type=PKK">
         <?= csrf_field() ?>
         <div class="row g-3 mb-4">
           <div class="col-md-4">
@@ -138,6 +141,8 @@ require_login();
   </main>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-  <script src="sedco-shell.js?v=20260930-18"></script>
+  <script>window.SEDCO_FORM_CONTEXT = { role: <?= json_encode($user['role'] ?? 'staff') ?>, mode: 'new' };</script>
+<script src="form-permissions.js?v=20260930-24"></script>
+<script src="sedco-shell.js?v=20260930-23"></script>
 </body>
 </html>
