@@ -360,7 +360,7 @@ window.SEDCO_FORM_CONTEXT = {
 </script>
 <script src="bpl-workflow.js?v=20260930-54"></script>
 <script src="form-permissions.js?v=20260930-59"></script>
-<script src="form-ux.js?v=20260930-62"></script>
+<script src="form-ux.js?v=20260930-63"></script>
 <script src="form-enhancements.js?v=20260930-59"></script>
 <script src="sedco-shell.js?v=20260930-56"></script>
 </body>
