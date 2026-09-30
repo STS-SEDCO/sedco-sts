@@ -17,9 +17,9 @@ require_login();
             window.print();
         }
     </script>
-    <link rel="stylesheet" href="sedco-saas.css?v=20260930-14">
+    <link rel="stylesheet" href="sedco-saas.css?v=20260930-19">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-  <link rel="stylesheet" href="sedco-shell.css?v=20260930-14">
+  <link rel="stylesheet" href="sedco-shell.css?v=20260930-18">
 </head>
 <body class="app-page form-page bpl-page" data-page="task">
 
