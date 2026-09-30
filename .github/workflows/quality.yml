@@ -26,6 +26,7 @@ jobs:
           node --check sedco-shell.js
           node --check sedco-submission.js
           node --check application-status.js
+          node --check submissions.js
 
       - name: Legacy reference check
         shell: bash
