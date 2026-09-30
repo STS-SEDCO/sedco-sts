@@ -334,6 +334,37 @@ function sts_save_version(
     }
 }
 
+
+function sts_cancel_application_supported(): bool
+{
+    static $supported = null;
+
+    if ($supported !== null) {
+        return $supported;
+    }
+
+    try {
+        $statusResult = db()->query("SHOW COLUMNS FROM applications LIKE 'status'");
+        $statusColumn = $statusResult ? $statusResult->fetch_assoc() : null;
+        $statusType = strtolower((string) ($statusColumn['Type'] ?? ''));
+
+        $reasonResult = db()->query("SHOW COLUMNS FROM applications LIKE 'cancellation_reason'");
+        $reasonColumn = $reasonResult ? $reasonResult->fetch_assoc() : null;
+
+        $cancelledResult = db()->query("SHOW COLUMNS FROM applications LIKE 'cancelled_at'");
+        $cancelledColumn = $cancelledResult ? $cancelledResult->fetch_assoc() : null;
+
+        $supported =
+            str_contains($statusType, "'cancelled'")
+            && $reasonColumn !== null
+            && $cancelledColumn !== null;
+    } catch (Throwable) {
+        $supported = false;
+    }
+
+    return $supported;
+}
+
 function sts_can_view_application(array $application, array $user): bool
 {
     $role = normalized_role($user['role'] ?? '');
