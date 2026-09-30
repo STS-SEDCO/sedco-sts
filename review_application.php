@@ -76,6 +76,25 @@ try {
     $allowedKeys = $allowedByStage[$stage] ?? [];
     $submittedFields = array_intersect_key($_POST, array_flip($allowedKeys));
 
+    $requiredReviewFields = match ($stage) {
+        'hod' => ['ulasan_bahagian', 'tarikh_bahagian', 'tt_bahagian'],
+        'training' => [
+            'ulasan_latihan', 'tarikh_latihan', 'tt_latihan',
+            'bayaran_kursus', 'pendahuluan_diterima', 'telah_didaftar'
+        ],
+        'gm' => ['tarikh_pgs', 'tt_pgs'],
+        default => [],
+    };
+
+    foreach ($requiredReviewFields as $requiredField) {
+        $value = $_POST[$requiredField] ?? '';
+
+        if (is_array($value) || trim((string) $value) === '') {
+            http_response_code(422);
+            throw new RuntimeException('Please complete all fields in your review section.');
+        }
+    }
+
     foreach ($submittedFields as $key => $value) {
         if (is_array($value)) {
             $payload[$key] = array_values(array_map('strval', $value));
