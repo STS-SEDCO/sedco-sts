@@ -10,6 +10,7 @@ CREATE TABLE IF NOT EXISTS users (
     staff_id VARCHAR(50) DEFAULT NULL UNIQUE,
     department VARCHAR(120) DEFAULT NULL,
     job_title VARCHAR(120) DEFAULT NULL,
+    profile_image VARCHAR(255) DEFAULT NULL,
     role ENUM(
         'admin',
         'staff',
