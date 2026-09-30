@@ -7032,3 +7032,41 @@ body.status-page .modal-backdrop{
     grid-template-columns:1fr !important;
   }
 }
+
+
+/* ===== SEDCO DEPARTMENT SELECT ===== */
+.form-page .sts-department-select{
+  width:100% !important;
+  min-height:46px !important;
+  padding:10px 38px 10px 12px !important;
+  border:1px solid #dedee3 !important;
+  border-radius:12px !important;
+  background-color:#fff !important;
+  color:#343438 !important;
+  font-size:12px !important;
+  font-weight:600 !important;
+  line-height:1.35 !important;
+  cursor:pointer;
+}
+
+.form-page .sts-department-select:focus{
+  border-color:rgba(143,16,16,.48) !important;
+  box-shadow:0 0 0 3px rgba(143,16,16,.075) !important;
+  outline:none !important;
+}
+
+.form-page .sts-department-select:invalid{
+  color:#9a9aa1 !important;
+}
+
+.form-page .sts-department-select option{
+  color:#343438;
+  background:#fff;
+  font-weight:500;
+}
+
+.form-page .sts-department-select:disabled{
+  cursor:not-allowed;
+  background:#f5f5f6 !important;
+  color:#77777d !important;
+}
