@@ -34,7 +34,7 @@ function current_user(): ?array
     }
 
     $stmt = db()->prepare(
-        'SELECT id, fullname, email, phone_number, staff_id, department, job_title, role, created_at
+        'SELECT id, fullname, email, phone_number, staff_id, department, job_title, role, is_active, created_at
          FROM users
          WHERE id = ?
          LIMIT 1'
@@ -46,7 +46,8 @@ function current_user(): ?array
     $cachedUser = $result->fetch_assoc() ?: null;
     $stmt->close();
 
-    if ($cachedUser === null) {
+    if ($cachedUser === null || (int) ($cachedUser['is_active'] ?? 1) !== 1) {
+        $cachedUser = null;
         $_SESSION = [];
         session_destroy();
     }
