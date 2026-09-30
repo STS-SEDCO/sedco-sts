@@ -92,8 +92,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 </script>
 
+    <link rel="stylesheet" href="sedco-saas.css">
 </head>
-<body>
+<body class="app-page form-page pkk-page">
 
     <style>
         body {
