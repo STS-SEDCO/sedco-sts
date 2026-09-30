@@ -1,0 +1,465 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+:root{
+  --sedco-brand:#8f1010;
+  --sedco-brand-deep:#6f0d0d;
+  --sedco-brand-soft:#fff1f1;
+  --sedco-bg:#f6f7f9;
+  --sedco-surface:#ffffff;
+  --sedco-surface-2:#fafafa;
+  --sedco-text:#171717;
+  --sedco-muted:#737373;
+  --sedco-border:#e8e8e8;
+  --sedco-shadow:0 1px 2px rgba(0,0,0,.04),0 10px 28px rgba(0,0,0,.05);
+}
+
+*{box-sizing:border-box}
+html,body{min-height:100%}
+body{
+  font-family:'Inter',system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif !important;
+  background:var(--sedco-bg) !important;
+  color:var(--sedco-text) !important;
+  -webkit-font-smoothing:antialiased;
+}
+
+/* ===== APP SHELL ===== */
+.app-page .navbar{
+  height:72px !important;
+  min-height:72px !important;
+  background:linear-gradient(135deg,var(--sedco-brand-deep),var(--sedco-brand)) !important;
+  border-bottom:1px solid rgba(255,255,255,.12) !important;
+  box-shadow:0 8px 24px rgba(83,10,10,.12) !important;
+  padding:0 28px !important;
+  display:flex !important;
+  align-items:center !important;
+}
+.app-page .navbar .container-fluid{height:100%}
+.app-page .navbar-brand{
+  color:#fff !important;
+  font-size:16px !important;
+  font-weight:700 !important;
+  letter-spacing:-.01em !important;
+}
+.app-page .navbar .nav-link{
+  color:rgba(255,255,255,.86) !important;
+  font-size:13px !important;
+  font-weight:600 !important;
+  padding:9px 12px !important;
+  margin:0 2px !important;
+  border-radius:9px !important;
+  text-decoration:none !important;
+}
+.app-page .navbar .nav-link:hover{
+  color:#fff !important;
+  background:rgba(255,255,255,.11) !important;
+}
+.app-page .brand-mark{
+  background:#fff !important;
+  color:var(--sedco-brand) !important;
+  box-shadow:none !important;
+}
+
+.app-page .sidebar{
+  top:72px !important;
+  width:244px !important;
+  height:calc(100vh - 72px) !important;
+  padding:20px 14px !important;
+  background:#731010 !important;
+  border-right:1px solid rgba(255,255,255,.06) !important;
+  box-shadow:none !important;
+  overflow:auto !important;
+}
+.app-page .sidebar h4{
+  color:rgba(255,255,255,.52) !important;
+  text-align:left !important;
+  text-transform:uppercase !important;
+  letter-spacing:.12em !important;
+  font-size:10px !important;
+  font-weight:700 !important;
+  margin:0 12px 10px !important;
+  padding:0 !important;
+}
+.app-page .sidebar a{
+  min-height:44px !important;
+  padding:10px 12px !important;
+  margin:0 0 5px !important;
+  border-radius:10px !important;
+  color:rgba(255,255,255,.8) !important;
+  font-size:13px !important;
+  font-weight:500 !important;
+  gap:10px !important;
+  text-decoration:none !important;
+  transition:.18s ease !important;
+}
+.app-page .sidebar a:hover{
+  background:rgba(255,255,255,.09) !important;
+  color:#fff !important;
+}
+.app-page .sidebar a.active{
+  background:rgba(255,255,255,.14) !important;
+  color:#fff !important;
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.07) !important;
+}
+.app-page .sidebar a i{
+  width:18px !important;
+  margin-right:0 !important;
+  opacity:.92;
+}
+
+.app-page .content,
+.app-page .main-content,
+.app-page .form-container,
+.app-page .card-container{
+  margin-left:244px !important;
+  margin-top:0 !important;
+  padding-top:104px !important;
+}
+
+/* Dashboard keeps its own grid, but shares shell */
+.dashboard-page .content{
+  width:calc(100% - 244px) !important;
+  padding:104px 28px 36px !important;
+}
+.dashboard-page .tasks-panel,
+.dashboard-page .calendar-container{
+  border:1px solid var(--sedco-border) !important;
+  box-shadow:var(--sedco-shadow) !important;
+}
+.dashboard-page .calendar-container{
+  border-radius:16px !important;
+}
+
+/* ===== GENERIC PREMIUM SURFACES ===== */
+.app-page .card,
+.app-page .content,
+.app-page .form-container > *,
+.app-page .profile-card{
+  border-color:var(--sedco-border) !important;
+}
+.app-page .card{
+  background:#fff !important;
+  border:1px solid var(--sedco-border) !important;
+  border-radius:14px !important;
+  box-shadow:0 1px 2px rgba(0,0,0,.03) !important;
+}
+.app-page .card:hover{
+  box-shadow:0 10px 26px rgba(0,0,0,.06) !important;
+}
+.app-page h1,.app-page h2,.app-page h3,.app-page h4,.app-page h5{
+  letter-spacing:-.025em;
+}
+.app-page .form-control,
+.app-page .form-select,
+.app-page input[type="text"],
+.app-page input[type="email"],
+.app-page input[type="password"],
+.app-page input[type="date"],
+.app-page input[type="time"],
+.app-page input[type="number"],
+.app-page textarea,
+.app-page select{
+  border:1px solid #dedede !important;
+  border-radius:10px !important;
+  background:#fff !important;
+  color:var(--sedco-text) !important;
+  box-shadow:none !important;
+}
+.app-page .form-control:focus,
+.app-page .form-select:focus,
+.app-page input:focus,
+.app-page textarea:focus,
+.app-page select:focus{
+  border-color:rgba(143,16,16,.42) !important;
+  box-shadow:0 0 0 3px rgba(143,16,16,.08) !important;
+  outline:none !important;
+}
+.app-page .btn-primary,
+.app-page input[type="submit"]{
+  background:var(--sedco-brand) !important;
+  border-color:var(--sedco-brand) !important;
+  border-radius:10px !important;
+  font-weight:600 !important;
+  box-shadow:0 5px 12px rgba(143,16,16,.13) !important;
+}
+.app-page .btn-primary:hover,
+.app-page input[type="submit"]:hover{
+  background:var(--sedco-brand-deep) !important;
+  border-color:var(--sedco-brand-deep) !important;
+}
+.app-page .btn-secondary{
+  border-radius:10px !important;
+}
+.app-page table{
+  border-color:var(--sedco-border) !important;
+}
+.app-page th{
+  font-weight:600 !important;
+}
+.app-page .table-dark th,
+.app-page thead.table-dark th{
+  background:#731010 !important;
+  border-color:#731010 !important;
+}
+
+/* ===== TASKS ===== */
+.task-page .card-container{
+  width:calc(100% - 244px) !important;
+  min-height:100vh !important;
+  padding:110px 28px 36px !important;
+  gap:16px !important;
+  align-content:flex-start !important;
+  justify-content:flex-start !important;
+}
+.task-page .card-container .card{
+  width:min(340px,100%) !important;
+  min-height:170px !important;
+  padding:22px !important;
+  text-align:left !important;
+  display:flex !important;
+  flex-direction:column !important;
+  justify-content:space-between !important;
+}
+.task-page .card h5{
+  font-size:15px !important;
+  line-height:1.45 !important;
+  margin:0 0 22px !important;
+}
+.task-page .btn-warning{
+  width:max-content !important;
+  background:var(--sedco-brand-soft) !important;
+  border:1px solid #f2cccc !important;
+  color:var(--sedco-brand) !important;
+  border-radius:9px !important;
+  font-size:12px !important;
+  font-weight:700 !important;
+  padding:9px 14px !important;
+}
+.task-page .btn-warning:hover{
+  background:#fde5e5 !important;
+  color:var(--sedco-brand-deep) !important;
+}
+
+/* ===== FORMS: BPL / PKK / TEA ===== */
+.form-page .content,
+.form-page .main-content,
+.form-page .form-container{
+  width:calc(100% - 244px) !important;
+  max-width:none !important;
+  min-height:100vh !important;
+  margin-right:0 !important;
+  margin-bottom:0 !important;
+  padding:104px 28px 44px !important;
+  background:transparent !important;
+  border-radius:0 !important;
+  box-shadow:none !important;
+}
+.form-page .content > form,
+.form-page .main-content > .container,
+.form-page .form-container{
+  background:#fff !important;
+}
+.form-page .content{
+  background:transparent !important;
+}
+.form-page .content > h2,
+.form-page .content > form,
+.form-page .main-content > .container,
+.form-page .form-container{
+  max-width:1120px !important;
+  margin-left:auto !important;
+  margin-right:auto !important;
+}
+.form-page .content > form,
+.form-page .main-content > .container,
+.form-page .form-container{
+  border:1px solid var(--sedco-border) !important;
+  border-radius:16px !important;
+  box-shadow:var(--sedco-shadow) !important;
+}
+.form-page .content > form{
+  padding:26px !important;
+}
+.form-page .main-content > .container{
+  padding:28px !important;
+}
+.form-page .form-container{
+  padding:28px !important;
+}
+.form-page h2{
+  color:#262626 !important;
+  font-size:23px !important;
+}
+.form-page .section-title{
+  color:var(--sedco-brand) !important;
+  border-bottom:1px solid var(--sedco-border) !important;
+  font-size:12px !important;
+  letter-spacing:.06em !important;
+}
+.form-page table{
+  background:#fff !important;
+  border-collapse:separate !important;
+  border-spacing:0 !important;
+}
+.form-page table th{
+  background:#f7f7f7 !important;
+  color:#404040 !important;
+}
+.form-page table td,
+.form-page table th{
+  border-color:#e5e5e5 !important;
+}
+.form-page .submit-btn{
+  background:var(--sedco-brand) !important;
+  border-radius:10px !important;
+}
+
+/* ===== PROFILE ===== */
+.profile-page .profile-content{
+  margin-left:244px;
+  min-height:100vh;
+  padding:108px 28px 40px;
+}
+.profile-page .profile-shell{
+  max-width:920px;
+  margin:0 auto;
+}
+.profile-page .profile-kicker{
+  color:var(--sedco-brand);
+  font-size:11px;
+  font-weight:700;
+  text-transform:uppercase;
+  letter-spacing:.12em;
+  margin-bottom:7px;
+}
+.profile-page .profile-page-title{
+  font-size:30px;
+  font-weight:700;
+  margin:0 0 22px;
+}
+.profile-page .profile-card{
+  max-width:none !important;
+  width:100% !important;
+  margin:0 !important;
+  padding:26px !important;
+  background:#fff !important;
+  border:1px solid var(--sedco-border) !important;
+  border-radius:16px !important;
+  box-shadow:var(--sedco-shadow) !important;
+}
+.profile-page .profile-image{
+  width:88px !important;
+  height:88px !important;
+  border:3px solid #fff !important;
+  box-shadow:0 0 0 1px var(--sedco-border),0 8px 20px rgba(0,0,0,.07) !important;
+}
+.profile-page .text-primary-custom{color:var(--sedco-brand) !important}
+.profile-page .profile-info{
+  margin-top:8px;
+  padding-top:18px;
+  border-top:1px solid var(--sedco-border);
+}
+.profile-page .profile-info label{
+  color:#8a8a8a !important;
+  font-size:11px !important;
+  text-transform:uppercase;
+  letter-spacing:.06em;
+}
+.profile-page .profile-info p{
+  color:#262626 !important;
+  font-size:14px !important;
+}
+.profile-page .btn-edit{
+  background:var(--sedco-brand) !important;
+  color:#fff !important;
+  border-radius:10px !important;
+  padding:9px 14px !important;
+}
+
+/* ===== AUTH ===== */
+.auth-page{
+  min-height:100vh;
+  background:
+    radial-gradient(circle at top left, rgba(143,16,16,.12), transparent 36%),
+    linear-gradient(180deg,#f7f7f8 0%,#f3f4f6 100%) !important;
+}
+.auth-page section{
+  min-height:100vh !important;
+}
+.auth-page .card{
+  border:1px solid var(--sedco-border) !important;
+  border-radius:18px !important;
+  background:rgba(255,255,255,.98) !important;
+  box-shadow:0 22px 70px rgba(0,0,0,.08) !important;
+  overflow:hidden !important;
+}
+.auth-page .card-body{
+  padding:42px !important;
+}
+.auth-page .h1,
+.auth-page .h3{
+  color:#1f1f1f !important;
+  font-size:28px !important;
+  letter-spacing:-.035em !important;
+}
+.auth-page .form-control{
+  min-height:44px !important;
+  border:1px solid #dedede !important;
+  border-radius:10px !important;
+  background:#fafafa !important;
+  font-size:13px !important;
+}
+.auth-page .btn-primary{
+  min-height:42px !important;
+  padding:0 22px !important;
+  border-radius:10px !important;
+  background:var(--sedco-brand) !important;
+}
+.auth-page .text-primary{color:var(--sedco-brand) !important}
+.auth-page .notification{
+  border-radius:12px !important;
+  box-shadow:var(--sedco-shadow) !important;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width:900px){
+  .app-page .sidebar{
+    width:72px !important;
+    padding:18px 10px !important;
+  }
+  .app-page .sidebar h4{display:none !important}
+  .app-page .sidebar a{
+    justify-content:center !important;
+    padding:10px !important;
+    font-size:0 !important;
+  }
+  .app-page .sidebar a i{
+    width:auto !important;
+    font-size:17px !important;
+  }
+  .app-page .content,
+  .app-page .main-content,
+  .app-page .form-container,
+  .app-page .card-container,
+  .profile-page .profile-content{
+    margin-left:72px !important;
+    width:calc(100% - 72px) !important;
+  }
+}
+@media (max-width:600px){
+  .app-page .navbar{padding:0 15px !important}
+  .app-page .navbar-brand{font-size:13px !important}
+  .app-page .navbar-nav{display:none !important}
+  .app-page .sidebar{display:none !important}
+  .app-page .content,
+  .app-page .main-content,
+  .app-page .form-container,
+  .app-page .card-container,
+  .profile-page .profile-content{
+    margin-left:0 !important;
+    width:100% !important;
+    padding-left:14px !important;
+    padding-right:14px !important;
+  }
+  .task-page .card-container .card{width:100% !important}
+  .auth-page .card-body{padding:28px 22px !important}
+}
