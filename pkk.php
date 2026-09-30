@@ -23,6 +23,7 @@ require_login();
       </p>
 
       <form method="post" action="submit_application.php?type=PKK">
+        <?= csrf_field() ?>
         <div class="row g-3 mb-4">
           <div class="col-md-4">
             <label class="form-label fw-semibold">Nama Pegawai/Staf</label>
