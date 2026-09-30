@@ -66,7 +66,7 @@ $rememberedEmail = (string) ($_COOKIE['sedco_email'] ?? '');
   <title>Login - Training Management System</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-  <link rel="stylesheet" href="sedco-saas.css?v=20260930-10">
+  <link rel="stylesheet" href="sedco-saas.css?v=20260930-12">
 </head>
 <body class="auth-page login-page">
   <section class="vh-100 d-flex align-items-center">
