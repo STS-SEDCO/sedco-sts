@@ -76,6 +76,18 @@
       const now = new Date();
       const applications = readApplications();
 
+      let previewUser = null;
+      try {
+        previewUser = JSON.parse(localStorage.getItem('sedcoPreviewUser') || 'null');
+      } catch {
+        previewUser = null;
+      }
+
+      if (!previewUser?.email) {
+        location.href = 'index.html';
+        return;
+      }
+
       const application = {
         id: `APP-${now.getFullYear()}-${String(now.getTime()).slice(-7)}`,
         type: meta.type,
@@ -88,8 +100,10 @@
         applicant: firstValue(
           data,
           ['nama', 'employee_name', 'fullname'],
-          'Guest'
+          previewUser.fullname || previewUser.email
         ),
+        ownerEmail: String(previewUser.email || '').toLowerCase(),
+        ownerRole: previewUser.role || 'staff',
         applicationDate: firstValue(
           data,
           ['tarikh', 'tarikh_mula', 'date', 'tarikh_penilaian'],
