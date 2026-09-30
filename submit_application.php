@@ -33,7 +33,26 @@ if (!user_can_submit_form_type($type, $user)) {
 }
 
 $payload = $_POST;
-unset($payload['submit'], $payload['_csrf']);
+unset(
+    $payload['submit'],
+    $payload['_csrf'],
+    $payload['parent_application_id']
+);
+
+$requiredByType = [
+    'BPL' => ['nama', 'bahagian', 'jawatan', 'tajuk', 'tarikh_mula', 'tarikh_tamat', 'tempat'],
+    'PKK' => ['nama', 'tajuk', 'tarikh'],
+    'TEA' => ['employee_name', 'division', 'head_division', 'date', 'signature'],
+];
+
+foreach ($requiredByType[$type] as $requiredKey) {
+    $value = $payload[$requiredKey] ?? '';
+
+    if (is_array($value) || trim((string) $value) === '') {
+        http_response_code(422);
+        exit('Please complete all required fields before submitting.');
+    }
+}
 
 if ($type === 'BPL') {
     $allowedKeys = [
@@ -49,45 +68,177 @@ if ($type === 'BPL') {
 $title = match ($type) {
     'BPL' => trim((string) ($payload['tajuk'] ?? $payload['kursus'] ?? 'Permohonan Latihan')),
     'PKK' => trim((string) ($payload['tajuk'] ?? 'Penilaian Keberkesanan Kursus')),
-    'TEA' => 'Training Effectiveness Assessment',
+    'TEA' => trim((string) ($payload['training_title'] ?? 'Training Effectiveness Assessment')),
 };
 
 if ($title === '') {
-    $title = match ($type) {
-        'BPL' => 'Permohonan Latihan',
-        'PKK' => 'Penilaian Keberkesanan Kursus',
-        'TEA' => 'Training Effectiveness Assessment',
-    };
+    $title = sts_form_name($type);
 }
 
-$applicationNo = sprintf(
-    'APP-%s-%06d',
-    date('Ymd'),
-    random_int(0, 999999)
-);
+$parentApplicationId = max(0, (int) ($_POST['parent_application_id'] ?? 0));
+$parent = null;
 
-$payloadJson = json_encode(
-    $payload,
-    JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR
-);
+if (in_array($type, ['PKK', 'TEA'], true) && $parentApplicationId > 0) {
+    $parent = sts_validate_parent_bpl($parentApplicationId, $user, $type);
 
-$stmt = db()->prepare(
-    'INSERT INTO applications
-        (application_no, user_id, form_type, title, payload, status)
-     VALUES (?, ?, ?, ?, ?, "pending")'
-);
+    if (!$parent) {
+        http_response_code(403);
+        exit('The selected training record is not available for this follow-up form.');
+    }
+}
 
-$userId = (int) $user['id'];
-$stmt->bind_param(
-    'sisss',
-    $applicationNo,
-    $userId,
-    $type,
-    $title,
-    $payloadJson
-);
-$stmt->execute();
-$stmt->close();
+$db = db();
+$db->begin_transaction();
 
-header('Location: application-status.php?submitted=1');
-exit;
+try {
+    do {
+        $applicationNo = sprintf(
+            'APP-%s-%06d',
+            date('Ymd'),
+            random_int(0, 999999)
+        );
+
+        $check = $db->prepare(
+            'SELECT id FROM applications WHERE application_no = ? LIMIT 1'
+        );
+        $check->bind_param('s', $applicationNo);
+        $check->execute();
+        $exists = $check->get_result()->fetch_assoc();
+        $check->close();
+    } while ($exists);
+
+    $payloadJson = json_encode(
+        $payload,
+        JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR
+    );
+
+    $userId = (int) $user['id'];
+    $department = trim((string) (
+        $payload['bahagian']
+        ?? $payload['division']
+        ?? $user['department']
+        ?? ''
+    ));
+    $departmentValue = $department !== '' ? $department : null;
+    $assignedHodId = null;
+    $status = 'approved';
+    $currentStage = 'completed';
+    $slaDueAt = null;
+    $trainingStart = null;
+    $trainingEnd = null;
+    $followupDueAt = null;
+    $completedAt = date('Y-m-d H:i:s');
+
+    if ($type === 'BPL') {
+        $assignedHodId = sts_department_hod($departmentValue);
+        $status = 'pending';
+        $currentStage = 'hod';
+        $slaDueAt = sts_review_sla_due();
+        $trainingStart = trim((string) ($payload['tarikh_mula'] ?? '')) ?: null;
+        $trainingEnd = trim((string) ($payload['tarikh_tamat'] ?? '')) ?: null;
+        $followupDueAt = sts_followup_due($trainingEnd, 'PKK');
+        $completedAt = null;
+    } elseif ($parent) {
+        $departmentValue = trim((string) ($parent['department'] ?? '')) ?: $departmentValue;
+        $assignedHodId = !empty($parent['assigned_hod_id'])
+            ? (int) $parent['assigned_hod_id']
+            : null;
+    }
+
+    $parentIdValue = $parent ? (int) $parent['id'] : null;
+
+    $stmt = $db->prepare(
+        'INSERT INTO applications
+            (
+              application_no, user_id, parent_application_id, form_type, title,
+              department, assigned_hod_id, payload, status, current_stage,
+              sla_due_at, training_start, training_end, followup_due_at, completed_at
+            )
+         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'
+    );
+    $stmt->bind_param(
+        'siisssissssssss',
+        $applicationNo,
+        $userId,
+        $parentIdValue,
+        $type,
+        $title,
+        $departmentValue,
+        $assignedHodId,
+        $payloadJson,
+        $status,
+        $currentStage,
+        $slaDueAt,
+        $trainingStart,
+        $trainingEnd,
+        $followupDueAt,
+        $completedAt
+    );
+    $stmt->execute();
+    $applicationId = (int) $stmt->insert_id;
+    $stmt->close();
+
+    sts_save_version($applicationId, $userId, 'submitted', $payload);
+    $attachments = sts_store_attachments($applicationId, $userId);
+
+    $draftDelete = $db->prepare(
+        'DELETE FROM application_drafts
+         WHERE user_id = ? AND form_type = ?'
+    );
+    $draftDelete->bind_param('is', $userId, $type);
+    $draftDelete->execute();
+    $draftDelete->close();
+
+    $db->commit();
+
+    sts_audit(
+        'application_submitted',
+        'application',
+        $applicationNo,
+        [
+            'form_type' => $type,
+            'parent_application_id' => $parentIdValue,
+            'attachments' => count($attachments),
+        ],
+        $userId
+    );
+
+    sts_notify(
+        $userId,
+        $type . ' submitted',
+        $applicationNo . ' has been submitted successfully.',
+        'application-detail.php?application=' . rawurlencode($applicationNo),
+        'success'
+    );
+
+    if ($type === 'BPL') {
+        sts_notify_stage(
+            'hod',
+            $applicationNo,
+            $departmentValue,
+            $assignedHodId
+        );
+    } elseif ($parent) {
+        $parentOwnerId = (int) $parent['user_id'];
+
+        if ($parentOwnerId !== $userId) {
+            sts_notify(
+                $parentOwnerId,
+                $type . ' follow-up completed',
+                $applicationNo . ' has been linked to ' . $parent['application_no'] . '.',
+                'application-detail.php?application=' . rawurlencode($parent['application_no']),
+                'success'
+            );
+        }
+    }
+
+    header(
+        'Location: application-status.php?submitted=1&application='
+        . rawurlencode($applicationNo)
+    );
+    exit;
+} catch (Throwable $error) {
+    $db->rollback();
+    http_response_code(500);
+    exit('Unable to submit the form. ' . e($error->getMessage()));
+}
