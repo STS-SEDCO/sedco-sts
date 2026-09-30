@@ -29,7 +29,23 @@ $hasExtendedProfile = isset(
     $userColumns['job_title']
 );
 $hasProfilePhoto = isset($userColumns['profile_image']);
-$existingProfileImage = $hasProfilePhoto ? trim((string) ($user['profile_image'] ?? '')) : '';
+$existingProfileImage = '';
+
+if ($hasProfilePhoto) {
+    $photoStmt = $db->prepare(
+        'SELECT profile_image
+         FROM users
+         WHERE id = ?
+         LIMIT 1'
+    );
+    $profileUserId = (int) $user['id'];
+    $photoStmt->bind_param('i', $profileUserId);
+    $photoStmt->execute();
+    $photoRow = $photoStmt->get_result()->fetch_assoc();
+    $photoStmt->close();
+
+    $existingProfileImage = trim((string) ($photoRow['profile_image'] ?? ''));
+}
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     verify_csrf();
