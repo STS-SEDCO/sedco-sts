@@ -42,6 +42,10 @@
         return false;
       }
 
+      if (applicationStatus === 'correction' && normalizedRole === 'staff') {
+        return normalizedOwner === 'staff';
+      }
+
       const ownerForStage = stageOwner(currentStage);
 
       if (normalizedRole === 'admin') {
@@ -112,6 +116,8 @@
 
         if (['approved', 'rejected'].includes(applicationStatus) || currentStage === 'completed') {
           notice.innerHTML = '<i class="bi bi-check2-circle"></i><span><strong>Workflow completed.</strong> This form is read-only.</span>';
+        } else if (applicationStatus === 'correction' && normalizedRole === 'staff') {
+          notice.innerHTML = '<i class="bi bi-exclamation-circle"></i><span><strong>Correction requested.</strong> Update the applicant sections highlighted for you, then resubmit. Approval sections remain locked.</span>';
         } else if (editableNow) {
           notice.innerHTML = '<i class="bi bi-pencil-square"></i><span><strong>' + label + '</strong> — current stage: ' + stageLabel + '. Only your review section is editable; all other sections are read-only.</span>';
         } else {
