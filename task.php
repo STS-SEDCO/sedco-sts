@@ -16,7 +16,7 @@ $canTea = in_array($role, ['head_of_department', 'admin'], true);
   <title>Training Forms - Smart Training System</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-  <link rel="stylesheet" href="sedco-saas.css?v=20260930-25">
+  <link rel="stylesheet" href="sedco-saas.css?v=20260930-34">
   <link rel="stylesheet" href="sedco-shell.css?v=20260930-18">
 </head>
 <body class="app-page task-page" data-page="task" data-role="<?= e(normalized_role($user['role'] ?? '')) ?>">
@@ -96,6 +96,6 @@ $canTea = in_array($role, ['head_of_department', 'admin'], true);
   </div>
 </main>
 
-<script src="sedco-shell.js?v=20260930-33"></script>
+<script src="sedco-shell.js?v=20260930-34"></script>
 </body>
 </html>
