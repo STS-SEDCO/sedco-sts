@@ -73,7 +73,7 @@ $stmt->close();
   <link rel="stylesheet" href="sedco-saas.css?v=20260930-31">
   <link rel="stylesheet" href="sedco-shell.css?v=20260930-15">
 </head>
-<body class="app-page status-page" data-page="application-status">
+<body class="app-page status-page" data-page="application-status" data-role="<?= e(normalized_role($user['role'] ?? '')) ?>">
 
 <main class="status-content">
   <div class="status-shell">
@@ -214,6 +214,6 @@ window.SEDCO_APPLICATIONS = <?= json_encode(
 ) ?>;
 </script>
 <script src="application-status.js?v=20260930-32"></script>
-<script src="sedco-shell.js?v=20260930-18"></script>
+<script src="sedco-shell.js?v=20260930-33"></script>
 </body>
 </html>
