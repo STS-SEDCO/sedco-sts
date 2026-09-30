@@ -8,6 +8,7 @@
 
   const activePage = body.dataset.page || (
     path.includes('application-status') ? 'application-status'
+      : path.includes('submissions') ? 'submissions'
       : path.includes('profile') ? 'profile'
       : /task|bpl|pkk|tea/.test(path) ? 'task'
       : 'dashboard'
@@ -20,7 +21,8 @@
     ['dashboard', 'Dashboard', 'bi-grid-1x2-fill', pageUrl('dashboard')],
     ['profile', 'Profile', 'bi-person', pageUrl('profile')],
     ['task', 'Tasks', 'bi-check2-square', pageUrl('task')],
-    ['application-status', 'Application status', 'bi-clipboard-check', pageUrl('application-status')]
+    ['application-status', 'Application status', 'bi-clipboard-check', pageUrl('application-status')],
+    ['submissions', 'Submissions', 'bi-inbox', pageUrl('submissions')]
   ];
 
   const sidebarLinks = items.map(([key, label, icon, href]) => `
@@ -64,10 +66,6 @@
 
       <nav class="sedco-side-nav" aria-label="Sidebar navigation">
         ${sidebarLinks}
-        <span class="sedco-nav-item is-disabled" aria-disabled="true">
-          <i class="bi bi-inbox"></i>
-          <span>Submissions</span>
-        </span>
       </nav>
 
       <div class="sedco-sidebar-footer">
