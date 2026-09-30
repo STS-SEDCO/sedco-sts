@@ -10,27 +10,26 @@ if (!$user) {
     exit;
 }
 
-if (user_can_review_applications($user)) {
-    $stmt = db()->prepare(
-        'SELECT a.application_no, a.form_type, a.title, a.payload, a.status,
-                a.submitted_at, a.updated_at, u.fullname
-         FROM applications a
-         INNER JOIN users u ON u.id = a.user_id
-         ORDER BY a.submitted_at DESC'
-    );
-} else {
-    $stmt = db()->prepare(
-        'SELECT a.application_no, a.form_type, a.title, a.payload, a.status,
-                a.submitted_at, a.updated_at, u.fullname
-         FROM applications a
-         INNER JOIN users u ON u.id = a.user_id
-         WHERE a.user_id = ?
-         ORDER BY a.submitted_at DESC'
-    );
+$normalizedRole = normalized_role($user['role'] ?? '');
 
-    $userId = (int) $user['id'];
-    $stmt->bind_param('i', $userId);
+if (!user_can_review_applications($user)) {
+    header('Location: application-status.php');
+    exit;
 }
+
+$stmt = db()->prepare(
+    'SELECT a.application_no, a.form_type, a.title, a.payload, a.status,
+            a.current_stage, a.review_note, a.submitted_at, a.updated_at, u.fullname
+     FROM applications a
+     INNER JOIN users u ON u.id = a.user_id
+     ORDER BY
+       CASE
+         WHEN a.form_type = "BPL" AND a.status = "pending" THEN 0
+         WHEN a.form_type = "BPL" AND a.status = "correction" THEN 1
+         ELSE 2
+       END,
+       a.submitted_at DESC'
+);
 
 $stmt->execute();
 $result = $stmt->get_result();
@@ -51,6 +50,16 @@ while ($row = $result->fetch_assoc()) {
         'title' => $row['title'],
         'applicant' => $row['fullname'],
         'status' => $row['status'],
+        'currentStage' => $row['current_stage'],
+        'stageLabel' => stage_label($row['current_stage']),
+        'reviewNote' => $row['review_note'],
+        'canReview' => $row['form_type'] === 'BPL'
+            && user_can_review_stage((string) $row['current_stage'], $user)
+            && !in_array($row['status'], ['approved', 'rejected'], true)
+            && $row['current_stage'] !== 'completed',
+        'reviewUrl' => $row['form_type'] === 'BPL'
+            ? 'bpl.php?application=' . rawurlencode((string) $row['application_no'])
+            : null,
         'submittedAt' => $row['submitted_at'],
         'updatedAt' => $row['updated_at'],
         'data' => $payload,
@@ -67,7 +76,7 @@ $stmt->close();
   <title>Submissions - Smart Training System</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-  <link rel="stylesheet" href="sedco-saas.css?v=20260930-18">
+  <link rel="stylesheet" href="sedco-saas.css?v=20260930-29">
   <link rel="stylesheet" href="sedco-shell.css?v=20260930-15">
 </head>
 <body class="app-page submissions-page" data-page="submissions">
@@ -164,6 +173,7 @@ $stmt->close();
               <th>Type</th>
               <th>Submission</th>
               <th>Status</th>
+              <th>Stage</th>
               <th></th>
             </tr>
           </thead>
@@ -237,7 +247,7 @@ window.SEDCO_SUBMISSIONS = <?= json_encode(
     | JSON_HEX_QUOT
 ) ?>;
 </script>
-<script src="submissions.js?v=20260930-18"></script>
-<script src="sedco-shell.js?v=20260930-18"></script>
+<script src="submissions.js?v=20260930-29"></script>
+<script src="sedco-shell.js?v=20260930-23"></script>
 </body>
 </html>
