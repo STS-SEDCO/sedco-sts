@@ -48,7 +48,10 @@ if ($action === 'mark_all') {
 
 $redirect = trim((string) ($_POST['redirect'] ?? ''));
 
-if ($redirect !== '' && !str_contains($redirect, '://') && !str_starts_with($redirect, '//')) {
+if (
+    $redirect !== ''
+    && preg_match('/^[A-Za-z0-9._-]+\.php(?:\?[A-Za-z0-9._%=&-]+)?$/', $redirect)
+) {
     header('Location: ' . $redirect);
     exit;
 }
