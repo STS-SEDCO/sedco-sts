@@ -175,7 +175,7 @@ if ($parentId > 0) {
 window.SEDCO_FORM_CONTEXT = { role: <?= json_encode($user['role'] ?? 'staff') ?>, mode: 'new', formType: 'PKK' };
 </script>
 <script src="form-permissions.js?v=20260930-59"></script>
-<script src="form-ux.js?v=20260930-62"></script>
+<script src="form-ux.js?v=20260930-63"></script>
 <script src="form-enhancements.js?v=20260930-59"></script>
 <script src="sedco-shell.js?v=20260930-56"></script>
 </body>
