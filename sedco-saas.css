@@ -1118,3 +1118,36 @@ body{
     margin:10mm;
   }
 }
+
+
+/* ===== CLEANUP UTILITIES ===== */
+.dashboard-page .calendar-icon{
+  color:var(--sedco-brand);
+  font-size:17px;
+}
+
+.profile-page .profile-avatar-placeholder{
+  background:#f4f4f5;
+  color:var(--sedco-brand);
+  font-size:34px;
+}
+
+.form-page .form-actions{
+  display:flex;
+  gap:10px;
+  margin-top:20px;
+}
+
+.form-page .score-input{
+  width:60px !important;
+  margin:auto !important;
+}
+
+.form-page .score-input-small{
+  width:50px !important;
+  min-width:50px;
+}
+
+.form-page .compact-select{
+  min-width:110px;
+}
