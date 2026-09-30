@@ -63,9 +63,13 @@
     if (!form) return;
 
     form.addEventListener('submit', event => {
-      event.preventDefault();
+      if (!form.checkValidity()) {
+        event.preventDefault();
+        form.reportValidity();
+        return;
+      }
 
-      if (!form.reportValidity()) return;
+      event.preventDefault();
 
       const data = formToObject(form);
       const meta = formMeta();
