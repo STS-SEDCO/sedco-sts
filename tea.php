@@ -129,8 +129,6 @@ require_login();
       </div>
     </form>
   </div>
-
-<script src="sedco-submission.js"></script>
 <script src="sedco-shell.js?v=20260930-9"></script>
 </body>
 </html>
