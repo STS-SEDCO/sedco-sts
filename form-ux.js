@@ -11,6 +11,8 @@
   form.noValidate = false;
   form.classList.add('sts-smart-form');
 
+  let invalidScrollScheduled = false;
+
   const fieldByName = name =>
     form.querySelector(`[name="${CSS.escape(name)}"]`);
 
@@ -642,6 +644,39 @@
       setGroupError(group, 'Sila lengkapkan pilihan ini.');
     } else {
       setFieldError(control, `${fieldLabel(control)} perlu diisi.`);
+    }
+
+    if (!invalidScrollScheduled) {
+      invalidScrollScheduled = true;
+
+      window.setTimeout(() => {
+        const invalidControls = [...form.elements].filter(item =>
+          item instanceof HTMLElement
+          && item.matches?.('input,textarea,select')
+          && !item.disabled
+          && item.type !== 'hidden'
+          && item.offsetParent !== null
+          && item.validity
+          && !item.validity.valid
+        );
+
+        showValidationSummary(invalidControls.length || 1);
+
+        const first = invalidControls[0] || control;
+        const target = firstTarget(first);
+
+        target?.scrollIntoView({
+          behavior: 'smooth',
+          block: 'center'
+        });
+
+        window.setTimeout(() => {
+          if (visibleEnabled(first) && typeof first.focus === 'function') {
+            first.focus({ preventScroll: true });
+          }
+          invalidScrollScheduled = false;
+        }, 450);
+      }, 0);
     }
   }, true);
 
