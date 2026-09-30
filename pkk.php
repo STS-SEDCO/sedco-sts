@@ -64,11 +64,11 @@ if ($parentId > 0) {
           </div>
           <div class="col-md-4">
             <label class="form-label fw-semibold">Bahagian</label>
-            <input type="text" class="form-control" name="bahagian" value="<?= e((string) ($parentPayload['bahagian'] ?? $user['department'] ?? '')) ? required>">
+            <input type="text" class="form-control" name="bahagian" required value="<?= e((string) ($parentPayload['bahagian'] ?? $user['department'] ?? '')) ?>">
           </div>
           <div class="col-md-4">
             <label class="form-label fw-semibold">Jawatan</label>
-            <input type="text" class="form-control" name="jawatan" value="<?= e((string) ($parentPayload['jawatan'] ?? $user['job_title'] ?? '')) ? required>">
+            <input type="text" class="form-control" name="jawatan" required value="<?= e((string) ($parentPayload['jawatan'] ?? $user['job_title'] ?? '')) ?>">
           </div>
         </div>
 
@@ -83,7 +83,7 @@ if ($parentId > 0) {
           </div>
           <div class="col-md-4">
             <label class="form-label fw-semibold">Tempat</label>
-            <input type="text" class="form-control" name="tempat" value="<?= e((string) ($parentPayload['tempat'] ?? '')) ? required>">
+            <input type="text" class="form-control" name="tempat" required value="<?= e((string) ($parentPayload['tempat'] ?? '')) ?>">
           </div>
         </div>
 
