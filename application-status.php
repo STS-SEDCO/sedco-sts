@@ -12,8 +12,7 @@ if (!$user) {
 
 $stmt = db()->prepare(
     'SELECT a.application_no, a.form_type, a.title, a.payload, a.status,
-            a.current_stage, a.review_note, a.cancelled_at, a.cancellation_reason,
-            a.submitted_at, a.updated_at, u.fullname
+            a.current_stage, a.review_note, a.submitted_at, a.updated_at, u.fullname
      FROM applications a
      INNER JOIN users u ON u.id = a.user_id
      WHERE a.user_id = ?
@@ -51,9 +50,10 @@ while ($row = $result->fetch_assoc()) {
         'currentStage' => $row['current_stage'],
         'stageLabel' => stage_label($row['current_stage']),
         'reviewNote' => $row['review_note'],
-        'cancelledAt' => $row['cancelled_at'],
-        'cancellationReason' => $row['cancellation_reason'],
-        'canCancel' => in_array($row['status'], ['pending', 'correction'], true),
+        'cancelledAt' => null,
+        'cancellationReason' => null,
+        'canCancel' => sts_cancel_application_supported()
+            && in_array($row['status'], ['pending', 'correction'], true),
         'viewUrl' => 'application-detail.php?application=' . rawurlencode((string) $row['application_no']),
         'editUrl' => $row['form_type'] === 'BPL' && $row['status'] === 'correction'
             ? 'bpl.php?application=' . rawurlencode((string) $row['application_no'])
@@ -179,7 +179,7 @@ $stmt->close();
 
 <div id="errorToast" class="success-toast status-error-toast">
   <i class="bi bi-exclamation-circle-fill"></i>
-  <span>Cancellation reason must be at least 5 characters.</span>
+  <span id="errorToastText">Cancellation reason must be at least 5 characters.</span>
 </div>
 
 <div class="modal fade status-modal" id="applicationModal" tabindex="-1" aria-hidden="true">
