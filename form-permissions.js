@@ -3,6 +3,8 @@
   const role = String(context.role || 'staff').toLowerCase();
   const mode = String(context.mode || 'new').toLowerCase();
   const formType = String(context.formType || '').toUpperCase();
+  const currentStage = String(context.currentStage || '').toLowerCase();
+  const applicationStatus = String(context.status || '').toLowerCase();
 
   const aliases = {
     head_of_division: 'head_of_department',
@@ -19,12 +21,34 @@
     admin: 'System Administrator'
   };
 
+  function stageOwner(stage) {
+    return {
+      hod: 'head_of_department',
+      training: 'training_section',
+      gm: 'general_manager'
+    }[stage] || null;
+  }
+
   function canEdit(owner) {
     const normalizedOwner = aliases[owner] || owner;
 
     if (mode === 'new' && formType === 'BPL') {
       if (normalizedRole === 'admin') return normalizedOwner === 'staff';
       return normalizedRole === 'staff' && normalizedOwner === 'staff';
+    }
+
+    if (mode === 'review' && formType === 'BPL') {
+      if (['approved', 'rejected'].includes(applicationStatus) || currentStage === 'completed') {
+        return false;
+      }
+
+      const ownerForStage = stageOwner(currentStage);
+
+      if (normalizedRole === 'admin') {
+        return normalizedOwner === ownerForStage;
+      }
+
+      return normalizedRole === ownerForStage && normalizedOwner === ownerForStage;
     }
 
     if (normalizedRole === 'admin') return true;
@@ -78,7 +102,24 @@
     const notice = document.querySelector('[data-form-permission-notice]');
     if (notice) {
       const label = roleLabels[normalizedRole] || normalizedRole;
-      notice.innerHTML = '<i class="bi bi-shield-lock"></i><span><strong>' + label + '</strong> — only your section is editable. Other workflow sections are locked.</span>';
+      const ownerForStage = stageOwner(currentStage);
+      const stageLabel = roleLabels[ownerForStage] || 'Reviewer';
+
+      if (mode === 'new' && formType === 'BPL') {
+        notice.innerHTML = '<i class="bi bi-shield-lock"></i><span><strong>Applicant section open.</strong> Approval sections are greyed out and will unlock only for the assigned reviewer after submission.</span>';
+      } else if (mode === 'review' && formType === 'BPL') {
+        const editableNow = canEdit(ownerForStage || '');
+
+        if (['approved', 'rejected'].includes(applicationStatus) || currentStage === 'completed') {
+          notice.innerHTML = '<i class="bi bi-check2-circle"></i><span><strong>Workflow completed.</strong> This form is read-only.</span>';
+        } else if (editableNow) {
+          notice.innerHTML = '<i class="bi bi-pencil-square"></i><span><strong>' + label + '</strong> — current stage: ' + stageLabel + '. Only your review section is editable; all other sections are read-only.</span>';
+        } else {
+          notice.innerHTML = '<i class="bi bi-lock-fill"></i><span><strong>Current stage: ' + stageLabel + '.</strong> You can view this form, but only the assigned reviewer can edit this stage.</span>';
+        }
+      } else {
+        notice.innerHTML = '<i class="bi bi-shield-lock"></i><span><strong>' + label + '</strong> — only your section is editable. Other workflow sections are locked.</span>';
+      }
     }
   });
 })();
