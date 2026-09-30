@@ -147,7 +147,7 @@ function detail_value_label(string $key): string
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
   <link rel="stylesheet" href="sedco-saas.css?v=20260930-40">
-  <link rel="stylesheet" href="sedco-shell.css?v=20260930-40">
+  <link rel="stylesheet" href="sedco-shell.css?v=20260930-56">
 </head>
 <body class="app-page application-detail-page" data-page="application-status" data-role="<?= e(normalized_role($user['role'] ?? '')) ?>">
 <main class="sts-page-content">
@@ -341,6 +341,6 @@ function detail_value_label(string $key): string
     </div>
   </div>
 </main>
-<script src="sedco-shell.js?v=20260930-40"></script>
+<script src="sedco-shell.js?v=20260930-56"></script>
 </body>
 </html>
