@@ -83,10 +83,24 @@ try {
         }
     }
 
-    foreach (['nama', 'bahagian', 'jawatan', 'tajuk', 'tarikh_mula', 'tarikh_tamat', 'tempat'] as $requiredKey) {
+    foreach ([
+        'nama', 'bahagian', 'jawatan', 'kursus', 'tarikh',
+        'tajuk', 'penganjur', 'tarikh_mula', 'tarikh_tamat',
+        'tempat', 'yuran', 'kandungan'
+    ] as $requiredKey) {
         if (trim((string) ($payload[$requiredKey] ?? '')) === '') {
             throw new RuntimeException('Please complete all required fields before resubmitting.');
         }
+    }
+
+    $vehicles = $payload['kenderaan'] ?? [];
+    $vehicles = is_array($vehicles) ? array_map('strval', $vehicles) : [];
+
+    if (
+        in_array('Lain-lain', $vehicles, true)
+        && trim((string) ($payload['kenderaan_other'] ?? '')) === ''
+    ) {
+        throw new RuntimeException('Please specify the other vehicle.');
     }
 
     $payloadJson = json_encode(
