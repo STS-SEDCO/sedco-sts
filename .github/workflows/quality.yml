@@ -29,6 +29,8 @@ jobs:
           node --check submissions.js
           node --check form-permissions.js
           node --check bpl-workflow.js
+          node --check dashboard.js
+          node --check form-enhancements.js
 
       - name: Legacy reference check
         shell: bash
@@ -72,6 +74,8 @@ jobs:
               for match in re.finditer(r'(?:href|src|action)=["\']([^"\'#]+)["\']', text, flags=re.I):
                   target = match.group(1)
                   if re.match(r'^(?:https?:|mailto:|tel:|javascript:)', target, flags=re.I):
+                      continue
+                  if '<?' in target or '?>' in target:
                       continue
                   target = target.split('?', 1)[0]
                   if not target or '/' in target:
