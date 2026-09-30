@@ -21,7 +21,7 @@ if (!$user) {
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
   <link rel="stylesheet" href="sedco-shell.css?v=20260930-14">
 </head>
-<body class="app-page profile-page" data-page="profile">
+<body class="app-page profile-page" data-page="profile" data-role="<?= e(normalized_role($user['role'] ?? '')) ?>">
 <main class="profile-content">
     <div class="profile-shell">
         <div class="profile-kicker">Account</div>
@@ -66,6 +66,6 @@ if (!$user) {
         </div>
     </div>
 </main>
-<script src="sedco-shell.js?v=20260930-18"></script>
+<script src="sedco-shell.js?v=20260930-33"></script>
 </body>
 </html>
