@@ -88,6 +88,20 @@ CREATE TABLE IF NOT EXISTS departments (
       ON DELETE SET NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+-- Current SEDCO divisions used for form dropdowns and HoD routing
+INSERT INTO departments (name, hod_user_id, is_active)
+VALUES
+  ('Bahagian Audit Dalam (IAD)', NULL, 1),
+  ('Bahagian Pembangunan Perniagaan dan Pelaburan (BDI)', NULL, 1),
+  ('Bahagian Kewangan (FND)', NULL, 1),
+  ('Bahagian Pembangunan Usahawan (EDD)', NULL, 1),
+  ('Bahagian Pengurusan Strategik (SMD)', NULL, 1),
+  ('Bahagian Pengurusan Hartanah (PMD)', NULL, 1),
+  ('Bahagian Sumber Manusia dan Pentadbiran (HRAD)', NULL, 1)
+ON DUPLICATE KEY UPDATE
+  is_active = 1,
+  hod_user_id = hod_user_id;
+
 -- Autosave drafts
 CREATE TABLE IF NOT EXISTS application_drafts (
     id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
