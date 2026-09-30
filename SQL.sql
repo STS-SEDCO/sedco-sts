@@ -1,4 +1,4 @@
--- SEDCO Training Management System
+-- SEDCO Smart Training System
 -- Canonical MySQL schema
 -- Select/create the target database in your hosting panel or phpMyAdmin
 -- before importing this file. The schema does not hardcode a database name.
