@@ -11,6 +11,7 @@ if (!empty($_SESSION['user_id'])) {
 $error = null;
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    verify_csrf();
     $fullname = trim((string) ($_POST['fullname'] ?? ''));
     $email = filter_var(trim((string) ($_POST['email'] ?? '')), FILTER_VALIDATE_EMAIL);
     $phoneNumber = trim((string) ($_POST['phone_number'] ?? ''));
@@ -76,6 +77,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <?php endif; ?>
 
             <form method="post" action="signup.php">
+                    <?= csrf_field() ?>
               <div class="form-outline mb-3">
                 <input
                   type="text"
