@@ -17,10 +17,9 @@ if (!$user) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Profile - Training Management System</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-    <link rel="stylesheet" href="sedco-saas.css?v=20260930-10">
+<link rel="stylesheet" href="sedco-saas.css?v=20260930-11">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-  <link rel="stylesheet" href="sedco-shell.css?v=20260930-10">
+  <link rel="stylesheet" href="sedco-shell.css?v=20260930-11">
 </head>
 <body class="app-page profile-page" data-page="profile">
 <main class="profile-content">
@@ -31,7 +30,7 @@ if (!$user) {
         <div class="profile-card">
             <div class="text-center mb-4">
                 <div class="profile-image profile-avatar-placeholder d-flex align-items-center justify-content-center">
-                    <i class="fas fa-user"></i>
+                    <i class="bi bi-person"></i>
                 </div>
                 <h3 class="text-primary-custom"><?= e($user['fullname']) ?></h3>
                 <p class="text-muted mb-0">Training Management System Member</p>
@@ -58,16 +57,15 @@ if (!$user) {
 
             <div class="d-flex justify-content-between gap-2 mt-2">
                 <a href="dashboard.php" class="btn btn-outline-secondary">
-                    <i class="fas fa-arrow-left me-1"></i> Back
+                    <i class="bi bi-arrow-left me-1"></i> Back
                 </a>
                 <button type="button" class="btn btn-edit" disabled title="Profile editing is not enabled yet">
-                    <i class="fas fa-edit me-1"></i> Edit Profile
+                    <i class="bi bi-pencil me-1"></i> Edit Profile
                 </button>
             </div>
         </div>
     </div>
 </main>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-<script src="sedco-shell.js?v=20260930-10"></script>
+<script src="sedco-shell.js?v=20260930-11"></script>
 </body>
 </html>
