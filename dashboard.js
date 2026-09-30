@@ -99,6 +99,115 @@
     `).join('');
   }
 
+  function loadPreviewApplications() {
+    if (window.STS_DASHBOARD_STATIC !== true) return [];
+
+    let previewUser = null;
+    let stored = [];
+
+    try {
+      previewUser = JSON.parse(localStorage.getItem('sedcoPreviewUser') || 'null');
+    } catch {
+      previewUser = null;
+    }
+
+    try {
+      const raw = JSON.parse(localStorage.getItem('sedcoApplications') || '[]');
+      stored = Array.isArray(raw) ? raw : [];
+    } catch {
+      stored = [];
+    }
+
+    const email = String(previewUser?.email || '').trim().toLowerCase();
+    if (!email) return [];
+
+    return stored
+      .filter(item => String(item.ownerEmail || '').trim().toLowerCase() === email)
+      .sort((a,b) => new Date(b.submittedAt || 0) - new Date(a.submittedAt || 0));
+  }
+
+  function previewStageLabel(stage) {
+    switch (String(stage || '').toLowerCase()) {
+      case 'hod': return 'Head of Department';
+      case 'training': return 'Training Department';
+      case 'gm': return 'General Manager';
+      case 'completed': return 'Completed';
+      default: return 'Pending';
+    }
+  }
+
+  function previewStatusLabel(status) {
+    switch (String(status || '').toLowerCase()) {
+      case 'approved': return 'Approved';
+      case 'rejected': return 'Rejected';
+      case 'correction': return 'Needs correction';
+      case 'cancelled': return 'Cancelled';
+      default: return 'Pending review';
+    }
+  }
+
+  function renderPreviewDashboard() {
+    if (window.STS_DASHBOARD_STATIC !== true) return;
+
+    const applications = loadPreviewApplications();
+    const total = applications.length;
+    const pending = applications.filter(item => (item.status || 'pending') === 'pending').length;
+    const approved = applications.filter(item => item.status === 'approved').length;
+    const attention = applications.filter(item => ['correction','rejected'].includes(item.status)).length;
+
+    const setText = (id, value) => {
+      const node = document.getElementById(id);
+      if (node) node.textContent = String(value);
+    };
+
+    setText('dashboardStatApplications', total);
+    setText('dashboardStatPending', pending);
+    setText('dashboardStatApproved', approved);
+    setText('dashboardStatAttention', attention);
+
+    const queue = document.getElementById('dashboardPreviewQueue');
+    const empty = document.getElementById('dashboardPreviewEmpty');
+    if (!queue || !empty) return;
+
+    const rows = applications.slice(0, 6);
+
+    if (!rows.length) {
+      queue.innerHTML = '';
+      empty.classList.remove('d-none');
+      return;
+    }
+
+    empty.classList.add('d-none');
+
+    queue.innerHTML = rows.map(item => {
+      const status = String(item.status || 'pending');
+      const stage = item.stageLabel || previewStageLabel(item.currentStage);
+      const date = item.submittedAt ? new Date(item.submittedAt) : null;
+      const when = date && !Number.isNaN(date.getTime())
+        ? new Intl.DateTimeFormat('en-MY',{day:'2-digit',month:'short',year:'numeric'}).format(date)
+        : '';
+
+      return `
+        <a class="dashboard-queue-item" href="application-status.html">
+          <span class="dashboard-queue-icon"><i class="bi bi-file-earmark-text"></i></span>
+          <div class="dashboard-queue-copy">
+            <div>
+              <strong>${escapeHtml(item.title || item.formName || 'Application')}</strong>
+              <span>${escapeHtml(item.id || '')}</span>
+            </div>
+            <p>
+              ${escapeHtml(item.type || 'FORM')} ·
+              ${escapeHtml(previewStatusLabel(status))} ·
+              ${escapeHtml(stage)}
+              ${when ? ' · ' + escapeHtml(when) : ''}
+            </p>
+          </div>
+          <span class="dashboard-queue-meta"><i class="bi bi-chevron-right"></i></span>
+        </a>
+      `;
+    }).join('');
+  }
+
   function escapeHtml(value) {
     return String(value ?? '')
       .replaceAll('&','&amp;')
@@ -108,5 +217,8 @@
       .replaceAll("'",'&#039;');
   }
 
-  document.addEventListener('DOMContentLoaded',generateCalendar);
+  document.addEventListener('DOMContentLoaded', () => {
+    generateCalendar();
+    renderPreviewDashboard();
+  });
 })();
