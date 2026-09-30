@@ -18,10 +18,12 @@ if (!user_can_review_applications($user)) {
 }
 
 $stmt = db()->prepare(
-    'SELECT a.application_no, a.form_type, a.title, a.payload, a.status,
-            a.current_stage, a.review_note, a.submitted_at, a.updated_at, u.fullname
+    'SELECT a.application_no, a.user_id, a.form_type, a.title, a.payload, a.status,
+            a.department, a.assigned_hod_id, a.current_stage, a.review_note,
+            a.sla_due_at, a.submitted_at, a.updated_at, u.fullname
      FROM applications a
      INNER JOIN users u ON u.id = a.user_id
+     WHERE a.form_type = "BPL"
      ORDER BY
        CASE
          WHEN a.form_type = "BPL" AND a.status = "pending" THEN 0
@@ -36,6 +38,10 @@ $result = $stmt->get_result();
 $submissions = [];
 
 while ($row = $result->fetch_assoc()) {
+    if ($normalizedRole === 'head_of_department' && !sts_can_view_application($row, $user)) {
+        continue;
+    }
+
     $payload = json_decode((string) $row['payload'], true);
     $payload = is_array($payload) ? $payload : [];
 
@@ -50,11 +56,16 @@ while ($row = $result->fetch_assoc()) {
         'title' => $row['title'],
         'applicant' => $row['fullname'],
         'status' => $row['status'],
+        'department' => $row['department'] ?: 'Unassigned',
         'currentStage' => $row['current_stage'],
         'stageLabel' => stage_label($row['current_stage']),
         'reviewNote' => $row['review_note'],
+        'slaDueAt' => $row['sla_due_at'],
+        'overdue' => !empty($row['sla_due_at'])
+            && strtotime((string) $row['sla_due_at']) < time()
+            && $row['status'] === 'pending',
         'canReview' => $row['form_type'] === 'BPL'
-            && user_can_review_stage((string) $row['current_stage'], $user)
+            && sts_can_review_application($row, $user)
             && !in_array($row['status'], ['approved', 'rejected'], true)
             && $row['current_stage'] !== 'completed',
         'reviewUrl' => $row['form_type'] === 'BPL'
@@ -76,8 +87,8 @@ $stmt->close();
   <title>Submissions - Smart Training System</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-  <link rel="stylesheet" href="sedco-saas.css?v=20260930-34">
-  <link rel="stylesheet" href="sedco-shell.css?v=20260930-15">
+  <link rel="stylesheet" href="sedco-saas.css?v=20260930-47">
+  <link rel="stylesheet" href="sedco-shell.css?v=20260930-47">
 </head>
 <body class="app-page submissions-page" data-page="submissions" data-role="<?= e(normalized_role($user['role'] ?? '')) ?>">
 
@@ -91,6 +102,10 @@ $stmt->close();
       </div>
 
       <div class="submissions-heading-actions">
+        <a class="submissions-secondary-action" href="export_applications.php?type=BPL">
+          <i class="bi bi-file-earmark-spreadsheet"></i>
+          Export CSV
+        </a>
         <a class="submissions-secondary-action" href="application-status.php">
           <i class="bi bi-clipboard-data"></i>
           Application status
@@ -158,6 +173,19 @@ $stmt->close();
           <button class="submission-filter" type="button" data-submission-filter="rejected">Rejected</button>
         </div>
 
+        <div class="submissions-advanced-filters">
+          <select id="submissionStage" aria-label="Filter by stage">
+            <option value="all">All stages</option>
+            <option value="hod">Head of Department</option>
+            <option value="training">Training Department</option>
+            <option value="gm">General Manager</option>
+            <option value="completed">Completed</option>
+          </select>
+          <select id="submissionDepartment" aria-label="Filter by department">
+            <option value="all">All departments</option>
+          </select>
+          <input id="submissionDate" type="date" aria-label="Filter by submitted date">
+        </div>
         <div class="submissions-search">
           <i class="bi bi-search"></i>
           <input id="submissionSearch" type="search" placeholder="Search reference, applicant or form...">
@@ -251,7 +279,7 @@ window.SEDCO_SUBMISSIONS = <?= json_encode(
     | JSON_HEX_QUOT
 ) ?>;
 </script>
-<script src="submissions.js?v=20260930-34"></script>
-<script src="sedco-shell.js?v=20260930-34"></script>
+<script src="submissions.js?v=20260930-47"></script>
+<script src="sedco-shell.js?v=20260930-47"></script>
 </body>
 </html>
