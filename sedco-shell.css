@@ -1,0 +1,321 @@
+:root{
+  --sedco-topbar-height:72px;
+  --sedco-sidebar-width:244px;
+}
+
+body.app-page{
+  margin:0 !important;
+  min-height:100vh !important;
+  overflow-x:hidden !important;
+}
+
+body.app-page > .sedco-navbar{
+  position:fixed !important;
+  top:0 !important;
+  left:0 !important;
+  right:0 !important;
+  width:auto !important;
+  height:var(--sedco-topbar-height) !important;
+  min-height:var(--sedco-topbar-height) !important;
+  margin:0 !important;
+  padding:0 28px !important;
+  display:block !important;
+  background:#7b1010 !important;
+  background:linear-gradient(135deg,#681010,#8f1010) !important;
+  border:0 !important;
+  border-bottom:1px solid rgba(255,255,255,.12) !important;
+  box-shadow:0 8px 24px rgba(83,10,10,.12) !important;
+  z-index:5000 !important;
+}
+
+body.app-page > .sedco-navbar .sedco-navbar-inner{
+  width:100% !important;
+  height:100% !important;
+  display:flex !important;
+  align-items:center !important;
+  justify-content:space-between !important;
+  gap:24px !important;
+}
+
+body.app-page > .sedco-navbar .sedco-brand-wrap{
+  display:flex !important;
+  align-items:center !important;
+  gap:10px !important;
+  min-width:0 !important;
+}
+
+body.app-page > .sedco-navbar .sedco-brand{
+  display:flex !important;
+  align-items:center !important;
+  gap:10px !important;
+  margin:0 !important;
+  padding:0 !important;
+  color:#fff !important;
+  text-decoration:none !important;
+  white-space:nowrap !important;
+}
+
+body.app-page > .sedco-navbar .brand-mark{
+  width:34px !important;
+  height:34px !important;
+  flex:0 0 34px !important;
+  display:inline-flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  border-radius:10px !important;
+  background:#fff !important;
+  color:#8f1010 !important;
+}
+
+body.app-page > .sedco-navbar .sedco-brand > span:last-child{
+  color:#fff !important;
+  font-size:15px !important;
+  line-height:1 !important;
+  font-weight:700 !important;
+  letter-spacing:-.01em !important;
+}
+
+body.app-page > .sedco-navbar .sedco-top-links{
+  display:flex !important;
+  align-items:center !important;
+  gap:2px !important;
+}
+
+body.app-page > .sedco-navbar .sedco-top-links a{
+  display:flex !important;
+  align-items:center !important;
+  height:38px !important;
+  padding:0 12px !important;
+  margin:0 !important;
+  border-radius:9px !important;
+  color:rgba(255,255,255,.88) !important;
+  background:transparent !important;
+  font-size:12px !important;
+  font-weight:600 !important;
+  text-decoration:none !important;
+}
+
+body.app-page > .sedco-navbar .sedco-top-links a:hover{
+  color:#fff !important;
+  background:rgba(255,255,255,.11) !important;
+}
+
+body.app-page > .sedco-sidebar{
+  position:fixed !important;
+  top:var(--sedco-topbar-height) !important;
+  left:0 !important;
+  bottom:0 !important;
+  width:var(--sedco-sidebar-width) !important;
+  height:auto !important;
+  margin:0 !important;
+  padding:20px 14px 14px !important;
+  display:flex !important;
+  flex-direction:column !important;
+  overflow-y:auto !important;
+  background:#731010 !important;
+  border:0 !important;
+  border-right:1px solid rgba(255,255,255,.06) !important;
+  box-shadow:none !important;
+  z-index:4900 !important;
+}
+
+body.app-page > .sedco-sidebar .sedco-sidebar-label{
+  padding:0 12px 10px !important;
+  color:rgba(255,255,255,.52) !important;
+  font-size:10px !important;
+  line-height:1.2 !important;
+  font-weight:700 !important;
+  letter-spacing:.12em !important;
+  text-transform:uppercase !important;
+}
+
+body.app-page > .sedco-sidebar .sedco-side-nav{
+  display:flex !important;
+  flex-direction:column !important;
+}
+
+body.app-page > .sedco-sidebar .sedco-nav-item{
+  display:flex !important;
+  align-items:center !important;
+  gap:10px !important;
+  width:100% !important;
+  min-height:44px !important;
+  padding:10px 12px !important;
+  margin:0 0 5px !important;
+  border-radius:10px !important;
+  color:rgba(255,255,255,.82) !important;
+  background:transparent !important;
+  font-size:13px !important;
+  font-weight:500 !important;
+  text-decoration:none !important;
+}
+
+body.app-page > .sedco-sidebar .sedco-nav-item i{
+  width:18px !important;
+  flex:0 0 18px !important;
+  margin:0 !important;
+  text-align:center !important;
+  font-size:16px !important;
+}
+
+body.app-page > .sedco-sidebar .sedco-nav-item:hover{
+  color:#fff !important;
+  background:rgba(255,255,255,.09) !important;
+}
+
+body.app-page > .sedco-sidebar .sedco-nav-item.active{
+  color:#fff !important;
+  background:rgba(255,255,255,.14) !important;
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.07) !important;
+}
+
+body.app-page > .sedco-sidebar .sedco-nav-item.is-disabled{
+  opacity:.45 !important;
+  cursor:not-allowed !important;
+}
+
+body.app-page > .sedco-sidebar .sedco-sidebar-footer{
+  margin-top:auto !important;
+  padding-top:14px !important;
+  border-top:1px solid rgba(255,255,255,.1) !important;
+}
+
+body.app-page > .sedco-mobile-toggle{
+  display:none !important;
+}
+
+body.app-page > .sedco-sidebar-backdrop{
+  display:none !important;
+}
+
+body.app-page .content,
+body.app-page .main-content,
+body.app-page .form-container,
+body.app-page .card-container,
+body.app-page .profile-content,
+body.app-page .status-content{
+  box-sizing:border-box !important;
+}
+
+body.dashboard-page .content,
+body.task-page .card-container,
+body.form-page .content,
+body.form-page .main-content,
+body.form-page .form-container,
+body.profile-page .profile-content,
+body.status-page .status-content{
+  margin-left:var(--sedco-sidebar-width) !important;
+  width:calc(100% - var(--sedco-sidebar-width)) !important;
+  margin-top:0 !important;
+  padding-top:104px !important;
+}
+
+@media (max-width:900px){
+  :root{--sedco-sidebar-width:76px}
+
+  body.app-page > .sedco-sidebar{
+    width:var(--sedco-sidebar-width) !important;
+    padding:18px 10px 12px !important;
+  }
+
+  body.app-page > .sedco-sidebar .sedco-sidebar-label{
+    display:none !important;
+  }
+
+  body.app-page > .sedco-sidebar .sedco-nav-item{
+    justify-content:center !important;
+    padding:10px !important;
+  }
+
+  body.app-page > .sedco-sidebar .sedco-nav-item span{
+    display:none !important;
+  }
+
+  body.app-page > .sedco-sidebar .sedco-nav-item i{
+    width:auto !important;
+    flex:0 0 auto !important;
+    font-size:17px !important;
+  }
+}
+
+@media (max-width:760px){
+  :root{--sedco-sidebar-width:0px}
+
+  body.app-page > .sedco-navbar{
+    padding:0 14px !important;
+  }
+
+  body.app-page > .sedco-navbar .sedco-mobile-toggle{
+    width:38px !important;
+    height:38px !important;
+    display:inline-flex !important;
+    align-items:center !important;
+    justify-content:center !important;
+    border:1px solid rgba(255,255,255,.14) !important;
+    border-radius:10px !important;
+    background:rgba(255,255,255,.08) !important;
+    color:#fff !important;
+    font-size:20px !important;
+  }
+
+  body.app-page > .sedco-navbar .sedco-brand > span:last-child{
+    font-size:12px !important;
+  }
+
+  body.app-page > .sedco-navbar .sedco-top-links{
+    display:none !important;
+  }
+
+  body.app-page > .sedco-sidebar{
+    width:244px !important;
+    transform:translateX(-100%) !important;
+    transition:transform .22s ease !important;
+    box-shadow:16px 0 40px rgba(0,0,0,.16) !important;
+  }
+
+  body.app-page > .sedco-sidebar .sedco-sidebar-label{
+    display:block !important;
+  }
+
+  body.app-page > .sedco-sidebar .sedco-nav-item{
+    justify-content:flex-start !important;
+    padding:10px 12px !important;
+  }
+
+  body.app-page > .sedco-sidebar .sedco-nav-item span{
+    display:inline !important;
+  }
+
+  body.app-page > .sedco-sidebar .sedco-nav-item i{
+    width:18px !important;
+    flex:0 0 18px !important;
+  }
+
+  body.app-page.sedco-menu-open > .sedco-sidebar{
+    transform:translateX(0) !important;
+  }
+
+  body.app-page > .sedco-sidebar-backdrop{
+    position:fixed !important;
+    inset:var(--sedco-topbar-height) 0 0 0 !important;
+    z-index:4800 !important;
+    border:0 !important;
+    background:rgba(0,0,0,.28) !important;
+    backdrop-filter:blur(1px) !important;
+  }
+
+  body.app-page.sedco-menu-open > .sedco-sidebar-backdrop{
+    display:block !important;
+  }
+
+  body.dashboard-page .content,
+  body.task-page .card-container,
+  body.form-page .content,
+  body.form-page .main-content,
+  body.form-page .form-container,
+  body.profile-page .profile-content,
+  body.status-page .status-content{
+    margin-left:0 !important;
+    width:100% !important;
+  }
+}
