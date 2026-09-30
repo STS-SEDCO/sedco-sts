@@ -20,9 +20,9 @@ require_login();
       window.print();
     }
   </script>
-    <link rel="stylesheet" href="sedco-saas.css?v=20260930-9">
+    <link rel="stylesheet" href="sedco-saas.css?v=20260930-10">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-  <link rel="stylesheet" href="sedco-shell.css?v=20260930-9">
+  <link rel="stylesheet" href="sedco-shell.css?v=20260930-10">
 </head>
 <body class="app-page form-page tea-page" data-page="task">
 
@@ -83,10 +83,10 @@ require_login();
               echo "<tr>
                 <td>$training</td>";
               for ($i = 0; $i < 5; $i++) {
-                echo "<td><input type='number' name='score_{$index}[]' min='1' max='4' style='width: 50px;'></td>";
+                echo "<td><input type="number" name="score_{$index}[]" min="1" max="4" class="score-input-small"></td>";
               }
               echo "
-                <td><input type='text' name='total_score_$index' style='width: 50px;'></td>
+                <td><input type="text" name="total_score_$index" class="score-input-small"></td>
                 <td>
                   <select name='competency_level_$index'>
                     <option value='Fail'>Fail</option>
@@ -129,6 +129,6 @@ require_login();
       </div>
     </form>
   </div>
-<script src="sedco-shell.js?v=20260930-9"></script>
+<script src="sedco-shell.js?v=20260930-10"></script>
 </body>
 </html>
