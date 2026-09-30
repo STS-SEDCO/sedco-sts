@@ -20,7 +20,7 @@
   const items = [
     ['dashboard', 'Dashboard', 'bi-grid-1x2-fill', pageUrl('dashboard')],
     ['profile', 'Profile', 'bi-person', pageUrl('profile')],
-    ['task', 'Tasks', 'bi-check2-square', pageUrl('task')],
+    ['task', 'Training Forms', 'bi-check2-square', pageUrl('task')],
     ['application-status', 'Application status', 'bi-clipboard-check', pageUrl('application-status')],
     ['submissions', 'Submissions', 'bi-inbox', pageUrl('submissions')]
   ];
