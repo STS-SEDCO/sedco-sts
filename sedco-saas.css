@@ -6897,3 +6897,138 @@ body{
     font-size:24px !important;
   }
 }
+
+
+/* ===== APPLICATION STATUS MODAL FIX V6 ===== */
+/* Keep application detail modals above the fixed SEDCO navbar/sidebar. */
+.status-page .modal{
+  z-index:6200 !important;
+}
+
+body.status-page .modal-backdrop{
+  z-index:6100 !important;
+}
+
+.status-page .status-modal{
+  padding-left:14px !important;
+  padding-right:14px !important;
+}
+
+.status-page .status-modal .modal-dialog{
+  width:min(920px,calc(100vw - 28px)) !important;
+  max-width:920px !important;
+  margin:20px auto !important;
+  min-height:calc(100vh - 40px) !important;
+  display:flex !important;
+  align-items:center !important;
+}
+
+.status-page .status-modal .modal-content{
+  width:100% !important;
+  max-height:calc(100vh - 40px) !important;
+  display:flex !important;
+  flex-direction:column !important;
+  overflow:hidden !important;
+  border:1px solid rgba(0,0,0,.06) !important;
+  border-radius:18px !important;
+  background:#fff !important;
+  box-shadow:0 28px 90px rgba(20,20,20,.22) !important;
+}
+
+.status-page .status-modal .modal-header{
+  flex:0 0 auto;
+  min-height:74px;
+  padding:18px 22px !important;
+  background:#fff;
+  border-bottom:1px solid #ececef !important;
+}
+
+.status-page .status-modal .modal-header .btn-close{
+  width:34px;
+  height:34px;
+  margin:0 !important;
+  padding:0 !important;
+  border-radius:10px;
+  background-size:10px;
+  opacity:.58;
+}
+
+.status-page .status-modal .modal-header .btn-close:hover{
+  background-color:#f5f5f6;
+  opacity:.9;
+}
+
+.status-page .status-modal .modal-body{
+  flex:1 1 auto;
+  min-height:0;
+  padding:18px 22px 22px !important;
+  overflow-y:auto !important;
+  overscroll-behavior:contain;
+  scrollbar-gutter:stable;
+}
+
+.status-page .status-modal .detail-grid{
+  max-height:none !important;
+  overflow:visible !important;
+  padding-right:0 !important;
+}
+
+.status-page .status-modal .modal-summary{
+  position:relative;
+  gap:10px !important;
+  margin-bottom:16px !important;
+}
+
+.status-page .status-modal .modal-summary-item{
+  min-height:82px;
+  padding:12px 14px !important;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+}
+
+.status-page .status-modal .detail-field{
+  min-height:74px;
+  padding:12px 14px !important;
+  background:#fcfcfd;
+}
+
+.status-page .status-modal .detail-field strong{
+  font-size:11.5px !important;
+  line-height:1.45;
+}
+
+@media(max-width:760px){
+  .status-page .status-modal{
+    padding-left:8px !important;
+    padding-right:8px !important;
+  }
+
+  .status-page .status-modal .modal-dialog{
+    width:calc(100vw - 16px) !important;
+    margin:8px auto !important;
+    min-height:calc(100vh - 16px) !important;
+  }
+
+  .status-page .status-modal .modal-content{
+    max-height:calc(100vh - 16px) !important;
+    border-radius:15px !important;
+  }
+
+  .status-page .status-modal .modal-header{
+    min-height:68px;
+    padding:15px 16px !important;
+  }
+
+  .status-page .status-modal .modal-body{
+    padding:15px 16px 18px !important;
+  }
+
+  .status-page .status-modal .modal-summary{
+    grid-template-columns:repeat(2,minmax(0,1fr)) !important;
+  }
+
+  .status-page .status-modal .detail-grid{
+    grid-template-columns:1fr !important;
+  }
+}
