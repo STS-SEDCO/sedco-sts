@@ -89,10 +89,27 @@
 
   function filteredRows() {
     const query = ($('submissionSearch')?.value || '').trim().toLowerCase();
+    const stage = $('submissionStage')?.value || 'all';
+    const department = $('submissionDepartment')?.value || 'all';
+    const date = $('submissionDate')?.value || '';
 
     return submissions.filter(item => {
       const status = item.status || 'pending';
       if (filter !== 'all' && status !== filter) return false;
+      if (stage !== 'all' && String(item.currentStage || '') !== stage) return false;
+      if (department !== 'all' && String(item.department || '') !== department) return false;
+
+      if (date) {
+        const submitted = new Date(item.submittedAt);
+        if (Number.isNaN(submitted.getTime())) return false;
+        const localDate = [
+          submitted.getFullYear(),
+          String(submitted.getMonth()+1).padStart(2,'0'),
+          String(submitted.getDate()).padStart(2,'0')
+        ].join('-');
+        if (localDate !== date) return false;
+      }
+
       if (!query) return true;
 
       return [
@@ -101,6 +118,7 @@
         item.title,
         item.formName,
         item.applicant,
+        item.department,
         status,
         item.stageLabel,
         item.currentStage
@@ -220,7 +238,22 @@
   document.addEventListener('DOMContentLoaded', () => {
     load();
 
+    const departmentSelect = $('submissionDepartment');
+    if (departmentSelect) {
+      [...new Set(submissions.map(item => item.department).filter(Boolean))]
+        .sort((a,b) => String(a).localeCompare(String(b)))
+        .forEach(department => {
+          const option = document.createElement('option');
+          option.value = department;
+          option.textContent = department;
+          departmentSelect.appendChild(option);
+        });
+    }
+
     $('submissionSearch')?.addEventListener('input', render);
+    $('submissionStage')?.addEventListener('change', render);
+    $('submissionDepartment')?.addEventListener('change', render);
+    $('submissionDate')?.addEventListener('change', render);
 
     document.querySelectorAll('[data-submission-filter]').forEach(button => {
       button.addEventListener('click', () => setFilter(button.dataset.submissionFilter));
