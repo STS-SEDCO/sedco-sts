@@ -50,7 +50,8 @@ while ($row = $result->fetch_assoc()) {
         'currentStage' => $row['current_stage'],
         'stageLabel' => stage_label($row['current_stage']),
         'reviewNote' => $row['review_note'],
-        'viewUrl' => $row['form_type'] === 'BPL'
+        'viewUrl' => 'application-detail.php?application=' . rawurlencode((string) $row['application_no']),
+        'editUrl' => $row['form_type'] === 'BPL' && $row['status'] === 'correction'
             ? 'bpl.php?application=' . rawurlencode((string) $row['application_no'])
             : null,
         'submittedAt' => $row['submitted_at'],
@@ -70,8 +71,8 @@ $stmt->close();
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-  <link rel="stylesheet" href="sedco-saas.css?v=20260930-34">
-  <link rel="stylesheet" href="sedco-shell.css?v=20260930-15">
+  <link rel="stylesheet" href="sedco-saas.css?v=20260930-48">
+  <link rel="stylesheet" href="sedco-shell.css?v=20260930-48">
 </head>
 <body class="app-page status-page" data-page="application-status" data-role="<?= e(normalized_role($user['role'] ?? '')) ?>">
 
@@ -213,7 +214,7 @@ window.SEDCO_APPLICATIONS = <?= json_encode(
     | JSON_HEX_QUOT
 ) ?>;
 </script>
-<script src="application-status.js?v=20260930-34"></script>
-<script src="sedco-shell.js?v=20260930-34"></script>
+<script src="application-status.js?v=20260930-48"></script>
+<script src="sedco-shell.js?v=20260930-48"></script>
 </body>
 </html>
