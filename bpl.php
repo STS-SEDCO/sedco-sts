@@ -20,6 +20,7 @@ $applicationNo = trim((string) ($_GET['application'] ?? ''));
 if ($applicationNo !== '') {
     $stmt = db()->prepare(
         'SELECT a.id, a.application_no, a.user_id, a.form_type, a.title, a.payload,
+                a.department, a.assigned_hod_id, a.sla_due_at,
                 a.status, a.current_stage, a.submitted_at, u.fullname AS applicant_name
          FROM applications a
          INNER JOIN users u ON u.id = a.user_id
@@ -38,7 +39,7 @@ if ($applicationNo !== '') {
 
     $isOwner = (int) $application['user_id'] === (int) $user['id'];
 
-    if (!$isOwner && !user_can_review_applications($user)) {
+    if (!$isOwner && !sts_can_view_application($application, $user)) {
         http_response_code(403);
         exit('You do not have permission to view this application.');
     }
@@ -62,7 +63,7 @@ $canReviewCurrentStage = $mode === 'review'
     && !$canResubmitCorrection
     && !in_array($applicationStatus, ['approved', 'rejected'], true)
     && $currentStage !== 'completed'
-    && user_can_review_stage($currentStage, $user);
+    && sts_can_review_application($application, $user);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -78,9 +79,9 @@ $canReviewCurrentStage = $mode === 'review'
             window.print();
         }
     </script>
-    <link rel="stylesheet" href="sedco-saas.css?v=20260930-34">
+    <link rel="stylesheet" href="sedco-saas.css?v=20260930-44">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-  <link rel="stylesheet" href="sedco-shell.css?v=20260930-18">
+  <link rel="stylesheet" href="sedco-shell.css?v=20260930-44">
 </head>
 <body class="app-page form-page bpl-page" data-page="task" data-role="<?= e(normalized_role($user['role'] ?? '')) ?>">
 
@@ -99,13 +100,13 @@ $canReviewCurrentStage = $mode === 'review'
                 <tr><th colspan="4">A. MAKLUMAT PEMOHON</th></tr>
                 <tr>
                     <td>01. Nama</td>
-                    <td><input type="text" name="nama" class="input-field"></td>
+                    <td><input type="text" name="nama" class="input-field" required></td>
                     <td>02. Bahagian</td>
-                    <td><input type="text" name="bahagian" class="input-field"></td>
+                    <td><input type="text" name="bahagian" class="input-field" required></td>
                 </tr>
                 <tr>
                     <td>03. Jawatan</td>
-                    <td colspan="3"><input type="text" name="jawatan" class="input-field"></td>
+                    <td colspan="3"><input type="text" name="jawatan" class="input-field" required></td>
                 </tr>
                 <tr>
                     <td>04. Kursus/Seminar</td>
@@ -122,7 +123,7 @@ $canReviewCurrentStage = $mode === 'review'
                 <tr><th colspan="4">B. MAKLUMAT KURSUS/SEMINAR</th></tr>
                 <tr>
                     <td>01. Tajuk Kursus</td>
-                    <td colspan="3"><input type="text" name="tajuk" class="input-field"></td>
+                    <td colspan="3"><input type="text" name="tajuk" class="input-field" required></td>
                 </tr>
                 <tr>
                     <td>02. Penganjur</td>
@@ -130,13 +131,13 @@ $canReviewCurrentStage = $mode === 'review'
                 </tr>
                 <tr>
                     <td>03. Tarikh Mula</td>
-                    <td><input type="date" name="tarikh_mula"></td>
+                    <td><input type="date" name="tarikh_mula" required></td>
                     <td>04. Tarikh Tamat</td>
-                    <td><input type="date" name="tarikh_tamat"></td>
+                    <td><input type="date" name="tarikh_tamat" required></td>
                 </tr>
                 <tr>
                     <td>05. Tempat Kursus</td>
-                    <td colspan="3"><input type="text" name="tempat" class="input-field"></td>
+                    <td colspan="3"><input type="text" name="tempat" class="input-field" required></td>
                 </tr>
                 <tr>
                     <td>06. Yuran (RM)</td>
@@ -298,8 +299,9 @@ window.SEDCO_FORM_CONTEXT = {
   status: <?= json_encode($applicationStatus) ?>
 };
 </script>
-<script src="bpl-workflow.js?v=20260930-34"></script>
-<script src="form-permissions.js?v=20260930-34"></script>
-<script src="sedco-shell.js?v=20260930-34"></script>
+<script src="bpl-workflow.js?v=20260930-44"></script>
+<script src="form-permissions.js?v=20260930-44"></script>
+<?php if ($mode === 'new'): ?><script src="form-enhancements.js?v=20260930-44"></script><?php endif; ?>
+<script src="sedco-shell.js?v=20260930-44"></script>
 </body>
 </html>
