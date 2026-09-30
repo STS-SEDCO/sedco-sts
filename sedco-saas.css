@@ -5963,3 +5963,317 @@ body{
     border-radius:18px;
   }
 }
+
+
+/* ===== SMART FORM INPUTS + VALIDATION ===== */
+.form-page .sts-smart-form input[type="text"],
+.form-page .sts-smart-form input[type="email"],
+.form-page .sts-smart-form input[type="tel"],
+.form-page .sts-smart-form input[type="date"],
+.form-page .sts-smart-form input[type="time"],
+.form-page .sts-smart-form input[type="number"],
+.form-page .sts-smart-form select,
+.form-page .sts-smart-form textarea{
+  min-height:42px !important;
+  padding:9px 11px !important;
+  border:1px solid #dfe0e4 !important;
+  border-radius:10px !important;
+  background:linear-gradient(180deg,#fff 0%,#fdfdfd 100%) !important;
+  color:#2f3034 !important;
+  font-size:10.5px !important;
+  line-height:1.4 !important;
+  outline:none !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.9),
+    0 1px 2px rgba(20,20,20,.025) !important;
+  transition:
+    border-color .16s ease,
+    box-shadow .16s ease,
+    background .16s ease,
+    transform .16s ease !important;
+}
+
+.form-page .sts-smart-form textarea{
+  min-height:86px !important;
+  resize:vertical !important;
+}
+
+.form-page .sts-smart-form input[type="text"]:hover:not(:disabled),
+.form-page .sts-smart-form input[type="date"]:hover:not(:disabled),
+.form-page .sts-smart-form input[type="time"]:hover:not(:disabled),
+.form-page .sts-smart-form input[type="number"]:hover:not(:disabled),
+.form-page .sts-smart-form select:hover:not(:disabled),
+.form-page .sts-smart-form textarea:hover:not(:disabled){
+  border-color:#cfd0d5 !important;
+  background:#fff !important;
+}
+
+.form-page .sts-smart-form input:focus:not([type="checkbox"]):not([type="radio"]),
+.form-page .sts-smart-form select:focus,
+.form-page .sts-smart-form textarea:focus{
+  border-color:rgba(143,16,16,.52) !important;
+  background:#fff !important;
+  box-shadow:
+    0 0 0 3px rgba(143,16,16,.075),
+    0 4px 12px rgba(68,14,14,.04) !important;
+}
+
+.form-page .sts-smart-form input::placeholder,
+.form-page .sts-smart-form textarea::placeholder{
+  color:#b0b1b6 !important;
+}
+
+.bpl-page .sts-smart-form td > input[type="text"],
+.bpl-page .sts-smart-form td > input[type="date"],
+.bpl-page .sts-smart-form td > input[type="time"],
+.bpl-page .sts-smart-form td > textarea,
+.bpl-page .sts-smart-form td > select{
+  width:min(100%,560px) !important;
+}
+
+.bpl-page .sts-smart-form td[colspan] > input[type="text"],
+.bpl-page .sts-smart-form td[colspan] > textarea{
+  width:min(100%,720px) !important;
+}
+
+.pkk-page .sts-smart-form .form-control{
+  width:100% !important;
+}
+
+.pkk-page .sts-smart-form .score-input{
+  min-width:58px !important;
+  max-width:78px !important;
+  height:38px !important;
+  min-height:38px !important;
+  padding:6px !important;
+  margin:auto !important;
+  text-align:center !important;
+  font-weight:700 !important;
+}
+
+.tea-page .sts-smart-form .score-input-small{
+  width:58px !important;
+  min-width:58px !important;
+  height:38px !important;
+  min-height:38px !important;
+  padding:5px !important;
+  text-align:center !important;
+  font-weight:720 !important;
+}
+
+.tea-page .sts-smart-form td input:not([type="radio"]):not([type="checkbox"]),
+.tea-page .sts-smart-form td select{
+  max-width:100% !important;
+}
+
+.tea-page .sts-smart-form select{
+  min-width:110px !important;
+}
+
+.form-page .sts-smart-form .sts-calculated-field{
+  background:#f5f7f6 !important;
+  border-color:#dce4df !important;
+  color:#32704e !important;
+  cursor:default !important;
+}
+
+.form-page .sts-smart-form label:has(input[type="radio"]),
+.form-page .sts-smart-form label:has(input[type="checkbox"]){
+  min-height:34px;
+  display:inline-flex;
+  align-items:center;
+  gap:7px;
+  margin:3px 6px 3px 0;
+  padding:6px 10px;
+  border:1px solid #e5e5e8;
+  border-radius:9px;
+  background:#fbfbfc;
+  color:#5c5c62;
+  font-size:9.5px;
+  font-weight:620;
+  cursor:pointer;
+  transition:border-color .16s ease,background .16s ease,color .16s ease;
+}
+
+.form-page .sts-smart-form label:has(input[type="radio"]:checked),
+.form-page .sts-smart-form label:has(input[type="checkbox"]:checked){
+  border-color:#e2bebe;
+  background:#fff3f3;
+  color:#7e1212;
+}
+
+.form-page .sts-smart-form input[type="radio"],
+.form-page .sts-smart-form input[type="checkbox"]{
+  width:15px;
+  height:15px;
+  margin:0;
+  accent-color:#8f1010;
+}
+
+.form-page .sts-required-mark{
+  color:#bd1f1f;
+  font-weight:800;
+}
+
+.form-page .sts-other-field{
+  max-width:430px;
+  margin-top:10px;
+  padding:10px;
+  border:1px solid #eadede;
+  border-radius:11px;
+  background:#fffafa;
+}
+
+.form-page .sts-other-field[hidden]{
+  display:none !important;
+}
+
+.form-page .sts-other-field label{
+  display:block !important;
+  margin:0 !important;
+  padding:0 !important;
+  border:0 !important;
+  background:transparent !important;
+  cursor:default !important;
+}
+
+.form-page .sts-other-field label > span{
+  display:block;
+  margin-bottom:6px;
+  color:#7a5050;
+  font-size:8.5px;
+  font-weight:720;
+}
+
+.form-page .sts-other-field input{
+  width:100% !important;
+}
+
+.form-page .sts-validation-banner{
+  position:relative;
+  display:flex;
+  align-items:flex-start;
+  gap:10px;
+  margin:0 0 14px;
+  padding:11px 12px;
+  border:1px solid #efcaca;
+  border-radius:12px;
+  background:linear-gradient(180deg,#fff8f8,#fff4f4);
+  color:#8d2020;
+  box-shadow:0 5px 16px rgba(143,16,16,.045);
+}
+
+.form-page .sts-validation-banner[hidden]{
+  display:none !important;
+}
+
+.form-page .sts-validation-banner-icon{
+  width:30px;
+  height:30px;
+  flex:0 0 30px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  border-radius:9px;
+  background:#ffe7e7;
+  color:#ad1f1f;
+  font-size:12px;
+}
+
+.form-page .sts-validation-banner strong{
+  display:block;
+  margin-bottom:2px;
+  color:#8c1b1b;
+  font-size:9.5px;
+  font-weight:750;
+}
+
+.form-page .sts-validation-banner p{
+  margin:0;
+  color:#9e5656;
+  font-size:8.5px;
+  line-height:1.45;
+}
+
+.form-page .sts-smart-form .sts-invalid:not([type="radio"]):not([type="checkbox"]){
+  border-color:#db3b3b !important;
+  background:#fffafa !important;
+  box-shadow:
+    0 0 0 3px rgba(219,59,59,.085),
+    0 4px 12px rgba(125,23,23,.04) !important;
+}
+
+.form-page .sts-invalid-host{
+  position:relative;
+}
+
+.form-page .sts-choice-error{
+  padding:7px !important;
+  border:1px solid #efc7c7 !important;
+  border-radius:10px !important;
+  background:#fffafa !important;
+}
+
+.form-page .sts-choice-error label:has(input[type="radio"]),
+.form-page .sts-choice-error label:has(input[type="checkbox"]){
+  border-color:#e6a9a9 !important;
+  background:#fff2f2 !important;
+}
+
+.form-page .sts-field-error{
+  display:flex;
+  align-items:center;
+  gap:5px;
+  margin-top:6px;
+  color:#bd2525;
+  font-size:8px;
+  line-height:1.35;
+  font-weight:650;
+}
+
+.form-page .sts-field-error i{
+  flex:0 0 auto;
+  font-size:8px;
+}
+
+.form-page .sts-smart-form .form-section-locked input,
+.form-page .sts-smart-form .form-section-locked textarea,
+.form-page .sts-smart-form .form-section-locked select{
+  border-color:#e7e7e9 !important;
+  background:#f4f4f5 !important;
+  color:#a0a0a5 !important;
+  box-shadow:none !important;
+}
+
+.form-page .sts-smart-form .form-section-editable{
+  scroll-margin-top:105px;
+}
+
+.form-page .sts-smart-form .form-section-editable td{
+  background:#fff !important;
+}
+
+.form-page .sts-smart-form .form-section-editable input:not([type="radio"]):not([type="checkbox"]),
+.form-page .sts-smart-form .form-section-editable textarea,
+.form-page .sts-smart-form .form-section-editable select{
+  box-shadow:0 1px 2px rgba(20,20,20,.025) !important;
+}
+
+@media(max-width:760px){
+  .form-page .sts-validation-banner{
+    margin-left:0;
+    margin-right:0;
+  }
+
+  .form-page .sts-smart-form label:has(input[type="radio"]),
+  .form-page .sts-smart-form label:has(input[type="checkbox"]){
+    margin-right:3px;
+    padding:6px 8px;
+  }
+
+  .pkk-page .sts-smart-form .score-input,
+  .tea-page .sts-smart-form .score-input-small{
+    min-width:52px !important;
+    width:52px !important;
+  }
+}
