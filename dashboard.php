@@ -11,6 +11,8 @@ if (!$user) {
     exit;
 }
 
+sts_ensure_followup_notifications($user);
+
 $db = db();
 $userId = (int) $user['id'];
 $role = normalized_role($user['role'] ?? '');
@@ -302,8 +304,8 @@ $unreadNotifications = sts_unread_notifications($userId);
   <title>Dashboard - Smart Training System</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-  <link rel="stylesheet" href="sedco-saas.css?v=20260930-41">
-  <link rel="stylesheet" href="sedco-shell.css?v=20260930-41">
+  <link rel="stylesheet" href="sedco-saas.css?v=20260930-50">
+  <link rel="stylesheet" href="sedco-shell.css?v=20260930-50">
 </head>
 <body class="app-page dashboard-page dashboard-v3" data-page="dashboard" data-role="<?= e($role) ?>">
 <main class="content">
@@ -444,6 +446,6 @@ window.STS_CALENDAR_EVENTS = <?= json_encode(
 ) ?>;
 </script>
 <script src="dashboard.js?v=20260930-41"></script>
-<script src="sedco-shell.js?v=20260930-41"></script>
+<script src="sedco-shell.js?v=20260930-50"></script>
 </body>
 </html>
