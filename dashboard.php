@@ -24,7 +24,7 @@ if (!$user) {
     <link rel="stylesheet" href="sedco-saas.css?v=20260930-14">
   <link rel="stylesheet" href="sedco-shell.css?v=20260930-14">
 </head>
-<body class="app-page dashboard-page" data-page="dashboard">
+<body class="app-page dashboard-page" data-page="dashboard" data-role="<?= e(normalized_role($user['role'] ?? '')) ?>">
 
     <main class="content">
         <div class="dashboard-shell">
@@ -148,6 +148,6 @@ if (!$user) {
             });
         }
     </script>
-<script src="sedco-shell.js?v=20260930-23"></script>
+<script src="sedco-shell.js?v=20260930-33"></script>
 </body>
 </html>
