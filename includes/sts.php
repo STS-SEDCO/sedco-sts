@@ -539,3 +539,101 @@ function sts_validate_parent_bpl(
 
     return null;
 }
+
+
+function sts_ensure_followup_notifications(array $user): void
+{
+    $role = normalized_role($user['role'] ?? '');
+    $userId = (int) ($user['id'] ?? 0);
+
+    if ($userId <= 0 || !in_array($role, ['staff', 'head_of_department'], true)) {
+        return;
+    }
+
+    try {
+        if ($role === 'staff') {
+            $stmt = db()->prepare(
+                'SELECT b.id, b.application_no, b.title, b.training_end
+                 FROM applications b
+                 WHERE b.user_id = ?
+                   AND b.form_type = "BPL"
+                   AND b.status = "approved"
+                   AND b.training_end IS NOT NULL
+                   AND NOT EXISTS (
+                     SELECT 1 FROM applications p
+                     WHERE p.parent_application_id = b.id
+                       AND p.form_type = "PKK"
+                   )
+                 ORDER BY b.training_end ASC'
+            );
+            $stmt->bind_param('i', $userId);
+            $type = 'PKK';
+        } else {
+            $department = trim((string) ($user['department'] ?? ''));
+            $stmt = db()->prepare(
+                'SELECT b.id, b.application_no, b.title, b.training_end
+                 FROM applications b
+                 WHERE b.form_type = "BPL"
+                   AND b.status = "approved"
+                   AND b.training_end IS NOT NULL
+                   AND (
+                     b.assigned_hod_id = ?
+                     OR (
+                       b.assigned_hod_id IS NULL
+                       AND (b.department = ? OR b.department IS NULL OR b.department = "")
+                     )
+                   )
+                   AND NOT EXISTS (
+                     SELECT 1 FROM applications t
+                     WHERE t.parent_application_id = b.id
+                       AND t.form_type = "TEA"
+                   )
+                 ORDER BY b.training_end ASC'
+            );
+            $stmt->bind_param('is', $userId, $department);
+            $type = 'TEA';
+        }
+
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        while ($row = $result->fetch_assoc()) {
+            $due = sts_followup_due((string) $row['training_end'], $type);
+
+            if (!$due || strtotime($due) > time()) {
+                continue;
+            }
+
+            $link = strtolower($type) . '.php?parent=' . (int) $row['id'];
+            $title = $type . ' follow-up due';
+
+            $check = db()->prepare(
+                'SELECT id
+                 FROM notifications
+                 WHERE user_id = ? AND title = ? AND link = ?
+                 LIMIT 1'
+            );
+            $check->bind_param('iss', $userId, $title, $link);
+            $check->execute();
+            $exists = $check->get_result()->fetch_assoc();
+            $check->close();
+
+            if ($exists) {
+                continue;
+            }
+
+            sts_notify(
+                $userId,
+                $title,
+                $row['application_no'] . ' · ' . $row['title']
+                    . ' is ready for ' . $type . ' follow-up.',
+                $link,
+                'warning'
+            );
+        }
+
+        $stmt->close();
+    } catch (Throwable) {
+        // Follow-up reminders are recreated the next time the dashboard loads.
+    }
+}
