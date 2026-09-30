@@ -137,11 +137,11 @@ $canReviewCurrentStage = $mode === 'review'
                 </tr>
                 <tr>
                     <td>04. Kursus/Seminar</td>
-                    <td colspan="3"><input type="text" name="kursus" class="input-field"></td>
+                    <td colspan="3"><input type="text" name="kursus" class="input-field" required></td>
                 </tr>
                 <tr>
                     <td>Tarikh</td>
-                    <td colspan="3"><input type="date" name="tarikh"></td>
+                    <td colspan="3"><input type="date" name="tarikh" required></td>
                 </tr>
             </table>
 
@@ -154,7 +154,7 @@ $canReviewCurrentStage = $mode === 'review'
                 </tr>
                 <tr>
                     <td>02. Penganjur</td>
-                    <td colspan="3"><input type="text" name="penganjur" class="input-field"></td>
+                    <td colspan="3"><input type="text" name="penganjur" class="input-field" required></td>
                 </tr>
                 <tr>
                     <td>03. Tarikh Mula</td>
@@ -168,11 +168,11 @@ $canReviewCurrentStage = $mode === 'review'
                 </tr>
                 <tr>
                     <td>06. Yuran (RM)</td>
-                    <td colspan="3"><input type="text" name="yuran" class="input-field"></td>
+                    <td colspan="3"><input type="text" name="yuran" class="input-field" required></td>
                 </tr>
                 <tr>
                     <td>07. Kandungan</td>
-                    <td colspan="3"><textarea name="kandungan" class="input-field" rows="4"></textarea></td>
+                    <td colspan="3"><textarea name="kandungan" class="input-field" rows="4" required></textarea></td>
                 </tr>
             </table>
 
@@ -226,15 +226,15 @@ $canReviewCurrentStage = $mode === 'review'
                 <tr><th colspan="2">C. ULASAN PENGURUS SEKSYEN LATIHAN</th></tr>
                 <tr>
                     <td>Ulasan</td>
-                    <td><textarea name="ulasan_latihan" class="input-field" rows="4"></textarea></td>
+                    <td><textarea name="ulasan_latihan" class="input-field" rows="4" required></textarea></td>
                 </tr>
                 <tr>
                     <td>Tarikh</td>
-                    <td><input type="date" name="tarikh_latihan"></td>
+                    <td><input type="date" name="tarikh_latihan" required></td>
                 </tr>
                 <tr>
                     <td>Tandatangan</td>
-                    <td><input type="text" name="tt_latihan" class="input-field"></td>
+                    <td><input type="text" name="tt_latihan" class="input-field" required></td>
                 </tr>
             </table>
 
@@ -242,15 +242,15 @@ $canReviewCurrentStage = $mode === 'review'
                 <tr><th colspan="2">D. ULASAN KETUA/PENGURUS BAHAGIAN</th></tr>
                 <tr>
                     <td>Ulasan</td>
-                    <td><textarea name="ulasan_bahagian" class="input-field" rows="4"></textarea></td>
+                    <td><textarea name="ulasan_bahagian" class="input-field" rows="4" required></textarea></td>
                 </tr>
                 <tr>
                     <td>Tarikh</td>
-                    <td><input type="date" name="tarikh_bahagian"></td>
+                    <td><input type="date" name="tarikh_bahagian" required></td>
                 </tr>
                 <tr>
                     <td>Tandatangan</td>
-                    <td><input type="text" name="tt_bahagian" class="input-field"></td>
+                    <td><input type="text" name="tt_bahagian" class="input-field" required></td>
                 </tr>
             </table>
 
@@ -259,17 +259,17 @@ $canReviewCurrentStage = $mode === 'review'
                 <tr>
                     <td>Kelulusan</td>
                     <td>
-                        <label><input type="radio" name="kelulusan_pgs" value="Diluluskan"> Diluluskan</label>
+                        <label><input type="radio" name="kelulusan_pgs" value="Diluluskan" required> Diluluskan</label>
                         <label><input type="radio" name="kelulusan_pgs" value="Tidak Diluluskan"> Tidak Diluluskan</label>
                     </td>
                 </tr>
                 <tr>
                     <td>Tarikh</td>
-                    <td><input type="date" name="tarikh_pgs"></td>
+                    <td><input type="date" name="tarikh_pgs" required></td>
                 </tr>
                 <tr>
                     <td>Tandatangan</td>
-                    <td><input type="text" name="tt_pgs" class="input-field"></td>
+                    <td><input type="text" name="tt_pgs" class="input-field" required></td>
                 </tr>
             </table>
 
@@ -297,19 +297,19 @@ $canReviewCurrentStage = $mode === 'review'
                 <tr><th colspan="2">ULASAN KEWANGAN</th></tr>
                 <tr>
                     <td>a) Bayaran Kursus</td>
-                    <td><input type="text" name="bayaran_kursus"> Yuran (RM)</td>
+                    <td><input type="text" name="bayaran_kursus" required> Yuran (RM)</td>
                 </tr>
                 <tr>
                     <td>b) Permohonan Pendahuluan Diterima</td>
                     <td>
-                        <label><input type="radio" name="pendahuluan_diterima" value="Ya"> Ya</label>
+                        <label><input type="radio" name="pendahuluan_diterima" value="Ya" required> Ya</label>
                         <label><input type="radio" name="pendahuluan_diterima" value="Tidak"> Tidak</label>
                     </td>
                 </tr>
                 <tr>
                     <td>c) Telah Didaftarkan</td>
                     <td>
-                        <label><input type="radio" name="telah_didaftar" value="Ya"> Ya</label>
+                        <label><input type="radio" name="telah_didaftar" value="Ya" required> Ya</label>
                         <label><input type="radio" name="telah_didaftar" value="Tidak"> Tidak</label>
                     </td>
                 </tr>
@@ -360,7 +360,7 @@ window.SEDCO_FORM_CONTEXT = {
 </script>
 <script src="bpl-workflow.js?v=20260930-54"></script>
 <script src="form-permissions.js?v=20260930-59"></script>
-<script src="form-ux.js?v=20260930-61"></script>
+<script src="form-ux.js?v=20260930-62"></script>
 <script src="form-enhancements.js?v=20260930-59"></script>
 <script src="sedco-shell.js?v=20260930-56"></script>
 </body>
