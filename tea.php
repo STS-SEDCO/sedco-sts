@@ -33,6 +33,7 @@ require_login();
     </div>
 
     <form method="post" action="submit_application.php?type=TEA">
+      <?= csrf_field() ?>
       <table>
         <tr>
           <td class="no-border" colspan="2">Employee Name: <input type="text" name="employee_name" class="input-field" required></td>
