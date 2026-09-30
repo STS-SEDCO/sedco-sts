@@ -7,6 +7,20 @@ declare(strict_types=1);
  * normalized_role(), role_label(), and stage_label().
  */
 
+
+function sts_sedco_departments(): array
+{
+    return [
+        'Bahagian Audit Dalam (IAD)',
+        'Bahagian Pembangunan Perniagaan dan Pelaburan (BDI)',
+        'Bahagian Kewangan (FND)',
+        'Bahagian Pembangunan Usahawan (EDD)',
+        'Bahagian Pengurusan Strategik (SMD)',
+        'Bahagian Pengurusan Hartanah (PMD)',
+        'Bahagian Sumber Manusia dan Pentadbiran (HRAD)',
+    ];
+}
+
 function sts_form_name(string $type): string
 {
     return match (strtoupper($type)) {
