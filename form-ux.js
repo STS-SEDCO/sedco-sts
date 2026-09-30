@@ -197,6 +197,83 @@
     });
   }
 
+  function enhanceWritingFields() {
+    const placeholders = {
+      BPL: {
+        nama: 'Nama penuh pemohon',
+        bahagian: 'Contoh: Bahagian Sumber Manusia',
+        jawatan: 'Jawatan pemohon',
+        kursus: 'Nama kursus / seminar',
+        tajuk: 'Tajuk latihan',
+        penganjur: 'Nama penganjur',
+        tempat: 'Lokasi kursus / seminar',
+        yuran: 'Contoh: 350.00',
+        kandungan: 'Ringkaskan kandungan utama kursus / seminar...',
+        tempat_tugas: 'Lokasi tugas luar daerah',
+        kenderaan_other: 'Contoh: Grab, teksi, bas...',
+        ulasan_latihan: 'Tulis ulasan Training Department...',
+        ulasan_bahagian: 'Tulis ulasan Head of Department...',
+        ulasan_pengurus: 'Tulis ulasan pengurus...',
+        ulasan_kewangan: 'Tulis ulasan kewangan...'
+      },
+      PKK: {
+        nama: 'Nama penuh pegawai / staf',
+        bahagian: 'Bahagian / divisyen',
+        jawatan: 'Jawatan',
+        tajuk: 'Tajuk kursus / seminar',
+        tempat: 'Tempat kursus / seminar',
+        objektif: 'Terangkan objektif anda menghadiri kursus...',
+        perkara1: 'Perkara pertama yang dipelajari...',
+        perkara2: 'Perkara kedua yang dipelajari...',
+        perkara3: 'Perkara ketiga yang dipelajari...',
+        perkara4: 'Perkara keempat yang dipelajari...',
+        perkara5: 'Perkara kelima yang dipelajari...',
+        cadangan1: 'Cadangan / penambahbaikan 1...',
+        cadangan2: 'Cadangan / penambahbaikan 2...',
+        cadangan3: 'Cadangan / penambahbaikan 3...',
+        p1: 'Nama Penceramah 1',
+        p2: 'Nama Penceramah 2',
+        p3: 'Nama Penceramah 3',
+        p4: 'Nama Penceramah 4',
+        p5: 'Nama Penceramah 5',
+        tandatangan: 'Nama / tandatangan digital ringkas'
+      },
+      TEA: {
+        employee_name: 'Nama pekerja',
+        division: 'Bahagian / seksyen',
+        comments_0: 'Tambah komen jika perlu...',
+        comments_1: 'Tambah komen jika perlu...',
+        head_division: 'Nama Ketua Bahagian / Seksyen',
+        signature: 'Nama / tandatangan digital ringkas'
+      }
+    };
+
+    const map = placeholders[formType] || {};
+
+    form.querySelectorAll('input[type="text"], input[type="email"], input[type="tel"], input[type="number"], textarea, select').forEach(control => {
+      if (control.disabled) return;
+
+      control.classList.add('sts-writing-field');
+
+      if (!control.placeholder && map[control.name]) {
+        control.placeholder = map[control.name];
+      }
+
+      if (control.tagName === 'TEXTAREA') {
+        control.classList.add('sts-auto-grow');
+
+        const resize = () => {
+          control.style.height = 'auto';
+          const next = Math.min(Math.max(control.scrollHeight, 82), 220);
+          control.style.height = next + 'px';
+        };
+
+        control.addEventListener('input', resize);
+        window.setTimeout(resize, 0);
+      }
+    });
+  }
+
   function setupOtherFields() {
     const controls = [
       ...form.querySelectorAll('input[type="checkbox"][value], input[type="radio"][value], select')
@@ -544,6 +621,7 @@
     }
   });
 
+  enhanceWritingFields();
   setupOtherFields();
   setupTeaTotals();
   setupPkkSpeakerRules();
