@@ -18,7 +18,7 @@ $user = current_user();
       window.print();
     }
   </script>
-    <link rel="stylesheet" href="sedco-saas.css?v=20260930-24">
+    <link rel="stylesheet" href="sedco-saas.css?v=20260930-26">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
   <link rel="stylesheet" href="sedco-shell.css?v=20260930-18">
 </head>
@@ -127,12 +127,12 @@ $user = current_user();
 
       <div class="center mt-4">
         <input type="submit" value="Submit Form" class="btn btn-primary">
-        <button type="button" onclick="printForm()" class="btn btn-secondary ms-3">Print Form</button>
+        <button type="button" onclick="printForm()" class="btn btn-secondary ms-3 form-print-button">Print Form</button>
       </div>
     </form>
   </div>
-<script>window.SEDCO_FORM_CONTEXT = { role: <?= json_encode($user['role'] ?? 'staff') ?>, mode: 'new' };</script>
-<script src="form-permissions.js?v=20260930-24"></script>
+<script>window.SEDCO_FORM_CONTEXT = { role: <?= json_encode($user['role'] ?? 'staff') ?>, mode: 'new', formType: 'TEA' };</script>
+<script src="form-permissions.js?v=20260930-26"></script>
 <script src="sedco-shell.js?v=20260930-23"></script>
 </body>
 </html>
