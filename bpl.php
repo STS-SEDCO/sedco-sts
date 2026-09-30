@@ -2,7 +2,62 @@
 declare(strict_types=1);
 require_once __DIR__ . '/includes/auth.php';
 require_login();
+
 $user = current_user();
+
+if (!$user) {
+    header('Location: login.php');
+    exit;
+}
+
+$mode = 'new';
+$application = null;
+$payload = [];
+$currentStage = '';
+$applicationStatus = 'pending';
+$applicationNo = trim((string) ($_GET['application'] ?? ''));
+
+if ($applicationNo !== '') {
+    $stmt = db()->prepare(
+        'SELECT a.id, a.application_no, a.user_id, a.form_type, a.title, a.payload,
+                a.status, a.current_stage, a.submitted_at, u.fullname AS applicant_name
+         FROM applications a
+         INNER JOIN users u ON u.id = a.user_id
+         WHERE a.application_no = ?
+         LIMIT 1'
+    );
+    $stmt->bind_param('s', $applicationNo);
+    $stmt->execute();
+    $application = $stmt->get_result()->fetch_assoc();
+    $stmt->close();
+
+    if (!$application || $application['form_type'] !== 'BPL') {
+        http_response_code(404);
+        exit('Application not found.');
+    }
+
+    $isOwner = (int) $application['user_id'] === (int) $user['id'];
+
+    if (!$isOwner && !user_can_review_applications($user)) {
+        http_response_code(403);
+        exit('You do not have permission to view this application.');
+    }
+
+    $mode = 'review';
+    $payload = json_decode((string) $application['payload'], true);
+    $payload = is_array($payload) ? $payload : [];
+    $currentStage = (string) $application['current_stage'];
+    $applicationStatus = (string) $application['status'];
+}
+
+$formAction = $mode === 'review'
+    ? 'review_application.php'
+    : 'submit_application.php?type=BPL';
+
+$canReviewCurrentStage = $mode === 'review'
+    && !in_array($applicationStatus, ['approved', 'rejected'], true)
+    && $currentStage !== 'completed'
+    && user_can_review_stage($currentStage, $user);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -18,7 +73,7 @@ $user = current_user();
             window.print();
         }
     </script>
-    <link rel="stylesheet" href="sedco-saas.css?v=20260930-26">
+    <link rel="stylesheet" href="sedco-saas.css?v=20260930-27">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
   <link rel="stylesheet" href="sedco-shell.css?v=20260930-18">
 </head>
@@ -220,8 +275,26 @@ $user = current_user();
 
         </form>
 </div>
-<script>window.SEDCO_FORM_CONTEXT = { role: <?= json_encode($user['role'] ?? 'staff') ?>, mode: 'new', formType: 'BPL' };</script>
-<script src="form-permissions.js?v=20260930-26"></script>
+<script>
+window.SEDCO_BPL_DATA = <?= json_encode(
+    $payload,
+    JSON_UNESCAPED_UNICODE
+    | JSON_UNESCAPED_SLASHES
+    | JSON_HEX_TAG
+    | JSON_HEX_AMP
+    | JSON_HEX_APOS
+    | JSON_HEX_QUOT
+) ?>;
+window.SEDCO_FORM_CONTEXT = {
+  role: <?= json_encode($user['role'] ?? 'staff') ?>,
+  mode: <?= json_encode($mode) ?>,
+  formType: 'BPL',
+  currentStage: <?= json_encode($currentStage) ?>,
+  status: <?= json_encode($applicationStatus) ?>
+};
+</script>
+<script src="bpl-workflow.js?v=20260930-27"></script>
+<script src="form-permissions.js?v=20260930-27"></script>
 <script src="sedco-shell.js?v=20260930-23"></script>
 </body>
 </html>
