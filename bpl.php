@@ -2,6 +2,7 @@
 declare(strict_types=1);
 require_once __DIR__ . '/includes/auth.php';
 require_login();
+$user = current_user();
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -17,7 +18,7 @@ require_login();
             window.print();
         }
     </script>
-    <link rel="stylesheet" href="sedco-saas.css?v=20260930-19">
+    <link rel="stylesheet" href="sedco-saas.css?v=20260930-24">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
   <link rel="stylesheet" href="sedco-shell.css?v=20260930-18">
 </head>
@@ -213,11 +214,13 @@ require_login();
 
             <div class="form-actions">
                 <input type="submit" name="submit" value="Submit" class="btn-maroon">
-                <button onclick="printPage()" type="button" class="btn-maroon">Print</button>
+                <button onclick="printPage()" type="button" class="btn-maroon form-print-button">Print</button>
             </div>
 
         </form>
 </div>
-<script src="sedco-shell.js?v=20260930-18"></script>
+<script>window.SEDCO_FORM_CONTEXT = { role: <?= json_encode($user['role'] ?? 'staff') ?>, mode: 'new' };</script>
+<script src="form-permissions.js?v=20260930-24"></script>
+<script src="sedco-shell.js?v=20260930-23"></script>
 </body>
 </html>
