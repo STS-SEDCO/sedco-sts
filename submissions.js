@@ -36,6 +36,8 @@
         return { label:'Rejected', cls:'rejected', icon:'bi-x-circle' };
       case 'correction':
         return { label:'Needs correction', cls:'correction', icon:'bi-exclamation-circle' };
+      case 'cancelled':
+        return { label:'Cancelled', cls:'cancelled', icon:'bi-slash-circle' };
       default:
         return { label:'Pending review', cls:'pending', icon:'bi-clock-history' };
     }
@@ -83,7 +85,9 @@
   function updateStats() {
     $('submissionTotal').textContent = submissions.length;
     $('submissionPending').textContent = submissions.filter(x => (x.status || 'pending') === 'pending').length;
-    $('submissionReviewed').textContent = submissions.filter(x => (x.status || 'pending') !== 'pending').length;
+    $('submissionReviewed').textContent = submissions.filter(x =>
+      ['approved','rejected','correction'].includes(x.status || 'pending')
+    ).length;
     $('submissionWeek').textContent = submissions.filter(x => isThisWeek(x.submittedAt)).length;
   }
 
