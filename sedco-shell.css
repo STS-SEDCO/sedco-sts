@@ -622,3 +622,55 @@ body.app-page.sedco-sidebar-collapsed > .sedco-sidebar .sedco-nav-badge{
     width:100%!important;
   }
 }
+
+
+/* ===== TOP RIGHT PROFILE ===== */
+body.app-page > .sedco-navbar .sedco-top-profile{
+  width:38px !important;
+  height:38px !important;
+  flex:0 0 38px !important;
+  display:inline-flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  margin-left:4px !important;
+  border:1px solid rgba(255,255,255,.17) !important;
+  border-radius:12px !important;
+  background:rgba(255,255,255,.09) !important;
+  color:#fff !important;
+  text-decoration:none !important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.06) !important;
+  transition:background .18s ease,border-color .18s ease,transform .18s ease,box-shadow .18s ease !important;
+}
+
+body.app-page > .sedco-navbar .sedco-top-profile i{
+  font-size:16px !important;
+  line-height:1 !important;
+}
+
+body.app-page > .sedco-navbar .sedco-top-profile:hover,
+body.app-page > .sedco-navbar .sedco-top-profile.active{
+  transform:translateY(-1px);
+  border-color:rgba(255,255,255,.32) !important;
+  background:rgba(255,255,255,.17) !important;
+  box-shadow:0 6px 15px rgba(54,4,4,.14),inset 0 1px 0 rgba(255,255,255,.08) !important;
+}
+
+body.app-page > .sedco-navbar .sedco-top-profile.active{
+  background:#fff !important;
+  color:#8f1010 !important;
+}
+
+body.app-page > .sedco-navbar .sedco-top-profile:focus-visible{
+  outline:3px solid rgba(255,255,255,.2) !important;
+  outline-offset:2px !important;
+}
+
+@media(max-width:760px){
+  body.app-page > .sedco-navbar .sedco-top-profile{
+    width:36px !important;
+    height:36px !important;
+    flex-basis:36px !important;
+    margin-left:auto !important;
+    border-radius:11px !important;
+  }
+}
