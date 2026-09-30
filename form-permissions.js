@@ -42,8 +42,8 @@
         return false;
       }
 
-      if (applicationStatus === 'correction' && normalizedRole === 'staff') {
-        return normalizedOwner === 'staff';
+      if (applicationStatus === 'correction') {
+        return normalizedRole === 'staff' && normalizedOwner === 'staff';
       }
 
       const ownerForStage = stageOwner(currentStage);
