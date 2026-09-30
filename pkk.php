@@ -92,8 +92,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 </script>
 
-    <link rel="stylesheet" href="sedco-saas.css?v=20260930-3">
+    <link rel="stylesheet" href="sedco-saas.css?v=20260930-6">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <link rel="stylesheet" href="sedco-shell.css?v=20260930-6">
 </head>
 <body class="app-page form-page pkk-page" data-page="task">
 
@@ -404,6 +405,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     </div>
 </div>
 
-<script src="sedco-submission.js"></script>\n<script src="sedco-shell.js?v=20260930-3"></script>
+<script src="sedco-submission.js"></script>\n<script src="sedco-shell.js?v=20260930-6"></script>
 </body>
 </html>
