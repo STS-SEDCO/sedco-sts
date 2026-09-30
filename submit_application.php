@@ -10,6 +10,8 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     exit;
 }
 
+verify_csrf();
+
 $type = strtoupper((string) ($_GET['type'] ?? ''));
 $allowedTypes = ['BPL', 'PKK', 'TEA'];
 
