@@ -15,7 +15,7 @@ $user = current_user();
   <link rel="stylesheet" href="sedco-saas.css?v=20260930-26">
   <link rel="stylesheet" href="sedco-shell.css?v=20260930-18">
 </head>
-<body class="app-page form-page pkk-page" data-page="task">
+<body class="app-page form-page pkk-page" data-page="task" data-role="<?= e(normalized_role($user['role'] ?? '')) ?>">
   <main class="main-content">
     <div class="container shadow-lg p-5 bg-white rounded-4">
       <h2 class="text-center mb-3 text-uppercase fw-bold">Borang Penilaian Keberkesanan Kursus / Seminar</h2>
@@ -143,6 +143,6 @@ $user = current_user();
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   <script>window.SEDCO_FORM_CONTEXT = { role: <?= json_encode($user['role'] ?? 'staff') ?>, mode: 'new', formType: 'PKK' };</script>
 <script src="form-permissions.js?v=20260930-26"></script>
-<script src="sedco-shell.js?v=20260930-23"></script>
+<script src="sedco-shell.js?v=20260930-33"></script>
 </body>
 </html>
