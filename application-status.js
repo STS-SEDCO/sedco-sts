@@ -269,8 +269,14 @@
       history.replaceState({}, '', location.pathname);
     }
 
-    if (params.get('cancel_error') === '1') {
+    if (params.get('cancel_error') === '1' || params.get('cancel_setup') === '1') {
       const toast = $('errorToast');
+      const text = $('errorToastText');
+
+      if (params.get('cancel_setup') === '1' && text) {
+        text.textContent = 'Import CANCEL_APPLICATION_UPGRADE.sql once before using cancellation.';
+      }
+
       if (toast) {
         toast.classList.add('show');
         setTimeout(() => toast.classList.remove('show'), 4200);
