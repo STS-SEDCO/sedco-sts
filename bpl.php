@@ -118,6 +118,9 @@ $canReviewCurrentStage = $mode === 'review'
 
         <form method="post" action="<?= e($formAction) ?>" enctype="multipart/form-data">
       <?= csrf_field() ?>
+      <?php if ($mode === 'review'): ?>
+      <input type="hidden" name="application_no" value="<?= e($application['application_no']) ?>">
+      <?php endif; ?>
 
             <!-- A. MAKLUMAT PEMOHON -->
             <table data-form-owner="staff">
@@ -299,8 +302,26 @@ $canReviewCurrentStage = $mode === 'review'
             </table>
 
             <div class="form-actions">
-                <input type="submit" name="submit" value="Submit" class="btn-maroon">
-                <button onclick="printPage()" type="button" class="btn-maroon form-print-button">Print</button>
+                <?php if ($mode === 'new'): ?>
+                <input type="submit" name="submit" value="Submit Application" class="btn-maroon">
+                <?php elseif ($canResubmitCorrection): ?>
+                <button type="submit" class="btn-maroon">
+                  <i class="bi bi-arrow-repeat"></i> Resubmit Application
+                </button>
+                <?php elseif ($canReviewCurrentStage): ?>
+                <button type="submit" name="decision" value="approved" class="btn-maroon btn-review-approve">
+                  <i class="bi bi-check2"></i> <?= $currentStage === 'gm' ? 'Approve & Complete' : 'Approve & Continue' ?>
+                </button>
+                <button type="submit" name="decision" value="correction" class="btn-review-secondary">
+                  <i class="bi bi-arrow-counterclockwise"></i> Needs Correction
+                </button>
+                <button type="submit" name="decision" value="rejected" class="btn-review-reject">
+                  <i class="bi bi-x-lg"></i> Reject
+                </button>
+                <?php endif; ?>
+                <button onclick="printPage()" type="button" class="btn-maroon form-print-button">
+                  <i class="bi bi-printer"></i> Print
+                </button>
             </div>
 
         </form>
@@ -323,9 +344,9 @@ window.SEDCO_FORM_CONTEXT = {
   status: <?= json_encode($applicationStatus) ?>
 };
 </script>
-<script src="bpl-workflow.js?v=20260930-51"></script>
-<script src="form-permissions.js?v=20260930-51"></script>
-<script src="form-enhancements.js?v=20260930-51"></script>
+<script src="bpl-workflow.js?v=20260930-54"></script>
+<script src="form-permissions.js?v=20260930-54"></script>
+<script src="form-enhancements.js?v=20260930-54"></script>
 <script src="sedco-shell.js?v=20260930-53"></script>
 </body>
 </html>
