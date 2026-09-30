@@ -91,6 +91,22 @@ while ($row = $linkedResult->fetch_assoc()) {
 
 $linkedStmt->close();
 
+$parentApplicationNo = null;
+if (!empty($application['parent_application_id'])) {
+    $parentStmt = db()->prepare(
+        'SELECT application_no
+         FROM applications
+         WHERE id = ?
+         LIMIT 1'
+    );
+    $parentId = (int) $application['parent_application_id'];
+    $parentStmt->bind_param('i', $parentId);
+    $parentStmt->execute();
+    $parentRow = $parentStmt->get_result()->fetch_assoc();
+    $parentStmt->close();
+    $parentApplicationNo = $parentRow['application_no'] ?? null;
+}
+
 $versionStmt = db()->prepare(
     'SELECT v.event_type, v.created_at, u.fullname
      FROM application_versions v
@@ -260,9 +276,11 @@ function detail_value_label(string $key): string
           <?php endforeach; ?>
         </div>
         <?php elseif (!empty($application['parent_application_id'])): ?>
-        <a class="lifecycle-parent-link" href="application-detail.php?application=<?= rawurlencode((string) ($linked['application_no'] ?? '')) ?>">
-          Linked training record
+        <?php if ($parentApplicationNo): ?>
+        <a class="lifecycle-parent-link" href="application-detail.php?application=<?= rawurlencode((string) $parentApplicationNo) ?>">
+          <i class="bi bi-arrow-left"></i> View linked BPL <?= e($parentApplicationNo) ?>
         </a>
+        <?php endif; ?>
         <?php else: ?>
         <p class="sts-muted-copy">This form is not linked to a BPL training record.</p>
         <?php endif; ?>
