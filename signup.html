@@ -86,8 +86,9 @@
             z-index: 1000;
         }
     </style>
+    <link rel="stylesheet" href="sedco-saas.css">
 </head>
-<body>
+<body class="auth-page signup-page">
 
 <section class="vh-100 d-flex align-items-center justify-content-center">
     <div class="card p-4">
