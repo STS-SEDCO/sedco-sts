@@ -82,7 +82,7 @@ $canReviewCurrentStage = $mode === 'review'
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
   <link rel="stylesheet" href="sedco-shell.css?v=20260930-18">
 </head>
-<body class="app-page form-page bpl-page" data-page="task">
+<body class="app-page form-page bpl-page" data-page="task" data-role="<?= e(normalized_role($user['role'] ?? '')) ?>">
 
     <!-- Navbar -->
     <!-- Sidebar -->
@@ -300,6 +300,6 @@ window.SEDCO_FORM_CONTEXT = {
 </script>
 <script src="bpl-workflow.js?v=20260930-28"></script>
 <script src="form-permissions.js?v=20260930-28"></script>
-<script src="sedco-shell.js?v=20260930-23"></script>
+<script src="sedco-shell.js?v=20260930-33"></script>
 </body>
 </html>
