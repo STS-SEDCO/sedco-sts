@@ -2843,3 +2843,51 @@ body{
     margin:7px 0 0;
   }
 }
+
+
+/* ===== TASK ROLE STATES ===== */
+.task-page .task-form-card-locked{
+  border-style:dashed !important;
+  background:linear-gradient(180deg,#fbfbfc 0%,#f8f8f9 100%) !important;
+  box-shadow:none !important;
+}
+
+.task-page .task-form-card-locked::before{
+  background:#c8c8cc !important;
+}
+
+.task-page .task-form-card-locked .task-form-icon{
+  border-color:#e5e5e8;
+  background:#f1f1f3;
+  color:#8e8e94;
+  box-shadow:none;
+}
+
+.task-page .task-form-card-locked .task-form-copy h2,
+.task-page .task-form-card-locked .task-form-copy p{
+  color:#8a8a90 !important;
+}
+
+.task-page .task-form-card-locked .task-card-status{
+  color:#929298;
+}
+
+.task-page .task-form-card-locked .task-card-status i{
+  color:#929298;
+  font-size:9px;
+}
+
+.task-page .task-apply-btn-locked{
+  cursor:not-allowed;
+  border-color:#e1e1e4 !important;
+  background:#f1f1f3 !important;
+  color:#95959a !important;
+  box-shadow:none !important;
+  pointer-events:none;
+}
+
+.task-page .task-form-card-locked:hover{
+  transform:none !important;
+  border-color:#dedee2 !important;
+  box-shadow:none !important;
+}
