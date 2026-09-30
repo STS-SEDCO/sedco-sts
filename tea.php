@@ -1,3 +1,8 @@
+<?php
+declare(strict_types=1);
+require_once __DIR__ . '/includes/auth.php';
+require_login();
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -189,9 +194,9 @@
       window.print();
     }
   </script>
-    <link rel="stylesheet" href="sedco-saas.css?v=20260930-6">
+    <link rel="stylesheet" href="sedco-saas.css?v=20260930-8">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-  <link rel="stylesheet" href="sedco-shell.css?v=20260930-6">
+  <link rel="stylesheet" href="sedco-shell.css?v=20260930-8">
 </head>
 <body class="app-page form-page tea-page" data-page="task">
 
@@ -200,12 +205,11 @@
   <!-- Main Content -->
   <div class="form-container">
     <div class="center mb-4">
-      <img src="http://localhost/STS/v2/assets/img/logo.png" alt="SEDCO Logo" style="height:60px;"><br>
       <h5 class="mt-3 fw-bold">TRAINING EFFECTIVENESS ASSESSMENT FORM</h5>
       <em>Post-Training Evaluation – Improvement Assessment (Conducted in June or December of the Training Year)</em>
     </div>
 
-    <form method="post" action="submit_form.php">
+    <form method="post" action="submit_application.php?type=TEA">
       <table>
         <tr>
           <td class="no-border" colspan="2">Employee Name: <input type="text" name="employee_name" class="input-field" required></td>
@@ -300,6 +304,7 @@
     </form>
   </div>
 
-<script src="sedco-submission.js"></script>\n<script src="sedco-shell.js?v=20260930-6"></script>
+<script src="sedco-submission.js"></script>
+<script src="sedco-shell.js?v=20260930-8"></script>
 </body>
 </html>
