@@ -64,7 +64,7 @@ $rememberedEmail = (string) ($_COOKIE['sedco_email'] ?? '');
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Login - Training Management System</title>
+  <title>Login - Smart Training System</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
   <link rel="stylesheet" href="sedco-saas.css?v=20260930-14">
@@ -78,7 +78,7 @@ $rememberedEmail = (string) ($_COOKIE['sedco_email'] ?? '');
             <div class="card-body p-md-5">
               <div class="row align-items-center justify-content-center">
                 <div class="col-md-10 col-lg-6">
-                  <p class="text-center h1 fw-bold mb-4">TRAINING MANAGEMENT SYSTEM</p>
+                  <p class="text-center h1 fw-bold mb-4">SMART TRAINING SYSTEM</p>
                   <p class="text-center text-muted mb-4">Sign in to continue to your workspace.</p>
 
                   <?php if ($error): ?>
@@ -138,7 +138,7 @@ $rememberedEmail = (string) ($_COOKIE['sedco_email'] ?? '');
 
                     <div class="text-center">
                       <small>
-                        New to Training Management System?
+                        New to Smart Training System?
                         <a href="signup.php" class="text-primary text-decoration-none fw-bold">Sign up</a>
                       </small>
                     </div>
