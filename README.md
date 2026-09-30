@@ -1,4 +1,4 @@
-# SEDCO Training Management System
+# SEDCO Smart Training System
 
 The repository contains two delivery modes:
 
