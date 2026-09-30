@@ -67,7 +67,7 @@ $stmt->close();
   <title>Submissions - Training Management System</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-  <link rel="stylesheet" href="sedco-saas.css?v=20260930-17">
+  <link rel="stylesheet" href="sedco-saas.css?v=20260930-18">
   <link rel="stylesheet" href="sedco-shell.css?v=20260930-15">
 </head>
 <body class="app-page submissions-page" data-page="submissions">
@@ -237,7 +237,7 @@ window.SEDCO_SUBMISSIONS = <?= json_encode(
     | JSON_HEX_QUOT
 ) ?>;
 </script>
-<script src="submissions.js?v=20260930-17"></script>
-<script src="sedco-shell.js?v=20260930-15"></script>
+<script src="submissions.js?v=20260930-18"></script>
+<script src="sedco-shell.js?v=20260930-18"></script>
 </body>
 </html>
