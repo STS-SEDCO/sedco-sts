@@ -1961,3 +1961,388 @@ body{
 @media(max-width:480px){
   .submissions-page .submissions-stats{grid-template-columns:1fr}
 }
+
+
+/* ===== PREMIUM FORMS V3 ===== */
+/* Visual polish only: preserves the existing BPL / PKK / TEA form layouts. */
+.form-page{
+  background:
+    radial-gradient(circle at 12% 4%,rgba(143,16,16,.05),transparent 22%),
+    linear-gradient(180deg,#f7f8fa 0%,#f4f5f7 100%) !important;
+}
+
+.form-page .content,
+.form-page .main-content,
+.form-page .form-container{
+  padding-top:116px !important;
+  padding-bottom:52px !important;
+}
+
+/* Main form surfaces */
+.bpl-page .content > form,
+.pkk-page .main-content > .container,
+.tea-page .form-container{
+  position:relative;
+  border:1px solid #e6e6e9 !important;
+  border-radius:18px !important;
+  background:
+    linear-gradient(180deg,rgba(255,255,255,1) 0%,rgba(254,254,254,1) 100%) !important;
+  box-shadow:
+    0 1px 2px rgba(20,20,20,.025),
+    0 14px 38px rgba(20,20,20,.045) !important;
+}
+
+/* Page titles */
+.bpl-page .content > h2{
+  max-width:1120px !important;
+  margin:0 auto 18px !important;
+  color:#1d1d20 !important;
+  font-size:28px !important;
+  line-height:1.15;
+  font-weight:760 !important;
+  letter-spacing:-.04em !important;
+}
+
+.bpl-page .content > h2::before,
+.pkk-page .main-content > .container > h2::before,
+.tea-page .form-container > .center:first-child h5::before{
+  content:"";
+  display:inline-block;
+  width:22px;
+  height:3px;
+  margin-right:10px;
+  border-radius:999px;
+  background:linear-gradient(90deg,#8f1010,#b51b1b);
+  vertical-align:middle;
+  transform:translateY(-2px);
+}
+
+.pkk-page .main-content > .container > h2,
+.tea-page .form-container > .center:first-child h5{
+  color:#1d1d20 !important;
+  font-size:24px !important;
+  line-height:1.2 !important;
+  font-weight:760 !important;
+  letter-spacing:-.035em !important;
+}
+
+.pkk-page .main-content > .container > p.text-muted,
+.tea-page .form-container > .center:first-child em{
+  color:#808086 !important;
+  font-size:11.5px !important;
+  line-height:1.65;
+}
+
+/* Inputs */
+.form-page input[type="text"],
+.form-page input[type="date"],
+.form-page input[type="time"],
+.form-page input[type="number"],
+.form-page textarea,
+.form-page select{
+  min-height:40px;
+  border:1px solid #e0e0e4 !important;
+  border-radius:10px !important;
+  background:#fbfbfc !important;
+  color:#2c2c30 !important;
+  font-size:12px !important;
+  box-shadow:0 1px 1px rgba(20,20,20,.015) !important;
+  transition:border-color .16s ease,background .16s ease,box-shadow .16s ease !important;
+}
+
+.form-page textarea{
+  min-height:88px;
+  padding-top:10px !important;
+  line-height:1.55;
+}
+
+.form-page input:hover,
+.form-page textarea:hover,
+.form-page select:hover{
+  border-color:#d5d5da !important;
+  background:#fff !important;
+}
+
+.form-page input:focus,
+.form-page textarea:focus,
+.form-page select:focus{
+  border-color:rgba(143,16,16,.38) !important;
+  background:#fff !important;
+  box-shadow:0 0 0 3px rgba(143,16,16,.065) !important;
+}
+
+.form-page input::placeholder,
+.form-page textarea::placeholder{
+  color:#b0b0b5 !important;
+}
+
+/* Native controls */
+.form-page input[type="checkbox"],
+.form-page input[type="radio"]{
+  min-height:auto !important;
+  width:15px;
+  height:15px;
+  margin-right:5px;
+  accent-color:var(--sedco-brand);
+  border-radius:4px !important;
+  box-shadow:none !important;
+}
+
+.form-page label{
+  color:#4f4f54;
+  font-size:11.5px;
+  font-weight:600;
+}
+
+.form-page td label{
+  display:inline-flex;
+  align-items:center;
+  margin:4px 16px 4px 0;
+  font-weight:550;
+}
+
+/* Tables */
+.form-page table{
+  width:100%;
+  overflow:hidden;
+  border:1px solid #e6e6e9 !important;
+  border-radius:13px;
+  background:#fff !important;
+  box-shadow:0 1px 2px rgba(20,20,20,.018);
+}
+
+.form-page table th{
+  padding:11px 13px !important;
+  background:linear-gradient(180deg,#821010 0%,#741010 100%) !important;
+  color:#fff !important;
+  border-color:rgba(255,255,255,.09) !important;
+  font-size:10px !important;
+  line-height:1.4;
+  font-weight:700 !important;
+  letter-spacing:.045em;
+  text-transform:uppercase;
+  vertical-align:middle;
+}
+
+.form-page table td{
+  padding:12px 13px !important;
+  color:#48484d;
+  border-color:#ececef !important;
+  background:#fff;
+  font-size:11.5px;
+  line-height:1.5;
+  vertical-align:middle;
+}
+
+.form-page table tbody tr{
+  transition:background .14s ease;
+}
+
+.form-page table tbody tr:hover td:not(.no-border){
+  background:#fdfafa;
+}
+
+/* BPL keeps exactly the same table structure, but section headers are clearer. */
+.bpl-page table tr:first-child th{
+  position:relative;
+  padding-left:16px !important;
+  background:linear-gradient(90deg,#741010 0%,#8f1010 100%) !important;
+  text-align:left;
+}
+
+.bpl-page table tr:first-child th::after{
+  content:"";
+  position:absolute;
+  left:0;
+  top:0;
+  bottom:0;
+  width:3px;
+  background:#d99494;
+}
+
+/* PKK evaluation areas */
+.pkk-page .main-content > .container{
+  padding:32px !important;
+}
+
+.pkk-page hr{
+  border-color:#ececef !important;
+  opacity:1 !important;
+}
+
+.pkk-page .form-label{
+  margin-bottom:7px !important;
+  color:#4b4b50 !important;
+  font-size:10.5px !important;
+  font-weight:700 !important;
+  letter-spacing:.015em;
+}
+
+.pkk-page ol{
+  color:#85858b;
+  font-size:11px;
+}
+
+.pkk-page ol textarea{
+  color:#2f2f33 !important;
+}
+
+.pkk-page h5{
+  color:#2f2f33 !important;
+  font-size:13px !important;
+  font-weight:720 !important;
+}
+
+.pkk-page .text-muted strong{
+  color:#55555a !important;
+}
+
+/* TEA-specific premium treatment */
+.tea-page .form-container{
+  padding:32px !important;
+}
+
+.tea-page .form-container > .center:first-child{
+  margin-bottom:26px !important;
+}
+
+.tea-page .rating-info{
+  display:inline-flex;
+  align-items:center;
+  min-height:32px;
+  margin-top:7px;
+  padding:0 12px;
+  border:1px solid #ececef;
+  border-radius:999px;
+  background:#fafafa;
+  color:#737378 !important;
+  font-size:10px !important;
+  font-weight:600;
+}
+
+.tea-page .form-container > form > p{
+  margin:4px 0 18px;
+  padding:10px 12px;
+  border:1px solid #ececef;
+  border-radius:10px;
+  background:#fafafa;
+  color:#707075;
+  font-size:10.5px;
+  line-height:1.55;
+}
+
+.tea-page .no-border{
+  padding:10px 12px !important;
+  color:#55555a !important;
+  background:#fafafa !important;
+}
+
+.tea-page .score-input-small{
+  min-height:34px !important;
+  width:46px !important;
+  min-width:46px !important;
+  padding:4px !important;
+  text-align:center;
+}
+
+/* Buttons */
+.form-page .form-actions,
+.form-page .center.mt-4,
+.pkk-page .text-end.mt-4{
+  padding-top:6px;
+}
+
+.form-page .btn-maroon,
+.form-page .btn-primary{
+  min-height:40px !important;
+  padding:0 17px !important;
+  border:1px solid #7d1010 !important;
+  border-radius:10px !important;
+  background:linear-gradient(180deg,#971414 0%,#821010 100%) !important;
+  color:#fff !important;
+  font-size:11px !important;
+  font-weight:700 !important;
+  box-shadow:0 5px 13px rgba(143,16,16,.14) !important;
+  transition:transform .16s ease,box-shadow .16s ease,background .16s ease !important;
+}
+
+.form-page .btn-maroon:hover,
+.form-page .btn-primary:hover{
+  transform:translateY(-1px);
+  background:linear-gradient(180deg,#a01818 0%,#8a1111 100%) !important;
+  box-shadow:0 8px 18px rgba(143,16,16,.17) !important;
+}
+
+.form-page .btn-secondary{
+  min-height:40px !important;
+  padding:0 17px !important;
+  border:1px solid #dedee2 !important;
+  border-radius:10px !important;
+  background:#fff !important;
+  color:#55555a !important;
+  font-size:11px !important;
+  font-weight:700 !important;
+  box-shadow:0 1px 2px rgba(20,20,20,.025) !important;
+}
+
+.form-page .btn-secondary:hover{
+  background:#f7f7f8 !important;
+  border-color:#d3d3d8 !important;
+  color:#29292d !important;
+}
+
+/* Responsive visual polish only; existing structure remains intact. */
+@media(max-width:760px){
+  .form-page .content,
+  .form-page .main-content,
+  .form-page .form-container{
+    padding-top:96px !important;
+    padding-left:14px !important;
+    padding-right:14px !important;
+  }
+
+  .pkk-page .main-content > .container,
+  .tea-page .form-container,
+  .bpl-page .content > form{
+    padding:18px !important;
+    border-radius:15px !important;
+  }
+
+  .bpl-page .content > h2{
+    font-size:22px !important;
+  }
+
+  .pkk-page .main-content > .container > h2,
+  .tea-page .form-container > .center:first-child h5{
+    font-size:20px !important;
+  }
+
+  .form-page table th,
+  .form-page table td{
+    padding:9px 10px !important;
+  }
+}
+
+@media print{
+  .form-page{
+    background:#fff !important;
+  }
+
+  .bpl-page .content > form,
+  .pkk-page .main-content > .container,
+  .tea-page .form-container{
+    border:0 !important;
+    box-shadow:none !important;
+    background:#fff !important;
+  }
+
+  .form-page table th{
+    background:#fff !important;
+    color:#000 !important;
+    border-color:#999 !important;
+  }
+
+  .form-page table td{
+    border-color:#bbb !important;
+  }
+}
