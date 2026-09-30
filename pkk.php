@@ -9,6 +9,8 @@ if (!$user) {
     exit;
 }
 
+$sedcoDepartments = sts_sedco_departments();
+
 $parent = null;
 $parentPayload = [];
 $parentId = max(0, (int) ($_GET['parent'] ?? 0));
@@ -33,7 +35,7 @@ if ($parentId > 0) {
   <title>Smart Training System - Borang Penilaian</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-  <link rel="stylesheet" href="sedco-saas.css?v=20260930-61">
+  <link rel="stylesheet" href="sedco-saas.css?v=20260930-71">
   <link rel="stylesheet" href="sedco-shell.css?v=20260930-56">
 </head>
 <body class="app-page form-page pkk-page" data-page="task" data-role="<?= e(normalized_role($user['role'] ?? '')) ?>">
@@ -64,7 +66,13 @@ if ($parentId > 0) {
           </div>
           <div class="col-md-4">
             <label class="form-label fw-semibold">Bahagian</label>
-            <input type="text" class="form-control" name="bahagian" required value="<?= e((string) ($parentPayload['bahagian'] ?? $user['department'] ?? '')) ?>">
+            <?php $selectedDepartment = (string) ($parentPayload['bahagian'] ?? $user['department'] ?? ''); ?>
+            <select class="form-control sts-department-select" name="bahagian" required>
+              <option value="">Pilih bahagian</option>
+              <?php foreach ($sedcoDepartments as $departmentName): ?>
+              <option value="<?= e($departmentName) ?>" <?= $selectedDepartment === $departmentName ? 'selected' : '' ?>><?= e($departmentName) ?></option>
+              <?php endforeach; ?>
+            </select>
           </div>
           <div class="col-md-4">
             <label class="form-label fw-semibold">Jawatan</label>
