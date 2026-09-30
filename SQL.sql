@@ -7,6 +7,9 @@ CREATE TABLE IF NOT EXISTS users (
     fullname VARCHAR(120) NOT NULL,
     email VARCHAR(190) NOT NULL UNIQUE,
     phone_number VARCHAR(30) DEFAULT NULL,
+    staff_id VARCHAR(50) DEFAULT NULL UNIQUE,
+    department VARCHAR(120) DEFAULT NULL,
+    job_title VARCHAR(120) DEFAULT NULL,
     role ENUM(
         'admin',
         'staff',
