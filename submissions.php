@@ -66,7 +66,7 @@ while ($row = $result->fetch_assoc()) {
             && $row['status'] === 'pending',
         'canReview' => $row['form_type'] === 'BPL'
             && sts_can_review_application($row, $user)
-            && !in_array($row['status'], ['approved', 'rejected'], true)
+            && !in_array($row['status'], ['approved', 'rejected', 'cancelled'], true)
             && $row['current_stage'] !== 'completed',
         'reviewUrl' => $row['form_type'] === 'BPL'
             ? 'bpl.php?application=' . rawurlencode((string) $row['application_no'])
@@ -87,7 +87,7 @@ $stmt->close();
   <title>Submissions - Smart Training System</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-  <link rel="stylesheet" href="sedco-saas.css?v=20260930-47">
+  <link rel="stylesheet" href="sedco-saas.css?v=20260930-65">
   <link rel="stylesheet" href="sedco-shell.css?v=20260930-56">
 </head>
 <body class="app-page submissions-page" data-page="submissions" data-role="<?= e(normalized_role($user['role'] ?? '')) ?>">
@@ -171,6 +171,7 @@ $stmt->close();
           <button class="submission-filter" type="button" data-submission-filter="approved">Approved</button>
           <button class="submission-filter" type="button" data-submission-filter="correction">Needs correction</button>
           <button class="submission-filter" type="button" data-submission-filter="rejected">Rejected</button>
+          <button class="submission-filter" type="button" data-submission-filter="cancelled">Cancelled</button>
         </div>
 
         <div class="submissions-advanced-filters">
@@ -279,7 +280,7 @@ window.SEDCO_SUBMISSIONS = <?= json_encode(
     | JSON_HEX_QUOT
 ) ?>;
 </script>
-<script src="submissions.js?v=20260930-47"></script>
+<script src="submissions.js?v=20260930-65"></script>
 <script src="sedco-shell.js?v=20260930-56"></script>
 </body>
 </html>
