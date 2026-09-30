@@ -126,10 +126,15 @@ while ($row = $versionResult->fetch_assoc()) {
 
 $versionStmt->close();
 
+$canCancelApplication =
+    (int) $application['user_id'] === (int) $user['id']
+    && in_array((string) $application['status'], ['pending', 'correction'], true);
+
 $statusClass = match ((string) $application['status']) {
     'approved' => 'approved',
     'rejected' => 'rejected',
     'correction' => 'correction',
+    'cancelled' => 'cancelled',
     default => 'pending',
 };
 
@@ -146,8 +151,8 @@ function detail_value_label(string $key): string
   <title><?= e($applicationNo) ?> - Smart Training System</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-  <link rel="stylesheet" href="sedco-saas.css?v=20260930-40">
-  <link rel="stylesheet" href="sedco-shell.css?v=20260930-56">
+  <link rel="stylesheet" href="sedco-saas.css?v=20260930-64">
+  <link rel="stylesheet" href="sedco-shell.css?v=20260930-64">
 </head>
 <body class="app-page application-detail-page" data-page="application-status" data-role="<?= e(normalized_role($user['role'] ?? '')) ?>">
 <main class="sts-page-content">
@@ -167,6 +172,11 @@ function detail_value_label(string $key): string
         <a class="sts-primary-btn" href="application-print.php?application=<?= rawurlencode($applicationNo) ?>" target="_blank">
           <i class="bi bi-printer"></i> Print / PDF
         </a>
+        <?php if ($canCancelApplication): ?>
+        <button class="sts-danger-btn" type="button" data-bs-toggle="modal" data-bs-target="#cancelApplicationModal">
+          <i class="bi bi-x-circle"></i> Cancel application
+        </button>
+        <?php endif; ?>
       </div>
     </header>
 
@@ -231,6 +241,19 @@ function detail_value_label(string $key): string
           <div class="workflow-step is-done">
             <span><i class="bi bi-check2-all"></i></span>
             <div><strong>Workflow completed</strong><p>Final approval completed.</p></div>
+          </div>
+          <?php elseif ($application['status'] === 'cancelled'): ?>
+          <div class="workflow-step is-cancelled">
+            <span><i class="bi bi-slash-circle"></i></span>
+            <div>
+              <strong>Application cancelled</strong>
+              <p>
+                <?= !empty($application['cancelled_at']) ? e(date('d M Y, g:i A', strtotime((string) $application['cancelled_at']))) : 'Cancelled by applicant' ?>
+              </p>
+              <?php if (!empty($application['cancellation_reason'])): ?>
+              <blockquote><?= e($application['cancellation_reason']) ?></blockquote>
+              <?php endif; ?>
+            </div>
           </div>
           <?php endif; ?>
         </div>
@@ -341,6 +364,46 @@ function detail_value_label(string $key): string
     </div>
   </div>
 </main>
-<script src="sedco-shell.js?v=20260930-56"></script>
+
+<?php if ($canCancelApplication): ?>
+<div class="modal fade status-modal cancel-application-modal" id="cancelApplicationModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <form method="post" action="cancel_application.php">
+        <?= csrf_field() ?>
+        <input type="hidden" name="application_no" value="<?= e($applicationNo) ?>">
+        <div class="modal-header">
+          <div>
+            <div class="modal-kicker">Withdraw application</div>
+            <h2 class="modal-title mt-1">Cancel application?</h2>
+          </div>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="cancel-warning-card">
+            <span><i class="bi bi-exclamation-triangle"></i></span>
+            <div>
+              <strong>This will stop the current approval workflow.</strong>
+              <p>The record will remain in Application Status as Cancelled for audit and reference.</p>
+            </div>
+          </div>
+          <label class="cancel-reason-field">
+            <span>Reason for cancellation <b>*</b></span>
+            <textarea name="cancellation_reason" rows="4" minlength="5" maxlength="500" required placeholder="Tell us why this application is being cancelled..."></textarea>
+            <small>Minimum 5 characters.</small>
+          </label>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="sts-secondary-btn" data-bs-dismiss="modal">Keep application</button>
+          <button type="submit" class="sts-danger-btn"><i class="bi bi-x-circle"></i> Confirm cancellation</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+<?php endif; ?>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="sedco-shell.js?v=20260930-64"></script>
 </body>
 </html>
