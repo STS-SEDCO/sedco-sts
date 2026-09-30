@@ -10,6 +10,11 @@
     path.includes('application-status') ? 'application-status'
       : path.includes('submissions') ? 'submissions'
       : path.includes('profile') ? 'profile'
+      : path.includes('notifications') ? 'notifications'
+      : path.includes('reports') ? 'reports'
+      : path.includes('admin-users') ? 'admin-users'
+      : path.includes('admin-settings') ? 'admin-settings'
+      : path.includes('audit-log') ? 'audit-log'
       : /task|bpl|pkk|tea/.test(path) ? 'task'
       : 'dashboard'
   );
@@ -21,20 +26,28 @@
   const items = [
     ['dashboard', 'Dashboard', 'bi-grid-1x2-fill', pageUrl('dashboard')],
     ['profile', 'Profile', 'bi-person', pageUrl('profile')],
-    ['task', 'Training Forms', 'bi-check2-square', pageUrl('task')],
+    ['task', 'Training Forms', 'bi-file-earmark-text', pageUrl('task')],
     ['application-status', 'Application status', 'bi-clipboard-check', pageUrl('application-status')],
-    ['submissions', 'Submissions', 'bi-inbox', pageUrl('submissions')]
+    ['submissions', 'Submissions', 'bi-inbox', pageUrl('submissions')],
+    ['notifications', 'Notifications', 'bi-bell', pageUrl('notifications')],
+    ['reports', 'Reports & Analytics', 'bi-bar-chart-line', pageUrl('reports')],
+    ['admin-users', 'User Management', 'bi-people', pageUrl('admin-users')],
+    ['admin-settings', 'System Settings', 'bi-sliders', pageUrl('admin-settings')],
+    ['audit-log', 'Audit Log', 'bi-shield-check', pageUrl('audit-log')]
   ];
 
   const visibleItems = items.filter(([key]) => {
-    if (key !== 'submissions') return true;
-    return userRole === '' || userRole !== 'staff';
+    if (key === 'submissions') return userRole !== '' && userRole !== 'staff';
+    if (key === 'reports') return ['admin','training_section','general_manager','head_of_department'].includes(userRole);
+    if (['admin-users','admin-settings','audit-log'].includes(key)) return userRole === 'admin';
+    return true;
   });
 
   const sidebarLinks = visibleItems.map(([key, label, icon, href]) => `
-    <a class="sedco-nav-item${key === activePage ? ' active' : ''}" href="${href}">
+    <a class="sedco-nav-item${key === activePage ? ' active' : ''}" href="${href}" data-nav-key="${key}">
       <i class="bi ${icon}"></i>
       <span>${label}</span>
+      ${key === 'notifications' ? '<b class="sedco-nav-badge" data-notification-badge hidden>0</b>' : ''}
     </a>
   `).join('');
 
@@ -151,4 +164,17 @@
   });
 
   syncToggleState();
+
+  if (isPhp) {
+    fetch('notification-count.php', { credentials: 'same-origin' })
+      .then(response => response.ok ? response.json() : null)
+      .then(data => {
+        const badge = document.querySelector('[data-notification-badge]');
+        const count = Number(data?.count || 0);
+        if (!badge || count <= 0) return;
+        badge.textContent = count > 99 ? '99+' : String(count);
+        badge.hidden = false;
+      })
+      .catch(() => {});
+  }
 })();
