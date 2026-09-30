@@ -2737,3 +2737,109 @@ body{
     min-height:220px;
   }
 }
+
+
+/* ===== FORM ROLE PERMISSIONS ===== */
+.form-page .form-permission-notice{
+  max-width:1120px;
+  margin:0 auto 14px;
+  min-height:42px;
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding:10px 13px;
+  border:1px solid #eadede;
+  border-radius:11px;
+  background:#fffafa;
+  color:#66666c;
+  font-size:10.5px;
+  line-height:1.5;
+}
+
+.form-page .form-permission-notice i{
+  width:28px;
+  height:28px;
+  flex:0 0 28px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  border-radius:8px;
+  background:#fff0f0;
+  color:var(--sedco-brand);
+}
+
+.form-page .form-permission-notice strong{
+  color:#3b3b40;
+  font-weight:750;
+}
+
+.form-page [data-form-owner] th:first-child{
+  position:relative;
+}
+
+.form-page .form-lock-badge,
+.form-page .form-edit-badge{
+  float:right;
+  display:inline-flex;
+  align-items:center;
+  gap:5px;
+  min-height:24px;
+  margin-left:12px;
+  padding:0 8px;
+  border-radius:999px;
+  font-size:8.5px;
+  font-weight:700;
+  letter-spacing:0;
+  text-transform:none;
+  vertical-align:middle;
+}
+
+.form-page .form-lock-badge{
+  border:1px solid rgba(255,255,255,.16);
+  background:rgba(255,255,255,.08);
+  color:rgba(255,255,255,.82);
+}
+
+.form-page .form-edit-badge{
+  border:1px solid rgba(255,255,255,.2);
+  background:rgba(255,255,255,.14);
+  color:#fff;
+}
+
+.form-page .form-section-locked{
+  position:relative;
+  opacity:.84;
+}
+
+.form-page .form-section-locked td{
+  background:#fafafa !important;
+  color:#8b8b90 !important;
+}
+
+.form-page .form-section-locked input:disabled,
+.form-page .form-section-locked textarea:disabled,
+.form-page .form-section-locked select:disabled{
+  cursor:not-allowed !important;
+  border-color:#e7e7e9 !important;
+  background:#f1f1f3 !important;
+  color:#9b9ba0 !important;
+  box-shadow:none !important;
+  opacity:1 !important;
+}
+
+.form-page .form-section-locked input[type="checkbox"]:disabled,
+.form-page .form-section-locked input[type="radio"]:disabled{
+  opacity:.48 !important;
+}
+
+.form-page .form-section-editable{
+  box-shadow:0 0 0 2px rgba(143,16,16,.035),0 1px 2px rgba(20,20,20,.018) !important;
+}
+
+@media(max-width:760px){
+  .form-page .form-lock-badge,
+  .form-page .form-edit-badge{
+    float:none;
+    margin:7px 0 0;
+  }
+}
