@@ -138,6 +138,6 @@ require_login();
   </main>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-  <script src="sedco-shell.js?v=20260930-14"></script>
+  <script src="sedco-shell.js?v=20260930-18"></script>
 </body>
 </html>
