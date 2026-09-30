@@ -15,3 +15,7 @@ node_modules/
 # Runtime application uploads
 uploads/applications/*
 !uploads/applications/.gitkeep
+
+# Runtime profile photos
+uploads/profiles/*
+!uploads/profiles/.gitkeep
