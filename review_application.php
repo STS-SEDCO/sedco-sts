@@ -32,7 +32,8 @@ $db->begin_transaction();
 
 try {
     $stmt = $db->prepare(
-        'SELECT id, user_id, form_type, payload, status, current_stage
+        'SELECT id, application_no, user_id, form_type, department, assigned_hod_id,
+                payload, status, current_stage
          FROM applications
          WHERE application_no = ?
          LIMIT 1
@@ -47,17 +48,12 @@ try {
         throw new RuntimeException('Application not found.');
     }
 
-    $stage = (string) $application['current_stage'];
-
-    if (!user_can_review_stage($stage, $user)) {
+    if (!sts_can_review_application($application, $user)) {
         http_response_code(403);
-        throw new RuntimeException('This application is not at your review stage.');
+        throw new RuntimeException('This application is not assigned to your current review stage.');
     }
 
-    if (in_array($application['status'], ['approved', 'rejected'], true) || $stage === 'completed') {
-        throw new RuntimeException('This application has already been completed.');
-    }
-
+    $stage = (string) $application['current_stage'];
     $allowedByStage = [
         'hod' => ['ulasan_bahagian', 'tarikh_bahagian', 'tt_bahagian'],
         'training' => [
@@ -69,6 +65,13 @@ try {
 
     $payload = json_decode((string) $application['payload'], true);
     $payload = is_array($payload) ? $payload : [];
+
+    sts_save_version(
+        (int) $application['id'],
+        (int) $user['id'],
+        'before_' . $stage . '_review',
+        $payload
+    );
 
     $allowedKeys = $allowedByStage[$stage] ?? [];
     $submittedFields = array_intersect_key($_POST, array_flip($allowedKeys));
@@ -89,12 +92,16 @@ try {
         }
     }
 
-    $note = match ($stage) {
-        'hod' => trim((string) ($payload['ulasan_bahagian'] ?? '')),
-        'training' => trim((string) ($payload['ulasan_latihan'] ?? '')),
-        'gm' => trim((string) ($payload['kelulusan_pgs'] ?? '')),
-        default => '',
-    };
+    $note = trim((string) ($_POST['review_comment'] ?? ''));
+
+    if ($note === '') {
+        $note = match ($stage) {
+            'hod' => trim((string) ($payload['ulasan_bahagian'] ?? '')),
+            'training' => trim((string) ($payload['ulasan_latihan'] ?? '')),
+            'gm' => trim((string) ($payload['kelulusan_pgs'] ?? '')),
+            default => '',
+        };
+    }
 
     $payloadJson = json_encode(
         $payload,
@@ -130,16 +137,95 @@ try {
         $nextStatus = 'correction';
     }
 
+    $slaDueAt = $nextStatus === 'pending' ? sts_review_sla_due() : null;
+    $completedAt = in_array($nextStatus, ['approved', 'rejected'], true)
+        ? date('Y-m-d H:i:s')
+        : null;
+
     $update = $db->prepare(
         'UPDATE applications
-         SET payload = ?, status = ?, current_stage = ?, review_note = ?
+         SET payload = ?, status = ?, current_stage = ?, review_note = ?,
+             sla_due_at = ?, completed_at = ?
          WHERE id = ?'
     );
-    $update->bind_param('ssssi', $payloadJson, $nextStatus, $nextStage, $note, $applicationId);
+    $update->bind_param(
+        'ssssssi',
+        $payloadJson,
+        $nextStatus,
+        $nextStage,
+        $note,
+        $slaDueAt,
+        $completedAt,
+        $applicationId
+    );
     $update->execute();
     $update->close();
 
+    sts_save_version(
+        $applicationId,
+        $reviewerId,
+        $stage . '_' . $decision,
+        $payload
+    );
+
     $db->commit();
+
+    sts_audit(
+        'application_' . $decision,
+        'application',
+        $applicationNo,
+        ['stage' => $stage, 'next_stage' => $nextStage],
+        $reviewerId
+    );
+
+    $applicantId = (int) $application['user_id'];
+    $applicantLink = 'application-detail.php?application=' . rawurlencode($applicationNo);
+
+    if ($decision === 'correction') {
+        sts_notify(
+            $applicantId,
+            'Correction requested',
+            $applicationNo . ' needs correction at ' . stage_label($stage) . ' stage.'
+                . ($note !== '' ? ' Note: ' . $note : ''),
+            $applicantLink,
+            'warning'
+        );
+    } elseif ($decision === 'rejected') {
+        sts_notify(
+            $applicantId,
+            'Application rejected',
+            $applicationNo . ' was rejected at ' . stage_label($stage) . ' stage.'
+                . ($note !== '' ? ' Note: ' . $note : ''),
+            $applicantLink,
+            'danger'
+        );
+    } elseif ($nextStage === 'completed') {
+        sts_notify(
+            $applicantId,
+            'Application approved',
+            $applicationNo . ' has completed the approval workflow.',
+            $applicantLink,
+            'success'
+        );
+    } else {
+        sts_notify(
+            $applicantId,
+            'Application progressed',
+            $applicationNo . ' was approved by ' . stage_label($stage)
+                . ' and moved to ' . stage_label($nextStage) . '.',
+            $applicantLink,
+            'success'
+        );
+
+        sts_notify_stage(
+            $nextStage,
+            $applicationNo,
+            $application['department'] ?? null,
+            !empty($application['assigned_hod_id'])
+                ? (int) $application['assigned_hod_id']
+                : null
+        );
+    }
 
     header(
         'Location: submissions.php?reviewed=1&decision='
