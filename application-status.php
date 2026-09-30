@@ -215,7 +215,7 @@ $stmt->close();
 <div class="modal fade status-modal cancel-application-modal" id="cancelApplicationModal" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
-      <form method="post" action="cancel_application.php">
+      <form id="cancelApplicationForm" method="post" action="cancel_application.php">
         <?= csrf_field() ?>
         <div class="modal-header">
           <div>
@@ -272,7 +272,7 @@ window.SEDCO_APPLICATIONS = <?= json_encode(
     | JSON_HEX_QUOT
 ) ?>;
 </script>
-<script src="application-status.js?v=20260930-64"></script>
+<script src="application-status.js?v=20260930-66"></script>
 <script src="sedco-shell.js?v=20260930-56"></script>
 </body>
 </html>
