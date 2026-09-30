@@ -2,6 +2,11 @@
 declare(strict_types=1);
 require_once __DIR__ . '/includes/auth.php';
 require_login();
+
+$user = current_user();
+$role = normalized_role($user['role'] ?? '');
+$canStaffForms = in_array($role, ['staff', 'admin'], true);
+$canTea = in_array($role, ['head_of_department', 'admin'], true);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -11,7 +16,7 @@ require_login();
   <title>Training Forms - Smart Training System</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-  <link rel="stylesheet" href="sedco-saas.css?v=20260930-22">
+  <link rel="stylesheet" href="sedco-saas.css?v=20260930-25">
   <link rel="stylesheet" href="sedco-shell.css?v=20260930-18">
 </head>
 <body class="app-page task-page" data-page="task">
@@ -31,7 +36,7 @@ require_login();
     </header>
 
     <section class="task-grid" aria-label="Training forms">
-      <article class="task-form-card">
+      <article class="task-form-card<?= $canStaffForms ? '' : ' task-form-card-locked' ?>">
         <div class="task-card-top">
           <span class="task-form-icon"><i class="bi bi-file-earmark-text"></i></span>
           <span class="task-form-code">BPL</span>
@@ -41,12 +46,16 @@ require_login();
           <p>Submit a training request for review and approval through the STS workflow.</p>
         </div>
         <div class="task-card-footer">
-          <span class="task-card-status"><i class="bi bi-circle-fill"></i> Ready to apply</span>
+          <span class="task-card-status"><?= $canStaffForms ? '<i class="bi bi-circle-fill"></i> Ready to apply' : '<i class="bi bi-lock-fill"></i> Staff only' ?></span>
+          <?php if ($canStaffForms): ?>
           <a href="bpl.php" class="task-apply-btn">Apply now <i class="bi bi-arrow-up-right"></i></a>
+          <?php else: ?>
+          <span class="task-apply-btn task-apply-btn-locked"><i class="bi bi-lock-fill"></i> Locked</span>
+          <?php endif; ?>
         </div>
       </article>
 
-      <article class="task-form-card">
+      <article class="task-form-card<?= $canStaffForms ? '' : ' task-form-card-locked' ?>">
         <div class="task-card-top">
           <span class="task-form-icon"><i class="bi bi-clipboard2-check"></i></span>
           <span class="task-form-code">PKK</span>
@@ -56,12 +65,16 @@ require_login();
           <p>Complete the course effectiveness evaluation after attending training.</p>
         </div>
         <div class="task-card-footer">
-          <span class="task-card-status"><i class="bi bi-circle-fill"></i> Ready to apply</span>
+          <span class="task-card-status"><?= $canStaffForms ? '<i class="bi bi-circle-fill"></i> Ready to apply' : '<i class="bi bi-lock-fill"></i> Staff only' ?></span>
+          <?php if ($canStaffForms): ?>
           <a href="pkk.php" class="task-apply-btn">Apply now <i class="bi bi-arrow-up-right"></i></a>
+          <?php else: ?>
+          <span class="task-apply-btn task-apply-btn-locked"><i class="bi bi-lock-fill"></i> Locked</span>
+          <?php endif; ?>
         </div>
       </article>
 
-      <article class="task-form-card">
+      <article class="task-form-card<?= $canTea ? '' : ' task-form-card-locked' ?>">
         <div class="task-card-top">
           <span class="task-form-icon"><i class="bi bi-graph-up-arrow"></i></span>
           <span class="task-form-code">TEA</span>
@@ -71,8 +84,12 @@ require_login();
           <p>Record post-training effectiveness, competency and improvement outcomes.</p>
         </div>
         <div class="task-card-footer">
-          <span class="task-card-status"><i class="bi bi-circle-fill"></i> Ready to apply</span>
+          <span class="task-card-status"><?= $canTea ? '<i class="bi bi-circle-fill"></i> Ready to apply' : '<i class="bi bi-lock-fill"></i> HoD only' ?></span>
+          <?php if ($canTea): ?>
           <a href="tea.php" class="task-apply-btn">Apply now <i class="bi bi-arrow-up-right"></i></a>
+          <?php else: ?>
+          <span class="task-apply-btn task-apply-btn-locked"><i class="bi bi-lock-fill"></i> Locked</span>
+          <?php endif; ?>
         </div>
       </article>
     </section>
