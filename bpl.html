@@ -154,8 +154,9 @@
             window.print();
         }
     </script>
+    <link rel="stylesheet" href="sedco-saas.css">
 </head>
-<body>
+<body class="app-page form-page bpl-page">
 
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-dark">
