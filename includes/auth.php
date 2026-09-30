@@ -14,7 +14,7 @@ function e(?string $value): string
 
 function require_login(): void
 {
-    if (empty($_SESSION['user_id'])) {
+    if (empty($_SESSION['user_id']) || current_user() === null) {
         header('Location: login.php');
         exit;
     }
@@ -67,4 +67,30 @@ function user_can_review_applications(?array $user = null): bool
         ['admin', 'training_section', 'head_of_department', 'pengerusi_besar'],
         true
     );
+}
+
+
+function csrf_token(): string
+{
+    if (empty($_SESSION['csrf_token'])) {
+        $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+    }
+
+    return $_SESSION['csrf_token'];
+}
+
+function csrf_field(): string
+{
+    return '<input type="hidden" name="_csrf" value="' . e(csrf_token()) . '">';
+}
+
+function verify_csrf(): void
+{
+    $submitted = (string) ($_POST['_csrf'] ?? '');
+    $expected = (string) ($_SESSION['csrf_token'] ?? '');
+
+    if ($expected === '' || $submitted === '' || !hash_equals($expected, $submitted)) {
+        http_response_code(419);
+        exit('Your session has expired. Please refresh the page and try again.');
+    }
 }
