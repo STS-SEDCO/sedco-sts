@@ -40,9 +40,19 @@ unset(
 );
 
 $requiredByType = [
-    'BPL' => ['nama', 'bahagian', 'jawatan', 'tajuk', 'tarikh_mula', 'tarikh_tamat', 'tempat'],
-    'PKK' => ['nama', 'tajuk', 'tarikh'],
-    'TEA' => ['employee_name', 'division', 'head_division', 'date', 'signature'],
+    'BPL' => [
+        'nama', 'bahagian', 'jawatan', 'kursus', 'tarikh',
+        'tajuk', 'penganjur', 'tarikh_mula', 'tarikh_tamat',
+        'tempat', 'yuran', 'kandungan'
+    ],
+    'PKK' => [
+        'nama', 'bahagian', 'jawatan', 'tajuk', 'tarikh', 'tempat',
+        'objektif', 'perkara1', 'perkara2', 'perkara3', 'perkara4', 'perkara5',
+        'cadangan1', 'cadangan2', 'cadangan3', 'p1',
+        'aspect0_p1', 'aspect1_p1', 'aspect2_p1', 'aspect3_p1', 'aspect4_p1',
+        'tandatangan', 'tarikh_penilaian'
+    ],
+    'TEA' => ['employee_name', 'division', 'month', 'head_division', 'date', 'signature'],
 ];
 
 foreach ($requiredByType[$type] as $requiredKey) {
@@ -55,11 +65,84 @@ foreach ($requiredByType[$type] as $requiredKey) {
 }
 
 if ($type === 'BPL') {
+    $vehicles = $payload['kenderaan'] ?? [];
+    $vehicles = is_array($vehicles) ? array_map('strval', $vehicles) : [];
+
+    if (
+        in_array('Lain-lain', $vehicles, true)
+        && trim((string) ($payload['kenderaan_other'] ?? '')) === ''
+    ) {
+        http_response_code(422);
+        exit('Please specify the other vehicle.');
+    }
+}
+
+if ($type === 'PKK') {
+    for ($speaker = 1; $speaker <= 5; $speaker++) {
+        $speakerName = trim((string) ($payload['p' . $speaker] ?? ''));
+        $scoreKeys = [];
+
+        for ($aspect = 0; $aspect <= 4; $aspect++) {
+            $scoreKeys[] = 'aspect' . $aspect . '_p' . $speaker;
+        }
+
+        $hasAnyScore = false;
+
+        foreach ($scoreKeys as $scoreKey) {
+            if (trim((string) ($payload[$scoreKey] ?? '')) !== '') {
+                $hasAnyScore = true;
+                break;
+            }
+        }
+
+        $activeSpeaker = $speaker === 1 || $speakerName !== '' || $hasAnyScore;
+
+        if (!$activeSpeaker) {
+            continue;
+        }
+
+        if ($speakerName === '') {
+            http_response_code(422);
+            exit('Please enter the speaker name before submitting scores.');
+        }
+
+        foreach ($scoreKeys as $scoreKey) {
+            $score = (int) ($payload[$scoreKey] ?? 0);
+
+            if ($score < 1 || $score > 10) {
+                http_response_code(422);
+                exit('Speaker scores must be between 1 and 10.');
+            }
+        }
+    }
+}
+
+if ($type === 'TEA') {
+    foreach ([0, 1] as $row) {
+        $scores = $payload['score_' . $row] ?? [];
+
+        if (!is_array($scores) || count($scores) !== 5) {
+            http_response_code(422);
+            exit('Please complete all Training Effectiveness scores.');
+        }
+
+        foreach ($scores as $score) {
+            $numeric = (int) $score;
+
+            if ($numeric < 1 || $numeric > 4) {
+                http_response_code(422);
+                exit('Training Effectiveness scores must be between 1 and 4.');
+            }
+        }
+    }
+}
+
+if ($type === 'BPL') {
     $allowedKeys = [
         'nama', 'bahagian', 'jawatan', 'kursus', 'tarikh',
         'tajuk', 'penganjur', 'tarikh_mula', 'tarikh_tamat',
         'tempat', 'yuran', 'kandungan', 'tempat_tugas',
-        'kenderaan', 'masa_bertolak', 'masa_kembali', 'pendahuluan'
+        'kenderaan', 'kenderaan_other', 'masa_bertolak', 'masa_kembali', 'pendahuluan'
     ];
 
     $payload = array_intersect_key($payload, array_flip($allowedKeys));
