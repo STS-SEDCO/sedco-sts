@@ -74,8 +74,8 @@ $stmt->close();
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-  <link rel="stylesheet" href="sedco-saas.css?v=20260930-14">
-  <link rel="stylesheet" href="sedco-shell.css?v=20260930-14">
+  <link rel="stylesheet" href="sedco-saas.css?v=20260930-15">
+  <link rel="stylesheet" href="sedco-shell.css?v=20260930-15">
 </head>
 <body class="app-page status-page" data-page="application-status">
 
@@ -87,6 +87,21 @@ $stmt->close();
         <h1>Application Status</h1>
         <p>Track submitted training forms and their review progress in one place.</p>
       </div>
+
+      <div class="status-heading-actions">
+        <a class="status-primary-action" href="task.php">
+          <i class="bi bi-plus-lg"></i>
+          New application
+        </a>
+      </div>
+    </div>
+
+    <div class="status-section-meta">
+      <div>
+        <span class="status-section-label">Overview</span>
+        <span class="status-section-note">Application activity at a glance</span>
+      </div>
+      <span class="status-live-chip"><span></span>Live status</span>
     </div>
 
     <section class="status-stats">
@@ -147,6 +162,9 @@ $stmt->close();
         <div class="empty-icon"><i class="bi bi-clipboard2-check"></i></div>
         <h3>No applications yet</h3>
         <p>Submit a form from the Tasks page and it will automatically appear here with a pending review status.</p>
+        <a class="empty-action" href="task.php">
+          Go to tasks <i class="bi bi-arrow-right"></i>
+        </a>
       </div>
     </section>
   </div>
@@ -197,7 +215,7 @@ window.SEDCO_APPLICATIONS = <?= json_encode(
     | JSON_HEX_QUOT
 ) ?>;
 </script>
-<script src="application-status.js?v=20260930-14"></script>
-<script src="sedco-shell.js?v=20260930-14"></script>
+<script src="application-status.js?v=20260930-15"></script>
+<script src="sedco-shell.js?v=20260930-15"></script>
 </body>
 </html>
