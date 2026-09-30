@@ -2,6 +2,7 @@
   const context = window.SEDCO_FORM_CONTEXT || {};
   const role = String(context.role || 'staff').toLowerCase();
   const mode = String(context.mode || 'new').toLowerCase();
+  const formType = String(context.formType || '').toUpperCase();
 
   const aliases = {
     head_of_division: 'head_of_department',
@@ -21,9 +22,12 @@
   function canEdit(owner) {
     const normalizedOwner = aliases[owner] || owner;
 
-    if (normalizedRole === 'admin') return true;
-    if (mode === 'new') return normalizedOwner === normalizedRole;
+    if (mode === 'new' && formType === 'BPL') {
+      if (normalizedRole === 'admin') return normalizedOwner === 'staff';
+      return normalizedRole === 'staff' && normalizedOwner === 'staff';
+    }
 
+    if (normalizedRole === 'admin') return true;
     return normalizedOwner === normalizedRole;
   }
 
