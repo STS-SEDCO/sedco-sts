@@ -12,7 +12,7 @@ $user = current_user();
   <title>Smart Training System - Borang Penilaian</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-  <link rel="stylesheet" href="sedco-saas.css?v=20260930-24">
+  <link rel="stylesheet" href="sedco-saas.css?v=20260930-26">
   <link rel="stylesheet" href="sedco-shell.css?v=20260930-18">
 </head>
 <body class="app-page form-page pkk-page" data-page="task">
@@ -134,15 +134,15 @@ $user = current_user();
 
         <div class="text-end mt-4 no-print">
           <button type="submit" class="btn btn-primary px-4 py-2 fw-semibold">Submit</button>
-          <button type="button" class="btn btn-secondary px-4 py-2 fw-semibold ms-2" onclick="window.print()">Print</button>
+          <button type="button" class="btn btn-secondary px-4 py-2 fw-semibold ms-2 form-print-button" onclick="window.print()">Print</button>
         </div>
       </form>
     </div>
   </main>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-  <script>window.SEDCO_FORM_CONTEXT = { role: <?= json_encode($user['role'] ?? 'staff') ?>, mode: 'new' };</script>
-<script src="form-permissions.js?v=20260930-24"></script>
+  <script>window.SEDCO_FORM_CONTEXT = { role: <?= json_encode($user['role'] ?? 'staff') ?>, mode: 'new', formType: 'PKK' };</script>
+<script src="form-permissions.js?v=20260930-26"></script>
 <script src="sedco-shell.js?v=20260930-23"></script>
 </body>
 </html>
