@@ -15,7 +15,7 @@ if (!$user) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Profile - Training Management System</title>
+    <title>My Profile - Smart Training System</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 <link rel="stylesheet" href="sedco-saas.css?v=20260930-14">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
@@ -33,7 +33,7 @@ if (!$user) {
                     <i class="bi bi-person"></i>
                 </div>
                 <h3 class="text-primary-custom"><?= e($user['fullname']) ?></h3>
-                <p class="text-muted mb-0">Training Management System Member</p>
+                <p class="text-muted mb-0">Smart Training System Member</p>
             </div>
 
             <div class="row profile-info">
