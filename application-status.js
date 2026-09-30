@@ -41,6 +41,16 @@
     }
   }
 
+  function stageLabel(stage) {
+    switch (String(stage || '').toLowerCase()) {
+      case 'hod': return 'Head of Department';
+      case 'training': return 'Training Department';
+      case 'gm': return 'General Manager';
+      case 'completed': return 'Completed';
+      default: return 'Pending';
+    }
+  }
+
   function formatDate(value, includeTime = false) {
     if (!value) return '—';
 
@@ -77,7 +87,9 @@
         application.formName,
         application.title,
         application.applicant,
-        status
+        status,
+        application.stageLabel,
+        application.currentStage
       ].some(value => String(value || '').toLowerCase().includes(query));
     });
   }
@@ -101,6 +113,14 @@
 
     tbody.innerHTML = rows.map(application => {
       const status = statusMeta(application.status);
+      const stage = application.stageLabel || stageLabel(application.currentStage);
+      const action = application.viewUrl
+        ? `<a class="view-btn${application.status === 'correction' ? ' is-correction' : ''}" href="${escapeHtml(application.viewUrl)}">
+             ${application.status === 'correction' ? 'Correct form' : 'View form'} <i class="bi bi-arrow-up-right"></i>
+           </a>`
+        : `<button class="view-btn" type="button" data-view-id="${escapeHtml(application.id)}">
+             View details <i class="bi bi-arrow-up-right"></i>
+           </button>`;
 
       return `
         <tr>
@@ -125,11 +145,10 @@
             <span class="status-pill status-${status.cls}">
               <i class="bi ${status.icon}"></i>${status.label}
             </span>
+            ${application.type === 'BPL' ? `<div class="application-stage-text">Stage: ${escapeHtml(stage)}</div>` : ''}
           </td>
           <td class="text-end">
-            <button class="view-btn" type="button" data-view-id="${escapeHtml(application.id)}">
-              View details <i class="bi bi-arrow-up-right"></i>
-            </button>
+            ${action}
           </td>
         </tr>
       `;
@@ -160,6 +179,18 @@
     $('modalApplicant').textContent = application.applicant || 'Guest';
     $('modalSubmitted').textContent = formatDate(application.submittedAt, true);
     $('modalApplicationDate').textContent = formatDate(application.applicationDate);
+
+    const stageTarget = $('modalWorkflowStage');
+    if (stageTarget) {
+      stageTarget.textContent = application.type === 'BPL'
+        ? (application.stageLabel || stageLabel(application.currentStage))
+        : 'Not applicable';
+    }
+
+    const noteTarget = $('modalReviewNote');
+    if (noteTarget) {
+      noteTarget.textContent = application.reviewNote || '—';
+    }
 
     const entries = Object.entries(application.data || {}).filter(([, value]) => {
       if (Array.isArray(value)) return value.some(item => String(item || '').trim());
@@ -193,7 +224,7 @@
 
     const params = new URLSearchParams(location.search);
 
-    if (params.get('submitted') === '1') {
+    if (params.get('submitted') === '1' || params.get('resubmitted') === '1') {
       const toast = $('successToast');
 
       if (toast) {
