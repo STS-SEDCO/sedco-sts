@@ -36,6 +36,8 @@
         return { label: 'Rejected', cls: 'rejected', icon: 'bi-x-circle' };
       case 'correction':
         return { label: 'Needs Correction', cls: 'correction', icon: 'bi-exclamation-circle' };
+      case 'cancelled':
+        return { label: 'Cancelled', cls: 'cancelled', icon: 'bi-slash-circle' };
       default:
         return { label: 'Pending Review', cls: 'pending', icon: 'bi-clock-history' };
     }
@@ -115,13 +117,21 @@
       const status = statusMeta(application.status);
       const stage = application.stageLabel || stageLabel(application.currentStage);
       const actionUrl = application.editUrl || application.viewUrl;
-      const action = actionUrl
+      const primaryAction = actionUrl
         ? `<a class="view-btn${application.editUrl ? ' is-correction' : ''}" href="${escapeHtml(actionUrl)}">
              ${application.editUrl ? 'Correct form' : 'View details'} <i class="bi bi-arrow-up-right"></i>
            </a>`
         : `<button class="view-btn" type="button" data-view-id="${escapeHtml(application.id)}">
              View details <i class="bi bi-arrow-up-right"></i>
            </button>`;
+
+      const cancelAction = application.canCancel
+        ? `<button class="cancel-app-btn" type="button" data-cancel-id="${escapeHtml(application.id)}">
+             <i class="bi bi-x-circle"></i> Cancel
+           </button>`
+        : '';
+
+      const action = `<div class="status-row-actions">${primaryAction}${cancelAction}</div>`;
 
       return `
         <tr>
@@ -157,6 +167,20 @@
 
     tbody.querySelectorAll('[data-view-id]').forEach(button => {
       button.addEventListener('click', () => showDetails(button.dataset.viewId));
+    });
+
+    tbody.querySelectorAll('[data-cancel-id]').forEach(button => {
+      button.addEventListener('click', () => {
+        const target = $('cancelApplicationNo');
+        const reason = $('cancelReason');
+
+        if (target) target.value = button.dataset.cancelId || '';
+        if (reason) reason.value = '';
+
+        bootstrap.Modal.getOrCreateInstance($('cancelApplicationModal')).show();
+
+        window.setTimeout(() => reason?.focus(), 250);
+      });
     });
   }
 
@@ -225,14 +249,32 @@
 
     const params = new URLSearchParams(location.search);
 
-    if (params.get('submitted') === '1' || params.get('resubmitted') === '1') {
+    if (
+      params.get('submitted') === '1'
+      || params.get('resubmitted') === '1'
+      || params.get('cancelled') === '1'
+    ) {
       const toast = $('successToast');
+      const text = $('successToastText');
+
+      if (params.get('cancelled') === '1' && text) {
+        text.textContent = 'Application cancelled successfully. It remains in your history for reference.';
+      }
 
       if (toast) {
         toast.classList.add('show');
         setTimeout(() => toast.classList.remove('show'), 3800);
       }
 
+      history.replaceState({}, '', location.pathname);
+    }
+
+    if (params.get('cancel_error') === '1') {
+      const toast = $('errorToast');
+      if (toast) {
+        toast.classList.add('show');
+        setTimeout(() => toast.classList.remove('show'), 4200);
+      }
       history.replaceState({}, '', location.pathname);
     }
 
