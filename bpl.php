@@ -51,6 +51,14 @@ if ($applicationNo !== '') {
     $applicationStatus = (string) $application['status'];
 }
 
+if ($mode === 'new') {
+    $payload = [
+        'nama' => (string) ($user['fullname'] ?? ''),
+        'bahagian' => (string) ($user['department'] ?? ''),
+        'jawatan' => (string) ($user['job_title'] ?? ''),
+    ];
+}
+
 $canResubmitCorrection = $mode === 'review'
     && $isOwner
     && $applicationStatus === 'correction';
@@ -299,9 +307,9 @@ window.SEDCO_FORM_CONTEXT = {
   status: <?= json_encode($applicationStatus) ?>
 };
 </script>
-<script src="bpl-workflow.js?v=20260930-44"></script>
-<script src="form-permissions.js?v=20260930-44"></script>
-<script src="form-enhancements.js?v=20260930-49"></script>
+<script src="bpl-workflow.js?v=20260930-51"></script>
+<script src="form-permissions.js?v=20260930-51"></script>
+<script src="form-enhancements.js?v=20260930-51"></script>
 <script src="sedco-shell.js?v=20260930-49"></script>
 </body>
 </html>
