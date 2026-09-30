@@ -79,7 +79,7 @@ $stmt->close();
   <link rel="stylesheet" href="sedco-saas.css?v=20260930-29">
   <link rel="stylesheet" href="sedco-shell.css?v=20260930-15">
 </head>
-<body class="app-page submissions-page" data-page="submissions">
+<body class="app-page submissions-page" data-page="submissions" data-role="<?= e(normalized_role($user['role'] ?? '')) ?>">
 
 <main class="submissions-content">
   <div class="submissions-shell">
@@ -252,6 +252,6 @@ window.SEDCO_SUBMISSIONS = <?= json_encode(
 ) ?>;
 </script>
 <script src="submissions.js?v=20260930-30"></script>
-<script src="sedco-shell.js?v=20260930-23"></script>
+<script src="sedco-shell.js?v=20260930-33"></script>
 </body>
 </html>
