@@ -27,7 +27,7 @@ if($role==='head_of_department'){
   $params[]=$userId; $types.='i';
   $params[]=$department; $types.='s';
 }
-if(in_array($status,['pending','approved','correction','rejected'],true)){
+if(in_array($status,['pending','approved','correction','rejected','cancelled'],true)){
   $where[]='a.status = ?'; $params[]=$status; $types.='s';
 }
 if(in_array($formType,['BPL','PKK','TEA'],true)){
@@ -60,7 +60,7 @@ $result=$stmt->get_result();
 $rows=[];
 
 $totalFees=0.0;
-$statusCounts=['pending'=>0,'approved'=>0,'correction'=>0,'rejected'=>0];
+$statusCounts=['pending'=>0,'approved'=>0,'correction'=>0,'rejected'=>0,'cancelled'=>0];
 $typeCounts=['BPL'=>0,'PKK'=>0,'TEA'=>0];
 $deptCounts=[];
 $monthCounts=[];
@@ -112,7 +112,7 @@ $query=http_build_query(array_filter([
 <title>Reports & Analytics - Smart Training System</title>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-<link rel="stylesheet" href="sedco-saas.css?v=20260930-43"><link rel="stylesheet" href="sedco-shell.css?v=20260930-56">
+<link rel="stylesheet" href="sedco-saas.css?v=20260930-64"><link rel="stylesheet" href="sedco-shell.css?v=20260930-56">
 </head>
 <body class="app-page reports-page" data-page="reports" data-role="<?= e($role) ?>">
 <main class="sts-page-content"><div class="sts-page-shell">
@@ -122,7 +122,7 @@ $query=http_build_query(array_filter([
 </header>
 
 <form class="report-filter-bar" method="get">
-<select name="status"><option value="">All statuses</option><?php foreach(['pending'=>'Pending','approved'=>'Approved','correction'=>'Needs correction','rejected'=>'Rejected'] as $v=>$l): ?><option value="<?= e($v) ?>" <?= $status===$v?'selected':'' ?>><?= e($l) ?></option><?php endforeach; ?></select>
+<select name="status"><option value="">All statuses</option><?php foreach(['pending'=>'Pending','approved'=>'Approved','correction'=>'Needs correction','rejected'=>'Rejected','cancelled'=>'Cancelled'] as $v=>$l): ?><option value="<?= e($v) ?>" <?= $status===$v?'selected':'' ?>><?= e($l) ?></option><?php endforeach; ?></select>
 <select name="type"><option value="">All forms</option><?php foreach(['BPL','PKK','TEA'] as $v): ?><option value="<?= e($v) ?>" <?= $formType===$v?'selected':'' ?>><?= e($v) ?></option><?php endforeach; ?></select>
 <?php if($role!=='head_of_department'): ?><select name="department"><option value="">All departments</option><?php foreach($departmentOptions as $d): ?><option value="<?= e((string)$d) ?>" <?= $filterDepartment===$d?'selected':'' ?>><?= e((string)$d) ?></option><?php endforeach; ?></select><?php endif; ?>
 <label><span>From</span><input type="date" name="from" value="<?= e($dateFrom) ?>"></label>
