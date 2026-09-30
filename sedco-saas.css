@@ -2891,3 +2891,96 @@ body{
   border-color:#dedee2 !important;
   box-shadow:none !important;
 }
+
+
+/* ===== BPL WORKFLOW REVIEW ===== */
+.bpl-page .bpl-workflow-meta{
+  max-width:1120px;
+  margin:0 auto 10px;
+  display:flex;
+  flex-wrap:wrap;
+  align-items:center;
+  gap:8px;
+}
+
+.bpl-page .bpl-workflow-meta span{
+  min-height:30px;
+  display:inline-flex;
+  align-items:center;
+  gap:7px;
+  padding:0 10px;
+  border:1px solid #e7e7ea;
+  border-radius:999px;
+  background:#fff;
+  color:#66666c;
+  font-size:9.5px;
+  font-weight:650;
+  box-shadow:0 1px 2px rgba(20,20,20,.02);
+}
+
+.bpl-page .bpl-workflow-meta i{
+  color:var(--sedco-brand);
+}
+
+.form-page .btn-review-secondary,
+.form-page .btn-review-reject{
+  min-height:40px;
+  padding:0 16px;
+  border-radius:10px;
+  font-size:10.5px;
+  font-weight:700;
+  transition:transform .16s ease,background .16s ease,border-color .16s ease,box-shadow .16s ease;
+}
+
+.form-page .btn-review-secondary{
+  border:1px solid #e0d3ad;
+  background:#fffaf0;
+  color:#8a6514;
+}
+
+.form-page .btn-review-secondary:hover{
+  transform:translateY(-1px);
+  border-color:#d7c188;
+  background:#fff6df;
+}
+
+.form-page .btn-review-reject{
+  border:1px solid #ebcaca;
+  background:#fff7f7;
+  color:#b42323;
+}
+
+.form-page .btn-review-reject:hover{
+  transform:translateY(-1px);
+  border-color:#dfb1b1;
+  background:#fff0f0;
+  box-shadow:0 5px 12px rgba(180,35,35,.08);
+}
+
+.form-page .form-section-locked{
+  filter:saturate(.78);
+}
+
+.form-page .form-section-locked th{
+  background:linear-gradient(180deg,#8b8b90 0%,#77777d 100%) !important;
+}
+
+.form-page .form-section-locked th::after{
+  background:#b9b9bd !important;
+}
+
+.form-page .form-section-editable th{
+  background:linear-gradient(180deg,#821010 0%,#741010 100%) !important;
+}
+
+@media(max-width:760px){
+  .bpl-page .bpl-workflow-meta{
+    padding:0 2px;
+  }
+
+  .form-page .form-actions{
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+  }
+}
