@@ -2984,3 +2984,115 @@ body{
     gap:8px;
   }
 }
+
+
+/* ===== STS WORKFLOW STATES ===== */
+.submissions-page .submission-stage-pill{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  min-height:26px;
+  padding:5px 9px;
+  border:1px solid #e3e3e6;
+  border-radius:999px;
+  background:#f8f8f9;
+  color:#66666b;
+  font-size:9.5px;
+  font-weight:700;
+  white-space:nowrap;
+}
+
+.submissions-page .submission-stage-pill.stage-hod{
+  background:#f5f3ff;
+  border-color:#ddd6fe;
+  color:#6d28d9;
+}
+
+.submissions-page .submission-stage-pill.stage-training{
+  background:#eff6ff;
+  border-color:#dbeafe;
+  color:#1d4ed8;
+}
+
+.submissions-page .submission-stage-pill.stage-gm{
+  background:#fff7ed;
+  border-color:#fed7aa;
+  color:#c2410c;
+}
+
+.submissions-page .submission-stage-pill.stage-completed{
+  background:#ecfdf5;
+  border-color:#a7f3d0;
+  color:#047857;
+}
+
+.submissions-page .submission-review-btn{
+  min-height:32px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:6px;
+  padding:0 10px;
+  border:1px solid #e1e1e4;
+  border-radius:9px;
+  background:#fff;
+  color:#69696e;
+  font-size:10px;
+  font-weight:700;
+  text-decoration:none;
+}
+
+.submissions-page .submission-review-btn:hover{
+  color:#2f2f33;
+  border-color:#d5d5d9;
+  background:#fafafa;
+}
+
+.submissions-page .submission-review-btn.is-ready{
+  border-color:#e3c2c2;
+  background:#fff7f7;
+  color:#8f1010;
+}
+
+.submissions-page .submission-review-btn.is-ready:hover{
+  border-color:#8f1010;
+  background:#8f1010;
+  color:#fff;
+}
+
+.status-page .application-stage-text{
+  margin-top:5px;
+  color:#9a9aa0;
+  font-size:9px;
+  font-weight:600;
+}
+
+.status-page .view-btn.is-correction{
+  color:#a16207;
+  font-weight:750;
+}
+
+.status-page .view-btn.is-correction:hover{
+  color:#854d0e;
+}
+
+.form-page .form-section-locked{
+  opacity:.72;
+}
+
+.form-page .form-section-locked td{
+  background:#f3f3f5 !important;
+}
+
+.form-page .form-section-locked input:disabled,
+.form-page .form-section-locked textarea:disabled,
+.form-page .form-section-locked select:disabled{
+  background:#e9e9ec !important;
+  color:#909096 !important;
+  border-color:#dedee2 !important;
+}
+
+.form-page .form-section-editable{
+  opacity:1;
+  box-shadow:0 0 0 2px rgba(143,16,16,.06),0 8px 20px rgba(143,16,16,.045) !important;
+}
