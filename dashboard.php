@@ -1,8 +1,13 @@
 <?php
-session_start();
-if (!isset($_SESSION['user_id'])) {
-    header("Location: login.php");
-    exit();
+declare(strict_types=1);
+require_once __DIR__ . '/includes/auth.php';
+
+require_login();
+$user = current_user();
+
+if (!$user) {
+    header('Location: login.php');
+    exit;
 }
 ?>
 <!DOCTYPE html>
@@ -532,8 +537,8 @@ if (!isset($_SESSION['user_id'])) {
             .tasks-panel, .calendar-container { border-radius: 14px; }
         }
     </style>
-    <link rel="stylesheet" href="sedco-saas.css?v=20260930-6">
-  <link rel="stylesheet" href="sedco-shell.css?v=20260930-6">
+    <link rel="stylesheet" href="sedco-saas.css?v=20260930-8">
+  <link rel="stylesheet" href="sedco-shell.css?v=20260930-8">
 </head>
 <body class="app-page dashboard-page" data-page="dashboard">
 
@@ -542,7 +547,7 @@ if (!isset($_SESSION['user_id'])) {
             <div class="page-heading">
                 <div>
                     <div class="eyebrow">Dashboard</div>
-                    <h1 class="welcome-message">Welcome, <?php echo isset($_SESSION['fullname']) ? htmlspecialchars($_SESSION['fullname']) : 'Guest'; ?>!</h1>
+                    <h1 class="welcome-message">Welcome, <?= e($user['fullname']) ?>!</h1>
                     <p class="page-subtitle">Here is an overview of your training tasks and schedule.</p>
                 </div>
             </div>
@@ -659,6 +664,6 @@ if (!isset($_SESSION['user_id'])) {
             });
         }
     </script>
-<script src="sedco-shell.js?v=20260930-6"></script>
+<script src="sedco-shell.js?v=20260930-8"></script>
 </body>
 </html>
