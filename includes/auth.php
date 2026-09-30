@@ -34,7 +34,7 @@ function current_user(): ?array
     }
 
     $stmt = db()->prepare(
-        'SELECT id, fullname, email, phone_number, role, created_at
+        'SELECT id, fullname, email, phone_number, staff_id, department, job_title, role, created_at
          FROM users
          WHERE id = ?
          LIMIT 1'
@@ -174,3 +174,5 @@ function user_can_review_stage(string $stage, ?array $user = null): bool
 
     return review_stage_for_role($user['role'] ?? '') === $stage;
 }
+
+require_once __DIR__ . '/sts.php';
