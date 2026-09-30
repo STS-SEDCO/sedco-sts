@@ -31,6 +31,7 @@ jobs:
           node --check bpl-workflow.js
           node --check dashboard.js
           node --check form-enhancements.js
+          node --check form-ux.js
 
       - name: Legacy reference check
         shell: bash
