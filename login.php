@@ -11,6 +11,7 @@ if (!empty($_SESSION['user_id'])) {
 $error = null;
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    verify_csrf();
     $email = filter_var(trim((string) ($_POST['email'] ?? '')), FILTER_VALIDATE_EMAIL);
     $password = (string) ($_POST['password'] ?? '');
 
@@ -89,6 +90,7 @@ $rememberedEmail = (string) ($_COOKIE['sedco_email'] ?? '');
                   <?php endif; ?>
 
                   <form method="post" action="login.php">
+                    <?= csrf_field() ?>
                     <div class="form-outline mb-3">
                       <input
                         type="email"
