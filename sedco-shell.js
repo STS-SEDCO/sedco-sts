@@ -4,38 +4,31 @@
 
   const path = (location.pathname.split('/').pop() || 'dashboard.html').toLowerCase();
   const isPhp = path.endsWith('.php');
-  const ext = isPhp ? 'php' : 'html';
+  const extension = isPhp ? 'php' : 'html';
 
-  const inferPage = () => {
-    const explicit = body.dataset.page;
-    if (explicit) return explicit;
-    if (path.includes('application-status')) return 'application-status';
-    if (path.includes('profile')) return 'profile';
-    if (path.includes('task') || path.includes('bpl') || path.includes('pkk') || path.includes('tea')) return 'task';
-    return 'dashboard';
-  };
+  const activePage = body.dataset.page || (
+    path.includes('application-status') ? 'application-status'
+      : path.includes('profile') ? 'profile'
+      : /task|bpl|pkk|tea/.test(path) ? 'task'
+      : 'dashboard'
+  );
 
-  const activePage = inferPage();
-  const file = (name) => name === 'logout'
-    ? (isPhp ? 'logout.php' : 'index.html')
-    : `${name}.${ext}`;
+  const pageUrl = name => `${name}.${extension}`;
+  const logoutUrl = isPhp ? 'logout.php' : 'index.html';
 
-  const sidebarItems = [
-    { key: 'dashboard', label: 'Dashboard', icon: 'bi-grid-1x2-fill', href: file('dashboard') },
-    { key: 'profile', label: 'Profile', icon: 'bi-person', href: file('profile') },
-    { key: 'task', label: 'Tasks', icon: 'bi-check2-square', href: file('task') },
-    { key: 'application-status', label: 'Application status', icon: 'bi-clipboard-check', href: file('application-status') },
-    { key: 'submissions', label: 'Submissions', icon: 'bi-inbox', href: '#', disabled: true }
+  const items = [
+    ['dashboard', 'Dashboard', 'bi-grid-1x2-fill', pageUrl('dashboard')],
+    ['profile', 'Profile', 'bi-person', pageUrl('profile')],
+    ['task', 'Tasks', 'bi-check2-square', pageUrl('task')],
+    ['application-status', 'Application status', 'bi-clipboard-check', pageUrl('application-status')]
   ];
 
-  const sidebarHtml = sidebarItems.map(item => {
-    const active = item.key === activePage ? ' active' : '';
-    const disabled = item.disabled ? ' is-disabled' : '';
-    const attrs = item.disabled ? ' aria-disabled="true" tabindex="-1"' : '';
-    return `<a class="sedco-nav-item${active}${disabled}" href="${item.href}"${attrs}>
-      <i class="bi ${item.icon}"></i><span>${item.label}</span>
-    </a>`;
-  }).join('');
+  const sidebarLinks = items.map(([key, label, icon, href]) => `
+    <a class="sedco-nav-item${key === activePage ? ' active' : ''}" href="${href}">
+      <i class="bi ${icon}"></i>
+      <span>${label}</span>
+    </a>
+  `).join('');
 
   const shell = `
     <header class="navbar sedco-navbar">
@@ -44,42 +37,56 @@
           <button class="sedco-mobile-toggle" id="sedcoMobileToggle" type="button" aria-label="Open navigation">
             <i class="bi bi-list"></i>
           </button>
-          <a class="navbar-brand sedco-brand" href="${file('dashboard')}">
+
+          <a class="navbar-brand sedco-brand" href="${pageUrl('dashboard')}">
             <span class="brand-mark"><i class="bi bi-mortarboard-fill"></i></span>
             <span>TRAINING MANAGEMENT SYSTEM</span>
           </a>
         </div>
+
         <nav class="sedco-top-links" aria-label="Top navigation">
-          <a class="nav-link" href="${file('dashboard')}">Dashboard</a>
-          <a class="nav-link" href="#">About Us</a>
-          <a class="nav-link" href="#">Contact Us</a>
-          <a class="nav-link" href="${file('logout')}"><i class="bi bi-box-arrow-right me-1"></i>Log out</a>
+          <a class="nav-link" href="${pageUrl('dashboard')}">Dashboard</a>
+          <span class="nav-link is-disabled" aria-disabled="true">About Us</span>
+          <span class="nav-link is-disabled" aria-disabled="true">Contact Us</span>
+          <a class="nav-link" href="${logoutUrl}">
+            <i class="bi bi-box-arrow-right me-1"></i>Log out
+          </a>
         </nav>
       </div>
     </header>
 
     <aside class="sidebar sedco-sidebar" id="sedcoSidebar">
       <div class="sedco-sidebar-label">Workspace</div>
+
       <nav class="sedco-side-nav" aria-label="Sidebar navigation">
-        ${sidebarHtml}
+        ${sidebarLinks}
+        <span class="sedco-nav-item is-disabled" aria-disabled="true">
+          <i class="bi bi-inbox"></i>
+          <span>Submissions</span>
+        </span>
       </nav>
+
       <div class="sedco-sidebar-footer">
-        <a class="sedco-nav-item" href="${file('logout')}">
-          <i class="bi bi-box-arrow-left"></i><span>Logout</span>
+        <a class="sedco-nav-item" href="${logoutUrl}">
+          <i class="bi bi-box-arrow-left"></i>
+          <span>Logout</span>
         </a>
       </div>
     </aside>
-    <button class="sedco-sidebar-backdrop" id="sedcoSidebarBackdrop" type="button" aria-label="Close navigation"></button>
+
+    <button
+      class="sedco-sidebar-backdrop"
+      id="sedcoSidebarBackdrop"
+      type="button"
+      aria-label="Close navigation"
+    ></button>
   `;
 
-  document.body.insertAdjacentHTML('afterbegin', shell);
-
-  document.querySelectorAll('.sedco-nav-item.is-disabled').forEach(link => {
-    link.addEventListener('click', event => event.preventDefault());
-  });
+  body.insertAdjacentHTML('afterbegin', shell);
 
   const toggle = document.getElementById('sedcoMobileToggle');
   const backdrop = document.getElementById('sedcoSidebarBackdrop');
+
   const closeMenu = () => body.classList.remove('sedco-menu-open');
 
   toggle?.addEventListener('click', () => body.classList.toggle('sedco-menu-open'));
