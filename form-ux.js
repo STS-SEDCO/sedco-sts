@@ -8,7 +8,7 @@
   const form = document.querySelector('form');
   if (!form || !['BPL','PKK','TEA'].includes(formType)) return;
 
-  form.noValidate = true;
+  form.noValidate = false;
   form.classList.add('sts-smart-form');
 
   const fieldByName = name =>
@@ -179,12 +179,29 @@
     return [];
   }
 
+
+  function applyNativeGroupRequirements() {
+    requiredGroups().forEach(name => {
+      const controls = fieldsByName(name).filter(control => !control.disabled);
+
+      controls.forEach(control => {
+        control.required = false;
+      });
+
+      if (controls[0]) {
+        controls[0].required = true;
+        controls[0].setAttribute('aria-required','true');
+      }
+    });
+  }
+
   function makeRequiredMarkers() {
     requiredNames().forEach(name => {
       const control = fieldByName(name);
       if (!control || control.disabled) return;
 
       control.dataset.stsRequired = '1';
+      control.required = true;
       control.setAttribute('aria-required','true');
 
       const wrapperLabel = control.closest('label.form-label, label:not(.profile-photo-upload)');
@@ -326,6 +343,7 @@
 
         box.hidden = !active;
         otherInput.disabled = !active;
+        otherInput.required = active;
         otherInput.dataset.stsRequired = active ? '1' : '0';
         otherInput.setAttribute('aria-required', active ? 'true' : 'false');
 
@@ -366,6 +384,7 @@
         score.max = '4';
         score.step = '1';
         score.inputMode = 'numeric';
+        score.required = true;
         score.dataset.stsRequired = '1';
       });
 
@@ -418,8 +437,16 @@
           || scores.some(score => String(score.value || '').trim() !== '');
 
         name?.classList.toggle('sts-dependent-active', active);
+
+        if (name) {
+          name.required = active;
+          name.setAttribute('aria-required', active ? 'true' : 'false');
+        }
+
         scores.forEach(score => {
+          score.required = active;
           score.dataset.stsSpeakerRequired = active ? '1' : '0';
+          score.setAttribute('aria-required', active ? 'true' : 'false');
         });
       };
 
@@ -575,17 +602,25 @@
     if (submitter?.classList.contains('form-print-button')) return;
 
     const invalid = validate();
+    const nativeValid = form.checkValidity();
 
-    if (!invalid.length) {
+    if (!invalid.length && nativeValid) {
       hideValidationSummary();
       return;
     }
 
     event.preventDefault();
     event.stopImmediatePropagation();
-    showValidationSummary(invalid.length);
+    const nativeInvalid = [...form.elements].filter(control =>
+      typeof control.checkValidity === 'function'
+      && !control.disabled
+      && !control.checkValidity()
+    );
 
-    const first = invalid[0];
+    const allInvalid = [...new Set([...invalid, ...nativeInvalid])];
+    showValidationSummary(allInvalid.length || 1);
+
+    const first = allInvalid[0];
     const target = firstTarget(first);
     target?.scrollIntoView({behavior:'smooth', block:'center'});
 
@@ -594,6 +629,20 @@
         first.focus({preventScroll:true});
       }
     }, 450);
+  }, true);
+
+  form.addEventListener('invalid', event => {
+    const control = event.target;
+    if (!(control instanceof HTMLElement) || !control.matches('input,textarea,select')) return;
+
+    event.preventDefault();
+
+    if (control.type === 'radio' || control.type === 'checkbox') {
+      const group = control.name ? fieldsByName(control.name) : [control];
+      setGroupError(group, 'Sila lengkapkan pilihan ini.');
+    } else {
+      setFieldError(control, `${fieldLabel(control)} perlu diisi.`);
+    }
   }, true);
 
   form.addEventListener('input', event => {
@@ -626,4 +675,5 @@
   setupTeaTotals();
   setupPkkSpeakerRules();
   makeRequiredMarkers();
+  applyNativeGroupRequirements();
 })();
