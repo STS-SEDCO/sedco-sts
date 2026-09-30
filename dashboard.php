@@ -304,50 +304,76 @@ $unreadNotifications = sts_unread_notifications($userId);
   <title>Dashboard - Smart Training System</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-  <link rel="stylesheet" href="sedco-saas.css?v=20260930-50">
-  <link rel="stylesheet" href="sedco-shell.css?v=20260930-50">
+  <link rel="stylesheet" href="sedco-saas.css?v=20260930-55">
+  <link rel="stylesheet" href="sedco-shell.css?v=20260930-55">
 </head>
-<body class="app-page dashboard-page dashboard-v3" data-page="dashboard" data-role="<?= e($role) ?>">
+<body class="app-page dashboard-page dashboard-v4" data-page="dashboard" data-role="<?= e($role) ?>">
 <main class="content">
   <div class="dashboard-shell">
-    <header class="dashboard-v3-heading">
-      <div>
-        <div class="eyebrow"><?= e(role_label($user['role'] ?? '')) ?></div>
-        <h1 class="welcome-message">Welcome, <?= e($user['fullname']) ?></h1>
-        <p class="page-subtitle"><?= e($dashboardSubtitle) ?></p>
-      </div>
-      <div class="dashboard-heading-actions">
-        <?php if ($unreadNotifications > 0): ?>
-        <a href="notifications.php" class="dashboard-alert-chip">
-          <i class="bi bi-bell-fill"></i>
-          <?= $unreadNotifications ?> unread
-        </a>
-        <?php endif; ?>
-        <a href="<?= $role === 'staff' ? 'task.php' : 'submissions.php' ?>" class="sts-primary-btn">
-          <i class="bi <?= $role === 'staff' ? 'bi-plus-lg' : 'bi-inbox' ?>"></i>
-          <?= $role === 'staff' ? 'New application' : 'Open review queue' ?>
-        </a>
-      </div>
-    </header>
+    <section class="dashboard-hero-v4">
+      <div class="dashboard-hero-copy">
+        <div class="dashboard-role-chip">
+          <span></span>
+          <?= e(role_label($user['role'] ?? '')) ?>
+        </div>
+        <h1>Welcome back, <?= e($user['fullname']) ?></h1>
+        <p><?= e($dashboardSubtitle) ?></p>
 
-    <section class="dashboard-stats-v3">
+        <div class="dashboard-hero-actions">
+          <a href="<?= $role === 'staff' ? 'task.php' : 'submissions.php' ?>" class="dashboard-primary-action">
+            <i class="bi <?= $role === 'staff' ? 'bi-plus-lg' : 'bi-inbox' ?>"></i>
+            <?= $role === 'staff' ? 'New application' : 'Open review queue' ?>
+          </a>
+          <a href="<?= $role === 'staff' ? 'application-status.php' : 'reports.php' ?>" class="dashboard-secondary-action">
+            <i class="bi <?= $role === 'staff' ? 'bi-clipboard-check' : 'bi-bar-chart-line' ?>"></i>
+            <?= $role === 'staff' ? 'Track application' : 'View reports' ?>
+          </a>
+          <?php if ($unreadNotifications > 0): ?>
+          <a href="notifications.php" class="dashboard-alert-chip">
+            <i class="bi bi-bell-fill"></i>
+            <?= $unreadNotifications ?> unread
+          </a>
+          <?php endif; ?>
+        </div>
+      </div>
+
+      <div class="dashboard-hero-visual" aria-hidden="true">
+        <div class="dashboard-orbit dashboard-orbit-one"></div>
+        <div class="dashboard-orbit dashboard-orbit-two"></div>
+        <div class="dashboard-hero-icon"><i class="bi bi-mortarboard-fill"></i></div>
+        <span class="dashboard-floating-chip chip-one"><i class="bi bi-check2-circle"></i> Approval</span>
+        <span class="dashboard-floating-chip chip-two"><i class="bi bi-file-earmark-text"></i> Training</span>
+      </div>
+    </section>
+
+    <section class="dashboard-stats-v4">
       <?php foreach ($stats as $stat): ?>
-      <article class="dashboard-stat-v3 tone-<?= e($stat['tone']) ?>">
-        <span class="dashboard-stat-icon"><i class="bi <?= e($stat['icon']) ?>"></i></span>
+      <article class="dashboard-stat-v4">
+        <span class="dashboard-stat-icon-v4 tone-<?= e($stat['tone']) ?>"><i class="bi <?= e($stat['icon']) ?>"></i></span>
         <div>
+          <span class="dashboard-stat-label"><?= e($stat['label']) ?></span>
           <strong><?= (int) $stat['value'] ?></strong>
-          <span><?= e($stat['label']) ?></span>
+          <small><?= match ($stat['label']) {
+            'Applications', 'Total' => 'Training records in your workspace',
+            'Pending', 'Pending review', 'My queue' => 'Waiting for workflow action',
+            'Approved', 'Approved by me' => 'Successfully processed records',
+            'Needs attention', 'Overdue SLA' => 'Items requiring attention',
+            'Reviewed this month' => 'Completed review activity',
+            'Active users' => 'Enabled STS accounts',
+            default => 'Current workspace activity',
+          } ?></small>
         </div>
       </article>
       <?php endforeach; ?>
     </section>
 
-    <div class="dashboard-v3-grid">
-      <section class="dashboard-work-panel">
-        <div class="dashboard-panel-heading">
+    <div class="dashboard-v4-grid">
+      <section class="dashboard-main-card">
+        <div class="dashboard-card-heading-v4">
           <div>
-            <span><?= $role === 'staff' ? 'Recent activity' : 'Priority queue' ?></span>
+            <span class="dashboard-card-kicker"><?= $role === 'staff' ? 'Recent activity' : 'Priority queue' ?></span>
             <h2><?= e($dashboardTitle) ?></h2>
+            <p><?= $role === 'staff' ? 'Your latest training records and workflow updates.' : 'Items that need your attention first.' ?></p>
           </div>
           <a href="<?= $role === 'staff' ? 'application-status.php' : 'submissions.php' ?>">
             View all <i class="bi bi-arrow-right"></i>
@@ -394,10 +420,10 @@ $unreadNotifications = sts_unread_notifications($userId);
         <?php endif; ?>
       </section>
 
-      <aside class="dashboard-calendar-panel">
-        <div class="dashboard-panel-heading">
-          <div><span>Schedule</span><h2>Training calendar</h2></div>
-          <i class="bi bi-calendar3"></i>
+      <aside class="dashboard-calendar-card-v4">
+        <div class="dashboard-card-heading-v4">
+          <div><span class="dashboard-card-kicker">Schedule</span><h2>Training calendar</h2><p>Approved training and company events.</p></div>
+          <span class="dashboard-calendar-badge"><i class="bi bi-calendar3"></i></span>
         </div>
         <div class="calendar-header" id="calendar-header"></div>
         <table class="calendar-table" id="calendar"></table>
@@ -407,10 +433,11 @@ $unreadNotifications = sts_unread_notifications($userId);
 
     <?php if ($followups): ?>
     <section class="dashboard-followup-panel">
-      <div class="dashboard-panel-heading">
+      <div class="dashboard-card-heading-v4">
         <div>
-          <span>Post-training</span>
+          <span class="dashboard-card-kicker">Post-training</span>
           <h2>Follow-up actions</h2>
+          <p>Complete the next required training lifecycle step.</p>
         </div>
         <span class="dashboard-followup-count"><?= count($followups) ?> pending</span>
       </div>
@@ -445,7 +472,7 @@ window.STS_CALENDAR_EVENTS = <?= json_encode(
     JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_HEX_TAG | JSON_HEX_AMP
 ) ?>;
 </script>
-<script src="dashboard.js?v=20260930-41"></script>
-<script src="sedco-shell.js?v=20260930-50"></script>
+<script src="dashboard.js?v=20260930-55"></script>
+<script src="sedco-shell.js?v=20260930-55"></script>
 </body>
 </html>
