@@ -157,7 +157,7 @@
         <a href="dashboard.php"><i class="fas fa-home"></i> Dashboard</a>
         <a href="profile.php"><i class="fas fa-user"></i> Profile</a>
         <a href="task.php" class="active"><i class="fas fa-tasks"></i> Tasks</a>
-        <a href="#"><i class="fas fa-clipboard-check"></i> Application status</a>
+        <a href="application-status.php"><i class="fas fa-clipboard-check"></i> Application status</a>
         <a href="#"><i class="fas fa-inbox"></i> Submissions</a>
         <a href="logout.php"><i class="fas fa-sign-out-alt"></i> Logout</a>
     </div>
