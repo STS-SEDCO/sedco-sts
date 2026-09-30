@@ -588,3 +588,37 @@ body.app-page .status-content{
     border-radius:0 18px 18px 0 !important;
   }
 }
+
+
+/* ===== STS EXTENDED PAGE SHELL ===== */
+body.app-page .sts-page-content{
+  box-sizing:border-box!important;
+  margin-left:var(--sedco-sidebar-width)!important;
+  width:calc(100% - var(--sedco-sidebar-width))!important;
+  transition:margin-left .22s ease,width .22s ease!important;
+}
+
+body.app-page > .sedco-sidebar .sedco-nav-item{
+  min-width:0!important;
+}
+
+body.app-page > .sedco-sidebar .sedco-nav-item .sedco-nav-badge{
+  flex:0 0 auto;
+}
+
+body.app-page.sedco-sidebar-collapsed > .sedco-sidebar .sedco-nav-badge{
+  position:absolute;
+  top:5px;
+  right:5px;
+  min-width:15px;
+  height:15px;
+  padding:0 3px;
+  font-size:7px;
+}
+
+@media(max-width:760px){
+  body.app-page .sts-page-content{
+    margin-left:0!important;
+    width:100%!important;
+  }
+}
