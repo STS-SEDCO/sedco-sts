@@ -1,3 +1,70 @@
+<?php
+declare(strict_types=1);
+require_once __DIR__ . '/includes/auth.php';
+
+require_login();
+$user = current_user();
+
+if (!$user) {
+    header('Location: login.php');
+    exit;
+}
+
+if (user_can_review_applications($user)) {
+    $stmt = db()->prepare(
+        'SELECT a.application_no, a.form_type, a.title, a.payload, a.status,
+                a.submitted_at, a.updated_at, u.fullname
+         FROM applications a
+         INNER JOIN users u ON u.id = a.user_id
+         ORDER BY a.submitted_at DESC'
+    );
+} else {
+    $stmt = db()->prepare(
+        'SELECT a.application_no, a.form_type, a.title, a.payload, a.status,
+                a.submitted_at, a.updated_at, u.fullname
+         FROM applications a
+         INNER JOIN users u ON u.id = a.user_id
+         WHERE a.user_id = ?
+         ORDER BY a.submitted_at DESC'
+    );
+    $userId = (int) $user['id'];
+    $stmt->bind_param('i', $userId);
+}
+
+$stmt->execute();
+$result = $stmt->get_result();
+$applications = [];
+
+while ($row = $result->fetch_assoc()) {
+    $payload = json_decode((string) $row['payload'], true);
+    $payload = is_array($payload) ? $payload : [];
+
+    $applicationDate = $payload['tarikh']
+        ?? $payload['tarikh_mula']
+        ?? $payload['date']
+        ?? $payload['tarikh_penilaian']
+        ?? $row['submitted_at'];
+
+    $applications[] = [
+        'id' => $row['application_no'],
+        'type' => $row['form_type'],
+        'formName' => match ($row['form_type']) {
+            'BPL' => 'Permohonan Latihan',
+            'PKK' => 'Penilaian Keberkesanan Kursus',
+            default => 'Training Effectiveness Assessment',
+        },
+        'title' => $row['title'],
+        'applicant' => $row['fullname'],
+        'applicationDate' => $applicationDate,
+        'status' => $row['status'],
+        'submittedAt' => $row['submitted_at'],
+        'updatedAt' => $row['updated_at'],
+        'data' => $payload,
+    ];
+}
+
+$stmt->close();
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,8 +74,8 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-  <link rel="stylesheet" href="sedco-saas.css?v=20260930-6">
-  <link rel="stylesheet" href="sedco-shell.css?v=20260930-6">
+  <link rel="stylesheet" href="sedco-saas.css?v=20260930-8">
+  <link rel="stylesheet" href="sedco-shell.css?v=20260930-8">
 </head>
 <body class="app-page status-page" data-page="application-status">
 
@@ -119,7 +186,18 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-<script src="application-status.js"></script>
-<script src="sedco-shell.js?v=20260930-6"></script>
+<script>
+window.SEDCO_APPLICATIONS = <?= json_encode(
+    $applications,
+    JSON_UNESCAPED_UNICODE
+    | JSON_UNESCAPED_SLASHES
+    | JSON_HEX_TAG
+    | JSON_HEX_AMP
+    | JSON_HEX_APOS
+    | JSON_HEX_QUOT
+) ?>;
+</script>
+<script src="application-status.js?v=20260930-8"></script>
+<script src="sedco-shell.js?v=20260930-8"></script>
 </body>
 </html>
