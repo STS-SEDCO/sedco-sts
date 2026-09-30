@@ -64,7 +64,7 @@ function user_can_review_applications(?array $user = null): bool
 
     return in_array(
         $user['role'],
-        ['admin', 'training_section', 'head_of_department', 'pengerusi_besar', 'general_manager'],
+        ['admin', 'training_section', 'head_of_department', 'head_of_division', 'pengerusi_besar', 'general_manager'],
         true
     );
 }
