@@ -15,188 +15,14 @@ require_login();
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
 
-  <style>
-    body {
-      background-color: #f8f9fa;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      margin: 0;
-    }
-
-    .navbar {
-      background-color: #800000;
-      padding: 15px 30px;
-      position: fixed;
-      width: 100%;
-      top: 0;
-      left: 0;
-      z-index: 1000;
-      box-shadow: 0 4px 6px rgba(0,0,0,0.2);
-    }
-
-    .navbar .nav-link {
-      color: white !important;
-      font-weight: 500;
-      margin: 0 10px;
-    }
-
-    .navbar .nav-link:hover {
-      text-decoration: underline;
-    }
-
-    .sidebar {
-      height: 100vh;
-      width: 250px;
-      position: fixed;
-      top: 65px;
-      left: 0;
-      background-color: #800000;
-      padding-top: 20px;
-      box-shadow: 2px 0 8px rgba(0,0,0,0.1);
-    }
-
-    .sidebar a {
-      padding: 12px 20px;
-      text-decoration: none;
-      font-size: 16px;
-      color: white;
-      display: flex;
-      align-items: center;
-      transition: background 0.2s ease;
-    }
-
-    .sidebar a:hover {
-      background-color: #a31515;
-    }
-
-    .sidebar a i {
-      margin-right: 10px;
-      width: 20px;
-      text-align: center;
-    }
-
-    .form-container {
-      margin-left: 270px;
-      margin-top: 90px;
-      padding: 30px;
-      background-color: white;
-      border-radius: 10px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
-      max-width: 95%;
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-bottom: 20px;
-    }
-
-    th, td {
-      border: 1px solid #000;
-      padding: 8px;
-      text-align: center;
-      vertical-align: middle;
-    }
-
-    .no-border {
-      border: none !important;
-      text-align: left;
-    }
-
-    .input-field {
-      width: 100%;
-      border: none;
-      border-bottom: 1px solid black;
-      outline: none;
-      padding: 2px 4px;
-    }
-
-    .center {
-      text-align: center;
-    }
-
-    .rating-info {
-      font-size: 14px;
-      color: #333;
-    }
-
-    select, input[type="number"], input[type="text"], input[type="date"] {
-      padding: 4px;
-      border-radius: 4px;
-      border: 1px solid #ccc;
-      width: 100%;
-    }
-
-    input[type="submit"], .btn-secondary {
-      padding: 10px 30px;
-      font-weight: 600;
-    }
-
-    em {
-      color: #555;
-    }
-
-    hr {
-      border: 1px solid #ccc;
-    }
-
-    @media print {
-      .navbar, .sidebar, .btn {
-        display: none;
-      }
-      .form-container {
-        margin: 0;
-        box-shadow: none;
-        width: 100%;
-      }
-      @media print {
-  * {
-    -webkit-print-color-adjust: exact;
-    print-color-adjust: exact;
-  }
-
-  body {
-    zoom: 80%; /* Scale down the entire content */
-    margin: 0;
-  }
-
-  .navbar, .sidebar, .btn {
-    display: none !important;
-  }
-
-  .form-container {
-    margin: 0 !important;
-    padding: 0 !important;
-    width: 100%;
-    box-shadow: none;
-    border: none;
-  }
-
-  table, tr, td, th {
-    page-break-inside: avoid !important;
-  }
-
-  @page {
-    size: A4 portrait;
-    margin: 10mm;
-  }
-
-  html, body {
-    height: auto;
-    overflow: visible;
-  }
-}
-
-    }
-  </style>
-
   <script>
     function printForm() {
       window.print();
     }
   </script>
-    <link rel="stylesheet" href="sedco-saas.css?v=20260930-8">
+    <link rel="stylesheet" href="sedco-saas.css?v=20260930-9">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-  <link rel="stylesheet" href="sedco-shell.css?v=20260930-8">
+  <link rel="stylesheet" href="sedco-shell.css?v=20260930-9">
 </head>
 <body class="app-page form-page tea-page" data-page="task">
 
@@ -305,6 +131,6 @@ require_login();
   </div>
 
 <script src="sedco-submission.js"></script>
-<script src="sedco-shell.js?v=20260930-8"></script>
+<script src="sedco-shell.js?v=20260930-9"></script>
 </body>
 </html>
