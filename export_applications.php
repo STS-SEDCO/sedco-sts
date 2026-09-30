@@ -21,7 +21,7 @@ if($role==='head_of_department'){
   $where[]='(a.assigned_hod_id=? OR (a.assigned_hod_id IS NULL AND (a.department=? OR a.department IS NULL OR a.department="")))';
   $params[]=(int)$user['id'];$types.='i';$params[]=trim((string)($user['department']??''));$types.='s';
 }
-if(in_array($status,['pending','approved','correction','rejected'],true)){$where[]='a.status=?';$params[]=$status;$types.='s';}
+if(in_array($status,['pending','approved','correction','rejected','cancelled'],true)){$where[]='a.status=?';$params[]=$status;$types.='s';}
 if(in_array($formType,['BPL','PKK','TEA'],true)){$where[]='a.form_type=?';$params[]=$formType;$types.='s';}
 if($departmentFilter!==''&&$role!=='head_of_department'){$where[]='a.department=?';$params[]=$departmentFilter;$types.='s';}
 if($dateFrom!==''){$where[]='DATE(a.submitted_at)>=?';$params[]=$dateFrom;$types.='s';}
