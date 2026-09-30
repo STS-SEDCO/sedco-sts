@@ -532,38 +532,9 @@ if (!isset($_SESSION['user_id'])) {
             .tasks-panel, .calendar-container { border-radius: 14px; }
         }
     </style>
-    <link rel="stylesheet" href="sedco-saas.css">
+    <link rel="stylesheet" href="sedco-saas.css?v=20260930-3">
 </head>
-<body class="app-page dashboard-page">
-
-    <nav class="navbar navbar-expand-lg">
-        <div class="container-fluid px-0">
-            <span class="navbar-brand">
-                <span class="brand-mark"><i class="bi bi-mortarboard-fill"></i></span>
-                TRAINING MANAGEMENT SYSTEM
-            </span>
-            <div class="collapse navbar-collapse justify-content-end">
-                <ul class="navbar-nav align-items-center">
-                    <li class="nav-item"><a class="nav-link" href="dashboard.php">Dashboard</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">About Us</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">Contact Us</a></li>
-                    <li class="nav-item"><a class="nav-link" href="logout.php"><i class="bi bi-box-arrow-right me-1"></i> Log out</a></li>
-                </ul>
-            </div>
-        </div>
-    </nav>
-
-    <aside class="sidebar">
-        <p class="sidebar-title">Workspace</p>
-        <a href="#" class="active"><i class="bi bi-grid-1x2-fill"></i><span>Dashboard</span></a>
-        <a href="profile.php"><i class="bi bi-person"></i><span>Profile</span></a>
-        <a href="task.php"><i class="bi bi-check2-square"></i><span>Tasks</span></a>
-        <a href="application-status.php"><i class="bi bi-clipboard-check"></i><span>Application status</span></a>
-        <a href="#"><i class="bi bi-inbox"></i><span>Submissions</span></a>
-        <div class="sidebar-footer">
-            <a href="logout.php"><i class="bi bi-box-arrow-left"></i><span>Logout</span></a>
-        </div>
-    </aside>
+<body class="app-page dashboard-page" data-page="dashboard">
 
     <main class="content">
         <div class="dashboard-shell">
@@ -687,5 +658,6 @@ if (!isset($_SESSION['user_id'])) {
             });
         }
     </script>
+<script src="sedco-shell.js?v=20260930-3"></script>
 </body>
 </html>
