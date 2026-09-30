@@ -1,12 +1,7 @@
 -- SEDCO Training Management System
 -- Canonical MySQL schema
--- Import this file into an empty database named `sts`.
-
-CREATE DATABASE IF NOT EXISTS sts
-    CHARACTER SET utf8mb4
-    COLLATE utf8mb4_unicode_ci;
-
-USE sts;
+-- Select/create the target database in your hosting panel or phpMyAdmin
+-- before importing this file. The schema does not hardcode a database name.
 
 CREATE TABLE IF NOT EXISTS users (
     id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
