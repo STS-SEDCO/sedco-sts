@@ -10,26 +10,16 @@ if (!$user) {
     exit;
 }
 
-if (user_can_review_applications($user)) {
-    $stmt = db()->prepare(
-        'SELECT a.application_no, a.form_type, a.title, a.payload, a.status,
-                a.submitted_at, a.updated_at, u.fullname
-         FROM applications a
-         INNER JOIN users u ON u.id = a.user_id
-         ORDER BY a.submitted_at DESC'
-    );
-} else {
-    $stmt = db()->prepare(
-        'SELECT a.application_no, a.form_type, a.title, a.payload, a.status,
-                a.submitted_at, a.updated_at, u.fullname
-         FROM applications a
-         INNER JOIN users u ON u.id = a.user_id
-         WHERE a.user_id = ?
-         ORDER BY a.submitted_at DESC'
-    );
-    $userId = (int) $user['id'];
-    $stmt->bind_param('i', $userId);
-}
+$stmt = db()->prepare(
+    'SELECT a.application_no, a.form_type, a.title, a.payload, a.status,
+            a.current_stage, a.review_note, a.submitted_at, a.updated_at, u.fullname
+     FROM applications a
+     INNER JOIN users u ON u.id = a.user_id
+     WHERE a.user_id = ?
+     ORDER BY a.submitted_at DESC'
+);
+$userId = (int) $user['id'];
+$stmt->bind_param('i', $userId);
 
 $stmt->execute();
 $result = $stmt->get_result();
@@ -57,6 +47,12 @@ while ($row = $result->fetch_assoc()) {
         'applicant' => $row['fullname'],
         'applicationDate' => $applicationDate,
         'status' => $row['status'],
+        'currentStage' => $row['current_stage'],
+        'stageLabel' => stage_label($row['current_stage']),
+        'reviewNote' => $row['review_note'],
+        'viewUrl' => $row['form_type'] === 'BPL'
+            ? 'bpl.php?application=' . rawurlencode((string) $row['application_no'])
+            : null,
         'submittedAt' => $row['submitted_at'],
         'updatedAt' => $row['updated_at'],
         'data' => $payload,
@@ -74,7 +70,7 @@ $stmt->close();
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-  <link rel="stylesheet" href="sedco-saas.css?v=20260930-16">
+  <link rel="stylesheet" href="sedco-saas.css?v=20260930-31">
   <link rel="stylesheet" href="sedco-shell.css?v=20260930-15">
 </head>
 <body class="app-page status-page" data-page="application-status">
@@ -215,7 +211,7 @@ window.SEDCO_APPLICATIONS = <?= json_encode(
     | JSON_HEX_QUOT
 ) ?>;
 </script>
-<script src="application-status.js?v=20260930-15"></script>
+<script src="application-status.js?v=20260930-31"></script>
 <script src="sedco-shell.js?v=20260930-18"></script>
 </body>
 </html>
