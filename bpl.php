@@ -87,9 +87,9 @@ $canReviewCurrentStage = $mode === 'review'
             window.print();
         }
     </script>
-    <link rel="stylesheet" href="sedco-saas.css?v=20260930-49">
+    <link rel="stylesheet" href="sedco-saas.css?v=20260930-53">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-  <link rel="stylesheet" href="sedco-shell.css?v=20260930-49">
+  <link rel="stylesheet" href="sedco-shell.css?v=20260930-53">
 </head>
 <body class="app-page form-page bpl-page" data-page="task" data-role="<?= e(normalized_role($user['role'] ?? '')) ?>">
 
@@ -98,9 +98,25 @@ $canReviewCurrentStage = $mode === 'review'
     <!-- Form Content -->
     <div class="content">
         <h2>BORANG PERMOHONAN LATIHAN (BPL)</h2>
+        <?php if ($mode === 'review'): ?>
+        <div class="bpl-workflow-meta">
+          <span><i class="bi bi-file-earmark-check"></i><?= e($application['application_no']) ?></span>
+          <span><i class="bi bi-person"></i><?= e($application['applicant_name']) ?></span>
+          <span><i class="bi bi-diagram-3"></i><?= e(stage_label($currentStage)) ?></span>
+          <?php if (!empty($application['sla_due_at']) && $applicationStatus === 'pending'): ?>
+          <span class="<?= strtotime((string) $application['sla_due_at']) < time() ? 'is-overdue' : '' ?>">
+            <i class="bi bi-alarm"></i>SLA <?= e(date('d M Y, g:i A', strtotime((string) $application['sla_due_at']))) ?>
+          </span>
+          <?php endif; ?>
+          <a href="application-detail.php?application=<?= rawurlencode((string) $application['application_no']) ?>">
+            <i class="bi bi-clock-history"></i> History
+          </a>
+        </div>
+        <?php endif; ?>
+
         <div class="form-permission-notice" data-form-permission-notice></div>
 
-        <form method="post" action="submit_application.php?type=BPL">
+        <form method="post" action="<?= e($formAction) ?>" enctype="multipart/form-data">
       <?= csrf_field() ?>
 
             <!-- A. MAKLUMAT PEMOHON -->
@@ -310,6 +326,6 @@ window.SEDCO_FORM_CONTEXT = {
 <script src="bpl-workflow.js?v=20260930-51"></script>
 <script src="form-permissions.js?v=20260930-51"></script>
 <script src="form-enhancements.js?v=20260930-51"></script>
-<script src="sedco-shell.js?v=20260930-49"></script>
+<script src="sedco-shell.js?v=20260930-53"></script>
 </body>
 </html>
