@@ -64,7 +64,7 @@ function user_can_review_applications(?array $user = null): bool
 
     return in_array(
         $user['role'],
-        ['admin', 'training_section', 'head_of_department', 'pengerusi_besar'],
+        ['admin', 'training_section', 'head_of_department', 'pengerusi_besar', 'general_manager'],
         true
     );
 }
@@ -124,4 +124,53 @@ function user_can_submit_form_type(string $formType, ?array $user = null): bool
         'TEA' => $role === 'head_of_department',
         default => false,
     };
+}
+
+
+function review_stage_for_role(?string $role): ?string
+{
+    return match (normalized_role($role)) {
+        'head_of_department' => 'hod',
+        'training_section' => 'training',
+        'general_manager' => 'gm',
+        default => null,
+    };
+}
+
+function role_label(?string $role): string
+{
+    return match (normalized_role($role)) {
+        'staff' => 'Staff / Applicant',
+        'head_of_department' => 'Head of Department',
+        'training_section' => 'Training Department',
+        'general_manager' => 'General Manager',
+        'admin' => 'System Administrator',
+        default => 'User',
+    };
+}
+
+function stage_label(?string $stage): string
+{
+    return match ($stage) {
+        'hod' => 'Head of Department',
+        'training' => 'Training Department',
+        'gm' => 'General Manager',
+        'completed' => 'Completed',
+        default => 'Pending',
+    };
+}
+
+function user_can_review_stage(string $stage, ?array $user = null): bool
+{
+    $user ??= current_user();
+
+    if (!$user) {
+        return false;
+    }
+
+    if (normalized_role($user['role'] ?? '') === 'admin') {
+        return in_array($stage, ['hod', 'training', 'gm'], true);
+    }
+
+    return review_stage_for_role($user['role'] ?? '') === $stage;
 }
