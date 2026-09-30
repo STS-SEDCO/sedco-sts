@@ -31,7 +31,12 @@ ALTER TABLE applications
     ADD COLUMN IF NOT EXISTS training_start DATE DEFAULT NULL AFTER sla_due_at,
     ADD COLUMN IF NOT EXISTS training_end DATE DEFAULT NULL AFTER training_start,
     ADD COLUMN IF NOT EXISTS followup_due_at DATETIME DEFAULT NULL AFTER training_end,
-    ADD COLUMN IF NOT EXISTS completed_at DATETIME DEFAULT NULL AFTER followup_due_at;
+    ADD COLUMN IF NOT EXISTS completed_at DATETIME DEFAULT NULL AFTER followup_due_at,
+    ADD COLUMN IF NOT EXISTS cancelled_at DATETIME DEFAULT NULL AFTER completed_at,
+    ADD COLUMN IF NOT EXISTS cancellation_reason TEXT DEFAULT NULL AFTER cancelled_at;
+
+ALTER TABLE applications
+    MODIFY COLUMN status ENUM('pending','approved','correction','rejected','cancelled') NOT NULL DEFAULT 'pending';
 
 CREATE TABLE IF NOT EXISTS application_drafts (
     id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
