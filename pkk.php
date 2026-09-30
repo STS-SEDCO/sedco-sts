@@ -1,32 +1,8 @@
 <?php
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // Display the notification message
-    echo "<div id='notification' style='
-        background-color: #e0ffe0;
-        padding: 20px 30px;
-        border: 1px solid #28a745;
-        border-left: 10px solid #28a745;
-        margin: 100px auto 20px auto;
-        max-width: 1000px;
-        font-weight: bold;
-        color: #155724;
-        font-size: 18px;
-        border-radius: 6px;
-        box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-        text-align: center;
-    '>✅ Borang telah dihantar dengan jayanya. Terima kasih!</div>";
-
-    // JavaScript to redirect after 3 seconds
-    echo "<script>
-        setTimeout(function() {
-            window.location.href = 'task.php'; // Redirect to task.php after 3 seconds
-        }, 3000); // 3000 milliseconds (3 seconds)
-    </script>";
-
-    exit();
-}
+declare(strict_types=1);
+require_once __DIR__ . '/includes/auth.php';
+require_login();
 ?>
-
 
 <!DOCTYPE html>
 <html lang="ms">
@@ -69,32 +45,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 }
     </style>
 
-<script>
-    // Wait until the DOM is fully loaded
-    window.onload = function() {
-        const form = document.querySelector('form');
-        form.addEventListener('submit', function(event) {
-            event.preventDefault();
-
-            var notify = document.getElementById('notification');
-            if (notify) {
-                notify.style.display = 'block';
-                setTimeout(function() {
-                    notify.style.display = 'none';
-                }, 1000);
-            }
-
-            // Redirect to task.php after showing notification
-            setTimeout(function() {
-                window.location.href = 'task.php';
-            }, 1000);
-        });
-    }
-</script>
-
-    <link rel="stylesheet" href="sedco-saas.css?v=20260930-6">
+<link rel="stylesheet" href="sedco-saas.css?v=20260930-8">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-  <link rel="stylesheet" href="sedco-shell.css?v=20260930-6">
+  <link rel="stylesheet" href="sedco-shell.css?v=20260930-8">
 </head>
 <body class="app-page form-page pkk-page" data-page="task">
 
@@ -280,7 +233,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <h2 class="text-center mb-3 text-uppercase fw-bold">Borang Penilaian Keberkesanan Kursus / Seminar</h2>
         <p class="text-center text-muted mb-4"><em>Borang ini hendaklah diisi dalam masa tujuh (7) hari bekerja selepas menghadiri kursus/seminar.</em></p>
 
-        <form method="post">
+        <form method="post" action="submit_application.php?type=PKK">
             <div class="row g-3 mb-4">
                 <div class="col-md-4">
                     <label class="form-label fw-semibold">Nama Pegawai/Staf</label>
@@ -405,6 +358,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     </div>
 </div>
 
-<script src="sedco-submission.js"></script>\n<script src="sedco-shell.js?v=20260930-6"></script>
+<script src="sedco-submission.js"></script>
+<script src="sedco-shell.js?v=20260930-8"></script>
 </body>
 </html>
