@@ -2,15 +2,6 @@
   const body = document.body;
   if (!body) return;
 
-  const shellCssId = 'sedco-shell-styles';
-  if (!document.getElementById(shellCssId)) {
-    const shellCss = document.createElement('link');
-    shellCss.id = shellCssId;
-    shellCss.rel = 'stylesheet';
-    shellCss.href = 'sedco-shell.css?v=20260930-5';
-    document.head.appendChild(shellCss);
-  }
-
   const path = (location.pathname.split('/').pop() || 'dashboard.html').toLowerCase();
   const isPhp = path.endsWith('.php');
   const ext = isPhp ? 'php' : 'html';
