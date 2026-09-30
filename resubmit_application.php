@@ -60,7 +60,7 @@ try {
         'nama', 'bahagian', 'jawatan', 'kursus', 'tarikh',
         'tajuk', 'penganjur', 'tarikh_mula', 'tarikh_tamat',
         'tempat', 'yuran', 'kandungan', 'tempat_tugas',
-        'kenderaan', 'masa_bertolak', 'masa_kembali', 'pendahuluan'
+        'kenderaan', 'kenderaan_other', 'masa_bertolak', 'masa_kembali', 'pendahuluan'
     ];
 
     $payload = json_decode((string) $application['payload'], true);
