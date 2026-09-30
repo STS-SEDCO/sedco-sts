@@ -20,6 +20,13 @@ jobs:
         shell: bash
         run: find . -type f -name '*.php' -print0 | xargs -0 -n1 php -l
 
+      - name: JavaScript syntax check
+        shell: bash
+        run: |
+          node --check sedco-shell.js
+          node --check sedco-submission.js
+          node --check application-status.js
+
       - name: Legacy reference check
         shell: bash
         run: |
@@ -35,3 +42,41 @@ jobs:
             echo "Inline style blocks found. Move styles to shared CSS."
             exit 1
           fi
+
+      - name: Markup and local reference check
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          import sys
+
+          root = Path('.')
+          files = [*root.glob('*.html'), *root.glob('*.php')]
+          known = {p.name for p in root.iterdir() if p.is_file()}
+          problems = []
+
+          for path in files:
+              text = path.read_text(encoding='utf-8')
+
+              if '<!DOCTYPE html' in text:
+                  for tag in ('html', 'head', 'body', 'form', 'table'):
+                      opens = len(re.findall(rf'<{tag}(?:\s|>)', text, flags=re.I))
+                      closes = len(re.findall(rf'</{tag}>', text, flags=re.I))
+                      if opens != closes:
+                          problems.append(f'{path}: unbalanced {tag} tags ({opens}/{closes})')
+
+              for match in re.finditer(r'(?:href|src|action)=["\']([^"\'#]+)["\']', text, flags=re.I):
+                  target = match.group(1)
+                  if re.match(r'^(?:https?:|mailto:|tel:|javascript:)', target, flags=re.I):
+                      continue
+                  target = target.split('?', 1)[0]
+                  if not target or '/' in target:
+                      continue
+                  if target not in known:
+                      problems.append(f'{path}: missing local reference {target}')
+
+          if problems:
+              print('\n'.join(problems))
+              sys.exit(1)
+          PY
