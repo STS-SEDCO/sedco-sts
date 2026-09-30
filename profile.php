@@ -28,6 +28,8 @@ $hasExtendedProfile = isset(
     $userColumns['department'],
     $userColumns['job_title']
 );
+$hasProfilePhoto = isset($userColumns['profile_image']);
+$existingProfileImage = $hasProfilePhoto ? trim((string) ($user['profile_image'] ?? '')) : '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     verify_csrf();
@@ -54,6 +56,69 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         } elseif ($hasExtendedProfile && mb_strlen($jobTitle) > 120) {
             $profileError = 'Job title is too long.';
         } else {
+            $newProfileImage = $existingProfileImage;
+            $uploadedProfilePath = null;
+            $oldProfilePathToDelete = null;
+
+            if ($hasProfilePhoto) {
+                $removePhoto = isset($_POST['remove_profile_image']);
+
+                if ($removePhoto) {
+                    $newProfileImage = '';
+                    if ($existingProfileImage !== '') {
+                        $oldProfilePathToDelete = __DIR__ . '/uploads/profiles/' . basename($existingProfileImage);
+                    }
+                }
+
+                if (
+                    isset($_FILES['profile_image'])
+                    && ($_FILES['profile_image']['error'] ?? UPLOAD_ERR_NO_FILE) !== UPLOAD_ERR_NO_FILE
+                ) {
+                    $uploadError = (int) ($_FILES['profile_image']['error'] ?? UPLOAD_ERR_NO_FILE);
+                    $uploadSize = (int) ($_FILES['profile_image']['size'] ?? 0);
+                    $tmpName = (string) ($_FILES['profile_image']['tmp_name'] ?? '');
+
+                    if ($uploadError !== UPLOAD_ERR_OK) {
+                        $profileError = 'Unable to upload the profile photo.';
+                    } elseif ($uploadSize <= 0 || $uploadSize > 3 * 1024 * 1024) {
+                        $profileError = 'Profile photo must be 3 MB or smaller.';
+                    } elseif (!is_uploaded_file($tmpName)) {
+                        $profileError = 'Invalid profile photo upload.';
+                    } else {
+                        $mime = (string) (new finfo(FILEINFO_MIME_TYPE))->file($tmpName);
+                        $allowedImages = [
+                            'image/jpeg' => 'jpg',
+                            'image/png' => 'png',
+                            'image/webp' => 'webp',
+                        ];
+
+                        if (!isset($allowedImages[$mime])) {
+                            $profileError = 'Use a JPG, PNG, or WebP image.';
+                        } else {
+                            $uploadDir = __DIR__ . '/uploads/profiles';
+
+                            if (!is_dir($uploadDir) && !mkdir($uploadDir, 0775, true) && !is_dir($uploadDir)) {
+                                $profileError = 'Unable to prepare the profile photo folder.';
+                            } else {
+                                $storedName = 'user-' . (int) $user['id'] . '-' . bin2hex(random_bytes(8)) . '.' . $allowedImages[$mime];
+                                $destination = $uploadDir . '/' . $storedName;
+
+                                if (!move_uploaded_file($tmpName, $destination)) {
+                                    $profileError = 'Unable to save the profile photo.';
+                                } else {
+                                    $uploadedProfilePath = $destination;
+                                    $newProfileImage = $storedName;
+
+                                    if ($existingProfileImage !== '') {
+                                        $oldProfilePathToDelete = __DIR__ . '/uploads/profiles/' . basename($existingProfileImage);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
             if ($hasExtendedProfile && $staffId !== '') {
                 $check = $db->prepare(
                     'SELECT id FROM users WHERE staff_id = ? AND id <> ? LIMIT 1'
@@ -66,6 +131,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                 if ($duplicate) {
                     $profileError = 'That Staff ID is already in use.';
+
+                    if ($uploadedProfilePath && is_file($uploadedProfilePath)) {
+                        @unlink($uploadedProfilePath);
+                        $uploadedProfilePath = null;
+                    }
                 }
             }
 
@@ -77,21 +147,42 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $departmentValue = $department !== '' ? $department : null;
                     $jobTitleValue = $jobTitle !== '' ? $jobTitle : null;
 
-                    $stmt = $db->prepare(
-                        'UPDATE users
-                         SET fullname = ?, phone_number = ?, staff_id = ?,
-                             department = ?, job_title = ?
-                         WHERE id = ?'
-                    );
-                    $stmt->bind_param(
-                        'sssssi',
-                        $fullname,
-                        $phoneNumber,
-                        $staffIdValue,
-                        $departmentValue,
-                        $jobTitleValue,
-                        $userId
-                    );
+                    if ($hasProfilePhoto) {
+                        $profileImageValue = $newProfileImage !== '' ? $newProfileImage : null;
+
+                        $stmt = $db->prepare(
+                            'UPDATE users
+                             SET fullname = ?, phone_number = ?, staff_id = ?,
+                                 department = ?, job_title = ?, profile_image = ?
+                             WHERE id = ?'
+                        );
+                        $stmt->bind_param(
+                            'ssssssi',
+                            $fullname,
+                            $phoneNumber,
+                            $staffIdValue,
+                            $departmentValue,
+                            $jobTitleValue,
+                            $profileImageValue,
+                            $userId
+                        );
+                    } else {
+                        $stmt = $db->prepare(
+                            'UPDATE users
+                             SET fullname = ?, phone_number = ?, staff_id = ?,
+                                 department = ?, job_title = ?
+                             WHERE id = ?'
+                        );
+                        $stmt->bind_param(
+                            'sssssi',
+                            $fullname,
+                            $phoneNumber,
+                            $staffIdValue,
+                            $departmentValue,
+                            $jobTitleValue,
+                            $userId
+                        );
+                    }
                 } else {
                     $stmt = $db->prepare(
                         'UPDATE users
@@ -104,7 +195,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $stmt->execute();
                 $stmt->close();
 
+                if (
+                    $oldProfilePathToDelete
+                    && is_file($oldProfilePathToDelete)
+                    && (!$uploadedProfilePath || realpath($oldProfilePathToDelete) !== realpath($uploadedProfilePath))
+                ) {
+                    @unlink($oldProfilePathToDelete);
+                }
+
                 $_SESSION['fullname'] = $fullname;
+
+                sts_audit(
+                    'profile_updated',
+                    'user',
+                    (int) $user['id'],
+                    [
+                        'photo_updated' => $hasProfilePhoto && $newProfileImage !== $existingProfileImage,
+                        'department' => $department,
+                        'job_title' => $jobTitle,
+                    ],
+                    (int) $user['id']
+                );
 
                 header('Location: profile.php?updated=1');
                 exit;
@@ -148,11 +259,12 @@ $profileDetails = [
     'staff_id' => null,
     'department' => null,
     'job_title' => null,
+    'profile_image' => $existingProfileImage ?: null,
 ];
 
 if ($hasExtendedProfile) {
     $detailsStmt = $db->prepare(
-        'SELECT staff_id, department, job_title
+        'SELECT staff_id, department, job_title' . ($hasProfilePhoto ? ', profile_image' : '') . '
          FROM users
          WHERE id = ?
          LIMIT 1'
@@ -176,6 +288,32 @@ foreach (array_slice(array_values(array_filter($nameParts)), 0, 2) as $part) {
 }
 
 $initials = $initials !== '' ? $initials : 'U';
+
+$profileImageName = trim((string) ($profileDetails['profile_image'] ?? $existingProfileImage));
+$profileImageUrl = null;
+
+if ($profileImageName !== '') {
+    $profileImagePath = __DIR__ . '/uploads/profiles/' . basename($profileImageName);
+
+    if (is_file($profileImagePath)) {
+        $profileImageUrl = 'uploads/profiles/' . rawurlencode(basename($profileImageName));
+    }
+}
+
+$profileCompletionFields = [
+    $user['fullname'] ?? '',
+    $user['email'] ?? '',
+    $user['phone_number'] ?? '',
+    $profileDetails['staff_id'] ?? '',
+    $profileDetails['department'] ?? '',
+    $profileDetails['job_title'] ?? '',
+    $profileImageUrl ?? '',
+];
+$profileCompleted = count(array_filter(
+    $profileCompletionFields,
+    static fn ($value): bool => trim((string) $value) !== ''
+));
+$profileCompletion = (int) round(($profileCompleted / count($profileCompletionFields)) * 100);
 
 $normalizedRole = normalized_role($user['role'] ?? '');
 $accessItems = match ($normalizedRole) {
@@ -263,8 +401,8 @@ if ($normalizedRole === 'staff') {
     <title>My Profile - Smart Training System</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-    <link rel="stylesheet" href="sedco-saas.css?v=20260930-36">
-    <link rel="stylesheet" href="sedco-shell.css?v=20260930-56">
+    <link rel="stylesheet" href="sedco-saas.css?v=20260930-57">
+    <link rel="stylesheet" href="sedco-shell.css?v=20260930-57">
 </head>
 <body class="app-page profile-page" data-page="profile" data-role="<?= e($normalizedRole) ?>">
 <main class="profile-content">
@@ -300,26 +438,65 @@ if ($normalizedRole === 'staff') {
         </div>
         <?php endif; ?>
 
-        <section class="profile-hero-card">
+        <section class="profile-hero-card profile-hero-v3">
+            <div class="profile-hero-decoration" aria-hidden="true">
+                <span></span><span></span><span></span>
+            </div>
+
             <div class="profile-identity">
-                <div class="profile-image profile-avatar-placeholder" aria-hidden="true">
-                    <span><?= e($initials) ?></span>
+                <div class="profile-avatar-wrap">
+                    <div class="profile-image profile-avatar-placeholder">
+                        <?php if ($profileImageUrl): ?>
+                        <img src="<?= e($profileImageUrl) ?>" alt="<?= e($user['fullname']) ?> profile photo">
+                        <?php else: ?>
+                        <span><?= e($initials) ?></span>
+                        <?php endif; ?>
+                    </div>
+                    <button
+                        type="button"
+                        class="profile-avatar-edit"
+                        data-bs-toggle="modal"
+                        data-bs-target="#editProfileModal"
+                        aria-label="Change profile photo"
+                        title="Change profile photo"
+                    >
+                        <i class="bi bi-camera-fill"></i>
+                    </button>
                 </div>
+
                 <div class="profile-identity-copy">
-                    <div class="profile-role-pill"><i class="bi bi-shield-check"></i><?= e($displayRole) ?></div>
+                    <div class="profile-identity-badges">
+                        <span class="profile-role-pill"><i class="bi bi-shield-check"></i><?= e($displayRole) ?></span>
+                        <span class="profile-verified-pill"><i class="bi bi-check-circle-fill"></i> Active</span>
+                    </div>
                     <h2><?= e($user['fullname']) ?></h2>
                     <p><?= e($user['email']) ?></p>
+                    <div class="profile-identity-meta">
+                        <?php if (!empty($profileDetails['department'])): ?>
+                        <span><i class="bi bi-building"></i><?= e($profileDetails['department']) ?></span>
+                        <?php endif; ?>
+                        <?php if (!empty($profileDetails['job_title'])): ?>
+                        <span><i class="bi bi-briefcase"></i><?= e($profileDetails['job_title']) ?></span>
+                        <?php endif; ?>
+                    </div>
                 </div>
             </div>
 
-            <div class="profile-quick-meta">
-                <div>
-                    <span>Member since</span>
-                    <strong><?= e($memberSince) ?></strong>
-                </div>
-                <div>
-                    <span>Account status</span>
-                    <strong class="profile-active-text"><i class="bi bi-check-circle-fill"></i> Active</strong>
+            <div class="profile-hero-side">
+                <div class="profile-quick-meta">
+                    <div>
+                        <span>Member since</span>
+                        <strong><?= e($memberSince) ?></strong>
+                    </div>
+                    <div>
+                        <span>Account status</span>
+                        <strong class="profile-active-text"><i class="bi bi-check-circle-fill"></i> Active</strong>
+                    </div>
+                    <div class="profile-completion-card">
+                        <span>Profile completeness</span>
+                        <strong><?= $profileCompletion ?>%</strong>
+                        <i><b style="width:<?= $profileCompletion ?>%"></b></i>
+                    </div>
                 </div>
             </div>
         </section>
@@ -467,7 +644,7 @@ if ($normalizedRole === 'staff') {
 <div class="modal fade profile-modal" id="editProfileModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
-            <form method="post" action="profile.php">
+            <form method="post" action="profile.php" enctype="multipart/form-data">
                 <?= csrf_field() ?>
                 <input type="hidden" name="action" value="update_profile">
 
@@ -480,6 +657,48 @@ if ($normalizedRole === 'staff') {
                 </div>
 
                 <div class="modal-body">
+                    <div class="profile-photo-editor">
+                        <div class="profile-photo-preview" id="profilePhotoPreview">
+                            <?php if ($profileImageUrl): ?>
+                            <img src="<?= e($profileImageUrl) ?>" alt="Current profile photo">
+                            <?php else: ?>
+                            <span><?= e($initials) ?></span>
+                            <?php endif; ?>
+                        </div>
+
+                        <div class="profile-photo-editor-copy">
+                            <strong>Profile photo</strong>
+                            <p>Use a clear square photo. JPG, PNG or WebP, maximum 3 MB.</p>
+
+                            <?php if ($hasProfilePhoto): ?>
+                            <div class="profile-photo-actions">
+                                <label class="profile-photo-upload">
+                                    <i class="bi bi-camera"></i>
+                                    Choose photo
+                                    <input
+                                        id="profilePhotoInput"
+                                        type="file"
+                                        name="profile_image"
+                                        accept="image/jpeg,image/png,image/webp"
+                                    >
+                                </label>
+
+                                <?php if ($profileImageUrl): ?>
+                                <label class="profile-photo-remove">
+                                    <input type="checkbox" name="remove_profile_image" value="1">
+                                    <span>Remove current photo</span>
+                                </label>
+                                <?php endif; ?>
+                            </div>
+                            <?php else: ?>
+                            <div class="profile-schema-note compact">
+                                <i class="bi bi-database-add"></i>
+                                Import <strong>PROFILE_PHOTO_UPGRADE.sql</strong> once to enable profile photos.
+                            </div>
+                            <?php endif; ?>
+                        </div>
+                    </div>
+
                     <div class="profile-form-grid">
                         <label>
                             <span>Full name</span>
@@ -575,7 +794,28 @@ if ($normalizedRole === 'staff') {
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-<script src="sedco-shell.js?v=20260930-56"></script>
+<script src="sedco-shell.js?v=20260930-57"></script>
+<script>
+(() => {
+  const input = document.getElementById('profilePhotoInput');
+  const preview = document.getElementById('profilePhotoPreview');
+
+  if (!input || !preview) return;
+
+  input.addEventListener('change', () => {
+    const file = input.files?.[0];
+    if (!file || !file.type.startsWith('image/')) return;
+
+    const url = URL.createObjectURL(file);
+    preview.innerHTML = '';
+    const image = document.createElement('img');
+    image.src = url;
+    image.alt = 'Profile photo preview';
+    image.onload = () => URL.revokeObjectURL(url);
+    preview.appendChild(image);
+  });
+})();
+</script>
 <?php if ($profileError !== null): ?>
 <script>bootstrap.Modal.getOrCreateInstance(document.getElementById('editProfileModal')).show();</script>
 <?php elseif ($passwordError !== null): ?>
