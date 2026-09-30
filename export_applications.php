@@ -33,8 +33,11 @@ if($where)$sql.=' WHERE '.implode(' AND ',$where);
 $sql.=' ORDER BY a.submitted_at DESC';
 
 $stmt=db()->prepare($sql);
-if($params)$stmt->bind_param($types,...$params);
-$stmt->execute();$result=$stmt->get_result();
+if($params){
+    $stmt->execute($params);
+} else {
+    $stmt->execute();
+}$result=$stmt->get_result();
 
 sts_audit('applications_exported','report','csv',['filters'=>$_GET],(int)$user['id']);
 
