@@ -705,10 +705,124 @@
     }
   });
 
+
+  function setupDepartmentDropdowns() {
+    const selects = [...form.querySelectorAll('select.sts-department-select')];
+
+    selects.forEach(select => {
+      if (select.dataset.stsCustomSelect === '1') return;
+      select.dataset.stsCustomSelect = '1';
+
+      const wrapper = document.createElement('div');
+      wrapper.className = 'sts-department-combobox';
+
+      const trigger = document.createElement('button');
+      trigger.type = 'button';
+      trigger.className = 'sts-department-trigger';
+      trigger.setAttribute('aria-haspopup', 'listbox');
+      trigger.setAttribute('aria-expanded', 'false');
+
+      const triggerText = document.createElement('span');
+      triggerText.className = 'sts-department-trigger-text';
+
+      const triggerIcon = document.createElement('span');
+      triggerIcon.className = 'sts-department-trigger-icon';
+      triggerIcon.setAttribute('aria-hidden', 'true');
+      triggerIcon.textContent = '⌄';
+
+      trigger.append(triggerText, triggerIcon);
+
+      const menu = document.createElement('div');
+      menu.className = 'sts-department-menu';
+      menu.setAttribute('role', 'listbox');
+      menu.hidden = true;
+
+      const sync = () => {
+        const selected = select.options[select.selectedIndex] || select.options[0];
+        triggerText.textContent = selected?.textContent?.trim() || 'Pilih bahagian SEDCO';
+        trigger.classList.toggle('is-placeholder', !select.value);
+        trigger.disabled = select.disabled;
+
+        menu.querySelectorAll('.sts-department-option').forEach(item => {
+          const active = item.dataset.value === select.value;
+          item.classList.toggle('is-selected', active);
+          item.setAttribute('aria-selected', active ? 'true' : 'false');
+        });
+      };
+
+      [...select.options].forEach(option => {
+        const item = document.createElement('button');
+        item.type = 'button';
+        item.className = 'sts-department-option';
+        item.dataset.value = option.value;
+        item.setAttribute('role', 'option');
+        item.textContent = option.textContent.trim();
+        item.disabled = option.disabled;
+
+        item.addEventListener('click', () => {
+          select.value = option.value;
+          select.dispatchEvent(new Event('input', { bubbles: true }));
+          select.dispatchEvent(new Event('change', { bubbles: true }));
+          menu.hidden = true;
+          trigger.setAttribute('aria-expanded', 'false');
+          sync();
+          trigger.focus();
+        });
+
+        menu.appendChild(item);
+      });
+
+      trigger.addEventListener('click', () => {
+        if (trigger.disabled) return;
+        const shouldOpen = menu.hidden;
+
+        document.querySelectorAll('.sts-department-menu:not([hidden])').forEach(openMenu => {
+          if (openMenu !== menu) openMenu.hidden = true;
+        });
+        document.querySelectorAll('.sts-department-trigger[aria-expanded="true"]').forEach(openTrigger => {
+          if (openTrigger !== trigger) openTrigger.setAttribute('aria-expanded', 'false');
+        });
+
+        menu.hidden = !shouldOpen;
+        trigger.setAttribute('aria-expanded', shouldOpen ? 'true' : 'false');
+      });
+
+      trigger.addEventListener('keydown', event => {
+        if (event.key === 'Escape') {
+          menu.hidden = true;
+          trigger.setAttribute('aria-expanded', 'false');
+        }
+      });
+
+      select.addEventListener('change', sync);
+      select.addEventListener('invalid', event => {
+        event.preventDefault();
+        trigger.classList.add('is-invalid');
+        trigger.focus();
+      });
+      select.addEventListener('input', () => trigger.classList.remove('is-invalid'));
+
+      select.parentNode.insertBefore(wrapper, select);
+      wrapper.append(trigger, menu, select);
+      sync();
+    });
+
+    document.addEventListener('click', event => {
+      if (event.target.closest('.sts-department-combobox')) return;
+      document.querySelectorAll('.sts-department-menu:not([hidden])').forEach(menu => {
+        menu.hidden = true;
+      });
+      document.querySelectorAll('.sts-department-trigger[aria-expanded="true"]').forEach(trigger => {
+        trigger.setAttribute('aria-expanded', 'false');
+      });
+    });
+  }
+
   enhanceWritingFields();
   setupOtherFields();
   setupTeaTotals();
   setupPkkSpeakerRules();
   makeRequiredMarkers();
   applyNativeGroupRequirements();
+  setupDepartmentDropdowns();
 })();
