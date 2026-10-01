@@ -7233,3 +7233,59 @@ body.status-page .modal-backdrop{
     max-height:260px;
   }
 }
+
+
+/* ===== BPL PROFILE-SOURCED APPLICANT INFO ===== */
+.form-page .sts-profile-source-note{
+  margin:0 0 14px;
+  padding:11px 13px;
+  border:1px solid #dfe5e1;
+  border-radius:12px;
+  background:#f7faf8;
+  color:#50575a;
+  display:flex;
+  align-items:flex-start;
+  gap:9px;
+  font-size:12px;
+  line-height:1.5;
+}
+
+.form-page .sts-profile-source-note > i{
+  color:#416b59;
+  font-size:15px;
+  line-height:1.35;
+}
+
+.form-page .sts-profile-source-note a{
+  color:#8f1010;
+  font-weight:700;
+  text-decoration:none;
+}
+
+.form-page .sts-profile-source-note a:hover{
+  text-decoration:underline;
+}
+
+.form-page .sts-profile-source-note.is-warning{
+  border-color:#efd4c9;
+  background:#fff8f5;
+  color:#6f4b40;
+}
+
+.form-page .sts-profile-source-note.is-warning > i{
+  color:#a44128;
+}
+
+.bpl-page .sts-profile-sourced[readonly],
+.bpl-page input[data-submission-date="1"][readonly]{
+  background:#f7f7f8 !important;
+  color:#4d4d53 !important;
+  cursor:default !important;
+}
+
+.bpl-page .sts-department-trigger.is-profile-locked{
+  background:#f7f7f8;
+  color:#4d4d53;
+  cursor:default;
+  opacity:1;
+}
