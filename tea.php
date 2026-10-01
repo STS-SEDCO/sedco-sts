@@ -41,7 +41,7 @@ if ($parentId > 0) {
       window.print();
     }
   </script>
-    <link rel="stylesheet" href="sedco-saas.css?v=20261001-22">
+    <link rel="stylesheet" href="sedco-saas.css?v=20261001-23">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
   <link rel="stylesheet" href="sedco-shell.css?v=20260930-56">
 </head>
@@ -163,7 +163,7 @@ if ($parentId > 0) {
   </div>
 <script>window.SEDCO_FORM_CONTEXT = { role: <?= json_encode($user['role'] ?? 'staff') ?>, mode: 'new', formType: 'TEA' };</script>
 <script src="form-permissions.js?v=20260930-59"></script>
-<script src="form-ux.js?v=20261001-06"></script>
+<script src="form-ux.js?v=20261001-07"></script>
 <script src="form-enhancements.js?v=20260930-59"></script>
 <script src="sedco-shell.js?v=20260930-56"></script>
 </body>
