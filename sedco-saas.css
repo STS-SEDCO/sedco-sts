@@ -7070,3 +7070,22 @@ body.status-page .modal-backdrop{
   background:#f5f5f6 !important;
   color:#77777d !important;
 }
+
+
+/* ===== SEDCO DEPARTMENT SELECT CLARITY V2 ===== */
+.form-page .sts-department-select{
+  min-height:50px !important;
+  padding-top:11px !important;
+  padding-bottom:11px !important;
+  font-size:12.5px !important;
+  font-weight:650 !important;
+}
+
+.bpl-page .sts-department-select{
+  min-width:100% !important;
+}
+
+.form-page .sts-department-select option{
+  font-size:13px !important;
+  line-height:1.5 !important;
+}
