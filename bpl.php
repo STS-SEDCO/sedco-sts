@@ -132,16 +132,10 @@ $canReviewCurrentStage = $mode === 'review'
       <?php endif; ?>
 
             <!-- A. MAKLUMAT PEMOHON -->
-            <?php if ($mode === 'new'): ?>
-            <div class="sts-profile-source-note <?= (!$profileApplicantComplete || !$profileDepartmentKnown) ? 'is-warning' : '' ?>">
-                <i class="bi <?= (!$profileApplicantComplete || !$profileDepartmentKnown) ? 'bi-exclamation-circle' : 'bi-person-check' ?>"></i>
-                <span>
-                    <?php if (!$profileApplicantComplete || !$profileDepartmentKnown): ?>
-                    Lengkapkan Nama, Bahagian SEDCO dan Jawatan di <a href="profile.php">Profile</a> terlebih dahulu. Maklumat Bahagian A diambil terus daripada Profile.
-                    <?php else: ?>
-                    Nama, Bahagian dan Jawatan diisi automatik daripada Profile. Tarikh akan disahkan semula mengikut tarikh sebenar anda menghantar borang.
-                    <?php endif; ?>
-                </span>
+            <?php if ($mode === 'new' && (!$profileApplicantComplete || !$profileDepartmentKnown)): ?>
+            <div class="sts-profile-source-note is-warning">
+                <i class="bi bi-exclamation-circle"></i>
+                <span>Lengkapkan Nama, Bahagian SEDCO dan Jawatan di <a href="profile.php">Profile</a> terlebih dahulu. Maklumat Bahagian A diambil terus daripada Profile.</span>
             </div>
             <?php endif; ?>
             <section class="bpl-applicant-section" data-form-owner="staff">
