@@ -8335,3 +8335,187 @@ body.profile-page .modal-backdrop{
     max-height:150px;
   }
 }
+
+
+/* ===== FORM CHOICE CONTROLS PREMIUM V1 ===== */
+.form-page .sts-smart-form label:has(input[type="radio"]),
+.form-page .sts-smart-form label:has(input[type="checkbox"]){
+  min-height:40px;
+  display:inline-flex;
+  align-items:center;
+  gap:9px;
+  margin:4px 7px 4px 0;
+  padding:8px 12px;
+  border:1px solid #e4e4e8;
+  border-radius:11px;
+  background:#fff;
+  color:#55575f;
+  font-size:10px;
+  font-weight:650;
+  line-height:1.35;
+  cursor:pointer;
+  box-shadow:0 1px 2px rgba(16,24,40,.025);
+  user-select:none;
+  transition:
+    transform .15s ease,
+    border-color .15s ease,
+    background .15s ease,
+    color .15s ease,
+    box-shadow .15s ease;
+}
+
+.form-page .sts-smart-form label:has(input[type="radio"]):hover,
+.form-page .sts-smart-form label:has(input[type="checkbox"]):hover{
+  transform:translateY(-1px);
+  border-color:#d8caca;
+  background:#fffafa;
+  box-shadow:0 4px 12px rgba(75,20,20,.05);
+}
+
+.form-page .sts-smart-form label:has(input[type="radio"]:focus-visible),
+.form-page .sts-smart-form label:has(input[type="checkbox"]:focus-visible){
+  border-color:rgba(143,16,16,.45);
+  box-shadow:0 0 0 3px rgba(143,16,16,.08);
+}
+
+.form-page .sts-smart-form label:has(input[type="radio"]:checked),
+.form-page .sts-smart-form label:has(input[type="checkbox"]:checked){
+  border-color:#e0b8b8;
+  background:linear-gradient(180deg,#fff7f7 0%,#fdf0f0 100%);
+  color:#821212;
+  font-weight:730;
+  box-shadow:0 4px 12px rgba(143,16,16,.07);
+}
+
+.form-page .sts-smart-form input[type="checkbox"],
+.form-page .sts-smart-form input[type="radio"]{
+  position:relative;
+  flex:0 0 auto;
+  width:18px !important;
+  height:18px !important;
+  min-width:18px !important;
+  min-height:18px !important;
+  margin:0 !important;
+  padding:0 !important;
+  appearance:none;
+  -webkit-appearance:none;
+  border:1.5px solid #bfc1c8;
+  background:#fff;
+  cursor:pointer;
+  box-shadow:inset 0 1px 2px rgba(16,24,40,.035) !important;
+  outline:none;
+  transition:
+    border-color .14s ease,
+    background .14s ease,
+    box-shadow .14s ease,
+    transform .14s ease;
+}
+
+.form-page .sts-smart-form input[type="checkbox"]{
+  border-radius:5px;
+}
+
+.form-page .sts-smart-form input[type="radio"]{
+  border-radius:50%;
+}
+
+.form-page .sts-smart-form input[type="checkbox"]:hover,
+.form-page .sts-smart-form input[type="radio"]:hover{
+  border-color:#a45a5a;
+}
+
+.form-page .sts-smart-form input[type="checkbox"]:focus-visible,
+.form-page .sts-smart-form input[type="radio"]:focus-visible{
+  border-color:#8f1010;
+  box-shadow:0 0 0 3px rgba(143,16,16,.10) !important;
+}
+
+.form-page .sts-smart-form input[type="checkbox"]:checked,
+.form-page .sts-smart-form input[type="radio"]:checked{
+  border-color:#8f1010;
+  background:#8f1010;
+  box-shadow:0 3px 8px rgba(143,16,16,.16) !important;
+}
+
+.form-page .sts-smart-form input[type="checkbox"]:checked::after{
+  content:"";
+  position:absolute;
+  left:5px;
+  top:2px;
+  width:5px;
+  height:9px;
+  border:solid #fff;
+  border-width:0 2px 2px 0;
+  transform:rotate(45deg);
+}
+
+.form-page .sts-smart-form input[type="radio"]:checked::after{
+  content:"";
+  position:absolute;
+  inset:4px;
+  border-radius:50%;
+  background:#fff;
+}
+
+.form-page .sts-smart-form input[type="checkbox"]:disabled,
+.form-page .sts-smart-form input[type="radio"]:disabled{
+  border-color:#d8d9de;
+  background:#f1f1f3;
+  cursor:not-allowed;
+  box-shadow:none !important;
+}
+
+.form-page .sts-smart-form label:has(input[type="checkbox"]:disabled),
+.form-page .sts-smart-form label:has(input[type="radio"]:disabled){
+  opacity:.62;
+  cursor:not-allowed;
+  transform:none !important;
+  box-shadow:none !important;
+}
+
+/* BPL multi-choice groups read more like clean selectable cards. */
+.bpl-page .sts-smart-form td:has(input[type="checkbox"]) label{
+  min-width:145px;
+  justify-content:flex-start;
+}
+
+.bpl-page .sts-smart-form td:has(input[type="radio"]) label{
+  min-width:86px;
+  justify-content:flex-start;
+}
+
+/* TEA period choice gets a cleaner compact segmented feel. */
+.tea-page .sts-smart-form td.no-border:has(input[name="month"]){
+  padding-top:12px !important;
+  padding-bottom:12px !important;
+}
+
+.tea-page .sts-smart-form label:has(input[name="month"]){
+  min-width:132px;
+  justify-content:flex-start;
+}
+
+/* Choice validation remains visible with the new controls. */
+.form-page .sts-smart-form .sts-choice-error label:has(input[type="radio"]),
+.form-page .sts-smart-form .sts-choice-error label:has(input[type="checkbox"]){
+  border-color:#dc8d8d !important;
+  background:#fff5f5 !important;
+}
+
+@media(max-width:720px){
+  .form-page .sts-smart-form label:has(input[type="radio"]),
+  .form-page .sts-smart-form label:has(input[type="checkbox"]){
+    min-height:38px;
+    margin:3px 5px 3px 0;
+    padding:7px 10px;
+    font-size:9.5px;
+  }
+
+  .bpl-page .sts-smart-form td:has(input[type="checkbox"]) label{
+    min-width:calc(50% - 7px);
+  }
+
+  .tea-page .sts-smart-form label:has(input[name="month"]){
+    min-width:calc(50% - 7px);
+  }
+}
