@@ -425,7 +425,7 @@ if ($normalizedRole === 'staff') {
     <title>My Profile - Smart Training System</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-    <link rel="stylesheet" href="sedco-saas.css?v=20261001-06">
+    <link rel="stylesheet" href="sedco-saas.css?v=20261001-07">
     <link rel="stylesheet" href="sedco-shell.css?v=20260930-57">
 </head>
 <body class="app-page profile-page" data-page="profile" data-role="<?= e($normalizedRole) ?>">
