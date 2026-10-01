@@ -782,12 +782,25 @@
         <td>${escapeHtml(v2 || '—')}</td>
       </tr>`;
 
-    const sectionWrap = (title, innerHtml, extraClass = '') => `
-      <section class="report-section ${extraClass}">
-        <div class="report-section-title">${escapeHtml(title)}</div>
-        ${innerHtml}
-      </section>
-    `;
+    const sectionWrap = (title, innerHtml, extraClass = '') => {
+      const match = String(title).match(/^([A-Z])\.\s*(.+)$/);
+      const index = match ? match[1] : '';
+      const heading = match ? match[2] : title;
+
+      return `
+        <section class="report-section ${extraClass}">
+          <div class="report-section-heading">
+            ${index ? `<span class="report-section-index">${escapeHtml(index)}</span>` : ''}
+            <div class="report-section-copy">
+              <strong>${escapeHtml(heading)}</strong>
+            </div>
+          </div>
+          <div class="report-section-body">
+            ${innerHtml}
+          </div>
+        </section>
+      `;
+    };
 
     const signatureBlock = (dateLabel, dateValue, signLabel, signValue) => `
       <div class="report-signoff-grid">
@@ -1064,26 +1077,31 @@
           ? buildPkk()
           : buildTea();
 
+      const applicationRef =
+        String(fieldByName('application_no')?.value || '').trim()
+        || String(document.querySelector('[data-application-no]')?.textContent || '').trim();
+
       report.innerHTML = `
         <header class="report-official-header">
           <div class="report-letterhead">
-            <div class="report-org-lockup">
-              <div class="report-org-mark">SEDCO</div>
-              <div class="report-org-copy">
-                <strong>Sabah Economic Development Corporation</strong>
-                <span>Smart Training System</span>
-              </div>
+            <div class="report-org-copy">
+              <span class="report-org-kicker">OFFICIAL TRAINING DOCUMENT</span>
+              <strong>SABAH ECONOMIC DEVELOPMENT CORPORATION</strong>
+              <small>Smart Training System · Human Resource & Administration</small>
             </div>
 
             <div class="report-doc-code">
-              <span>FORM</span>
+              <span>FORM CODE</span>
               <strong>${escapeHtml(formType)}</strong>
             </div>
           </div>
 
           <div class="report-title-block">
-            <span>Training Administration Record</span>
             <h1>${escapeHtml(titleByType[formType] || 'TRAINING REPORT')}</h1>
+            <div class="report-title-meta">
+              <span>Document type: Training administration record</span>
+              ${applicationRef ? `<span>Reference: ${escapeHtml(applicationRef)}</span>` : ''}
+            </div>
           </div>
         </header>
 
@@ -1092,8 +1110,14 @@
         </main>
 
         <footer class="report-official-footer">
-          <span>Generated from Smart Training System (STS)</span>
-          <strong>Dicetak pada: ${escapeHtml(now)}</strong>
+          <div>
+            <strong>Smart Training System (STS)</strong>
+            <span>Sabah Economic Development Corporation</span>
+          </div>
+          <div class="report-print-meta">
+            <span>Official system-generated copy</span>
+            <strong>Dicetak pada: ${escapeHtml(now)}</strong>
+          </div>
         </footer>
       `;
     };
