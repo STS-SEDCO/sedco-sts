@@ -25,6 +25,10 @@
 
       if (!values.length) return;
       field.value = values[0];
+
+      if (field.tagName === 'SELECT') {
+        field.dispatchEvent(new Event('change', { bubbles: true }));
+      }
     });
   }
 
