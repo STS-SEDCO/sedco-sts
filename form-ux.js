@@ -1109,8 +1109,14 @@
       report.setAttribute('aria-hidden','true');
     });
 
+    const activatePrintReport = () => {
+      updateReport();
+      document.body.classList.add('sts-printing-report');
+      report.removeAttribute('aria-hidden');
+    };
+
     document.querySelectorAll('.form-print-button').forEach(button => {
-      button.addEventListener('click', updateReport, {capture:true});
+      button.addEventListener('click', activatePrintReport, {capture:true});
     });
 
     updateReport();
