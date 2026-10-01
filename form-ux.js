@@ -741,7 +741,8 @@
         const selected = select.options[select.selectedIndex] || select.options[0];
         triggerText.textContent = selected?.textContent?.trim() || 'Pilih bahagian SEDCO';
         trigger.classList.toggle('is-placeholder', !select.value);
-        trigger.disabled = select.disabled;
+        trigger.disabled = select.disabled || select.dataset.profileLocked === '1';
+        trigger.classList.toggle('is-profile-locked', select.dataset.profileLocked === '1');
 
         menu.querySelectorAll('.sts-department-option').forEach(item => {
           const active = item.dataset.value === select.value;
