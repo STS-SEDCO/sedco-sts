@@ -39,6 +39,33 @@ unset(
     $payload['parent_application_id']
 );
 
+// BPL Section A is sourced from the authenticated profile.
+// The form date is always the actual submission date in Malaysia,
+// never the date a draft was first started or autosaved.
+if ($type === 'BPL') {
+    $payload['nama'] = trim((string) ($user['fullname'] ?? ''));
+    $payload['bahagian'] = trim((string) ($user['department'] ?? ''));
+    $payload['jawatan'] = trim((string) ($user['job_title'] ?? ''));
+    $payload['tarikh'] = (new DateTimeImmutable(
+        'now',
+        new DateTimeZone('Asia/Kuala_Lumpur')
+    ))->format('Y-m-d');
+
+    if (
+        $payload['nama'] === ''
+        || $payload['bahagian'] === ''
+        || $payload['jawatan'] === ''
+    ) {
+        http_response_code(422);
+        exit('Please complete your Name, Department / Division, and Position in Profile before submitting the BPL form.');
+    }
+
+    if (!in_array($payload['bahagian'], sts_sedco_departments(), true)) {
+        http_response_code(422);
+        exit('Please select an official SEDCO Department / Division in Profile before submitting the BPL form.');
+    }
+}
+
 $requiredByType = [
     'BPL' => [
         'nama', 'bahagian', 'jawatan', 'kursus', 'tarikh',
