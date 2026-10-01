@@ -8306,3 +8306,32 @@ body.profile-page .modal-backdrop{
     border-radius:0 0 19px 19px;
   }
 }
+
+
+/* ===== PROFILE DROPDOWN AUTO FLIP V8 ===== */
+.profile-modal .profile-department-menu{
+  top:calc(100% + 8px);
+  bottom:auto;
+}
+
+.profile-modal .profile-department-menu.opens-up{
+  top:auto !important;
+  bottom:calc(100% + 8px);
+  transform-origin:bottom center;
+}
+
+.profile-modal .profile-department-menu:not(.opens-up){
+  transform-origin:top center;
+}
+
+@media(max-height:760px){
+  .profile-modal .profile-department-menu{
+    max-height:180px;
+  }
+}
+
+@media(max-height:660px){
+  .profile-modal .profile-department-menu{
+    max-height:150px;
+  }
+}
