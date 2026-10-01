@@ -41,7 +41,7 @@ if ($parentId > 0) {
       window.print();
     }
   </script>
-    <link rel="stylesheet" href="sedco-saas.css?v=20260930-72">
+    <link rel="stylesheet" href="sedco-saas.css?v=20261001-02">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
   <link rel="stylesheet" href="sedco-shell.css?v=20260930-56">
 </head>
@@ -66,7 +66,7 @@ if ($parentId > 0) {
           <td class="no-border" colspan="2">Division/Section:
             <?php $selectedDivision = (string) ($parent['department'] ?? $parentPayload['bahagian'] ?? ''); ?>
             <select name="division" class="input-field sts-department-select" required>
-              <option value="">Select division / section</option>
+              <option value="">Pilih nama penuh bahagian SEDCO</option>
               <?php foreach ($sedcoDepartments as $departmentName): ?>
               <option value="<?= e($departmentName) ?>" <?= $selectedDivision === $departmentName ? 'selected' : '' ?>><?= e($departmentName) ?></option>
               <?php endforeach; ?>
