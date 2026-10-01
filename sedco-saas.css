@@ -9266,3 +9266,217 @@ body.profile-page .modal-backdrop{
     border-radius:13px !important;
   }
 }
+
+
+/* ===== FORM FONT SCALE V3 ===== */
+/* Global readable type scale for all training forms */
+.form-page .sts-smart-form{
+  font-size:13px;
+}
+
+.form-page .sts-smart-form label,
+.form-page .sts-smart-form td,
+.form-page .sts-smart-form p,
+.form-page .sts-smart-form li,
+.form-page .sts-smart-form small,
+.form-page .sts-smart-form span{
+  line-height:1.5;
+}
+
+.form-page .sts-smart-form label,
+.form-page .sts-smart-form .form-label{
+  font-size:12.5px !important;
+}
+
+.form-page .sts-smart-form input[type="text"],
+.form-page .sts-smart-form input[type="email"],
+.form-page .sts-smart-form input[type="tel"],
+.form-page .sts-smart-form input[type="date"],
+.form-page .sts-smart-form input[type="time"],
+.form-page .sts-smart-form input[type="number"],
+.form-page .sts-smart-form select,
+.form-page .sts-smart-form textarea{
+  font-size:13px !important;
+}
+
+.form-page .sts-smart-form textarea{
+  line-height:1.65 !important;
+}
+
+.form-page .sts-smart-form > table > tbody > tr:first-child > th,
+.bpl-page .bpl-applicant-section-title{
+  font-size:13.5px !important;
+}
+
+.form-page .sts-smart-form > table > tbody > tr:not(:first-child) > td{
+  font-size:12.5px !important;
+}
+
+.bpl-page .sts-smart-form > table td:first-child:not([colspan]),
+.bpl-page .sts-smart-form > table td:nth-child(3):not([colspan]){
+  font-size:12px !important;
+}
+
+.bpl-page .bpl-section-heading strong{
+  font-size:13.5px !important;
+}
+
+.bpl-page .bpl-section-heading small{
+  font-size:10.5px !important;
+}
+
+.bpl-page .bpl-applicant-label{
+  font-size:11.5px !important;
+}
+
+.bpl-page .bpl-applicant-control > input,
+.bpl-page .bpl-applicant-control .sts-department-trigger{
+  font-size:13px !important;
+}
+
+.bpl-page .bpl-applicant-footer-note{
+  font-size:10.5px !important;
+}
+
+.form-page .sts-smart-form label:has(input[type="radio"]),
+.form-page .sts-smart-form label:has(input[type="checkbox"]){
+  font-size:11.5px !important;
+}
+
+.form-page .sts-smart-form .sts-required-mark{
+  font-size:inherit;
+}
+
+.form-page .sts-smart-form .sts-other-field label > span{
+  font-size:11px !important;
+}
+
+.form-page .sts-smart-form .sts-field-error{
+  font-size:10.5px !important;
+}
+
+.form-page .sts-smart-form .sts-validation-banner strong{
+  font-size:11.5px !important;
+}
+
+.form-page .sts-smart-form .sts-validation-banner p{
+  font-size:10.5px !important;
+}
+
+/* PKK */
+.pkk-page .main-content > .container > h2{
+  font-size:28px !important;
+}
+
+.pkk-page .main-content > .container > p.text-muted{
+  font-size:13px !important;
+}
+
+.pkk-page .sts-smart-form h5{
+  font-size:13px !important;
+}
+
+.pkk-page .sts-smart-form .text-muted{
+  font-size:11px !important;
+}
+
+.pkk-page .sts-smart-form ol li{
+  font-size:11.5px !important;
+}
+
+.pkk-page .sts-smart-form table.table thead th{
+  font-size:11px !important;
+}
+
+.pkk-page .sts-smart-form table.table tbody td{
+  font-size:11.5px !important;
+}
+
+.pkk-page .sts-smart-form .score-input{
+  font-size:12px !important;
+}
+
+/* TEA */
+.tea-page .form-container > .center:first-child h5{
+  font-size:28px !important;
+}
+
+.tea-page .form-container > .center:first-child em{
+  font-size:13px !important;
+}
+
+.tea-page .rating-info{
+  font-size:11.5px !important;
+}
+
+.tea-page .sts-smart-form > table:first-of-type .no-border{
+  font-size:11.5px !important;
+}
+
+.tea-page .sts-smart-form > table:nth-of-type(2) th{
+  font-size:10px !important;
+}
+
+.tea-page .sts-smart-form > table:nth-of-type(2) td{
+  font-size:10.5px !important;
+}
+
+.tea-page .sts-smart-form .score-input-small{
+  font-size:12px !important;
+}
+
+.tea-page .sts-smart-form > p{
+  font-size:11px !important;
+}
+
+.tea-page .sts-smart-form > table:nth-of-type(3) th,
+.tea-page .sts-smart-form > table:nth-of-type(3) td,
+.tea-page .sts-smart-form > table:nth-of-type(4) td{
+  font-size:11px !important;
+}
+
+/* Form action buttons */
+.form-page .btn-maroon,
+.form-page .btn-primary,
+.form-page .btn-review-secondary,
+.form-page .btn-review-reject{
+  font-size:12px !important;
+}
+
+/* Permission/status badges */
+.form-page .form-lock-badge,
+.form-page .form-edit-badge{
+  font-size:10px !important;
+}
+
+.form-page .form-permission-notice{
+  font-size:11.5px !important;
+}
+
+/* Mobile still readable */
+@media(max-width:720px){
+  .form-page .sts-smart-form{
+    font-size:12px;
+  }
+
+  .form-page .sts-smart-form label,
+  .form-page .sts-smart-form .form-label{
+    font-size:11.5px !important;
+  }
+
+  .form-page .sts-smart-form input[type="text"],
+  .form-page .sts-smart-form input[type="email"],
+  .form-page .sts-smart-form input[type="tel"],
+  .form-page .sts-smart-form input[type="date"],
+  .form-page .sts-smart-form input[type="time"],
+  .form-page .sts-smart-form input[type="number"],
+  .form-page .sts-smart-form select,
+  .form-page .sts-smart-form textarea{
+    font-size:12.5px !important;
+  }
+
+  .form-page .sts-smart-form > table > tbody > tr:first-child > th,
+  .bpl-page .bpl-applicant-section-title{
+    font-size:12.5px !important;
+  }
+}
