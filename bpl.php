@@ -89,7 +89,7 @@ $canReviewCurrentStage = $mode === 'review'
             window.print();
         }
     </script>
-    <link rel="stylesheet" href="sedco-saas.css?v=20261001-01">
+    <link rel="stylesheet" href="sedco-saas.css?v=20261001-02">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
   <link rel="stylesheet" href="sedco-shell.css?v=20260930-56">
 </head>
@@ -133,7 +133,7 @@ $canReviewCurrentStage = $mode === 'review'
                     <td>02. Bahagian</td>
                     <td>
                         <select name="bahagian" class="input-field sts-department-select" required>
-                            <option value="">Pilih bahagian</option>
+                            <option value="">Pilih nama penuh bahagian SEDCO</option>
                             <?php foreach ($sedcoDepartments as $departmentName): ?>
                             <option value="<?= e($departmentName) ?>" <?= (string) ($payload['bahagian'] ?? '') === $departmentName ? 'selected' : '' ?>>
                                 <?= e($departmentName) ?>
