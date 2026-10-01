@@ -80,9 +80,17 @@
 
       if (!email || !password) return;
 
+      let existing = {};
+      try {
+        existing = JSON.parse(localStorage.getItem('sedcoPreviewUser') || '{}') || {};
+      } catch {}
+
+      const sameAccount = String(existing.email || '').toLowerCase() === email;
+
       localStorage.setItem('sedcoPreviewUser', JSON.stringify({
+        ...(sameAccount ? existing : {}),
         email,
-        fullname: displayNameForEmail(email),
+        fullname: sameAccount && existing.fullname ? existing.fullname : displayNameForEmail(email),
         role: roleForEmail(email),
         loggedInAt: new Date().toISOString()
       }));
