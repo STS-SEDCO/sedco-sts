@@ -96,7 +96,7 @@ $canReviewCurrentStage = $mode === 'review'
             window.print();
         }
     </script>
-    <link rel="stylesheet" href="sedco-saas.css?v=20261001-15">
+    <link rel="stylesheet" href="sedco-saas.css?v=20261001-16">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
   <link rel="stylesheet" href="sedco-shell.css?v=20260930-56">
 </head>
@@ -144,36 +144,69 @@ $canReviewCurrentStage = $mode === 'review'
                 </span>
             </div>
             <?php endif; ?>
-            <table data-form-owner="staff">
-                <tr><th colspan="4">A. MAKLUMAT PEMOHON</th></tr>
-                <tr>
-                    <td>01. Nama</td>
-                    <td><input type="text" name="nama" class="input-field sts-profile-sourced" required readonly value="<?= e((string) ($payload['nama'] ?? '')) ?>" data-profile-sourced="1"></td>
-                    <td>02. Bahagian</td>
-                    <td>
-                        <select name="bahagian" class="input-field sts-department-select sts-profile-sourced" required data-profile-sourced="1" data-profile-locked="1">
-                            <option value="">Pilih nama penuh bahagian SEDCO</option>
-                            <?php foreach ($sedcoDepartments as $departmentName): ?>
-                            <option value="<?= e($departmentName) ?>" <?= (string) ($payload['bahagian'] ?? '') === $departmentName ? 'selected' : '' ?>>
-                                <?= e($departmentName) ?>
-                            </option>
-                            <?php endforeach; ?>
-                        </select>
-                    </td>
-                </tr>
-                <tr>
-                    <td>03. Jawatan</td>
-                    <td colspan="3"><input type="text" name="jawatan" class="input-field sts-profile-sourced" required readonly value="<?= e((string) ($payload['jawatan'] ?? '')) ?>" data-profile-sourced="1"></td>
-                </tr>
-                <tr>
-                    <td>04. Kursus/Seminar</td>
-                    <td colspan="3"><input type="text" name="kursus" class="input-field" required></td>
-                </tr>
-                <tr>
-                    <td>Tarikh</td>
-                    <td colspan="3"><input type="date" name="tarikh" required readonly value="<?= e((string) ($payload['tarikh'] ?? '')) ?>" data-submission-date="1"></td>
-                </tr>
-            </table>
+            <section class="bpl-applicant-section" data-form-owner="staff">
+                <div class="form-section-title bpl-applicant-section-title">
+                    <div class="bpl-section-heading">
+                        <span class="bpl-section-heading-icon"><i class="bi bi-person-vcard"></i></span>
+                        <div>
+                            <strong>A. MAKLUMAT PEMOHON</strong>
+                            <small>Maklumat asas pemohon dan kursus yang dipohon</small>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bpl-applicant-grid">
+                    <label class="bpl-applicant-field">
+                        <span class="bpl-applicant-label"><i class="bi bi-person"></i>01. Nama</span>
+                        <div class="bpl-applicant-control is-readonly">
+                            <input type="text" name="nama" class="input-field sts-profile-sourced" required readonly value="<?= e((string) ($payload['nama'] ?? '')) ?>" data-profile-sourced="1">
+                            <span class="bpl-field-status"><i class="bi bi-check-circle-fill"></i></span>
+                        </div>
+                    </label>
+
+                    <label class="bpl-applicant-field">
+                        <span class="bpl-applicant-label"><i class="bi bi-building"></i>02. Bahagian</span>
+                        <div class="bpl-applicant-control is-readonly is-department">
+                            <select name="bahagian" class="input-field sts-department-select sts-profile-sourced" required data-profile-sourced="1" data-profile-locked="1">
+                                <option value="">Pilih nama penuh bahagian SEDCO</option>
+                                <?php foreach ($sedcoDepartments as $departmentName): ?>
+                                <option value="<?= e($departmentName) ?>" <?= (string) ($payload['bahagian'] ?? '') === $departmentName ? 'selected' : '' ?>>
+                                    <?= e($departmentName) ?>
+                                </option>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
+                    </label>
+
+                    <label class="bpl-applicant-field">
+                        <span class="bpl-applicant-label"><i class="bi bi-briefcase"></i>03. Jawatan</span>
+                        <div class="bpl-applicant-control is-readonly">
+                            <input type="text" name="jawatan" class="input-field sts-profile-sourced" required readonly value="<?= e((string) ($payload['jawatan'] ?? '')) ?>" data-profile-sourced="1">
+                            <span class="bpl-field-status"><i class="bi bi-check-circle-fill"></i></span>
+                        </div>
+                    </label>
+
+                    <label class="bpl-applicant-field">
+                        <span class="bpl-applicant-label"><i class="bi bi-calendar-check"></i>Tarikh Penghantaran</span>
+                        <div class="bpl-applicant-control is-readonly">
+                            <input type="date" name="tarikh" required readonly value="<?= e((string) ($payload['tarikh'] ?? '')) ?>" data-submission-date="1">
+                            <span class="bpl-field-status"><i class="bi bi-clock-history"></i></span>
+                        </div>
+                    </label>
+
+                    <label class="bpl-applicant-field bpl-applicant-field-wide">
+                        <span class="bpl-applicant-label"><i class="bi bi-mortarboard"></i>04. Kursus / Seminar</span>
+                        <div class="bpl-applicant-control">
+                            <input type="text" name="kursus" class="input-field" required placeholder="Masukkan nama kursus atau seminar">
+                        </div>
+                    </label>
+                </div>
+
+                <div class="bpl-applicant-footer-note">
+                    <i class="bi bi-info-circle"></i>
+                    <span>Nama, Bahagian dan Jawatan diambil daripada Profile. Tarikh akan disahkan semula semasa borang dihantar.</span>
+                </div>
+            </section>
 
             <!-- B. MAKLUMAT KURSUS/SEMINAR -->
             <table data-form-owner="staff">
@@ -389,7 +422,7 @@ window.SEDCO_FORM_CONTEXT = {
 };
 </script>
 <script src="bpl-workflow.js?v=20261001-02"></script>
-<script src="form-permissions.js?v=20260930-59"></script>
+<script src="form-permissions.js?v=20261001-02"></script>
 <script src="form-ux.js?v=20261001-03"></script>
 <script src="form-enhancements.js?v=20260930-59"></script>
 <script src="sedco-shell.js?v=20260930-56"></script>
