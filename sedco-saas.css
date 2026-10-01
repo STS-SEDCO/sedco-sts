@@ -9899,3 +9899,198 @@ body.profile-page .modal-backdrop{
     margin:12mm 11mm 14mm;
   }
 }
+
+
+/* ===== PLAIN OFFICIAL TABLE REPORT V2 ===== */
+.sts-official-print-report{
+  display:none;
+}
+
+@media print{
+  body.sts-printing-report > *:not(.sts-official-print-report){
+    display:none !important;
+  }
+
+  body.sts-printing-report{
+    margin:0 !important;
+    padding:0 !important;
+    background:#fff !important;
+  }
+
+  body.sts-printing-report .sts-official-print-report{
+    display:block !important;
+    width:100% !important;
+    margin:0 !important;
+    padding:0 !important;
+    background:#fff !important;
+    color:#000 !important;
+    font-family:Arial,Helvetica,sans-serif !important;
+    font-size:9pt !important;
+    line-height:1.35 !important;
+    -webkit-print-color-adjust:exact !important;
+    print-color-adjust:exact !important;
+  }
+
+  .sts-official-print-report .report-official-header{
+    margin:0 0 7mm;
+    padding:0 0 4mm;
+    border-bottom:1.5pt solid #000;
+    text-align:center;
+  }
+
+  .sts-official-print-report .report-agency{
+    margin-bottom:2mm;
+    color:#000 !important;
+    font-size:8pt;
+    font-weight:700;
+    letter-spacing:.04em;
+    text-transform:uppercase;
+  }
+
+  .sts-official-print-report .report-official-header h1{
+    margin:0 !important;
+    color:#000 !important;
+    font-size:14pt !important;
+    line-height:1.25 !important;
+    font-weight:800 !important;
+    letter-spacing:0 !important;
+    text-transform:uppercase;
+  }
+
+  .sts-official-print-report .report-official-body{
+    width:100%;
+  }
+
+  .sts-official-print-report .report-table{
+    width:100% !important;
+    margin:0 0 5mm !important;
+    border-collapse:collapse !important;
+    border-spacing:0 !important;
+    table-layout:auto !important;
+    page-break-inside:auto !important;
+    break-inside:auto !important;
+  }
+
+  .sts-official-print-report .report-table tr{
+    page-break-inside:avoid !important;
+    break-inside:avoid !important;
+  }
+
+  .sts-official-print-report .report-table th,
+  .sts-official-print-report .report-table td{
+    padding:4.5pt 5.5pt !important;
+    border:1pt solid #555 !important;
+    background:#fff !important;
+    color:#000 !important;
+    font-size:8.5pt !important;
+    line-height:1.4 !important;
+    vertical-align:top !important;
+    text-align:left !important;
+    font-weight:400 !important;
+    word-break:break-word;
+  }
+
+  .sts-official-print-report .report-table .report-label{
+    width:22%;
+    background:#f2f2f2 !important;
+    font-weight:700 !important;
+  }
+
+  .sts-official-print-report .report-table-four .report-label{
+    width:18%;
+  }
+
+  .sts-official-print-report .report-section-row th{
+    padding:5pt 6pt !important;
+    border:1pt solid #333 !important;
+    background:#e7e7e7 !important;
+    color:#000 !important;
+    font-size:9pt !important;
+    font-weight:800 !important;
+    text-align:left !important;
+    text-transform:uppercase;
+  }
+
+  .sts-official-print-report .report-subtitle th{
+    background:#f4f4f4 !important;
+    font-weight:700 !important;
+  }
+
+  .sts-official-print-report .report-number{
+    width:8% !important;
+    text-align:center !important;
+  }
+
+  .sts-official-print-report .report-center{
+    text-align:center !important;
+  }
+
+  .sts-official-print-report .report-score-table{
+    table-layout:fixed !important;
+  }
+
+  .sts-official-print-report .report-score-table th:first-child,
+  .sts-official-print-report .report-score-table td:first-child{
+    width:35%;
+  }
+
+  .sts-official-print-report .report-score-table thead tr:not(.report-section-row) th{
+    background:#f2f2f2 !important;
+    font-weight:700 !important;
+    text-align:center !important;
+  }
+
+  .sts-official-print-report .report-score-table small{
+    display:block;
+    margin-top:2pt;
+    color:#333 !important;
+    font-size:6.5pt !important;
+    line-height:1.2;
+    font-weight:400;
+  }
+
+  .sts-official-print-report .report-tea-table{
+    table-layout:fixed !important;
+  }
+
+  .sts-official-print-report .report-tea-table thead tr:not(.report-section-row) th{
+    background:#f2f2f2 !important;
+    font-size:7pt !important;
+    font-weight:700 !important;
+    text-align:center !important;
+    vertical-align:middle !important;
+  }
+
+  .sts-official-print-report .report-tea-table td{
+    font-size:7.3pt !important;
+  }
+
+  .sts-official-print-report .report-official-footer{
+    display:flex !important;
+    align-items:flex-end;
+    justify-content:space-between;
+    gap:12pt;
+    margin-top:7mm;
+    padding-top:3mm;
+    border-top:1pt solid #777;
+    color:#333 !important;
+    font-size:7pt !important;
+    line-height:1.35;
+    page-break-inside:avoid !important;
+  }
+
+  .sts-official-print-report .report-official-footer span{
+    font-weight:400;
+  }
+
+  .sts-official-print-report .report-official-footer strong{
+    color:#000 !important;
+    font-weight:700 !important;
+    text-align:right;
+  }
+
+  @page{
+    size:A4 portrait;
+    margin:12mm 10mm 14mm;
+  }
+}
