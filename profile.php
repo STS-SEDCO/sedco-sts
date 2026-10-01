@@ -390,7 +390,7 @@ if ($normalizedRole === 'staff') {
     <title>My Profile - Smart Training System</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-    <link rel="stylesheet" href="sedco-saas.css?v=20261001-11">
+    <link rel="stylesheet" href="sedco-saas.css?v=20261001-12">
     <link rel="stylesheet" href="sedco-shell.css?v=20260930-57">
 </head>
 <body class="app-page profile-page" data-page="profile" data-role="<?= e($normalizedRole) ?>">
@@ -849,6 +849,11 @@ try {
     menu.setAttribute('role','listbox');
     menu.hidden = true;
 
+    const menuHead = document.createElement('div');
+    menuHead.className = 'profile-department-menu-head';
+    menuHead.innerHTML = '<span>Choose department</span><small>Select one</small>';
+    menu.appendChild(menuHead);
+
     const sync = () => {
       const option = select.options[select.selectedIndex] || null;
       const hasValue = Boolean(select.value);
@@ -875,7 +880,21 @@ try {
       item.className = 'profile-department-option';
       item.dataset.value = option.value;
       item.setAttribute('role','option');
-      item.textContent = option.textContent.trim();
+
+      const optionIcon = document.createElement('i');
+      optionIcon.className = option.value === 'Training'
+        ? 'bi bi-mortarboard profile-department-option-icon'
+        : 'bi bi-building profile-department-option-icon';
+
+      const optionText = document.createElement('span');
+      optionText.className = 'profile-department-option-text';
+      optionText.textContent = option.textContent.trim();
+
+      const optionCheck = document.createElement('i');
+      optionCheck.className = 'bi bi-check2 profile-department-option-check';
+      optionCheck.setAttribute('aria-hidden','true');
+
+      item.append(optionIcon, optionText, optionCheck);
 
       item.addEventListener('click', () => {
         select.value = option.value;
