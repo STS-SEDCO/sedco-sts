@@ -35,7 +35,7 @@ if ($parentId > 0) {
   <title>Smart Training System - Borang Penilaian</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-  <link rel="stylesheet" href="sedco-saas.css?v=20260930-72">
+  <link rel="stylesheet" href="sedco-saas.css?v=20261001-02">
   <link rel="stylesheet" href="sedco-shell.css?v=20260930-56">
 </head>
 <body class="app-page form-page pkk-page" data-page="task" data-role="<?= e(normalized_role($user['role'] ?? '')) ?>">
@@ -68,7 +68,7 @@ if ($parentId > 0) {
             <label class="form-label fw-semibold">Bahagian</label>
             <?php $selectedDepartment = (string) ($parentPayload['bahagian'] ?? $user['department'] ?? ''); ?>
             <select class="form-control sts-department-select" name="bahagian" required>
-              <option value="">Pilih bahagian</option>
+              <option value="">Pilih nama penuh bahagian SEDCO</option>
               <?php foreach ($sedcoDepartments as $departmentName): ?>
               <option value="<?= e($departmentName) ?>" <?= $selectedDepartment === $departmentName ? 'selected' : '' ?>><?= e($departmentName) ?></option>
               <?php endforeach; ?>
