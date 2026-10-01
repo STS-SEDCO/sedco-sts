@@ -52,14 +52,21 @@ if ($applicationNo !== '') {
 }
 
 if ($mode === 'new') {
+    $malaysiaNow = new DateTimeImmutable('now', new DateTimeZone('Asia/Kuala_Lumpur'));
     $payload = [
         'nama' => (string) ($user['fullname'] ?? ''),
         'bahagian' => (string) ($user['department'] ?? ''),
         'jawatan' => (string) ($user['job_title'] ?? ''),
+        'tarikh' => $malaysiaNow->format('Y-m-d'),
     ];
 }
 
 $sedcoDepartments = sts_sedco_departments();
+$profileApplicantComplete = trim((string) ($user['fullname'] ?? '')) !== ''
+    && trim((string) ($user['department'] ?? '')) !== ''
+    && trim((string) ($user['job_title'] ?? '')) !== '';
+$profileDepartmentKnown = trim((string) ($user['department'] ?? '')) === ''
+    || in_array(trim((string) $user['department']), $sedcoDepartments, true);
 
 $canResubmitCorrection = $mode === 'review'
     && $isOwner
@@ -89,7 +96,7 @@ $canReviewCurrentStage = $mode === 'review'
             window.print();
         }
     </script>
-    <link rel="stylesheet" href="sedco-saas.css?v=20261001-03">
+    <link rel="stylesheet" href="sedco-saas.css?v=20261001-04">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
   <link rel="stylesheet" href="sedco-shell.css?v=20260930-56">
 </head>
@@ -125,6 +132,18 @@ $canReviewCurrentStage = $mode === 'review'
       <?php endif; ?>
 
             <!-- A. MAKLUMAT PEMOHON -->
+            <?php if ($mode === 'new'): ?>
+            <div class="sts-profile-source-note <?= (!$profileApplicantComplete || !$profileDepartmentKnown) ? 'is-warning' : '' ?>">
+                <i class="bi <?= (!$profileApplicantComplete || !$profileDepartmentKnown) ? 'bi-exclamation-circle' : 'bi-person-check' ?>"></i>
+                <span>
+                    <?php if (!$profileApplicantComplete || !$profileDepartmentKnown): ?>
+                    Lengkapkan Nama, Bahagian SEDCO dan Jawatan di <a href="profile.php">Profile</a> terlebih dahulu. Maklumat Bahagian A diambil terus daripada Profile.
+                    <?php else: ?>
+                    Nama, Bahagian dan Jawatan diisi automatik daripada Profile. Tarikh akan disahkan semula mengikut tarikh sebenar anda menghantar borang.
+                    <?php endif; ?>
+                </span>
+            </div>
+            <?php endif; ?>
             <table data-form-owner="staff">
                 <tr><th colspan="4">A. MAKLUMAT PEMOHON</th></tr>
                 <tr>
@@ -371,7 +390,7 @@ window.SEDCO_FORM_CONTEXT = {
 </script>
 <script src="bpl-workflow.js?v=20260930-54"></script>
 <script src="form-permissions.js?v=20260930-59"></script>
-<script src="form-ux.js?v=20261001-01"></script>
+<script src="form-ux.js?v=20261001-02"></script>
 <script src="form-enhancements.js?v=20260930-59"></script>
 <script src="sedco-shell.js?v=20260930-56"></script>
 </body>
