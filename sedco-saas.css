@@ -10574,3 +10574,390 @@ body.profile-page .modal-backdrop{
     margin:14mm 12mm 15mm;
   }
 }
+
+
+/* ===== OFFICIAL REPORT MASTER V5 ===== */
+@media print{
+  .sts-official-print-report{
+    --r-ink:#181818;
+    --r-copy:#333;
+    --r-muted:#777;
+    --r-line:#d8d8d8;
+    --r-line-strong:#aaa;
+    --r-soft:#f8f8f8;
+    --r-accent:#7f1010;
+    font-family:Arial,Helvetica,sans-serif !important;
+  }
+
+  /* Letterhead */
+  .sts-official-print-report .report-official-header{
+    margin:0 0 11mm !important;
+    padding:0 !important;
+    border:0 !important;
+  }
+
+  .sts-official-print-report .report-letterhead{
+    display:flex !important;
+    align-items:flex-start !important;
+    justify-content:space-between !important;
+    gap:12mm !important;
+    padding:0 0 4.5mm !important;
+    border-bottom:.8pt solid var(--r-line-strong) !important;
+  }
+
+  .sts-official-print-report .report-org-copy{
+    display:block !important;
+  }
+
+  .sts-official-print-report .report-org-kicker{
+    display:block !important;
+    margin:0 0 1.8mm !important;
+    color:var(--r-accent) !important;
+    font-size:6.4pt !important;
+    line-height:1 !important;
+    font-weight:800 !important;
+    letter-spacing:.11em !important;
+  }
+
+  .sts-official-print-report .report-org-copy > strong{
+    display:block !important;
+    margin:0 0 1.3mm !important;
+    color:var(--r-ink) !important;
+    font-size:10.2pt !important;
+    line-height:1.15 !important;
+    font-weight:800 !important;
+    letter-spacing:.015em !important;
+  }
+
+  .sts-official-print-report .report-org-copy > small{
+    display:block !important;
+    color:var(--r-muted) !important;
+    font-size:7pt !important;
+    line-height:1.3 !important;
+    font-weight:400 !important;
+  }
+
+  .sts-official-print-report .report-doc-code{
+    min-width:28mm !important;
+    padding:2.2mm 3mm !important;
+    border:.8pt solid #d0d0d0 !important;
+    border-radius:2.2mm !important;
+    background:#fff !important;
+    text-align:center !important;
+  }
+
+  .sts-official-print-report .report-doc-code span{
+    display:block !important;
+    margin-bottom:1mm !important;
+    color:#888 !important;
+    font-size:5.8pt !important;
+    line-height:1 !important;
+    font-weight:700 !important;
+    letter-spacing:.08em !important;
+  }
+
+  .sts-official-print-report .report-doc-code strong{
+    display:block !important;
+    color:var(--r-accent) !important;
+    font-size:12pt !important;
+    line-height:1 !important;
+    font-weight:800 !important;
+  }
+
+  .sts-official-print-report .report-title-block{
+    padding:6.5mm 0 0 !important;
+  }
+
+  .sts-official-print-report .report-title-block h1{
+    max-width:155mm !important;
+    margin:0 0 2.5mm !important;
+    color:var(--r-ink) !important;
+    font-size:16pt !important;
+    line-height:1.16 !important;
+    font-weight:800 !important;
+    letter-spacing:-.015em !important;
+    text-align:left !important;
+    text-transform:none !important;
+  }
+
+  .sts-official-print-report .report-title-meta{
+    display:flex !important;
+    flex-wrap:wrap !important;
+    gap:3mm 8mm !important;
+    color:var(--r-muted) !important;
+    font-size:6.8pt !important;
+    line-height:1.35 !important;
+  }
+
+  /* Sections */
+  .sts-official-print-report .report-section{
+    margin:0 0 9mm !important;
+    padding:0 !important;
+    break-inside:auto !important;
+    page-break-inside:auto !important;
+  }
+
+  .sts-official-print-report .report-section-heading{
+    display:flex !important;
+    align-items:center !important;
+    gap:3mm !important;
+    margin:0 0 3mm !important;
+    break-after:avoid !important;
+    page-break-after:avoid !important;
+  }
+
+  .sts-official-print-report .report-section-index{
+    width:7mm !important;
+    height:7mm !important;
+    flex:0 0 7mm !important;
+    display:inline-flex !important;
+    align-items:center !important;
+    justify-content:center !important;
+    border-radius:50% !important;
+    background:var(--r-accent) !important;
+    color:#fff !important;
+    font-size:7.4pt !important;
+    line-height:1 !important;
+    font-weight:800 !important;
+  }
+
+  .sts-official-print-report .report-section-copy{
+    flex:1 !important;
+    padding:0 0 2mm !important;
+    border-bottom:.7pt solid var(--r-line) !important;
+  }
+
+  .sts-official-print-report .report-section-copy strong{
+    display:block !important;
+    color:var(--r-ink) !important;
+    font-size:9.3pt !important;
+    line-height:1.25 !important;
+    font-weight:800 !important;
+    letter-spacing:.015em !important;
+  }
+
+  .sts-official-print-report .report-section-body{
+    padding-left:10mm !important;
+  }
+
+  /* Key-value tables: refined, no spreadsheet look */
+  .sts-official-print-report .report-table{
+    width:100% !important;
+    margin:0 !important;
+    border:0 !important;
+    border-collapse:separate !important;
+    border-spacing:0 !important;
+    table-layout:auto !important;
+    background:#fff !important;
+    box-shadow:none !important;
+  }
+
+  .sts-official-print-report .report-table tr{
+    break-inside:avoid !important;
+    page-break-inside:avoid !important;
+  }
+
+  .sts-official-print-report .report-table th,
+  .sts-official-print-report .report-table td{
+    padding:4.8pt 6pt !important;
+    border:0 !important;
+    border-bottom:.6pt solid var(--r-line) !important;
+    background:#fff !important;
+    color:var(--r-copy) !important;
+    font-size:8.2pt !important;
+    line-height:1.48 !important;
+    vertical-align:top !important;
+    white-space:pre-wrap !important;
+  }
+
+  .sts-official-print-report .report-table tr:last-child > th,
+  .sts-official-print-report .report-table tr:last-child > td{
+    border-bottom:.8pt solid var(--r-line-strong) !important;
+  }
+
+  .sts-official-print-report .report-table .report-label{
+    width:21% !important;
+    padding-left:0 !important;
+    background:#fff !important;
+    color:#555 !important;
+    font-size:7.3pt !important;
+    font-weight:800 !important;
+    letter-spacing:.005em !important;
+  }
+
+  .sts-official-print-report .report-table-four .report-label{
+    width:17.5% !important;
+  }
+
+  .sts-official-print-report .report-table-four td{
+    width:32.5% !important;
+  }
+
+  .sts-official-print-report .report-subtitle th{
+    padding:7pt 0 3.5pt !important;
+    border-bottom:.6pt solid var(--r-line) !important;
+    background:#fff !important;
+    color:var(--r-accent) !important;
+    font-size:7.8pt !important;
+    font-weight:800 !important;
+  }
+
+  .sts-official-print-report .report-number{
+    width:7% !important;
+    color:#777 !important;
+    text-align:center !important;
+  }
+
+  /* Matrix tables keep borders, but lighter */
+  .sts-official-print-report .report-score-table,
+  .sts-official-print-report .report-tea-table{
+    border:.7pt solid var(--r-line-strong) !important;
+    border-collapse:collapse !important;
+    table-layout:fixed !important;
+  }
+
+  .sts-official-print-report .report-score-table th,
+  .sts-official-print-report .report-score-table td,
+  .sts-official-print-report .report-tea-table th,
+  .sts-official-print-report .report-tea-table td{
+    border:.55pt solid #bdbdbd !important;
+    padding:4.5pt !important;
+  }
+
+  .sts-official-print-report .report-score-table thead th,
+  .sts-official-print-report .report-tea-table thead th{
+    background:#f4f4f4 !important;
+    color:#222 !important;
+    font-size:7pt !important;
+    line-height:1.28 !important;
+    font-weight:800 !important;
+    text-align:center !important;
+    vertical-align:middle !important;
+  }
+
+  .sts-official-print-report .report-score-table th:first-child,
+  .sts-official-print-report .report-score-table td:first-child{
+    width:38% !important;
+    text-align:left !important;
+  }
+
+  .sts-official-print-report .report-score-table small{
+    color:#777 !important;
+    font-size:5.8pt !important;
+    font-weight:400 !important;
+  }
+
+  .sts-official-print-report .report-tea-table td{
+    font-size:6.8pt !important;
+  }
+
+  .sts-official-print-report .report-rating-note{
+    margin:0 0 3mm !important;
+    padding:3mm 3.5mm !important;
+    border:0 !important;
+    border-left:2pt solid #bbb !important;
+    background:#fafafa !important;
+    color:#555 !important;
+    font-size:7pt !important;
+    line-height:1.4 !important;
+  }
+
+  /* Signature area */
+  .sts-official-print-report .report-signoff-grid{
+    display:grid !important;
+    grid-template-columns:.7fr 1.3fr !important;
+    gap:18mm !important;
+    align-items:end !important;
+    margin-top:7mm !important;
+    padding:0 !important;
+    break-inside:avoid !important;
+    page-break-inside:avoid !important;
+  }
+
+  .sts-official-print-report .report-signoff-item{
+    min-height:24mm !important;
+    display:flex !important;
+    flex-direction:column !important;
+    justify-content:flex-end !important;
+  }
+
+  .sts-official-print-report .report-signoff-label{
+    margin:0 0 2mm !important;
+    color:#777 !important;
+    font-size:6.8pt !important;
+    line-height:1.2 !important;
+    font-weight:700 !important;
+    text-transform:uppercase !important;
+    letter-spacing:.05em !important;
+  }
+
+  .sts-official-print-report .report-signoff-date{
+    color:#222 !important;
+    font-size:8.4pt !important;
+    line-height:1.3 !important;
+    font-weight:700 !important;
+  }
+
+  .sts-official-print-report .report-signature-space{
+    min-height:13mm !important;
+    display:flex !important;
+    align-items:flex-end !important;
+    justify-content:center !important;
+    padding:0 4pt 1.5mm !important;
+    color:#333 !important;
+    font-size:7.5pt !important;
+    line-height:1.2 !important;
+    text-align:center !important;
+  }
+
+  .sts-official-print-report .report-signature-line{
+    width:100% !important;
+    border-bottom:.9pt solid #444 !important;
+  }
+
+  .sts-official-print-report .report-review-section{
+    margin-bottom:11mm !important;
+  }
+
+  /* Footer */
+  .sts-official-print-report .report-official-footer{
+    display:flex !important;
+    align-items:flex-end !important;
+    justify-content:space-between !important;
+    gap:12mm !important;
+    margin-top:13mm !important;
+    padding-top:3.5mm !important;
+    border-top:.65pt solid var(--r-line) !important;
+    color:#777 !important;
+    font-size:6.4pt !important;
+    line-height:1.35 !important;
+    break-inside:avoid !important;
+    page-break-inside:avoid !important;
+  }
+
+  .sts-official-print-report .report-official-footer > div > strong{
+    display:block !important;
+    margin-bottom:.7mm !important;
+    color:#333 !important;
+    font-size:6.8pt !important;
+    font-weight:800 !important;
+  }
+
+  .sts-official-print-report .report-official-footer > div > span{
+    display:block !important;
+  }
+
+  .sts-official-print-report .report-print-meta{
+    text-align:right !important;
+  }
+
+  .sts-official-print-report .report-print-meta strong{
+    margin-top:.8mm !important;
+    margin-bottom:0 !important;
+  }
+
+  @page{
+    size:A4 portrait;
+    margin:13mm 13mm 15mm;
+  }
+}
