@@ -8256,3 +8256,53 @@ body.profile-page .modal-backdrop{
   background:#d0c7c7;
   border-radius:999px;
 }
+
+
+/* ===== PROFILE DROPDOWN CLIP FIX V7 ===== */
+.profile-modal .modal-dialog,
+.profile-modal .modal-content,
+.profile-modal .modal-content > form{
+  overflow:visible !important;
+}
+
+.profile-modal .modal-content{
+  isolation:isolate;
+}
+
+.profile-modal .modal-header{
+  position:relative;
+  z-index:2;
+  border-radius:26px 26px 0 0;
+}
+
+.profile-modal .modal-body{
+  position:relative;
+  z-index:4;
+  overflow:visible !important;
+}
+
+.profile-modal .profile-form-grid,
+.profile-modal .profile-field-department,
+.profile-modal .profile-department-combobox{
+  overflow:visible !important;
+}
+
+.profile-modal .profile-department-menu{
+  z-index:6500 !important;
+}
+
+.profile-modal .modal-footer{
+  position:relative;
+  z-index:1;
+  border-radius:0 0 26px 26px;
+}
+
+@media(max-width:720px){
+  .profile-modal .modal-header{
+    border-radius:19px 19px 0 0;
+  }
+
+  .profile-modal .modal-footer{
+    border-radius:0 0 19px 19px;
+  }
+}
