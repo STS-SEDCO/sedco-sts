@@ -9480,3 +9480,422 @@ body.profile-page .modal-backdrop{
     font-size:12.5px !important;
   }
 }
+
+
+/* ===== OFFICIAL FORM PRINT REPORT V1 ===== */
+.sts-print-report-header,
+.sts-print-report-footer{
+  display:none;
+}
+
+@media print{
+  html,
+  body{
+    width:100% !important;
+    min-width:0 !important;
+    margin:0 !important;
+    padding:0 !important;
+    background:#fff !important;
+    color:#111 !important;
+    -webkit-print-color-adjust:exact !important;
+    print-color-adjust:exact !important;
+  }
+
+  .sedco-navbar,
+  .sedco-sidebar,
+  .sedco-sidebar-backdrop,
+  .form-permission-notice,
+  .bpl-workflow-meta,
+  .sts-validation-banner,
+  .sts-profile-source-note,
+  .no-print,
+  .form-page .form-actions,
+  .form-page .btn,
+  .form-page .btn-maroon,
+  .form-page .form-lock-badge,
+  .form-page .form-edit-badge,
+  .form-page .bpl-applicant-footer-note{
+    display:none !important;
+  }
+
+  .form-page .content,
+  .form-page .main-content,
+  .form-page .form-container,
+  .pkk-page .main-content > .container{
+    width:100% !important;
+    max-width:none !important;
+    margin:0 !important;
+    padding:0 !important;
+    border:0 !important;
+    border-radius:0 !important;
+    background:#fff !important;
+    box-shadow:none !important;
+  }
+
+  .form-page .content > h2,
+  .pkk-page .main-content > .container > h2,
+  .tea-page .form-container > .center:first-child{
+    display:none !important;
+  }
+
+  .form-page .sts-smart-form{
+    width:100% !important;
+    margin:0 !important;
+    padding:0 !important;
+    color:#111 !important;
+    font-family:Arial,Helvetica,sans-serif !important;
+    font-size:10pt !important;
+  }
+
+  .sts-print-report-header{
+    display:block !important;
+    margin:0 0 8mm !important;
+    padding:0 0 5mm !important;
+    border-bottom:1.5pt solid #861010;
+    page-break-inside:avoid;
+  }
+
+  .sts-print-brand{
+    display:flex;
+    align-items:center;
+    gap:9pt;
+    margin-bottom:5mm;
+  }
+
+  .sts-print-mark{
+    width:31pt;
+    height:31pt;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    border-radius:7pt;
+    background:#861010 !important;
+    color:#fff !important;
+    font-size:10pt;
+    font-weight:800;
+    letter-spacing:.02em;
+  }
+
+  .sts-print-brand strong{
+    display:block;
+    color:#161616 !important;
+    font-size:10pt;
+    line-height:1.2;
+    font-weight:800;
+    letter-spacing:.03em;
+  }
+
+  .sts-print-brand small{
+    display:block;
+    margin-top:1.5pt;
+    color:#555 !important;
+    font-size:7.5pt;
+    line-height:1.3;
+  }
+
+  .sts-print-title{
+    display:flex;
+    align-items:flex-end;
+    justify-content:space-between;
+    gap:12pt;
+  }
+
+  .sts-print-title span{
+    flex:0 0 auto;
+    padding:3pt 5pt;
+    border:1pt solid #d9bcbc;
+    border-radius:4pt;
+    color:#861010 !important;
+    font-size:6.5pt;
+    font-weight:800;
+    letter-spacing:.07em;
+  }
+
+  .sts-print-title h1{
+    flex:1;
+    margin:0 !important;
+    color:#111 !important;
+    font-size:14pt !important;
+    line-height:1.2 !important;
+    font-weight:800 !important;
+    text-align:right;
+  }
+
+  /* General report tables */
+  .form-page .sts-smart-form table,
+  .form-page .sts-smart-form > table,
+  .pkk-page .sts-smart-form table.table,
+  .tea-page .sts-smart-form table{
+    width:100% !important;
+    margin:0 0 5mm !important;
+    border:1pt solid #8b8b8b !important;
+    border-collapse:collapse !important;
+    border-spacing:0 !important;
+    border-radius:0 !important;
+    overflow:visible !important;
+    background:#fff !important;
+    box-shadow:none !important;
+    page-break-inside:auto !important;
+  }
+
+  .form-page .sts-smart-form table th,
+  .form-page .sts-smart-form > table th,
+  .pkk-page .sts-smart-form table.table th,
+  .tea-page .sts-smart-form table th{
+    padding:5pt 6pt !important;
+    border:1pt solid #8b8b8b !important;
+    background:#861010 !important;
+    color:#fff !important;
+    font-size:8pt !important;
+    line-height:1.3 !important;
+    font-weight:800 !important;
+    text-transform:none !important;
+    letter-spacing:0 !important;
+  }
+
+  .form-page .sts-smart-form table td,
+  .form-page .sts-smart-form > table td,
+  .pkk-page .sts-smart-form table.table td,
+  .tea-page .sts-smart-form table td{
+    padding:5pt 6pt !important;
+    border:1pt solid #b5b5b5 !important;
+    background:#fff !important;
+    color:#111 !important;
+    font-size:8pt !important;
+    line-height:1.4 !important;
+    vertical-align:top !important;
+  }
+
+  .form-page .sts-smart-form table tr,
+  .pkk-page .sts-smart-form table.table tr,
+  .tea-page .sts-smart-form table tr{
+    page-break-inside:avoid !important;
+    break-inside:avoid !important;
+  }
+
+  /* Inputs print like report values, not web controls */
+  .form-page .sts-smart-form input,
+  .form-page .sts-smart-form select,
+  .form-page .sts-smart-form textarea,
+  .form-page .sts-smart-form .sts-department-trigger{
+    min-height:0 !important;
+    height:auto !important;
+    width:100% !important;
+    max-width:none !important;
+    margin:0 !important;
+    padding:0 !important;
+    border:0 !important;
+    border-radius:0 !important;
+    background:transparent !important;
+    color:#111 !important;
+    font-family:Arial,Helvetica,sans-serif !important;
+    font-size:8.5pt !important;
+    font-weight:600 !important;
+    line-height:1.4 !important;
+    box-shadow:none !important;
+    outline:0 !important;
+    appearance:none !important;
+    -webkit-appearance:none !important;
+  }
+
+  .form-page .sts-smart-form textarea{
+    min-height:34pt !important;
+    resize:none !important;
+    overflow:visible !important;
+  }
+
+  .form-page .sts-department-menu,
+  .form-page .sts-department-trigger-icon,
+  .bpl-page .bpl-field-status{
+    display:none !important;
+  }
+
+  /* BPL modern Section A prints as a clean report grid */
+  .bpl-page .bpl-applicant-section{
+    margin:0 0 5mm !important;
+    border:1pt solid #8b8b8b !important;
+    border-radius:0 !important;
+    background:#fff !important;
+    box-shadow:none !important;
+    page-break-inside:avoid !important;
+  }
+
+  .bpl-page .bpl-applicant-section-title{
+    min-height:0 !important;
+    padding:5pt 6pt !important;
+    border-radius:0 !important;
+    background:#861010 !important;
+    color:#fff !important;
+  }
+
+  .bpl-page .bpl-section-heading-icon,
+  .bpl-page .bpl-section-heading small{
+    display:none !important;
+  }
+
+  .bpl-page .bpl-section-heading strong{
+    color:#fff !important;
+    font-size:8pt !important;
+  }
+
+  .bpl-page .bpl-applicant-grid{
+    display:grid !important;
+    grid-template-columns:1fr 1fr !important;
+    gap:0 !important;
+    padding:0 !important;
+  }
+
+  .bpl-page .bpl-applicant-field{
+    min-height:18mm;
+    padding:5pt 6pt !important;
+    border-right:1pt solid #b5b5b5;
+    border-bottom:1pt solid #b5b5b5;
+    background:#fff !important;
+  }
+
+  .bpl-page .bpl-applicant-field:nth-child(even){
+    border-right:0;
+  }
+
+  .bpl-page .bpl-applicant-field-wide{
+    grid-column:1 / -1 !important;
+    border-right:0 !important;
+  }
+
+  .bpl-page .bpl-applicant-label{
+    margin:0 0 3pt !important;
+    color:#555 !important;
+    font-size:7pt !important;
+    font-weight:800 !important;
+  }
+
+  .bpl-page .bpl-applicant-label i{
+    display:none !important;
+  }
+
+  .bpl-page .bpl-applicant-control,
+  .bpl-page .bpl-applicant-control.is-readonly{
+    border:0 !important;
+    background:transparent !important;
+  }
+
+  /* PKK cards become report blocks */
+  .pkk-page .sts-smart-form{
+    gap:0 !important;
+  }
+
+  .pkk-page .sts-smart-form > .row,
+  .pkk-page .sts-smart-form > .mb-3:has(textarea),
+  .pkk-page .sts-smart-form > .mb-4:has(textarea),
+  .pkk-page .sts-smart-form h5 + .row{
+    margin:0 0 4mm !important;
+    padding:5pt 6pt !important;
+    border:1pt solid #aaa !important;
+    border-radius:0 !important;
+    background:#fff !important;
+    box-shadow:none !important;
+    page-break-inside:avoid !important;
+  }
+
+  .pkk-page .sts-smart-form .form-label{
+    margin-bottom:3pt !important;
+    color:#222 !important;
+    font-size:8pt !important;
+    font-weight:800 !important;
+  }
+
+  .pkk-page .sts-smart-form .form-label::before{
+    display:none !important;
+  }
+
+  .pkk-page .sts-smart-form h5{
+    margin:3mm 0 0 !important;
+    padding:5pt 6pt !important;
+    border:1pt solid #8b8b8b !important;
+    border-radius:0 !important;
+    background:#861010 !important;
+    color:#fff !important;
+    font-size:8pt !important;
+  }
+
+  .pkk-page .sts-smart-form .text-muted{
+    margin:0 0 4mm !important;
+    padding:5pt 6pt !important;
+    border:1pt solid #bbb !important;
+    border-radius:0 !important;
+    background:#f7f7f7 !important;
+    color:#333 !important;
+    font-size:7.5pt !important;
+  }
+
+  /* TEA */
+  .tea-page .center.my-3{
+    margin:0 0 4mm !important;
+    padding:5pt 6pt !important;
+    border:1pt solid #aaa !important;
+    border-radius:0 !important;
+    background:#f7f7f7 !important;
+  }
+
+  .tea-page .rating-info{
+    color:#222 !important;
+    font-size:7.5pt !important;
+  }
+
+  /* Choice controls remain readable in print */
+  .form-page .sts-smart-form label:has(input[type="checkbox"]),
+  .form-page .sts-smart-form label:has(input[type="radio"]){
+    min-height:0 !important;
+    margin:1pt 6pt 1pt 0 !important;
+    padding:0 !important;
+    border:0 !important;
+    border-radius:0 !important;
+    background:transparent !important;
+    color:#111 !important;
+    box-shadow:none !important;
+    font-size:8pt !important;
+  }
+
+  .form-page .sts-smart-form input[type="checkbox"],
+  .form-page .sts-smart-form input[type="radio"]{
+    width:10pt !important;
+    height:10pt !important;
+    min-width:10pt !important;
+    min-height:10pt !important;
+    margin-right:3pt !important;
+    border:1pt solid #555 !important;
+    background:#fff !important;
+    opacity:1 !important;
+  }
+
+  .form-page .sts-smart-form input[type="checkbox"]:checked,
+  .form-page .sts-smart-form input[type="radio"]:checked{
+    background:#861010 !important;
+    border-color:#861010 !important;
+  }
+
+  .sts-print-report-footer{
+    display:flex !important;
+    align-items:center;
+    justify-content:space-between;
+    gap:12pt;
+    margin-top:7mm !important;
+    padding-top:4mm !important;
+    border-top:1pt solid #b7b7b7;
+    color:#555 !important;
+    font-size:7pt !important;
+    line-height:1.35;
+    page-break-inside:avoid;
+  }
+
+  .sts-print-report-footer strong{
+    color:#222 !important;
+    font-size:7.5pt !important;
+    font-weight:700 !important;
+  }
+
+  @page{
+    size:A4 portrait;
+    margin:12mm 11mm 14mm;
+  }
+}
