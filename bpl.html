@@ -12,7 +12,7 @@
             window.print();
         }
     </script>
-    <link rel="stylesheet" href="sedco-saas.css?v=20261001-15">
+    <link rel="stylesheet" href="sedco-saas.css?v=20261001-16">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
   <link rel="stylesheet" href="sedco-shell.css?v=20260930-56">
 </head>
@@ -32,38 +32,72 @@
                 <i class="bi bi-person-check"></i>
                 <span>Nama, Bahagian dan Jawatan diisi automatik daripada Profile. Tarikh akan ikut tarikh sebenar penghantaran.</span>
             </div>
-            <table data-form-owner="staff">
-                <tr><th colspan="4">A. MAKLUMAT PEMOHON</th></tr>
-                <tr>
-                    <td>01. Nama</td>
-                    <td><input type="text" name="nama" class="input-field sts-profile-sourced" required readonly data-profile-sourced="1"></td>
-                    <td>02. Bahagian</td>
-                    <td>
-                        <select name="bahagian" class="input-field sts-department-select sts-profile-sourced" required data-profile-sourced="1" data-profile-locked="1">
-                            <option value="">Pilih nama penuh bahagian SEDCO</option>
-                            <option value="Bahagian Audit Dalam (IAD)">Bahagian Audit Dalam (IAD)</option>
-                            <option value="Bahagian Pembangunan Perniagaan dan Pelaburan (BDI)">Bahagian Pembangunan Perniagaan dan Pelaburan (BDI)</option>
-                            <option value="Bahagian Kewangan (FND)">Bahagian Kewangan (FND)</option>
-                            <option value="Bahagian Pembangunan Usahawan (EDD)">Bahagian Pembangunan Usahawan (EDD)</option>
-                            <option value="Bahagian Pengurusan Strategik (SMD)">Bahagian Pengurusan Strategik (SMD)</option>
-                            <option value="Bahagian Pengurusan Hartanah (PMD)">Bahagian Pengurusan Hartanah (PMD)</option>
-                            <option value="Bahagian Sumber Manusia dan Pentadbiran (HRAD)">Bahagian Sumber Manusia dan Pentadbiran (HRAD)</option>
-                        </select>
-                    </td>
-                </tr>
-                <tr>
-                    <td>03. Jawatan</td>
-                    <td colspan="3"><input type="text" name="jawatan" class="input-field sts-profile-sourced" required readonly data-profile-sourced="1"></td>
-                </tr>
-                <tr>
-                    <td>04. Kursus/Seminar</td>
-                    <td colspan="3"><input type="text" name="kursus" class="input-field" required></td>
-                </tr>
-                <tr>
-                    <td>Tarikh</td>
-                    <td colspan="3"><input type="date" name="tarikh" required readonly data-submission-date="1"></td>
-                </tr>
-            </table>
+            <section class="bpl-applicant-section" data-form-owner="staff">
+                <div class="form-section-title bpl-applicant-section-title">
+                    <div class="bpl-section-heading">
+                        <span class="bpl-section-heading-icon"><i class="bi bi-person-vcard"></i></span>
+                        <div>
+                            <strong>A. MAKLUMAT PEMOHON</strong>
+                            <small>Maklumat asas pemohon dan kursus yang dipohon</small>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bpl-applicant-grid">
+                    <label class="bpl-applicant-field">
+                        <span class="bpl-applicant-label"><i class="bi bi-person"></i>01. Nama</span>
+                        <div class="bpl-applicant-control is-readonly">
+                            <input type="text" name="nama" class="input-field sts-profile-sourced" required readonly data-profile-sourced="1">
+                            <span class="bpl-field-status"><i class="bi bi-check-circle-fill"></i></span>
+                        </div>
+                    </label>
+
+                    <label class="bpl-applicant-field">
+                        <span class="bpl-applicant-label"><i class="bi bi-building"></i>02. Bahagian</span>
+                        <div class="bpl-applicant-control is-readonly is-department">
+                            <select name="bahagian" class="input-field sts-department-select sts-profile-sourced" required data-profile-sourced="1" data-profile-locked="1">
+                                <option value="">Pilih nama penuh bahagian SEDCO</option>
+                                <option value="Training">Training</option>
+                                <option value="Bahagian Audit Dalam (IAD)">Bahagian Audit Dalam (IAD)</option>
+                                <option value="Bahagian Pembangunan Perniagaan dan Pelaburan (BDI)">Bahagian Pembangunan Perniagaan dan Pelaburan (BDI)</option>
+                                <option value="Bahagian Kewangan (FND)">Bahagian Kewangan (FND)</option>
+                                <option value="Bahagian Pembangunan Usahawan (EDD)">Bahagian Pembangunan Usahawan (EDD)</option>
+                                <option value="Bahagian Pengurusan Strategik (SMD)">Bahagian Pengurusan Strategik (SMD)</option>
+                                <option value="Bahagian Pengurusan Hartanah (PMD)">Bahagian Pengurusan Hartanah (PMD)</option>
+                                <option value="Bahagian Sumber Manusia dan Pentadbiran (HRAD)">Bahagian Sumber Manusia dan Pentadbiran (HRAD)</option>
+                            </select>
+                        </div>
+                    </label>
+
+                    <label class="bpl-applicant-field">
+                        <span class="bpl-applicant-label"><i class="bi bi-briefcase"></i>03. Jawatan</span>
+                        <div class="bpl-applicant-control is-readonly">
+                            <input type="text" name="jawatan" class="input-field sts-profile-sourced" required readonly data-profile-sourced="1">
+                            <span class="bpl-field-status"><i class="bi bi-check-circle-fill"></i></span>
+                        </div>
+                    </label>
+
+                    <label class="bpl-applicant-field">
+                        <span class="bpl-applicant-label"><i class="bi bi-calendar-check"></i>Tarikh Penghantaran</span>
+                        <div class="bpl-applicant-control is-readonly">
+                            <input type="date" name="tarikh" required readonly data-submission-date="1">
+                            <span class="bpl-field-status"><i class="bi bi-clock-history"></i></span>
+                        </div>
+                    </label>
+
+                    <label class="bpl-applicant-field bpl-applicant-field-wide">
+                        <span class="bpl-applicant-label"><i class="bi bi-mortarboard"></i>04. Kursus / Seminar</span>
+                        <div class="bpl-applicant-control">
+                            <input type="text" name="kursus" class="input-field" required placeholder="Masukkan nama kursus atau seminar">
+                        </div>
+                    </label>
+                </div>
+
+                <div class="bpl-applicant-footer-note">
+                    <i class="bi bi-info-circle"></i>
+                    <span>Nama, Bahagian dan Jawatan diambil daripada Profile. Tarikh akan disahkan semula semasa borang dihantar.</span>
+                </div>
+            </section>
 
             <!-- B. MAKLUMAT KURSUS/SEMINAR -->
             <table data-form-owner="staff">
@@ -294,7 +328,7 @@
   }
 })();
 </script>
-<script src="form-permissions.js?v=20260930-58"></script>
+<script src="form-permissions.js?v=20261001-02"></script>
 <script src="form-ux.js?v=20261001-03"></script>
 <script src="sedco-shell.js?v=20260930-68"></script>
 </body>
