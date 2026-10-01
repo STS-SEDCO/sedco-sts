@@ -390,7 +390,7 @@ if ($normalizedRole === 'staff') {
     <title>My Profile - Smart Training System</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-    <link rel="stylesheet" href="sedco-saas.css?v=20261001-13">
+    <link rel="stylesheet" href="sedco-saas.css?v=20261001-14">
     <link rel="stylesheet" href="sedco-shell.css?v=20260930-57">
 </head>
 <body class="app-page profile-page" data-page="profile" data-role="<?= e($normalizedRole) ?>">
@@ -910,14 +910,26 @@ try {
 
     trigger.addEventListener('click', () => {
       const open = menu.hidden;
+
       document.querySelectorAll('.profile-department-menu:not([hidden])').forEach(other => {
         if (other !== menu) other.hidden = true;
       });
       document.querySelectorAll('.profile-department-trigger[aria-expanded="true"]').forEach(other => {
         if (other !== trigger) other.setAttribute('aria-expanded','false');
       });
+
+      if (open) {
+        const rect = trigger.getBoundingClientRect();
+        const estimatedMenuHeight = Math.min(238, Math.max(150, menu.scrollHeight || 238));
+        const spaceBelow = window.innerHeight - rect.bottom - 16;
+        const spaceAbove = rect.top - 16;
+        const shouldOpenUp = spaceBelow < estimatedMenuHeight && spaceAbove > spaceBelow;
+
+        menu.classList.toggle('opens-up', shouldOpenUp);
+        menu.scrollTop = 0;
+      }
+
       menu.hidden = !open;
-      if (open) menu.scrollTop = 0;
       trigger.setAttribute('aria-expanded', open ? 'true' : 'false');
     });
 
