@@ -69,7 +69,7 @@
       control.setAttribute('aria-disabled', 'true');
     });
 
-    const header = section.querySelector('th');
+    const header = section.querySelector('th, .form-section-title');
     if (header && !header.querySelector('.form-lock-badge')) {
       const badge = document.createElement('span');
       badge.className = 'form-lock-badge';
@@ -81,7 +81,7 @@
   function unlockSection(section) {
     section.classList.add('form-section-editable');
 
-    const header = section.querySelector('th');
+    const header = section.querySelector('th, .form-section-title');
     if (header && !header.querySelector('.form-edit-badge')) {
       const badge = document.createElement('span');
       badge.className = 'form-edit-badge';
