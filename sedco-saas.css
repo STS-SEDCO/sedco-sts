@@ -3807,7 +3807,8 @@ body{
   font-weight:700;
 }
 
-.profile-modal .profile-form-grid input{
+.profile-modal .profile-form-grid input,
+.profile-modal .profile-form-grid select{
   width:100%;
   min-height:40px;
   padding:0 11px;
@@ -3818,12 +3819,14 @@ body{
   font-size:10.5px !important;
 }
 
-.profile-modal .profile-form-grid input:focus{
+.profile-modal .profile-form-grid input:focus,
+.profile-modal .profile-form-grid select:focus{
   border-color:rgba(143,16,16,.38) !important;
   box-shadow:0 0 0 3px rgba(143,16,16,.07) !important;
 }
 
-.profile-modal .profile-form-grid input:disabled{
+.profile-modal .profile-form-grid input:disabled,
+.profile-modal .profile-form-grid select:disabled{
   background:#f3f3f5 !important;
   color:#96969b !important;
   cursor:not-allowed;
