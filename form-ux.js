@@ -805,6 +805,7 @@
 
       select.parentNode.insertBefore(wrapper, select);
       wrapper.append(trigger, menu, select);
+      select.classList.add('sts-department-native');
       sync();
     });
 
