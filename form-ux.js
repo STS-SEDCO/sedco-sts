@@ -730,6 +730,7 @@
       if (!controls.length) return '';
 
       const first = controls[0];
+
       if (first.type === 'radio' || first.type === 'checkbox') {
         const values = controls
           .filter(control => control.checked)
@@ -767,8 +768,11 @@
       return value;
     };
 
-    const cell = (label, value, colspan = 1) =>
-      `<tr><th class="report-label">${escapeHtml(label)}</th><td colspan="${colspan}">${escapeHtml(value || '—')}</td></tr>`;
+    const row = (label, value, colspan = 1) =>
+      `<tr>
+        <th class="report-label">${escapeHtml(label)}</th>
+        <td colspan="${colspan}">${escapeHtml(value || '—')}</td>
+      </tr>`;
 
     const pairRow = (l1,v1,l2,v2) =>
       `<tr>
@@ -778,67 +782,129 @@
         <td>${escapeHtml(v2 || '—')}</td>
       </tr>`;
 
-    const sectionTitle = title =>
-      `<tr class="report-section-row"><th colspan="4">${escapeHtml(title)}</th></tr>`;
+    const sectionWrap = (title, innerHtml, extraClass = '') => `
+      <section class="report-section ${extraClass}">
+        <div class="report-section-title">${escapeHtml(title)}</div>
+        ${innerHtml}
+      </section>
+    `;
+
+    const signatureBlock = (dateLabel, dateValue, signLabel, signValue) => `
+      <div class="report-signoff-grid">
+        <div class="report-signoff-item">
+          <span class="report-signoff-label">${escapeHtml(dateLabel)}</span>
+          <strong class="report-signoff-date">${escapeHtml(dateValue || '—')}</strong>
+        </div>
+
+        <div class="report-signoff-item report-signature-item">
+          <span class="report-signoff-label">${escapeHtml(signLabel)}</span>
+          <div class="report-signature-space">${signValue && signValue !== '—' ? escapeHtml(signValue) : '&nbsp;'}</div>
+          <div class="report-signature-line"></div>
+        </div>
+      </div>
+    `;
 
     const buildBpl = () => {
       return `
-        <table class="report-table report-table-four">
-          <tbody>
-            ${sectionTitle('A. MAKLUMAT PEMOHON')}
-            ${pairRow('01. Nama',displayValue('nama'),'02. Bahagian',displayValue('bahagian'))}
-            ${pairRow('03. Jawatan',displayValue('jawatan'),'Tarikh Penghantaran',displayValue('tarikh'))}
-            ${cell('04. Kursus / Seminar',displayValue('kursus'),3)}
+        ${sectionWrap('A. MAKLUMAT PEMOHON', `
+          <table class="report-table report-table-four">
+            <tbody>
+              ${pairRow('01. Nama',displayValue('nama'),'02. Bahagian',displayValue('bahagian'))}
+              ${pairRow('03. Jawatan',displayValue('jawatan'),'Tarikh Penghantaran',displayValue('tarikh'))}
+              ${row('04. Kursus / Seminar',displayValue('kursus'),3)}
+            </tbody>
+          </table>
+        `)}
 
-            ${sectionTitle('B. MAKLUMAT KURSUS / SEMINAR')}
-            ${cell('01. Tajuk Kursus',displayValue('tajuk'),3)}
-            ${cell('02. Penganjur',displayValue('penganjur'),3)}
-            ${pairRow('03. Tarikh Mula',displayValue('tarikh_mula'),'04. Tarikh Tamat',displayValue('tarikh_tamat'))}
-            ${cell('05. Tempat Kursus',displayValue('tempat'),3)}
-            ${cell('06. Yuran (RM)',displayValue('yuran'),3)}
-            ${cell('07. Kandungan',displayValue('kandungan'),3)}
+        ${sectionWrap('B. MAKLUMAT KURSUS / SEMINAR', `
+          <table class="report-table report-table-four">
+            <tbody>
+              ${row('01. Tajuk Kursus',displayValue('tajuk'),3)}
+              ${row('02. Penganjur',displayValue('penganjur'),3)}
+              ${pairRow('03. Tarikh Mula',displayValue('tarikh_mula'),'04. Tarikh Tamat',displayValue('tarikh_tamat'))}
+              ${row('05. Tempat Kursus',displayValue('tempat'),3)}
+              ${row('06. Yuran (RM)',displayValue('yuran'),3)}
+              ${row('07. Kandungan',displayValue('kandungan'),3)}
+            </tbody>
+          </table>
+        `)}
 
-            ${sectionTitle('C. MAKLUMAT TUGAS LUAR DAERAH')}
-            ${cell('08. Tempat Bertugas',displayValue('tempat_tugas'),3)}
-            ${cell('i. Kenderaan',displayValue('kenderaan[]'),3)}
-            ${pairRow('ii. Masa Bertolak',displayValue('masa_bertolak'),'iii. Masa Kembali',displayValue('masa_kembali'))}
-            ${cell('09. Pendahuluan',displayValue('pendahuluan'),3)}
+        ${sectionWrap('C. MAKLUMAT TUGAS LUAR DAERAH', `
+          <table class="report-table report-table-four">
+            <tbody>
+              ${row('08. Tempat Bertugas',displayValue('tempat_tugas'),3)}
+              ${row('i. Kenderaan',displayValue('kenderaan[]'),3)}
+              ${pairRow('ii. Masa Bertolak',displayValue('masa_bertolak'),'iii. Masa Kembali',displayValue('masa_kembali'))}
+              ${row('09. Pendahuluan',displayValue('pendahuluan'),3)}
+            </tbody>
+          </table>
+        `)}
 
-            ${sectionTitle('D. ULASAN PENGURUS SEKSYEN LATIHAN')}
-            ${cell('Ulasan',displayValue('ulasan_latihan'),3)}
-            ${pairRow('Tarikh',displayValue('tarikh_latihan'),'Tandatangan',displayValue('tt_latihan'))}
+        ${sectionWrap('D. ULASAN PENGURUS SEKSYEN LATIHAN', `
+          <table class="report-table report-table-two">
+            <tbody>
+              ${row('Ulasan',displayValue('ulasan_latihan'),1)}
+            </tbody>
+          </table>
+          ${signatureBlock('Tarikh',displayValue('tarikh_latihan'),'Tandatangan',displayValue('tt_latihan'))}
+        `, 'report-review-section')}
 
-            ${sectionTitle('E. ULASAN KETUA / PENGURUS BAHAGIAN')}
-            ${cell('Ulasan',displayValue('ulasan_bahagian'),3)}
-            ${pairRow('Tarikh',displayValue('tarikh_bahagian'),'Tandatangan',displayValue('tt_bahagian'))}
+        ${sectionWrap('E. ULASAN KETUA / PENGURUS BAHAGIAN', `
+          <table class="report-table report-table-two">
+            <tbody>
+              ${row('Ulasan',displayValue('ulasan_bahagian'),1)}
+            </tbody>
+          </table>
+          ${signatureBlock('Tarikh',displayValue('tarikh_bahagian'),'Tandatangan',displayValue('tt_bahagian'))}
+        `, 'report-review-section')}
 
-            ${sectionTitle('F. ULASAN PENGURUS BESAR KUMPULAN SEDCO')}
-            ${cell('Kelulusan',displayValue('kelulusan_pgs'),3)}
-            ${pairRow('Tarikh',displayValue('tarikh_pgs'),'Tandatangan',displayValue('tt_pgs'))}
+        ${sectionWrap('F. ULASAN PENGURUS BESAR KUMPULAN SEDCO', `
+          <table class="report-table report-table-two">
+            <tbody>
+              ${row('Kelulusan',displayValue('kelulusan_pgs'),1)}
+            </tbody>
+          </table>
+          ${signatureBlock('Tarikh',displayValue('tarikh_pgs'),'Tandatangan',displayValue('tt_pgs'))}
+        `, 'report-review-section')}
 
-            ${sectionTitle('G. ULASAN PENGURUS SEDCO')}
-            ${cell('Kelulusan',displayValue('kelulusan_sedco'),3)}
-            ${pairRow('Tarikh',displayValue('tarikh_sedco'),'Tandatangan',displayValue('tt_sedco'))}
+        ${sectionWrap('G. ULASAN PENGURUS SEDCO', `
+          <table class="report-table report-table-two">
+            <tbody>
+              ${row('Kelulusan',displayValue('kelulusan_sedco'),1)}
+            </tbody>
+          </table>
+          ${signatureBlock('Tarikh',displayValue('tarikh_sedco'),'Tandatangan',displayValue('tt_sedco'))}
+        `, 'report-review-section')}
 
-            ${sectionTitle('H. ULASAN KEWANGAN')}
-            ${cell('a) Bayaran Kursus / Yuran (RM)',displayValue('bayaran_kursus'),3)}
-            ${cell('b) Permohonan Pendahuluan Diterima',displayValue('pendahuluan_diterima'),3)}
-            ${cell('c) Telah Didaftarkan',displayValue('telah_didaftar'),3)}
-          </tbody>
-        </table>
+        ${sectionWrap('H. ULASAN KEWANGAN', `
+          <table class="report-table report-table-four">
+            <tbody>
+              ${row('a) Bayaran Kursus / Yuran (RM)',displayValue('bayaran_kursus'),3)}
+              ${row('b) Permohonan Pendahuluan Diterima',displayValue('pendahuluan_diterima'),3)}
+              ${row('c) Telah Didaftarkan',displayValue('telah_didaftar'),3)}
+            </tbody>
+          </table>
+        `)}
       `;
     };
 
     const buildPkk = () => {
       const learned = [1,2,3,4,5].map(i =>
-        `<tr><th class="report-label report-number">${i}.</th><td>${escapeHtml(displayValue('perkara'+i))}</td></tr>`
+        `<tr>
+          <th class="report-label report-number">${i}.</th>
+          <td>${escapeHtml(displayValue('perkara'+i))}</td>
+        </tr>`
       ).join('');
 
       const suggestions = [1,2,3].map(i =>
-        `<tr><th class="report-label report-number">${i}.</th><td>${escapeHtml(displayValue('cadangan'+i))}</td></tr>`
+        `<tr>
+          <th class="report-label report-number">${i}.</th>
+          <td>${escapeHtml(displayValue('cadangan'+i))}</td>
+        </tr>`
       ).join('');
 
       const speakers = [1,2,3,4,5].map(i => escapeHtml(displayValue('p'+i)));
+
       const scoreRows = [
         ['i. Kefahaman / Penguasaan terhadap subjek','aspect0'],
         ['ii. Penyampaian','aspect1'],
@@ -853,116 +919,130 @@
       `).join('');
 
       return `
-        <table class="report-table report-table-four">
-          <tbody>
-            ${sectionTitle('A. MAKLUMAT PEGAWAI / KURSUS')}
-            ${pairRow('Nama Pegawai / Staf',displayValue('nama'),'Bahagian',displayValue('bahagian'))}
-            ${pairRow('Jawatan',displayValue('jawatan'),'Tarikh / Hari',displayValue('tarikh'))}
-            ${cell('Tajuk Kursus / Seminar',displayValue('tajuk'),3)}
-            ${cell('Tempat',displayValue('tempat'),3)}
-          </tbody>
-        </table>
+        ${sectionWrap('A. MAKLUMAT PEGAWAI / KURSUS', `
+          <table class="report-table report-table-four">
+            <tbody>
+              ${pairRow('Nama Pegawai / Staf',displayValue('nama'),'Bahagian',displayValue('bahagian'))}
+              ${pairRow('Jawatan',displayValue('jawatan'),'Tarikh / Hari',displayValue('tarikh'))}
+              ${row('Tajuk Kursus / Seminar',displayValue('tajuk'),3)}
+              ${row('Tempat',displayValue('tempat'),3)}
+            </tbody>
+          </table>
+        `)}
 
-        <table class="report-table report-table-two">
-          <tbody>
-            <tr class="report-section-row"><th colspan="2">B. PENILAIAN KURSUS / SEMINAR</th></tr>
-            ${cell('1. Objektif menghadiri kursus',displayValue('objektif'),1)}
-            <tr class="report-subtitle"><th colspan="2">2. Lima (5) perkara yang dipelajari</th></tr>
-            ${learned}
-            <tr class="report-subtitle"><th colspan="2">3. Cadangan / Penambahbaikan</th></tr>
-            ${suggestions}
-          </tbody>
-        </table>
+        ${sectionWrap('B. PENILAIAN KURSUS / SEMINAR', `
+          <table class="report-table report-table-two">
+            <tbody>
+              ${row('1. Objektif menghadiri kursus',displayValue('objektif'),1)}
+              <tr class="report-subtitle"><th colspan="2">2. Lima (5) perkara yang dipelajari</th></tr>
+              ${learned}
+              <tr class="report-subtitle"><th colspan="2">3. Cadangan / Penambahbaikan</th></tr>
+              ${suggestions}
+            </tbody>
+          </table>
+        `)}
 
-        <table class="report-table report-score-table">
-          <thead>
-            <tr class="report-section-row"><th colspan="6">C. PENILAIAN PENCERAMAH</th></tr>
-            <tr>
-              <th>Aspek</th>
-              <th>P1<br><small>${speakers[0]}</small></th>
-              <th>P2<br><small>${speakers[1]}</small></th>
-              <th>P3<br><small>${speakers[2]}</small></th>
-              <th>P4<br><small>${speakers[3]}</small></th>
-              <th>P5<br><small>${speakers[4]}</small></th>
-            </tr>
-          </thead>
-          <tbody>${scoreRows}</tbody>
-        </table>
+        ${sectionWrap('C. PENILAIAN PENCERAMAH', `
+          <table class="report-table report-score-table">
+            <thead>
+              <tr>
+                <th>Aspek</th>
+                <th>P1<br><small>${speakers[0]}</small></th>
+                <th>P2<br><small>${speakers[1]}</small></th>
+                <th>P3<br><small>${speakers[2]}</small></th>
+                <th>P4<br><small>${speakers[3]}</small></th>
+                <th>P5<br><small>${speakers[4]}</small></th>
+              </tr>
+            </thead>
+            <tbody>${scoreRows}</tbody>
+          </table>
+        `)}
 
-        <table class="report-table report-table-four">
-          <tbody>
-            ${pairRow('Tandatangan',displayValue('tandatangan'),'Tarikh Penilaian',displayValue('tarikh_penilaian'))}
-          </tbody>
-        </table>
+        ${sectionWrap('D. PENGESAHAN', `
+          ${signatureBlock('Tarikh Penilaian',displayValue('tarikh_penilaian'),'Tandatangan',displayValue('tandatangan'))}
+        `, 'report-review-section')}
       `;
     };
 
     const buildTea = () => {
-      const month = displayValue('month');
-      const rows = [0,1].map(row => {
-        const scores = fieldsByName(`score_${row}[]`).map(control => String(control.value || '').trim() || '—');
-        const title = row === 0
-          ? (form.querySelector('table:nth-of-type(2) tbody tr:nth-child(1) td:first-child')?.textContent?.trim() || 'Training')
+      const rows = [0,1].map(rowIndex => {
+        const scores = fieldsByName(`score_${rowIndex}[]`).map(
+          control => String(control.value || '').trim() || '—'
+        );
+
+        const title = rowIndex === 0
+          ? (
+              form.querySelector('table:nth-of-type(2) tbody tr:nth-child(1) td:first-child')
+                ?.textContent?.trim()
+              || 'Training'
+            )
           : 'Public Speaking & Presentation Skill';
 
         return `
           <tr>
             <td>${escapeHtml(title)}</td>
             ${[0,1,2,3,4].map(i => `<td class="report-center">${escapeHtml(scores[i] || '—')}</td>`).join('')}
-            <td class="report-center">${escapeHtml(displayValue('total_score_'+row))}</td>
-            <td>${escapeHtml(displayValue('competency_level_'+row))}</td>
-            <td>${escapeHtml(displayValue('comments_'+row))}</td>
+            <td class="report-center">${escapeHtml(displayValue('total_score_'+rowIndex))}</td>
+            <td>${escapeHtml(displayValue('competency_level_'+rowIndex))}</td>
+            <td>${escapeHtml(displayValue('comments_'+rowIndex))}</td>
           </tr>
         `;
       }).join('');
 
       return `
-        <table class="report-table report-table-four">
-          <tbody>
-            ${sectionTitle('A. EMPLOYEE / EVALUATION INFORMATION')}
-            ${pairRow('Employee Name',displayValue('employee_name'),'Division / Section',displayValue('division'))}
-            ${cell('Evaluation Period',month,3)}
-          </tbody>
-        </table>
+        ${sectionWrap('A. EMPLOYEE / EVALUATION INFORMATION', `
+          <table class="report-table report-table-four">
+            <tbody>
+              ${pairRow('Employee Name',displayValue('employee_name'),'Division / Section',displayValue('division'))}
+              ${row('Evaluation Period',displayValue('month'),3)}
+            </tbody>
+          </table>
+        `)}
 
-        <table class="report-table report-tea-table">
-          <thead>
-            <tr class="report-section-row"><th colspan="9">B. TRAINING EFFECTIVENESS ASSESSMENT</th></tr>
-            <tr>
-              <th>Training Title</th>
-              <th>Productivity</th>
-              <th>Quality of Work</th>
-              <th>Skill Enhancement</th>
-              <th>Application of Knowledge</th>
-              <th>Attitude</th>
-              <th>Total Score</th>
-              <th>Competency Level</th>
-              <th>Additional Comments</th>
-            </tr>
-          </thead>
-          <tbody>${rows}</tbody>
-        </table>
+        ${sectionWrap('B. TRAINING EFFECTIVENESS ASSESSMENT', `
+          <div class="report-rating-note">
+            Rating Scale: Poor (1) · Average (2) · Good (3) · Excellent (4)
+          </div>
+          <table class="report-table report-tea-table">
+            <thead>
+              <tr>
+                <th>Training Title</th>
+                <th>Productivity</th>
+                <th>Quality of Work</th>
+                <th>Skill Enhancement</th>
+                <th>Application of Knowledge</th>
+                <th>Attitude</th>
+                <th>Total Score</th>
+                <th>Competency Level</th>
+                <th>Additional Comments</th>
+              </tr>
+            </thead>
+            <tbody>${rows}</tbody>
+          </table>
+        `)}
 
-        <table class="report-table report-table-two">
-          <thead>
-            <tr class="report-section-row"><th colspan="2">C. COMPETENCY RANKING REFERENCE</th></tr>
-            <tr><th>Ranking</th><th>Description</th></tr>
-          </thead>
-          <tbody>
-            <tr><td>Fail</td><td>0–7 points. No significant improvement observed. Re-training recommended.</td></tr>
-            <tr><td>Probation</td><td>8–12 points. Requires supervision for 6 months. Re-assessment needed.</td></tr>
-            <tr><td>Pass</td><td>13–17 points. Can perform tasks with minimal supervision.</td></tr>
-            <tr><td>Merit</td><td>18 points. Shows excellent competency. Can guide others.</td></tr>
-          </tbody>
-        </table>
+        ${sectionWrap('C. COMPETENCY RANKING REFERENCE', `
+          <table class="report-table report-table-two">
+            <thead>
+              <tr><th>Ranking</th><th>Description</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Fail</td><td>0–7 points. No significant improvement observed. Re-training recommended.</td></tr>
+              <tr><td>Probation</td><td>8–12 points. Requires supervision for 6 months. Re-assessment needed.</td></tr>
+              <tr><td>Pass</td><td>13–17 points. Can perform tasks with minimal supervision.</td></tr>
+              <tr><td>Merit</td><td>18 points. Shows excellent competency. Can guide others.</td></tr>
+            </tbody>
+          </table>
+        `)}
 
-        <table class="report-table report-table-four">
-          <tbody>
-            ${sectionTitle('D. EVALUATION CONFIRMATION')}
-            ${cell('Head of Division / Section',displayValue('head_division'),3)}
-            ${pairRow('Date of Evaluation',displayValue('date'),'Signature',displayValue('signature'))}
-          </tbody>
-        </table>
+        ${sectionWrap('D. EVALUATION CONFIRMATION', `
+          <table class="report-table report-table-two">
+            <tbody>
+              ${row('Head of Division / Section',displayValue('head_division'),1)}
+            </tbody>
+          </table>
+          ${signatureBlock('Date of Evaluation',displayValue('date'),'Signature',displayValue('signature'))}
+        `, 'report-review-section')}
       `;
     };
 
@@ -988,6 +1068,7 @@
         <header class="report-official-header">
           <div class="report-agency">SABAH ECONOMIC DEVELOPMENT CORPORATION (SEDCO)</div>
           <h1>${escapeHtml(titleByType[formType] || 'TRAINING REPORT')}</h1>
+          <div class="report-document-rule"></div>
         </header>
 
         <main class="report-official-body">
