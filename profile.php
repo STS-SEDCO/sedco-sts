@@ -739,24 +739,41 @@ try {
                     </div>
 
                     <div class="profile-form-grid">
-                        <label class="profile-field profile-field-name">\n                            <span>Full name</span>
-                            <div class="profile-input-shell profile-input-name"><i class="bi bi-person" aria-hidden="true"></i><input type="text" name="fullname" required maxlength="120" value="<?= e($user['fullname']) ?></div>">
+                        <label class="profile-field profile-field-name">
+                            <span>Full name</span>
+                            <div class="profile-input-shell profile-input-name">
+                                <i class="bi bi-person" aria-hidden="true"></i>
+                                <input type="text" name="fullname" required maxlength="120" value="<?= e($user['fullname']) ?>">
+                            </div>
                         </label>
 
-                        <label class="profile-field profile-field-email">\n                            <span>Email address</span>
-                            <div class="profile-input-shell profile-input-email"><i class="bi bi-envelope" aria-hidden="true"></i><input type="email" value="<?= e($user['email']) ?>" disabled></div>
+                        <label class="profile-field profile-field-email">
+                            <span>Email address</span>
+                            <div class="profile-input-shell profile-input-email">
+                                <i class="bi bi-envelope" aria-hidden="true"></i>
+                                <input type="email" value="<?= e($user['email']) ?>" disabled>
+                            </div>
                             <small>Email is used for login and cannot be changed here.</small>
                         </label>
 
-                        <label class="profile-field profile-field-phone">\n                            <span>Phone number</span>
-                            <div class="profile-input-shell profile-input-phone"><i class="bi bi-telephone" aria-hidden="true"></i><input type="tel" name="phone_number" maxlength="30" value="<?= e($user['phone_number'] ?? '') ?></div>">
+                        <label class="profile-field profile-field-phone">
+                            <span>Phone number</span>
+                            <div class="profile-input-shell profile-input-phone">
+                                <i class="bi bi-telephone" aria-hidden="true"></i>
+                                <input type="tel" name="phone_number" maxlength="30" value="<?= e($user['phone_number'] ?? '') ?>">
+                            </div>
                         </label>
 
-                        <label class="profile-field profile-field-staff">\n                            <span>Staff ID</span>
-                            <div class="profile-input-shell profile-input-staff"><i class="bi bi-person-badge" aria-hidden="true"></i><input type="text" name="staff_id" maxlength="50" value="<?= e((string) ($profileDetails['staff_id'] ?? '')) ?></div>" <?= !$hasExtendedProfile ? 'disabled' : '' ?>>
+                        <label class="profile-field profile-field-staff">
+                            <span>Staff ID</span>
+                            <div class="profile-input-shell profile-input-staff">
+                                <i class="bi bi-person-badge" aria-hidden="true"></i>
+                                <input type="text" name="staff_id" maxlength="50" value="<?= e((string) ($profileDetails['staff_id'] ?? '')) ?>" <?= !$hasExtendedProfile ? 'disabled' : '' ?>>
+                            </div>
                         </label>
 
-                        <label class="profile-field profile-field-department">\n                            <span>Department / Division</span>
+                        <label class="profile-field profile-field-department">
+                            <span>Department / Division</span>
                             <select name="department" <?= !$hasExtendedProfile ? 'disabled' : '' ?>>
                                 <option value="">Select SEDCO Department / Division</option>
                                 <?php foreach ($sedcoDepartments as $departmentName): ?>
@@ -768,8 +785,12 @@ try {
                             <small>This is used automatically in BPL Section A and for HoD routing.</small>
                         </label>
 
-                        <label class="profile-field profile-field-job">\n                            <span>Position / Job title</span>
-                            <div class="profile-input-shell profile-input-job"><i class="bi bi-briefcase" aria-hidden="true"></i><input type="text" name="job_title" maxlength="120" value="<?= e((string) ($profileDetails['job_title'] ?? '')) ?></div>" <?= !$hasExtendedProfile ? 'disabled' : '' ?>>
+                        <label class="profile-field profile-field-job">
+                            <span>Position / Job title</span>
+                            <div class="profile-input-shell profile-input-job">
+                                <i class="bi bi-briefcase" aria-hidden="true"></i>
+                                <input type="text" name="job_title" maxlength="120" value="<?= e((string) ($profileDetails['job_title'] ?? '')) ?>" <?= !$hasExtendedProfile ? 'disabled' : '' ?>>
+                            </div>
                         </label>
                     </div>
 
