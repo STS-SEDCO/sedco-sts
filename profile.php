@@ -69,6 +69,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $profileError = 'Staff ID is too long.';
         } elseif ($hasExtendedProfile && mb_strlen($department) > 120) {
             $profileError = 'Department is too long.';
+        } elseif (
+            $hasExtendedProfile
+            && $department !== ''
+            && !in_array($department, sts_sedco_departments(), true)
+        ) {
+            $profileError = 'Please select an official SEDCO Department / Division.';
         } elseif ($hasExtendedProfile && mb_strlen($jobTitle) > 120) {
             $profileError = 'Job title is too long.';
         } else {
@@ -270,6 +276,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 }
+
+$sedcoDepartments = sts_sedco_departments();
 
 $profileDetails = [
     'staff_id' => null,
@@ -739,7 +747,15 @@ if ($normalizedRole === 'staff') {
 
                         <label>
                             <span>Department / Division</span>
-                            <input type="text" name="department" maxlength="120" value="<?= e((string) ($profileDetails['department'] ?? '')) ?>" <?= !$hasExtendedProfile ? 'disabled' : '' ?>>
+                            <select name="department" <?= !$hasExtendedProfile ? 'disabled' : '' ?>>
+                                <option value="">Select SEDCO Department / Division</option>
+                                <?php foreach ($sedcoDepartments as $departmentName): ?>
+                                <option value="<?= e($departmentName) ?>" <?= (string) ($profileDetails['department'] ?? '') === $departmentName ? 'selected' : '' ?>>
+                                    <?= e($departmentName) ?>
+                                </option>
+                                <?php endforeach; ?>
+                            </select>
+                            <small>This is used automatically in BPL Section A and for HoD routing.</small>
                         </label>
 
                         <label>
