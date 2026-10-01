@@ -7914,3 +7914,64 @@ body.profile-page .modal-backdrop{
     height:30px;
   }
 }
+
+
+/* ===== PROFILE DEPARTMENT COMPACT V4 ===== */
+.profile-modal .profile-department-trigger{
+  min-height:50px;
+  grid-template-columns:18px minmax(0,1fr) 16px;
+  gap:9px;
+  padding:9px 12px;
+  border-radius:13px;
+}
+
+.profile-modal .profile-department-menu{
+  max-height:205px;
+  padding:5px;
+  border-radius:13px;
+  box-shadow:0 14px 34px rgba(30,30,35,.14);
+  scrollbar-width:thin;
+  scrollbar-color:#b9b9bf transparent;
+}
+
+.profile-modal .profile-department-menu::-webkit-scrollbar{
+  width:6px;
+}
+
+.profile-modal .profile-department-menu::-webkit-scrollbar-thumb{
+  background:#b9b9bf;
+  border-radius:999px;
+}
+
+.profile-modal .profile-department-option{
+  min-height:36px;
+  padding:8px 10px;
+  border-radius:9px;
+  font-size:10.5px;
+  line-height:1.35;
+}
+
+.profile-modal .profile-department-option.is-selected{
+  background:#f7eeee;
+  color:#8f1010;
+}
+
+.profile-modal .profile-form-grid{
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  align-items:start;
+}
+
+.profile-modal .profile-field-department,
+.profile-modal .profile-field-job{
+  align-self:start;
+}
+
+@media(max-width:720px){
+  .profile-modal .profile-form-grid{
+    grid-template-columns:1fr;
+  }
+
+  .profile-modal .profile-department-menu{
+    max-height:180px;
+  }
+}
