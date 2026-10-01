@@ -7292,3 +7292,42 @@ body.status-page .modal-backdrop{
   cursor:default;
   opacity:1;
 }
+
+
+/* ===== PROFILE INTERACTION FIX ===== */
+.profile-page .profile-avatar-edit,
+.profile-page .profile-security-button,
+.profile-page .profile-edit-button.is-enabled,
+.profile-page .profile-back-link{
+  position:relative;
+  z-index:5;
+  pointer-events:auto !important;
+}
+
+.profile-page .profile-avatar-edit,
+.profile-page .profile-security-button,
+.profile-page .profile-edit-button.is-enabled{
+  touch-action:manipulation;
+}
+
+.profile-modal{
+  z-index:6300 !important;
+}
+
+body.profile-page .modal-backdrop{
+  z-index:6200 !important;
+}
+
+.profile-modal .modal-dialog,
+.profile-modal .modal-content,
+.profile-modal button,
+.profile-modal input,
+.profile-modal select,
+.profile-modal label{
+  pointer-events:auto;
+}
+
+.profile-modal .btn-close{
+  position:relative;
+  z-index:2;
+}
