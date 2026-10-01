@@ -10961,3 +10961,413 @@ body.profile-page .modal-backdrop{
     margin:13mm 13mm 15mm;
   }
 }
+
+
+/* ===== BPL SECTIONS B-H CONSISTENCY MASTER V1 ===== */
+/* Deliberately scoped to B-H only. Section A is not touched. */
+.bpl-page .sts-smart-form > table.bpl-section-card{
+  width:100% !important;
+  margin:0 0 20px !important;
+  border:1px solid #eadede !important;
+  border-collapse:separate !important;
+  border-spacing:0 !important;
+  border-radius:18px !important;
+  overflow:hidden !important;
+  background:#fff !important;
+  box-shadow:
+    0 1px 2px rgba(20,20,24,.025),
+    0 8px 24px rgba(69,20,20,.035) !important;
+}
+
+.bpl-page .sts-smart-form > table.bpl-section-card > tbody > tr:first-child > th{
+  position:relative;
+  min-height:64px !important;
+  padding:13px 16px !important;
+  border:0 !important;
+  border-radius:0 !important;
+  background:linear-gradient(135deg,#861010 0%,#9b1414 100%) !important;
+  color:#fff !important;
+  box-shadow:inset 0 -1px 0 rgba(255,255,255,.08) !important;
+}
+
+.bpl-page .bpl-table-heading{
+  min-height:38px;
+  display:flex;
+  align-items:center;
+  gap:11px;
+  padding-right:110px;
+}
+
+.bpl-page .bpl-table-heading-icon{
+  width:34px;
+  height:34px;
+  flex:0 0 34px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  border:1px solid rgba(255,255,255,.22);
+  border-radius:10px;
+  background:rgba(255,255,255,.10);
+  color:#fff;
+  font-size:14px;
+}
+
+.bpl-page .bpl-table-heading-copy{
+  min-width:0;
+}
+
+.bpl-page .bpl-table-heading-copy strong{
+  display:block;
+  margin:0 0 2px;
+  color:#fff !important;
+  font-size:13.5px !important;
+  line-height:1.25 !important;
+  font-weight:790 !important;
+  letter-spacing:.015em !important;
+}
+
+.bpl-page .bpl-table-heading-copy small{
+  display:block;
+  color:rgba(255,255,255,.74) !important;
+  font-size:10.5px !important;
+  line-height:1.35 !important;
+  font-weight:540 !important;
+}
+
+.bpl-page .sts-smart-form > table.bpl-section-card > tbody > tr:first-child > th > .form-lock-badge,
+.bpl-page .sts-smart-form > table.bpl-section-card > tbody > tr:first-child > th > .form-edit-badge{
+  position:absolute !important;
+  top:50% !important;
+  right:16px !important;
+  margin:0 !important;
+  transform:translateY(-50%) !important;
+  padding:6px 9px !important;
+  border:1px solid rgba(255,255,255,.22) !important;
+  border-radius:999px !important;
+  background:rgba(255,255,255,.10) !important;
+  color:#fff !important;
+  font-size:9.5px !important;
+  font-weight:750 !important;
+  box-shadow:none !important;
+}
+
+.bpl-page .sts-smart-form > table.bpl-section-card > tbody > tr:not(:first-child) > td{
+  padding:14px 15px !important;
+  border-top:1px solid #f0edef !important;
+  border-right:1px solid #f4f1f2 !important;
+  background:#fff !important;
+  color:#35373d !important;
+  font-size:12.5px !important;
+  line-height:1.45 !important;
+  vertical-align:middle !important;
+}
+
+.bpl-page .sts-smart-form > table.bpl-section-card > tbody > tr:not(:first-child) > td:last-child{
+  border-right:0 !important;
+}
+
+.bpl-page .sts-smart-form > table.bpl-section-card > tbody > tr:not(:first-child):hover > td{
+  background:#fffdfd !important;
+}
+
+/* B & C information sections */
+.bpl-page .sts-smart-form > table.bpl-section-course,
+.bpl-page .sts-smart-form > table.bpl-section-travel{
+  table-layout:fixed !important;
+}
+
+.bpl-page .sts-smart-form > table.bpl-section-course td:first-child:not([colspan]),
+.bpl-page .sts-smart-form > table.bpl-section-course td:nth-child(3):not([colspan]),
+.bpl-page .sts-smart-form > table.bpl-section-travel td:first-child:not([colspan]),
+.bpl-page .sts-smart-form > table.bpl-section-travel td:nth-child(3):not([colspan]){
+  width:18% !important;
+  background:#fcfbfb !important;
+  color:#66686f !important;
+  font-size:11.5px !important;
+  font-weight:760 !important;
+}
+
+.bpl-page .sts-smart-form > table.bpl-section-course td:nth-child(2),
+.bpl-page .sts-smart-form > table.bpl-section-course td:nth-child(4),
+.bpl-page .sts-smart-form > table.bpl-section-travel td:nth-child(2),
+.bpl-page .sts-smart-form > table.bpl-section-travel td:nth-child(4){
+  width:32% !important;
+}
+
+/* Review / approval / finance sections */
+.bpl-page .sts-smart-form > table.bpl-review-card{
+  table-layout:fixed !important;
+}
+
+.bpl-page .sts-smart-form > table.bpl-review-card > tbody > tr:not(:first-child) > td:first-child{
+  width:22% !important;
+  min-width:160px !important;
+  background:#fcfbfb !important;
+  color:#66686f !important;
+  font-size:11.5px !important;
+  font-weight:760 !important;
+}
+
+.bpl-page .sts-smart-form > table.bpl-review-card textarea{
+  min-height:118px !important;
+}
+
+/* Inputs aligned to Section A's control language, without changing A itself */
+.bpl-page .sts-smart-form > table.bpl-section-card input[type="text"],
+.bpl-page .sts-smart-form > table.bpl-section-card input[type="date"],
+.bpl-page .sts-smart-form > table.bpl-section-card input[type="time"],
+.bpl-page .sts-smart-form > table.bpl-section-card input[type="number"],
+.bpl-page .sts-smart-form > table.bpl-section-card select{
+  width:100% !important;
+  min-height:50px !important;
+  margin:0 !important;
+  padding:11px 14px !important;
+  border:1px solid #dfe0e5 !important;
+  border-radius:13px !important;
+  background:#fff !important;
+  color:#2f3137 !important;
+  font-size:13px !important;
+  line-height:1.35 !important;
+  font-weight:560 !important;
+  box-shadow:inset 0 1px 2px rgba(15,23,42,.025) !important;
+}
+
+.bpl-page .sts-smart-form > table.bpl-section-card textarea{
+  width:100% !important;
+  min-height:108px !important;
+  margin:0 !important;
+  padding:13px 14px !important;
+  border:1px solid #dfe0e5 !important;
+  border-radius:13px !important;
+  background:#fff !important;
+  color:#2f3137 !important;
+  font-size:13px !important;
+  line-height:1.6 !important;
+  font-weight:520 !important;
+  box-shadow:inset 0 1px 2px rgba(15,23,42,.025) !important;
+  resize:vertical;
+}
+
+.bpl-page .sts-smart-form > table.bpl-section-card input:not([type="radio"]):not([type="checkbox"]):hover,
+.bpl-page .sts-smart-form > table.bpl-section-card textarea:hover,
+.bpl-page .sts-smart-form > table.bpl-section-card select:hover{
+  border-color:#cfd1d8 !important;
+}
+
+.bpl-page .sts-smart-form > table.bpl-section-card input:not([type="radio"]):not([type="checkbox"]):focus,
+.bpl-page .sts-smart-form > table.bpl-section-card textarea:focus,
+.bpl-page .sts-smart-form > table.bpl-section-card select:focus{
+  border-color:rgba(143,16,16,.48) !important;
+  outline:none !important;
+  box-shadow:0 0 0 4px rgba(143,16,16,.07) !important;
+}
+
+/* Choice controls */
+.bpl-page .sts-smart-form > table.bpl-section-card label:has(input[type="radio"]),
+.bpl-page .sts-smart-form > table.bpl-section-card label:has(input[type="checkbox"]){
+  min-height:42px !important;
+  display:inline-flex !important;
+  align-items:center !important;
+  gap:8px !important;
+  margin:2px 6px 2px 0 !important;
+  padding:8px 12px !important;
+  border:1px solid #e4e4e8 !important;
+  border-radius:11px !important;
+  background:#fafafb !important;
+  color:#4f5157 !important;
+  font-size:12px !important;
+  line-height:1.25 !important;
+  font-weight:650 !important;
+  box-shadow:none !important;
+}
+
+.bpl-page .sts-smart-form > table.bpl-section-card label:has(input[type="radio"]:checked),
+.bpl-page .sts-smart-form > table.bpl-section-card label:has(input[type="checkbox"]:checked){
+  border-color:#e2bcbc !important;
+  background:#fff5f5 !important;
+  color:#7f1010 !important;
+}
+
+/* Finance amount */
+.bpl-page .bpl-money-field{
+  width:min(100%,360px);
+  display:flex;
+  align-items:stretch;
+}
+
+.bpl-page .bpl-money-prefix{
+  min-width:52px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  border:1px solid #dfe0e5;
+  border-right:0;
+  border-radius:13px 0 0 13px;
+  background:#f6f6f8;
+  color:#686970;
+  font-size:12px;
+  font-weight:800;
+}
+
+.bpl-page .sts-smart-form > table.bpl-section-card .bpl-money-field input{
+  border-radius:0 13px 13px 0 !important;
+}
+
+/* Other vehicle field */
+.bpl-page .sts-smart-form > table.bpl-section-card .sts-other-field{
+  width:min(100%,560px) !important;
+  margin-top:12px !important;
+  padding:12px !important;
+  border:1px dashed #dfc5c5 !important;
+  border-radius:13px !important;
+  background:#fffafa !important;
+}
+
+/* Keep locked sections visually consistent instead of turning the whole card grey */
+.bpl-page .sts-smart-form > table.bpl-section-card.form-section-locked{
+  opacity:1 !important;
+  border-color:#e7dede !important;
+  box-shadow:
+    0 1px 2px rgba(20,20,24,.02),
+    0 6px 18px rgba(40,40,45,.025) !important;
+}
+
+.bpl-page .sts-smart-form > table.bpl-section-card.form-section-locked > tbody > tr:first-child > th{
+  background:linear-gradient(135deg,#861010 0%,#931313 100%) !important;
+}
+
+.bpl-page .sts-smart-form > table.bpl-section-card.form-section-locked > tbody > tr:not(:first-child) > td{
+  background:#fbfbfc !important;
+  color:#85868c !important;
+}
+
+.bpl-page .sts-smart-form > table.bpl-section-card.form-section-locked input:not([type="radio"]):not([type="checkbox"]),
+.bpl-page .sts-smart-form > table.bpl-section-card.form-section-locked textarea,
+.bpl-page .sts-smart-form > table.bpl-section-card.form-section-locked select{
+  border-color:#e6e6e9 !important;
+  background:#f5f5f7 !important;
+  color:#8c8e94 !important;
+  box-shadow:none !important;
+}
+
+.bpl-page .sts-smart-form > table.bpl-section-card.form-section-editable{
+  border-color:#dfbebe !important;
+  box-shadow:
+    0 0 0 3px rgba(143,16,16,.03),
+    0 10px 28px rgba(143,16,16,.05) !important;
+}
+
+/* Bottom actions */
+.bpl-page .sts-smart-form > .form-actions{
+  display:flex !important;
+  flex-wrap:wrap;
+  justify-content:flex-end;
+  align-items:center;
+  gap:10px !important;
+  margin-top:26px !important;
+  padding-top:20px !important;
+  border-top:1px solid #ececee;
+}
+
+.bpl-page .sts-smart-form > .form-actions .btn-maroon,
+.bpl-page .sts-smart-form > .form-actions .btn-review-secondary,
+.bpl-page .sts-smart-form > .form-actions .btn-review-reject,
+.bpl-page .sts-smart-form > .form-actions input[type="submit"]{
+  min-height:46px !important;
+  padding:0 18px !important;
+  border-radius:12px !important;
+  font-size:12.5px !important;
+  font-weight:720 !important;
+}
+
+.bpl-page .sts-smart-form > .form-actions .form-print-button{
+  border:1px solid #dfbebe !important;
+  background:#fff !important;
+  color:#861010 !important;
+  box-shadow:none !important;
+}
+
+.bpl-page .sts-smart-form > .form-actions .form-print-button:hover{
+  background:#fff5f5 !important;
+  border-color:#cf9f9f !important;
+}
+
+/* Responsive B-H only */
+@media(max-width:760px){
+  .bpl-page .bpl-table-heading{
+    padding-right:0;
+  }
+
+  .bpl-page .bpl-table-heading-copy small{
+    display:none;
+  }
+
+  .bpl-page .sts-smart-form > table.bpl-section-card > tbody > tr:first-child > th{
+    padding:12px 13px !important;
+  }
+
+  .bpl-page .sts-smart-form > table.bpl-section-card > tbody > tr:first-child > th > .form-lock-badge,
+  .bpl-page .sts-smart-form > table.bpl-section-card > tbody > tr:first-child > th > .form-edit-badge{
+    position:static !important;
+    display:inline-flex !important;
+    margin-top:8px !important;
+    transform:none !important;
+  }
+}
+
+@media(max-width:640px){
+  .bpl-page .sts-smart-form > table.bpl-section-card,
+  .bpl-page .sts-smart-form > table.bpl-section-card > tbody,
+  .bpl-page .sts-smart-form > table.bpl-section-card > tbody > tr,
+  .bpl-page .sts-smart-form > table.bpl-section-card > tbody > tr > td,
+  .bpl-page .sts-smart-form > table.bpl-section-card > tbody > tr > th{
+    display:block !important;
+    width:100% !important;
+  }
+
+  .bpl-page .sts-smart-form > table.bpl-section-card > tbody > tr:first-child{
+    padding:0 !important;
+    border:0 !important;
+  }
+
+  .bpl-page .sts-smart-form > table.bpl-section-card > tbody > tr:not(:first-child){
+    padding:13px 14px 5px !important;
+    border-top:1px solid #f0edef !important;
+  }
+
+  .bpl-page .sts-smart-form > table.bpl-section-card > tbody > tr:not(:first-child) > td{
+    min-width:0 !important;
+    padding:0 0 9px !important;
+    border:0 !important;
+    background:#fff !important;
+  }
+
+  .bpl-page .sts-smart-form > table.bpl-section-card > tbody > tr:not(:first-child) > td:first-child,
+  .bpl-page .sts-smart-form > table.bpl-section-card > tbody > tr:not(:first-child) > td:nth-child(3){
+    width:100% !important;
+    padding:0 0 6px !important;
+    background:#fff !important;
+    color:#6a6c72 !important;
+    font-size:10.5px !important;
+    letter-spacing:.02em !important;
+    text-transform:none !important;
+  }
+
+  .bpl-page .sts-smart-form > table.bpl-section-card label:has(input[type="radio"]),
+  .bpl-page .sts-smart-form > table.bpl-section-card label:has(input[type="checkbox"]){
+    width:100%;
+    margin:3px 0 !important;
+  }
+
+  .bpl-page .bpl-money-field{
+    width:100%;
+  }
+
+  .bpl-page .sts-smart-form > .form-actions{
+    align-items:stretch;
+  }
+
+  .bpl-page .sts-smart-form > .form-actions > *{
+    width:100% !important;
+  }
+}
