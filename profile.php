@@ -425,10 +425,24 @@ if ($normalizedRole === 'staff') {
     <title>My Profile - Smart Training System</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-    <link rel="stylesheet" href="sedco-saas.css?v=20261001-05">
+    <link rel="stylesheet" href="sedco-saas.css?v=20261001-06">
     <link rel="stylesheet" href="sedco-shell.css?v=20260930-57">
 </head>
 <body class="app-page profile-page" data-page="profile" data-role="<?= e($normalizedRole) ?>">
+<script>
+try {
+  const current = JSON.parse(localStorage.getItem('sedcoPreviewUser') || '{}');
+  localStorage.setItem('sedcoPreviewUser', JSON.stringify({
+    ...current,
+    email: <?= json_encode((string) ($user['email'] ?? '')) ?>,
+    fullname: <?= json_encode((string) ($user['fullname'] ?? '')) ?>,
+    department: <?= json_encode((string) ($profileDetails['department'] ?? '')) ?>,
+    job_title: <?= json_encode((string) ($profileDetails['job_title'] ?? '')) ?>,
+    staff_id: <?= json_encode((string) ($profileDetails['staff_id'] ?? '')) ?>,
+    role: <?= json_encode((string) ($normalizedRole ?? 'staff')) ?>
+  }));
+} catch {}
+</script>
 <main class="profile-content">
     <div class="profile-shell">
         <header class="profile-heading">
