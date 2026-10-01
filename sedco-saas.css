@@ -8781,3 +8781,488 @@ body.profile-page .modal-backdrop{
     margin:0 14px 14px;
   }
 }
+
+
+/* ===== COMPLETE FORM VISUAL SYSTEM V2 ===== */
+/* Shared section rhythm across BPL / PKK / TEA */
+.form-page .sts-smart-form{
+  display:block;
+}
+
+.form-page .sts-smart-form > table,
+.bpl-page .sts-smart-form > table{
+  margin:0 0 18px !important;
+  border:1px solid #eadfe0 !important;
+  border-collapse:separate !important;
+  border-spacing:0 !important;
+  border-radius:18px !important;
+  overflow:hidden;
+  background:#fff !important;
+  box-shadow:
+    0 1px 2px rgba(24,24,29,.02),
+    0 8px 24px rgba(67,20,20,.035) !important;
+}
+
+.form-page .sts-smart-form > table > tbody > tr:first-child > th,
+.bpl-page .sts-smart-form > table > tbody > tr:first-child > th{
+  min-height:56px;
+  padding:15px 17px !important;
+  border:0 !important;
+  background:
+    linear-gradient(135deg,#861010 0%,#9a1414 100%) !important;
+  color:#fff !important;
+  font-size:11px !important;
+  line-height:1.35 !important;
+  font-weight:790 !important;
+  letter-spacing:.02em !important;
+  text-transform:none !important;
+  box-shadow:inset 0 -1px 0 rgba(255,255,255,.08);
+}
+
+.bpl-page .sts-smart-form > table > tbody > tr:first-child > th::after{
+  display:none !important;
+}
+
+.form-page .sts-smart-form > table > tbody > tr:not(:first-child) > td{
+  padding:13px 14px !important;
+  border-top:1px solid #f0edef !important;
+  border-right:1px solid #f5f2f3 !important;
+  background:#fff !important;
+  vertical-align:middle !important;
+}
+
+.form-page .sts-smart-form > table > tbody > tr:not(:first-child) > td:last-child{
+  border-right:0 !important;
+}
+
+.form-page .sts-smart-form > table > tbody > tr:not(:first-child):hover > td:not(.no-border){
+  background:#fffdfd !important;
+}
+
+/* Make question/label cells feel like metadata, not spreadsheet cells */
+.bpl-page .sts-smart-form > table td:first-child:not([colspan]),
+.bpl-page .sts-smart-form > table td:nth-child(3):not([colspan]){
+  background:#fcfbfb !important;
+  color:#5b5d64 !important;
+  font-size:9.5px !important;
+  font-weight:760 !important;
+  letter-spacing:.005em;
+}
+
+.bpl-page .sts-smart-form > table td:first-child:not([colspan])::first-letter,
+.bpl-page .sts-smart-form > table td:nth-child(3):not([colspan])::first-letter{
+  color:#8f1010;
+}
+
+/* All writing controls */
+.form-page .sts-smart-form input[type="text"],
+.form-page .sts-smart-form input[type="date"],
+.form-page .sts-smart-form input[type="time"],
+.form-page .sts-smart-form input[type="number"],
+.form-page .sts-smart-form select,
+.form-page .sts-smart-form textarea{
+  border-radius:13px !important;
+  border-color:#dfe0e5 !important;
+  background:#fff !important;
+  box-shadow:
+    inset 0 1px 2px rgba(15,23,42,.025),
+    0 1px 2px rgba(15,23,42,.02) !important;
+}
+
+.form-page .sts-smart-form input[type="text"],
+.form-page .sts-smart-form input[type="date"],
+.form-page .sts-smart-form input[type="time"],
+.form-page .sts-smart-form input[type="number"],
+.form-page .sts-smart-form select{
+  min-height:48px !important;
+  padding:10px 13px !important;
+}
+
+.form-page .sts-smart-form textarea{
+  min-height:105px !important;
+  padding:13px 14px !important;
+  line-height:1.65 !important;
+}
+
+.form-page .sts-smart-form input:focus:not([type="checkbox"]):not([type="radio"]),
+.form-page .sts-smart-form select:focus,
+.form-page .sts-smart-form textarea:focus{
+  border-color:rgba(143,16,16,.50) !important;
+  box-shadow:
+    0 0 0 4px rgba(143,16,16,.065),
+    0 6px 18px rgba(78,18,18,.045) !important;
+}
+
+/* BPL section B and C: cleaner information grid */
+.bpl-page .sts-smart-form > table[data-form-owner="staff"]{
+  position:relative;
+}
+
+.bpl-page .sts-smart-form > table[data-form-owner="staff"] td:has(input),
+.bpl-page .sts-smart-form > table[data-form-owner="staff"] td:has(textarea),
+.bpl-page .sts-smart-form > table[data-form-owner="staff"] td:has(select){
+  background:#fff !important;
+}
+
+.bpl-page .sts-smart-form > table[data-form-owner="staff"] td[colspan="3"] > input,
+.bpl-page .sts-smart-form > table[data-form-owner="staff"] td[colspan="3"] > textarea{
+  width:100% !important;
+  max-width:none !important;
+}
+
+/* Review sections C-F + Finance */
+.bpl-page .sts-smart-form > table[data-form-owner="training_section"],
+.bpl-page .sts-smart-form > table[data-form-owner="head_of_department"],
+.bpl-page .sts-smart-form > table[data-form-owner="general_manager"],
+.bpl-page .sts-smart-form > table[data-form-owner="admin"]{
+  background:
+    linear-gradient(180deg,#fff 0%,#fffefe 100%) !important;
+}
+
+.bpl-page .sts-smart-form > table[data-form-owner="training_section"] td:first-child,
+.bpl-page .sts-smart-form > table[data-form-owner="head_of_department"] td:first-child,
+.bpl-page .sts-smart-form > table[data-form-owner="general_manager"] td:first-child,
+.bpl-page .sts-smart-form > table[data-form-owner="admin"] td:first-child{
+  width:22% !important;
+  min-width:150px;
+  background:#fcfbfb !important;
+}
+
+.bpl-page .sts-smart-form > table[data-form-owner="training_section"] textarea,
+.bpl-page .sts-smart-form > table[data-form-owner="head_of_department"] textarea,
+.bpl-page .sts-smart-form > table[data-form-owner="general_manager"] textarea,
+.bpl-page .sts-smart-form > table[data-form-owner="admin"] textarea{
+  width:100% !important;
+  max-width:none !important;
+}
+
+/* Locked review sections should still look intentional */
+.bpl-page .sts-smart-form > table.form-section-locked{
+  opacity:1 !important;
+  border-color:#e6e6e9 !important;
+  box-shadow:none !important;
+}
+
+.bpl-page .sts-smart-form > table.form-section-locked > tbody > tr:first-child > th{
+  background:linear-gradient(135deg,#85868c 0%,#717278 100%) !important;
+}
+
+.bpl-page .sts-smart-form > table.form-section-locked td{
+  background:#f7f7f8 !important;
+  color:#8d8f95 !important;
+}
+
+.bpl-page .sts-smart-form > table.form-section-editable{
+  border-color:#e5caca !important;
+  box-shadow:
+    0 0 0 3px rgba(143,16,16,.035),
+    0 10px 28px rgba(143,16,16,.055) !important;
+}
+
+/* Other vehicle field */
+.bpl-page .sts-other-field{
+  margin-top:12px !important;
+  padding:12px !important;
+  border:1px dashed #dfc5c5 !important;
+  border-radius:13px !important;
+  background:#fffafa !important;
+}
+
+/* PKK: turn content blocks into clean cards */
+.pkk-page .sts-smart-form{
+  display:flex;
+  flex-direction:column;
+  gap:15px;
+}
+
+.pkk-page .sts-smart-form > .row,
+.pkk-page .sts-smart-form > .mb-3,
+.pkk-page .sts-smart-form > .mb-4{
+  margin:0 !important;
+}
+
+.pkk-page .sts-smart-form > .row{
+  padding:16px !important;
+  border:1px solid #e9e9ed !important;
+  border-radius:16px !important;
+  background:#fff !important;
+  box-shadow:0 5px 18px rgba(31,31,35,.025);
+}
+
+.pkk-page .sts-smart-form > .mb-3:has(textarea),
+.pkk-page .sts-smart-form > .mb-4:has(textarea){
+  padding:16px !important;
+  border:1px solid #e9e9ed !important;
+  border-radius:16px !important;
+  background:#fff !important;
+  box-shadow:0 5px 18px rgba(31,31,35,.025);
+}
+
+.pkk-page .sts-smart-form .form-label{
+  display:flex;
+  align-items:center;
+  gap:7px;
+  margin-bottom:9px !important;
+  color:#404149 !important;
+  font-size:10.5px !important;
+  font-weight:760 !important;
+}
+
+.pkk-page .sts-smart-form .form-label::before{
+  content:"";
+  width:5px;
+  height:5px;
+  flex:0 0 5px;
+  border-radius:50%;
+  background:#971717;
+  box-shadow:0 0 0 4px rgba(151,23,23,.075);
+}
+
+.pkk-page .sts-smart-form ol{
+  margin:0 !important;
+  padding-left:24px !important;
+}
+
+.pkk-page .sts-smart-form ol li{
+  margin:10px 0 !important;
+  padding-left:5px !important;
+  color:#62646b !important;
+  font-size:9.5px !important;
+  font-weight:720 !important;
+}
+
+.pkk-page .sts-smart-form h5{
+  margin:5px 0 0 !important;
+  padding:12px 14px;
+  border:1px solid #eadede;
+  border-radius:14px;
+  background:linear-gradient(135deg,#fffafa,#fff);
+  color:#781212 !important;
+  font-size:11px !important;
+  font-weight:790 !important;
+  letter-spacing:.015em;
+}
+
+.pkk-page .sts-smart-form h5 + .row{
+  padding:14px !important;
+  border:1px solid #ededf0 !important;
+  border-radius:14px !important;
+  background:#fcfcfd !important;
+}
+
+.pkk-page .sts-smart-form .text-muted{
+  padding:10px 12px;
+  border:1px solid #ececef;
+  border-radius:11px;
+  background:#fafafa;
+  color:#777980 !important;
+  font-size:9.5px !important;
+  line-height:1.55;
+}
+
+/* PKK score table */
+.pkk-page .sts-smart-form table.table{
+  margin:0 !important;
+  border:1px solid #e5e5e9 !important;
+  border-collapse:separate !important;
+  border-spacing:0 !important;
+  border-radius:16px !important;
+  overflow:hidden;
+  box-shadow:0 7px 22px rgba(31,31,35,.035);
+}
+
+.pkk-page .sts-smart-form table.table thead th{
+  padding:11px 9px !important;
+  border-color:rgba(255,255,255,.08) !important;
+  background:linear-gradient(135deg,#771010,#901313) !important;
+  color:#fff !important;
+  font-size:9px !important;
+  font-weight:760 !important;
+  text-transform:none !important;
+}
+
+.pkk-page .sts-smart-form table.table tbody td{
+  padding:10px 8px !important;
+  border-color:#eeeeef !important;
+  background:#fff !important;
+}
+
+.pkk-page .sts-smart-form table.table tbody tr:nth-child(even) td{
+  background:#fcfcfd !important;
+}
+
+.pkk-page .sts-smart-form .score-input{
+  border-radius:10px !important;
+  background:#fff !important;
+  font-size:10.5px !important;
+}
+
+/* TEA top identity block */
+.tea-page .sts-smart-form > table:first-of-type{
+  margin-bottom:16px !important;
+  border:1px solid #e7e7eb !important;
+  border-radius:16px !important;
+  background:#fff !important;
+  box-shadow:0 5px 18px rgba(31,31,35,.025) !important;
+}
+
+.tea-page .sts-smart-form > table:first-of-type .no-border{
+  padding:13px 14px !important;
+  border-bottom:1px solid #f0f0f2 !important;
+  background:#fff !important;
+  color:#55575f !important;
+  font-size:9.5px !important;
+  font-weight:680 !important;
+}
+
+/* TEA rating strip */
+.tea-page .center.my-3{
+  margin:0 0 16px !important;
+  padding:13px 15px;
+  border:1px solid #eadede;
+  border-radius:14px;
+  background:linear-gradient(135deg,#fffafa,#fff);
+}
+
+.tea-page .center.my-3 > strong{
+  display:block;
+  margin-bottom:6px;
+  color:#741010;
+  font-size:10.5px;
+  font-weight:790;
+}
+
+.tea-page .rating-info{
+  margin:0 !important;
+  border:0 !important;
+  background:transparent !important;
+  color:#6d6f76 !important;
+  font-size:9.5px !important;
+}
+
+/* TEA assessment matrix */
+.tea-page .sts-smart-form > table:nth-of-type(2){
+  border:1px solid #e4e4e8 !important;
+  border-radius:16px !important;
+  overflow:hidden;
+  box-shadow:0 8px 24px rgba(31,31,35,.035) !important;
+}
+
+.tea-page .sts-smart-form > table:nth-of-type(2) th{
+  padding:10px 8px !important;
+  background:linear-gradient(135deg,#781010,#911313) !important;
+  color:#fff !important;
+  font-size:8.5px !important;
+  line-height:1.35 !important;
+  font-weight:750 !important;
+  text-transform:none !important;
+}
+
+.tea-page .sts-smart-form > table:nth-of-type(2) td{
+  padding:10px 8px !important;
+  border-color:#eeeeef !important;
+  background:#fff !important;
+  font-size:9px !important;
+}
+
+.tea-page .sts-smart-form > table:nth-of-type(2) tr:nth-child(even) td{
+  background:#fcfcfd !important;
+}
+
+.tea-page .sts-smart-form .score-input-small{
+  border-radius:10px !important;
+  border-color:#dfe0e5 !important;
+  background:#fff !important;
+  font-size:10.5px !important;
+}
+
+/* TEA note / ranking / signoff blocks */
+.tea-page .sts-smart-form > p{
+  margin:0 0 16px !important;
+  padding:11px 13px !important;
+  border:1px solid #e8e8eb !important;
+  border-radius:12px !important;
+  background:#fafafa !important;
+  color:#696b72 !important;
+  font-size:9.5px !important;
+  line-height:1.55 !important;
+}
+
+.tea-page .sts-smart-form > table:nth-of-type(3),
+.tea-page .sts-smart-form > table:nth-of-type(4){
+  margin-bottom:16px !important;
+  border:1px solid #e6e6ea !important;
+  border-radius:15px !important;
+  overflow:hidden;
+}
+
+.tea-page .sts-smart-form > table:nth-of-type(3) th{
+  background:#f7f1f1 !important;
+  color:#741010 !important;
+  border-color:#eadede !important;
+  text-transform:none !important;
+}
+
+.tea-page .sts-smart-form > table:nth-of-type(3) td,
+.tea-page .sts-smart-form > table:nth-of-type(4) td{
+  padding:11px 12px !important;
+  border-color:#eeeeef !important;
+  background:#fff !important;
+}
+
+/* Buttons / bottom actions */
+.form-page .form-actions,
+.pkk-page .text-end.mt-4,
+.tea-page .center.mt-4{
+  margin-top:18px !important;
+  padding:14px 0 0 !important;
+  border-top:1px solid #eeeeef;
+}
+
+.form-page .btn-maroon,
+.form-page .btn-primary{
+  min-height:44px !important;
+  padding:0 18px !important;
+  border-radius:12px !important;
+  font-size:10.5px !important;
+  font-weight:760 !important;
+  box-shadow:0 7px 16px rgba(143,16,16,.13) !important;
+}
+
+/* Responsive table handling */
+@media(max-width:900px){
+  .form-page .sts-smart-form > table{
+    display:block;
+    overflow-x:auto;
+    -webkit-overflow-scrolling:touch;
+  }
+
+  .bpl-page .sts-smart-form > table{
+    display:table;
+    overflow:visible;
+  }
+
+  .tea-page .sts-smart-form > table:nth-of-type(2),
+  .pkk-page .sts-smart-form table.table{
+    display:block;
+    overflow-x:auto;
+  }
+}
+
+@media(max-width:700px){
+  .bpl-page .sts-smart-form > table:not(.bpl-applicant-section) td:first-child,
+  .bpl-page .sts-smart-form > table:not(.bpl-applicant-section) td:nth-child(3){
+    min-width:120px;
+  }
+
+  .pkk-page .sts-smart-form{
+    gap:12px;
+  }
+
+  .pkk-page .sts-smart-form > .row,
+  .pkk-page .sts-smart-form > .mb-3:has(textarea),
+  .pkk-page .sts-smart-form > .mb-4:has(textarea){
+    padding:13px !important;
+    border-radius:13px !important;
+  }
+}
