@@ -7089,3 +7089,147 @@ body.status-page .modal-backdrop{
   font-size:13px !important;
   line-height:1.5 !important;
 }
+
+
+/* ===== SEDCO DEPARTMENT CUSTOM MENU ===== */
+.form-page .sts-department-combobox{
+  position:relative;
+  width:100%;
+  max-width:100%;
+  box-sizing:border-box;
+}
+
+.form-page .sts-department-trigger{
+  width:100%;
+  min-height:50px;
+  padding:11px 42px 11px 14px;
+  border:1px solid #dedee3;
+  border-radius:12px;
+  background:#fff;
+  color:#343438;
+  font:inherit;
+  font-size:12.5px;
+  font-weight:650;
+  line-height:1.35;
+  text-align:left;
+  cursor:pointer;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  box-sizing:border-box;
+}
+
+.form-page .sts-department-trigger:hover{
+  border-color:#c9c9cf;
+}
+
+.form-page .sts-department-trigger:focus,
+.form-page .sts-department-trigger[aria-expanded="true"]{
+  border-color:rgba(143,16,16,.48);
+  box-shadow:0 0 0 3px rgba(143,16,16,.075);
+  outline:none;
+}
+
+.form-page .sts-department-trigger.is-placeholder{
+  color:#75757c;
+}
+
+.form-page .sts-department-trigger.is-invalid{
+  border-color:#b42318;
+  box-shadow:0 0 0 3px rgba(180,35,24,.08);
+}
+
+.form-page .sts-department-trigger-text{
+  min-width:0;
+  white-space:normal;
+  overflow-wrap:anywhere;
+}
+
+.form-page .sts-department-trigger-icon{
+  flex:0 0 auto;
+  font-size:18px;
+  line-height:1;
+  color:#5f6065;
+  transform:translateY(-1px);
+}
+
+.form-page .sts-department-menu{
+  position:absolute;
+  z-index:1200;
+  top:calc(100% + 6px);
+  left:0;
+  right:0;
+  width:100%;
+  max-width:100%;
+  max-height:300px;
+  overflow-y:auto;
+  overflow-x:hidden;
+  padding:6px;
+  border:1px solid #d7d7dc;
+  border-radius:12px;
+  background:#fff;
+  box-shadow:0 14px 32px rgba(20,20,24,.14);
+  box-sizing:border-box;
+}
+
+.form-page .sts-department-menu[hidden]{
+  display:none !important;
+}
+
+.form-page .sts-department-option{
+  width:100%;
+  min-height:38px;
+  padding:9px 10px;
+  border:0;
+  border-radius:8px;
+  background:transparent;
+  color:#343438;
+  font:inherit;
+  font-size:12.5px;
+  font-weight:550;
+  line-height:1.35;
+  text-align:left;
+  white-space:normal;
+  overflow-wrap:anywhere;
+  cursor:pointer;
+  box-sizing:border-box;
+}
+
+.form-page .sts-department-option:hover,
+.form-page .sts-department-option:focus{
+  background:#f6f1f1;
+  outline:none;
+}
+
+.form-page .sts-department-option.is-selected{
+  background:#f4eaea;
+  color:#8f1010;
+  font-weight:700;
+}
+
+.form-page .sts-department-select.sts-department-native{
+  position:absolute !important;
+  width:1px !important;
+  min-width:1px !important;
+  max-width:1px !important;
+  height:1px !important;
+  min-height:1px !important;
+  margin:0 !important;
+  padding:0 !important;
+  opacity:0 !important;
+  pointer-events:none !important;
+  overflow:hidden !important;
+  clip-path:inset(50%) !important;
+}
+
+@media (max-width:640px){
+  .form-page .sts-department-trigger{
+    padding-left:12px;
+    padding-right:36px;
+  }
+
+  .form-page .sts-department-menu{
+    max-height:260px;
+  }
+}
