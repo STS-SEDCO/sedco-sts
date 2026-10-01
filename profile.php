@@ -54,8 +54,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if ($action === 'update_profile') {
         $fullname = trim((string) ($_POST['fullname'] ?? ''));
-        $phoneNumber = trim((string) ($_POST['phone_number'] ?? ''));
-        $staffId = trim((string) ($_POST['staff_id'] ?? ''));
         $department = trim((string) ($_POST['department'] ?? ''));
         $jobTitle = trim((string) ($_POST['job_title'] ?? ''));
 
@@ -63,18 +61,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $profileError = 'Full name is required.';
         } elseif (mb_strlen($fullname) > 120) {
             $profileError = 'Full name is too long.';
-        } elseif (mb_strlen($phoneNumber) > 30) {
-            $profileError = 'Phone number is too long.';
-        } elseif ($hasExtendedProfile && mb_strlen($staffId) > 50) {
-            $profileError = 'Staff ID is too long.';
         } elseif ($hasExtendedProfile && mb_strlen($department) > 120) {
             $profileError = 'Department is too long.';
         } elseif (
             $hasExtendedProfile
             && $department !== ''
-            && !in_array($department, sts_sedco_departments(), true)
+            && !in_array($department, array_merge(['Training'], sts_sedco_departments()), true)
         ) {
-            $profileError = 'Please select an official SEDCO Department / Division.';
+            $profileError = 'Please select a valid Department / Division.';
         } elseif ($hasExtendedProfile && mb_strlen($jobTitle) > 120) {
             $profileError = 'Job title is too long.';
         } else {
@@ -141,31 +135,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 }
             }
 
-            if ($hasExtendedProfile && $staffId !== '') {
-                $check = $db->prepare(
-                    'SELECT id FROM users WHERE staff_id = ? AND id <> ? LIMIT 1'
-                );
-                $userId = (int) $user['id'];
-                $check->bind_param('si', $staffId, $userId);
-                $check->execute();
-                $duplicate = $check->get_result()->fetch_assoc();
-                $check->close();
-
-                if ($duplicate) {
-                    $profileError = 'That Staff ID is already in use.';
-
-                    if ($uploadedProfilePath && is_file($uploadedProfilePath)) {
-                        @unlink($uploadedProfilePath);
-                        $uploadedProfilePath = null;
-                    }
-                }
-            }
-
             if ($profileError === null) {
                 $userId = (int) $user['id'];
 
                 if ($hasExtendedProfile) {
-                    $staffIdValue = $staffId !== '' ? $staffId : null;
                     $departmentValue = $department !== '' ? $department : null;
                     $jobTitleValue = $jobTitle !== '' ? $jobTitle : null;
 
@@ -174,15 +147,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                         $stmt = $db->prepare(
                             'UPDATE users
-                             SET fullname = ?, phone_number = ?, staff_id = ?,
-                                 department = ?, job_title = ?, profile_image = ?
+                             SET fullname = ?, department = ?, job_title = ?, profile_image = ?
                              WHERE id = ?'
                         );
                         $stmt->bind_param(
-                            'ssssssi',
+                            'ssssi',
                             $fullname,
-                            $phoneNumber,
-                            $staffIdValue,
                             $departmentValue,
                             $jobTitleValue,
                             $profileImageValue,
@@ -191,15 +161,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     } else {
                         $stmt = $db->prepare(
                             'UPDATE users
-                             SET fullname = ?, phone_number = ?, staff_id = ?,
-                                 department = ?, job_title = ?
+                             SET fullname = ?, department = ?, job_title = ?
                              WHERE id = ?'
                         );
                         $stmt->bind_param(
-                            'sssssi',
+                            'sssi',
                             $fullname,
-                            $phoneNumber,
-                            $staffIdValue,
                             $departmentValue,
                             $jobTitleValue,
                             $userId
@@ -208,10 +175,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 } else {
                     $stmt = $db->prepare(
                         'UPDATE users
-                         SET fullname = ?, phone_number = ?
+                         SET fullname = ?
                          WHERE id = ?'
                     );
-                    $stmt->bind_param('ssi', $fullname, $phoneNumber, $userId);
+                    $stmt->bind_param('si', $fullname, $userId);
                 }
 
                 $stmt->execute();
@@ -277,7 +244,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-$sedcoDepartments = sts_sedco_departments();
+$sedcoDepartments = array_merge(['Training'], sts_sedco_departments());
 
 $profileDetails = [
     'staff_id' => null,
@@ -327,8 +294,6 @@ if ($profileImageName !== '') {
 $profileCompletionFields = [
     $user['fullname'] ?? '',
     $user['email'] ?? '',
-    $user['phone_number'] ?? '',
-    $profileDetails['staff_id'] ?? '',
     $profileDetails['department'] ?? '',
     $profileDetails['job_title'] ?? '',
     $profileImageUrl ?? '',
@@ -425,7 +390,7 @@ if ($normalizedRole === 'staff') {
     <title>My Profile - Smart Training System</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-    <link rel="stylesheet" href="sedco-saas.css?v=20261001-09">
+    <link rel="stylesheet" href="sedco-saas.css?v=20261001-10">
     <link rel="stylesheet" href="sedco-shell.css?v=20260930-57">
 </head>
 <body class="app-page profile-page" data-page="profile" data-role="<?= e($normalizedRole) ?>">
@@ -438,7 +403,6 @@ try {
     fullname: <?= json_encode((string) ($user['fullname'] ?? '')) ?>,
     department: <?= json_encode((string) ($profileDetails['department'] ?? '')) ?>,
     job_title: <?= json_encode((string) ($profileDetails['job_title'] ?? '')) ?>,
-    staff_id: <?= json_encode((string) ($profileDetails['staff_id'] ?? '')) ?>,
     role: <?= json_encode((string) ($normalizedRole ?? 'staff')) ?>
   }));
 } catch {}
@@ -565,24 +529,10 @@ try {
                         </div>
                     </div>
                     <div class="profile-detail">
-                        <span class="profile-detail-icon"><i class="bi bi-telephone"></i></span>
-                        <div>
-                            <label>Phone number</label>
-                            <strong><?= e($user['phone_number'] ?: 'Not provided') ?></strong>
-                        </div>
-                    </div>
-                    <div class="profile-detail">
                         <span class="profile-detail-icon"><i class="bi bi-person-badge"></i></span>
                         <div>
                             <label>Role</label>
                             <strong><?= e($displayRole) ?></strong>
-                        </div>
-                    </div>
-                    <div class="profile-detail">
-                        <span class="profile-detail-icon"><i class="bi bi-hash"></i></span>
-                        <div>
-                            <label>Staff ID</label>
-                            <strong><?= e((string) ($profileDetails['staff_id'] ?: 'Not provided')) ?></strong>
                         </div>
                     </div>
                     <div class="profile-detail">
@@ -756,22 +706,6 @@ try {
                             <small>Email is used for login and cannot be changed here.</small>
                         </label>
 
-                        <label class="profile-field profile-field-phone">
-                            <span>Phone number</span>
-                            <div class="profile-input-shell profile-input-phone">
-                                <i class="bi bi-telephone" aria-hidden="true"></i>
-                                <input type="tel" name="phone_number" maxlength="30" value="<?= e($user['phone_number'] ?? '') ?>">
-                            </div>
-                        </label>
-
-                        <label class="profile-field profile-field-staff">
-                            <span>Staff ID</span>
-                            <div class="profile-input-shell profile-input-staff">
-                                <i class="bi bi-person-badge" aria-hidden="true"></i>
-                                <input type="text" name="staff_id" maxlength="50" value="<?= e((string) ($profileDetails['staff_id'] ?? '')) ?>" <?= !$hasExtendedProfile ? 'disabled' : '' ?>>
-                            </div>
-                        </label>
-
                         <label class="profile-field profile-field-department">
                             <span>Department / Division</span>
                             <select name="department" <?= !$hasExtendedProfile ? 'disabled' : '' ?>>
@@ -797,7 +731,7 @@ try {
                     <?php if (!$hasExtendedProfile): ?>
                     <div class="profile-schema-note">
                         <i class="bi bi-database-add"></i>
-                        Import <strong>PROFILE_UPGRADE.sql</strong> once to enable Staff ID, Department, and Job Title.
+                        Import <strong>PROFILE_UPGRADE.sql</strong> once to enable Department and Job Title.
                     </div>
                     <?php endif; ?>
                 </div>
@@ -957,6 +891,7 @@ try {
         if (other !== trigger) other.setAttribute('aria-expanded','false');
       });
       menu.hidden = !open;
+      if (open) menu.scrollTop = 0;
       trigger.setAttribute('aria-expanded', open ? 'true' : 'false');
     });
 
