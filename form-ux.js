@@ -1066,9 +1066,25 @@
 
       report.innerHTML = `
         <header class="report-official-header">
-          <div class="report-agency">SABAH ECONOMIC DEVELOPMENT CORPORATION (SEDCO)</div>
-          <h1>${escapeHtml(titleByType[formType] || 'TRAINING REPORT')}</h1>
-          <div class="report-document-rule"></div>
+          <div class="report-letterhead">
+            <div class="report-org-lockup">
+              <div class="report-org-mark">SEDCO</div>
+              <div class="report-org-copy">
+                <strong>Sabah Economic Development Corporation</strong>
+                <span>Smart Training System</span>
+              </div>
+            </div>
+
+            <div class="report-doc-code">
+              <span>FORM</span>
+              <strong>${escapeHtml(formType)}</strong>
+            </div>
+          </div>
+
+          <div class="report-title-block">
+            <span>Training Administration Record</span>
+            <h1>${escapeHtml(titleByType[formType] || 'TRAINING REPORT')}</h1>
+          </div>
         </header>
 
         <main class="report-official-body">
@@ -1076,7 +1092,7 @@
         </main>
 
         <footer class="report-official-footer">
-          <span>Dokumen ini dijana daripada rekod borang latihan.</span>
+          <span>Generated from Smart Training System (STS)</span>
           <strong>Dicetak pada: ${escapeHtml(now)}</strong>
         </footer>
       `;
