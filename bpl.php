@@ -148,10 +148,10 @@ $canReviewCurrentStage = $mode === 'review'
                 <tr><th colspan="4">A. MAKLUMAT PEMOHON</th></tr>
                 <tr>
                     <td>01. Nama</td>
-                    <td><input type="text" name="nama" class="input-field" required></td>
+                    <td><input type="text" name="nama" class="input-field sts-profile-sourced" required readonly value="<?= e((string) ($payload['nama'] ?? '')) ?>" data-profile-sourced="1"></td>
                     <td>02. Bahagian</td>
                     <td>
-                        <select name="bahagian" class="input-field sts-department-select" required>
+                        <select name="bahagian" class="input-field sts-department-select sts-profile-sourced" required data-profile-sourced="1" data-profile-locked="1">
                             <option value="">Pilih nama penuh bahagian SEDCO</option>
                             <?php foreach ($sedcoDepartments as $departmentName): ?>
                             <option value="<?= e($departmentName) ?>" <?= (string) ($payload['bahagian'] ?? '') === $departmentName ? 'selected' : '' ?>>
@@ -163,7 +163,7 @@ $canReviewCurrentStage = $mode === 'review'
                 </tr>
                 <tr>
                     <td>03. Jawatan</td>
-                    <td colspan="3"><input type="text" name="jawatan" class="input-field" required></td>
+                    <td colspan="3"><input type="text" name="jawatan" class="input-field sts-profile-sourced" required readonly value="<?= e((string) ($payload['jawatan'] ?? '')) ?>" data-profile-sourced="1"></td>
                 </tr>
                 <tr>
                     <td>04. Kursus/Seminar</td>
@@ -171,7 +171,7 @@ $canReviewCurrentStage = $mode === 'review'
                 </tr>
                 <tr>
                     <td>Tarikh</td>
-                    <td colspan="3"><input type="date" name="tarikh" required></td>
+                    <td colspan="3"><input type="date" name="tarikh" required readonly value="<?= e((string) ($payload['tarikh'] ?? '')) ?>" data-submission-date="1"></td>
                 </tr>
             </table>
 
