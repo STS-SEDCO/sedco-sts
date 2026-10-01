@@ -96,7 +96,7 @@ $canReviewCurrentStage = $mode === 'review'
             window.print();
         }
     </script>
-    <link rel="stylesheet" href="sedco-saas.css?v=20261001-24">
+    <link rel="stylesheet" href="sedco-saas.css?v=20261001-25">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
   <link rel="stylesheet" href="sedco-shell.css?v=20260930-56">
 </head>
@@ -203,8 +203,7 @@ $canReviewCurrentStage = $mode === 'review'
             </section>
 
             <!-- B. MAKLUMAT KURSUS/SEMINAR -->
-            <table data-form-owner="staff">
-                <tr><th colspan="4">B. MAKLUMAT KURSUS/SEMINAR</th></tr>
+            <table class="bpl-section-card bpl-section-course" data-form-owner="staff">\n                <tr><th colspan="4">B. MAKLUMAT KURSUS / SEMINAR</th></tr>
                 <tr>
                     <td>01. Tajuk Kursus</td>
                     <td colspan="3"><input type="text" name="tajuk" class="input-field" required></td>
@@ -234,8 +233,7 @@ $canReviewCurrentStage = $mode === 'review'
             </table>
 
             <!-- C. MAKLUMAT TUGAS LUAR DAERAH -->
-            <table data-form-owner="staff">
-                <tr><th colspan="4">C. MAKLUMAT TUGAS LUAR DAERAH</th></tr>
+            <table class="bpl-section-card bpl-section-travel" data-form-owner="staff">\n                <tr><th colspan="4">C. MAKLUMAT TUGAS LUAR DAERAH</th></tr>
                 <tr>
                     <td>08. Tempat Bertugas</td>
                     <td colspan="3"><input type="text" name="tempat_tugas" class="input-field"></td>
@@ -279,8 +277,7 @@ $canReviewCurrentStage = $mode === 'review'
             </table>
 
             <!-- ULASAN D - H -->
-            <table data-form-owner="training_section">
-                <tr><th colspan="2">D. ULASAN PENGURUS SEKSYEN LATIHAN</th></tr>
+            <table class="bpl-section-card bpl-review-card bpl-section-training-review" data-form-owner="training_section">\n                <tr><th colspan="2">D. ULASAN PENGURUS SEKSYEN LATIHAN</th></tr>
                 <tr>
                     <td>Ulasan</td>
                     <td><textarea name="ulasan_latihan" class="input-field" rows="4" required></textarea></td>
@@ -295,8 +292,7 @@ $canReviewCurrentStage = $mode === 'review'
                 </tr>
             </table>
 
-            <table data-form-owner="head_of_department">
-                <tr><th colspan="2">E. ULASAN KETUA/PENGURUS BAHAGIAN</th></tr>
+            <table class="bpl-section-card bpl-review-card bpl-section-hod-review" data-form-owner="head_of_department">\n                <tr><th colspan="2">E. ULASAN KETUA / PENGURUS BAHAGIAN</th></tr>
                 <tr>
                     <td>Ulasan</td>
                     <td><textarea name="ulasan_bahagian" class="input-field" rows="4" required></textarea></td>
@@ -311,8 +307,7 @@ $canReviewCurrentStage = $mode === 'review'
                 </tr>
             </table>
 
-            <table data-form-owner="general_manager">
-                <tr><th colspan="2">F. ULASAN PENGURUS BESAR KUMPULAN SEDCO</th></tr>
+            <table class="bpl-section-card bpl-review-card bpl-section-gm-review" data-form-owner="general_manager">\n                <tr><th colspan="2">F. ULASAN PENGURUS BESAR KUMPULAN SEDCO</th></tr>
                 <tr>
                     <td>Kelulusan</td>
                     <td>
@@ -330,8 +325,7 @@ $canReviewCurrentStage = $mode === 'review'
                 </tr>
             </table>
 
-            <table data-form-owner="admin">
-                <tr><th colspan="2">G. ULASAN PENGURUS SEDCO</th></tr>
+            <table class="bpl-section-card bpl-review-card bpl-section-admin-review" data-form-owner="admin">\n                <tr><th colspan="2">G. ULASAN PENGURUS SEDCO</th></tr>
                 <tr>
                     <td>Kelulusan</td>
                     <td>
@@ -350,11 +344,10 @@ $canReviewCurrentStage = $mode === 'review'
             </table>
 
             <!-- FINAL CHECKLIST -->
-            <table data-form-owner="training_section">
-                <tr><th colspan="2">H. ULASAN KEWANGAN</th></tr>
+            <table class="bpl-section-card bpl-review-card bpl-section-finance" data-form-owner="training_section">\n                <tr><th colspan="2">H. ULASAN KEWANGAN</th></tr>
                 <tr>
                     <td>a) Bayaran Kursus</td>
-                    <td><input type="text" name="bayaran_kursus" required> Yuran (RM)</td>
+                    <td><div class="bpl-money-field"><span class="bpl-money-prefix">RM</span><input type="text" name="bayaran_kursus" required inputmode="decimal" aria-label="Bayaran kursus dalam Ringgit Malaysia"></div></td>
                 </tr>
                 <tr>
                     <td>b) Permohonan Pendahuluan Diterima</td>
