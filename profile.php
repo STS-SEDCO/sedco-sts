@@ -425,7 +425,7 @@ if ($normalizedRole === 'staff') {
     <title>My Profile - Smart Training System</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-    <link rel="stylesheet" href="sedco-saas.css?v=20261001-08">
+    <link rel="stylesheet" href="sedco-saas.css?v=20261001-09">
     <link rel="stylesheet" href="sedco-shell.css?v=20260930-57">
 </head>
 <body class="app-page profile-page" data-page="profile" data-role="<?= e($normalizedRole) ?>">
@@ -703,6 +703,7 @@ try {
                             <span><?= e($initials) ?></span>
                             <?php endif; ?>
                         </div>
+                        <span class="profile-photo-corner-icon" aria-hidden="true"><i class="bi bi-camera-fill"></i></span>
 
                         <div class="profile-photo-editor-copy">
                             <strong>Profile photo</strong>
@@ -738,29 +739,24 @@ try {
                     </div>
 
                     <div class="profile-form-grid">
-                        <label>
-                            <span>Full name</span>
-                            <input type="text" name="fullname" required maxlength="120" value="<?= e($user['fullname']) ?>">
+                        <label class="profile-field profile-field-name">\n                            <span>Full name</span>
+                            <div class="profile-input-shell profile-input-name"><i class="bi bi-person" aria-hidden="true"></i><input type="text" name="fullname" required maxlength="120" value="<?= e($user['fullname']) ?></div>">
                         </label>
 
-                        <label>
-                            <span>Email address</span>
-                            <input type="email" value="<?= e($user['email']) ?>" disabled>
+                        <label class="profile-field profile-field-email">\n                            <span>Email address</span>
+                            <div class="profile-input-shell profile-input-email"><i class="bi bi-envelope" aria-hidden="true"></i><input type="email" value="<?= e($user['email']) ?>" disabled></div>
                             <small>Email is used for login and cannot be changed here.</small>
                         </label>
 
-                        <label>
-                            <span>Phone number</span>
-                            <input type="tel" name="phone_number" maxlength="30" value="<?= e($user['phone_number'] ?? '') ?>">
+                        <label class="profile-field profile-field-phone">\n                            <span>Phone number</span>
+                            <div class="profile-input-shell profile-input-phone"><i class="bi bi-telephone" aria-hidden="true"></i><input type="tel" name="phone_number" maxlength="30" value="<?= e($user['phone_number'] ?? '') ?></div>">
                         </label>
 
-                        <label>
-                            <span>Staff ID</span>
-                            <input type="text" name="staff_id" maxlength="50" value="<?= e((string) ($profileDetails['staff_id'] ?? '')) ?>" <?= !$hasExtendedProfile ? 'disabled' : '' ?>>
+                        <label class="profile-field profile-field-staff">\n                            <span>Staff ID</span>
+                            <div class="profile-input-shell profile-input-staff"><i class="bi bi-person-badge" aria-hidden="true"></i><input type="text" name="staff_id" maxlength="50" value="<?= e((string) ($profileDetails['staff_id'] ?? '')) ?></div>" <?= !$hasExtendedProfile ? 'disabled' : '' ?>>
                         </label>
 
-                        <label>
-                            <span>Department / Division</span>
+                        <label class="profile-field profile-field-department">\n                            <span>Department / Division</span>
                             <select name="department" <?= !$hasExtendedProfile ? 'disabled' : '' ?>>
                                 <option value="">Select SEDCO Department / Division</option>
                                 <?php foreach ($sedcoDepartments as $departmentName): ?>
@@ -772,9 +768,8 @@ try {
                             <small>This is used automatically in BPL Section A and for HoD routing.</small>
                         </label>
 
-                        <label>
-                            <span>Position / Job title</span>
-                            <input type="text" name="job_title" maxlength="120" value="<?= e((string) ($profileDetails['job_title'] ?? '')) ?>" <?= !$hasExtendedProfile ? 'disabled' : '' ?>>
+                        <label class="profile-field profile-field-job">\n                            <span>Position / Job title</span>
+                            <div class="profile-input-shell profile-input-job"><i class="bi bi-briefcase" aria-hidden="true"></i><input type="text" name="job_title" maxlength="120" value="<?= e((string) ($profileDetails['job_title'] ?? '')) ?></div>" <?= !$hasExtendedProfile ? 'disabled' : '' ?>>
                         </label>
                     </div>
 
@@ -788,7 +783,7 @@ try {
 
                 <div class="modal-footer">
                     <button type="button" class="profile-modal-cancel" data-bs-dismiss="modal">Cancel</button>
-                    <button type="submit" class="profile-modal-save">Save changes</button>
+                    <button type="submit" class="profile-modal-save"><i class="bi bi-check2"></i><span>Save changes</span></button>
                 </div>
             </form>
         </div>
@@ -883,10 +878,16 @@ try {
     trigger.setAttribute('aria-haspopup','listbox');
     trigger.setAttribute('aria-expanded','false');
 
+    const leading = document.createElement('i');
+    leading.className = 'bi bi-buildings profile-department-leading';
+
     const text = document.createElement('span');
+    text.className = 'profile-department-text';
+
     const icon = document.createElement('i');
-    icon.className = 'bi bi-chevron-down';
-    trigger.append(text,icon);
+    icon.className = 'bi bi-chevron-down profile-department-chevron';
+
+    trigger.append(leading,text,icon);
 
     const menu = document.createElement('div');
     menu.className = 'profile-department-menu';
