@@ -11371,3 +11371,31 @@ body.profile-page .modal-backdrop{
     width:100% !important;
   }
 }
+
+
+/* ===== BPL REVIEW LOCK VISIBILITY ===== */
+.bpl-page .bpl-review-card.form-section-locked{
+  opacity:.72;
+  filter:saturate(.65);
+}
+
+.bpl-page .bpl-review-card.form-section-locked td{
+  background:#f3f3f4 !important;
+  color:#88888e !important;
+}
+
+.bpl-page .bpl-review-card.form-section-locked input:disabled,
+.bpl-page .bpl-review-card.form-section-locked textarea:disabled,
+.bpl-page .bpl-review-card.form-section-locked select:disabled{
+  background:#ececef !important;
+  border-color:#dddddf !important;
+  color:#98989d !important;
+  cursor:not-allowed !important;
+}
+
+@media print{
+  .bpl-page .bpl-review-card.form-section-locked{
+    opacity:1;
+    filter:none;
+  }
+}
