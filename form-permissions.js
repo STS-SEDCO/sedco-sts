@@ -60,7 +60,10 @@
   }
 
   function lockSection(section, owner) {
+    section.classList.remove('form-section-editable');
     section.classList.add('form-section-locked');
+    section.setAttribute('inert', '');
+    section.setAttribute('aria-disabled', 'true');
 
     section.querySelectorAll('input, textarea, select, button').forEach(control => {
       if (control.type === 'hidden') return;
@@ -70,6 +73,9 @@
     });
 
     const header = section.querySelector('th, .form-section-title');
+    const editBadge = header?.querySelector('.form-edit-badge');
+    if (editBadge) editBadge.remove();
+
     if (header && !header.querySelector('.form-lock-badge')) {
       const badge = document.createElement('span');
       badge.className = 'form-lock-badge';
@@ -79,9 +85,22 @@
   }
 
   function unlockSection(section) {
+    section.classList.remove('form-section-locked');
     section.classList.add('form-section-editable');
+    section.removeAttribute('inert');
+    section.removeAttribute('aria-disabled');
+
+    section.querySelectorAll('input, textarea, select, button').forEach(control => {
+      if (control.type === 'hidden') return;
+      if (control.classList.contains('form-print-button')) return;
+      control.disabled = false;
+      control.removeAttribute('aria-disabled');
+    });
 
     const header = section.querySelector('th, .form-section-title');
+    const lockBadge = header?.querySelector('.form-lock-badge');
+    if (lockBadge) lockBadge.remove();
+
     if (header && !header.querySelector('.form-edit-badge')) {
       const badge = document.createElement('span');
       badge.className = 'form-edit-badge';
