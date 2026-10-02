@@ -11401,73 +11401,56 @@ body.profile-page .modal-backdrop{
 }
 
 
-/* ===== BPL OPTIONAL SECTION VISIBILITY ===== */
-/* Optional applicant sections remain editable, but are visually separated from required fields. */
-.bpl-page .bpl-section-optional{
-  border-color:#dedee2 !important;
-  background:#f7f7f8 !important;
+
+
+/* ===== BPL STATIC DISABLED SECTION ===== */
+.bpl-page .bpl-section-disabled,
+.bpl-page .bpl-section-disabled.form-section-locked{
+  opacity:.68 !important;
+  filter:saturate(.45);
+  border-color:#dddddf !important;
+  background:#f3f3f4 !important;
   box-shadow:none !important;
 }
 
-.bpl-page .bpl-section-optional > tbody > tr:not(:first-child) > td{
-  background:#f7f7f8 !important;
-  color:#777980 !important;
+.bpl-page .bpl-section-disabled > tbody > tr:not(:first-child) > td{
+  background:#f3f3f4 !important;
+  color:#8d8e93 !important;
 }
 
-.bpl-page .bpl-section-optional input:not([type="radio"]):not([type="checkbox"]),
-.bpl-page .bpl-section-optional textarea,
-.bpl-page .bpl-section-optional select{
-  background:#f1f1f3 !important;
-  border-color:#dfdfe3 !important;
-  color:#666870 !important;
+.bpl-page .bpl-section-disabled input:disabled,
+.bpl-page .bpl-section-disabled textarea:disabled,
+.bpl-page .bpl-section-disabled select:disabled{
+  background:#e9e9eb !important;
+  border-color:#d9d9dc !important;
+  color:#9a9ba0 !important;
+  cursor:not-allowed !important;
   box-shadow:none !important;
 }
 
-.bpl-page .bpl-section-optional input::placeholder,
-.bpl-page .bpl-section-optional textarea::placeholder{
-  color:#9a9ca2 !important;
+.bpl-page .bpl-section-disabled input[type="checkbox"]:disabled,
+.bpl-page .bpl-section-disabled input[type="radio"]:disabled{
+  opacity:.42 !important;
+  cursor:not-allowed !important;
 }
 
-.bpl-page .bpl-section-optional .bpl-table-heading{
-  opacity:.92;
-}
-
-.bpl-page .bpl-optional-badge{
-  display:inline-flex;
-  align-items:center;
-  gap:5px;
-  margin-left:8px;
-  padding:3px 7px;
-  border:1px solid rgba(255,255,255,.24);
-  border-radius:999px;
-  background:rgba(255,255,255,.12);
-  color:#fff;
-  font-size:8px;
-  font-weight:800;
-  letter-spacing:.08em;
-  vertical-align:middle;
-}
-
-.bpl-page .bpl-section-optional .bpl-table-heading-copy small{
-  color:rgba(255,255,255,.82) !important;
+.bpl-page .bpl-section-disabled .form-lock-badge,
+.bpl-page .bpl-section-disabled .form-edit-badge{
+  display:none !important;
 }
 
 @media(max-width:640px){
-  .bpl-page .bpl-section-optional > tbody > tr:not(:first-child) > td,
-  .bpl-page .bpl-section-optional > tbody > tr:not(:first-child) > td:first-child,
-  .bpl-page .bpl-section-optional > tbody > tr:not(:first-child) > td:nth-child(3){
-    background:#f7f7f8 !important;
+  .bpl-page .bpl-section-disabled > tbody > tr:not(:first-child) > td,
+  .bpl-page .bpl-section-disabled > tbody > tr:not(:first-child) > td:first-child,
+  .bpl-page .bpl-section-disabled > tbody > tr:not(:first-child) > td:nth-child(3){
+    background:#f3f3f4 !important;
   }
 }
 
 @media print{
-  .bpl-page .bpl-section-optional,
-  .bpl-page .bpl-section-optional > tbody > tr:not(:first-child) > td{
-    background:#fff !important;
-  }
-  .bpl-page .bpl-optional-badge{
-    border:1px solid #777 !important;
-    background:#fff !important;
-    color:#555 !important;
+  .bpl-page .bpl-section-disabled,
+  .bpl-page .bpl-section-disabled.form-section-locked{
+    opacity:1 !important;
+    filter:none !important;
   }
 }
