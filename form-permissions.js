@@ -84,19 +84,6 @@
     }
   }
 
-  function lockStaticSection(section) {
-    section.classList.remove('form-section-editable');
-    section.classList.add('form-section-locked', 'form-section-static-disabled');
-    section.setAttribute('inert', '');
-    section.setAttribute('aria-disabled', 'true');
-
-    section.querySelectorAll('input, textarea, select, button').forEach(control => {
-      if (control.type === 'hidden') return;
-      control.disabled = true;
-      control.setAttribute('aria-disabled', 'true');
-    });
-  }
-
   function unlockSection(section) {
     section.classList.remove('form-section-locked');
     section.classList.add('form-section-editable');
@@ -127,11 +114,6 @@
 
     sections.forEach(section => {
       const owner = String(section.dataset.formOwner || '').toLowerCase();
-
-      if (String(section.dataset.formDisabled || '').toLowerCase() === 'true') {
-        lockStaticSection(section);
-        return;
-      }
 
       if (canEdit(owner)) {
         unlockSection(section);
