@@ -96,7 +96,7 @@ $canReviewCurrentStage = $mode === 'review'
             window.print();
         }
     </script>
-    <link rel="stylesheet" href="sedco-saas.css?v=20261002-02">
+    <link rel="stylesheet" href="sedco-saas.css?v=20261002-03">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
   <link rel="stylesheet" href="sedco-shell.css?v=20260930-56">
 </head>
@@ -234,8 +234,8 @@ $canReviewCurrentStage = $mode === 'review'
             </table>
 
             <!-- C. MAKLUMAT TUGAS LUAR DAERAH -->
-            <table class="bpl-section-card bpl-section-travel bpl-section-optional" data-form-owner="staff">
-                <tr><th colspan="4"><div class="bpl-table-heading"><span class="bpl-table-heading-icon"><i class="bi bi-geo-alt"></i></span><div class="bpl-table-heading-copy"><strong>C. MAKLUMAT TUGAS LUAR DAERAH <span class="bpl-optional-badge"><i class="bi bi-info-circle"></i> OPTIONAL</span></strong><small>Tidak wajib diisi — isi hanya jika permohonan melibatkan tugas luar daerah / perjalanan</small></div></div></th></tr>
+            <table class="bpl-section-card bpl-section-travel bpl-section-disabled" data-form-owner="staff" data-form-disabled="true" inert aria-disabled="true">
+                <tr><th colspan="4"><div class="bpl-table-heading"><span class="bpl-table-heading-icon"><i class="bi bi-geo-alt"></i></span><div class="bpl-table-heading-copy"><strong>C. MAKLUMAT TUGAS LUAR DAERAH</strong><small>Maklumat perjalanan dan urusan tugas luar daerah</small></div></div></th></tr>
                 <tr>
                     <td>08. Tempat Bertugas</td>
                     <td colspan="3"><input type="text" name="tempat_tugas" class="input-field"></td>
@@ -416,7 +416,7 @@ window.SEDCO_FORM_CONTEXT = {
 };
 </script>
 <script src="bpl-workflow.js?v=20261001-02"></script>
-<script src="form-permissions.js?v=20261002-01"></script>
+<script src="form-permissions.js?v=20261002-02"></script>
 <script src="form-ux.js?v=20261001-09"></script>
 <script src="form-enhancements.js?v=20260930-59"></script>
 <script src="sedco-shell.js?v=20260930-56"></script>
