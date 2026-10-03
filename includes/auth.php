@@ -65,7 +65,7 @@ function user_can_review_applications(?array $user = null): bool
 
     return in_array(
         $user['role'],
-        ['admin', 'training_section', 'head_of_department', 'head_of_division', 'pengerusi_besar', 'general_manager'],
+        ['admin', 'training_section', 'head_of_department', 'head_of_division', 'general_manager', 'pengerusi_besar', 'finance'],
         true
     );
 }
@@ -101,7 +101,6 @@ function normalized_role(?string $role): string
 {
     return match ($role) {
         'head_of_division' => 'head_of_department',
-        'pengerusi_besar' => 'general_manager',
         default => (string) $role,
     };
 }
@@ -131,9 +130,11 @@ function user_can_submit_form_type(string $formType, ?array $user = null): bool
 function review_stage_for_role(?string $role): ?string
 {
     return match (normalized_role($role)) {
-        'head_of_department' => 'hod',
         'training_section' => 'training',
+        'head_of_department' => 'hod',
         'general_manager' => 'gm',
+        'pengerusi_besar' => 'chairman',
+        'finance' => 'finance',
         default => null,
     };
 }
@@ -145,6 +146,8 @@ function role_label(?string $role): string
         'head_of_department' => 'Head of Department',
         'training_section' => 'Training Department',
         'general_manager' => 'General Manager',
+        'pengerusi_besar' => 'Pengerusi',
+        'finance' => 'Kewangan',
         'admin' => 'System Administrator',
         default => 'User',
     };
@@ -153,9 +156,11 @@ function role_label(?string $role): string
 function stage_label(?string $stage): string
 {
     return match ($stage) {
-        'hod' => 'Head of Department',
         'training' => 'Training Department',
+        'hod' => 'Head of Department',
         'gm' => 'General Manager',
+        'chairman' => 'Pengerusi',
+        'finance' => 'Kewangan',
         'completed' => 'Completed',
         default => 'Pending',
     };
@@ -170,7 +175,7 @@ function user_can_review_stage(string $stage, ?array $user = null): bool
     }
 
     if (normalized_role($user['role'] ?? '') === 'admin') {
-        return in_array($stage, ['hod', 'training', 'gm'], true);
+        return in_array($stage, ['training', 'hod', 'gm', 'chairman', 'finance'], true);
     }
 
     return review_stage_for_role($user['role'] ?? '') === $stage;
