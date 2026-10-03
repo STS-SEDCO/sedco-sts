@@ -52,15 +52,21 @@ if ($role === 'admin' && $decisionFilter === 'all') {
     $stmt->bind_param('is', $userId, $decisionFilter);
 }
 
-$stmt->execute();
-$result = $stmt->get_result();
 $history = [];
+$historyUnavailable = false;
 
-while ($row = $result->fetch_assoc()) {
-    $history[] = $row;
+try {
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    while ($row = $result->fetch_assoc()) {
+        $history[] = $row;
+    }
+
+    $stmt->close();
+} catch (Throwable $error) {
+    $historyUnavailable = true;
 }
-
-$stmt->close();
 
 $stats = [
     'total' => count($history),
@@ -95,7 +101,7 @@ function approval_decision_label(string $decision): string
   <title>Smart Training System: Approval History</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-  <link rel="stylesheet" href="sedco-saas.css?v=20261003-04">
+  <link rel="stylesheet" href="sedco-saas.css?v=20261003-07">
   <link rel="stylesheet" href="sedco-shell.css?v=20260930-56">
 </head>
 <body class="app-page submissions-page" data-page="approval-history" data-role="<?= e($role) ?>">
@@ -159,6 +165,16 @@ function approval_decision_label(string $decision): string
         <span>Rejected</span>
       </article>
     </section>
+
+    <?php if ($historyUnavailable): ?>
+    <div class="approval-history-notice">
+      <i class="bi bi-database-exclamation"></i>
+      <div>
+        <strong>Approval History is ready for the new database structure.</strong>
+        <span>Import the full STS database sync when you are ready to enable live approval records.</span>
+      </div>
+    </div>
+    <?php endif; ?>
 
     <section class="submissions-panel">
       <div class="submissions-toolbar">
