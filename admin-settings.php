@@ -146,7 +146,7 @@ $emailCounts = db()->query(
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>System Settings - Smart Training System</title>
+<title>Smart Training System: System Settings</title>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 <link rel="stylesheet" href="sedco-saas.css?v=20260930-42">
@@ -163,14 +163,14 @@ $emailCounts = db()->query(
 
 <div class="settings-grid">
 <section class="sts-card">
-<div class="sts-card-heading"><div><span>Workflow</span><h2>Approval & follow-up timing</h2></div><i class="bi bi-stopwatch"></i></div>
+<div class="sts-card-heading"><div><span>Workflow</span><h2>Approval and follow up timing</h2></div><i class="bi bi-stopwatch"></i></div>
 <form method="post" class="settings-form">
 <?= csrf_field() ?><input type="hidden" name="action" value="save_settings">
 <label><span>Reviewer SLA</span><div class="settings-number"><input type="number" name="review_sla_days" min="1" max="30" value="<?= e($settings['review_sla_days']) ?>"><em>days</em></div><small>Time allowed for each approval stage before it is marked overdue.</small></label>
-<label><span>PKK follow-up</span><div class="settings-number"><input type="number" name="pkk_due_days" min="1" max="60" value="<?= e($settings['pkk_due_days']) ?>"><em>days</em></div><small>Target after training ends for Staff to submit PKK.</small></label>
-<label><span>TEA follow-up</span><div class="settings-number"><input type="number" name="tea_due_days" min="1" max="180" value="<?= e($settings['tea_due_days']) ?>"><em>days</em></div><small>Target after training ends for HoD to complete TEA.</small></label>
+<label><span>PKK follow up</span><div class="settings-number"><input type="number" name="pkk_due_days" min="1" max="60" value="<?= e($settings['pkk_due_days']) ?>"><em>days</em></div><small>Target after training ends for Staff to submit PKK.</small></label>
+<label><span>TEA follow up</span><div class="settings-number"><input type="number" name="tea_due_days" min="1" max="180" value="<?= e($settings['tea_due_days']) ?>"><em>days</em></div><small>Target after training ends for HoD to complete TEA.</small></label>
 <label><span>Email sender</span><input type="email" name="mail_from" value="<?= e($settings['mail_from']) ?>"><small>Requires PHP mail / SMTP configuration on the hosting server.</small></label>
-<label class="settings-switch"><input type="checkbox" name="email_notifications" value="1" <?= $settings['email_notifications']==='1'?'checked':'' ?>><span><strong>Email notifications</strong><small>In-app notifications always remain enabled.</small></span></label>
+<label class="settings-switch"><input type="checkbox" name="email_notifications" value="1" <?= $settings['email_notifications']==='1'?'checked':'' ?>><span><strong>Email notifications</strong><small>System notifications always remain enabled.</small></span></label>
 <button class="sts-primary-btn" type="submit"><i class="bi bi-check2"></i> Save settings</button>
 </form>
 <div class="email-health">
