@@ -15,6 +15,8 @@ if (!$user || !user_can_review_applications($user)) {
 
 $count = 0;
 
+sts_repair_pending_bpl_stages();
+
 try {
     $stmt = db()->prepare(
         'SELECT id, application_no, user_id, form_type, department,
