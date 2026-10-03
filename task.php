@@ -18,7 +18,9 @@ if ($role === 'staff') {
         'SELECT b.id, b.application_no, b.title, b.training_end,
                 EXISTS(
                   SELECT 1 FROM applications p
-                  WHERE p.parent_application_id = b.id AND p.form_type = "PKK"
+                  WHERE p.parent_application_id = b.id
+                    AND p.form_type = "PKK"
+                    AND p.status <> "cancelled"
                 ) AS has_followup
          FROM applications b
          WHERE b.user_id = ?
