@@ -650,7 +650,7 @@ function sts_ensure_followup_notifications(array $user): void
             }
 
             $link = strtolower($type) . '.php?parent=' . (int) $row['id'];
-            $title = $type . ' follow-up due';
+            $title = $type . ' follow up due';
 
             $check = db()->prepare(
                 'SELECT id
@@ -671,7 +671,7 @@ function sts_ensure_followup_notifications(array $user): void
                 $userId,
                 $title,
                 $row['application_no'] . ' · ' . $row['title']
-                    . ' is ready for ' . $type . ' follow-up.',
+                    . ' is ready for ' . $type . ' follow up.',
                 $link,
                 'warning'
             );
@@ -679,6 +679,6 @@ function sts_ensure_followup_notifications(array $user): void
 
         $stmt->close();
     } catch (Throwable) {
-        // Follow-up reminders are recreated the next time the dashboard loads.
+        // Follow up reminders are recreated the next time the dashboard loads.
     }
 }
