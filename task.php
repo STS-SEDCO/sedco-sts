@@ -75,7 +75,7 @@ if ($role === 'staff') {
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Training Forms - Smart Training System</title>
+  <title>Smart Training System: Training Forms</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
   <link rel="stylesheet" href="sedco-saas.css?v=20260930-50">
@@ -89,7 +89,7 @@ if ($role === 'staff') {
       <div>
         <div class="task-eyebrow">Smart Training System</div>
         <h1>Training Forms</h1>
-        <p>Manage training applications and post-training evaluations through the STS workflow.</p>
+        <p>Manage training applications and post training evaluations through the STS workflow.</p>
       </div>
       <div class="task-count-chip">
         <span class="task-count-dot"></span>
@@ -143,7 +143,7 @@ if ($role === 'staff') {
         </div>
         <div class="task-form-copy">
           <h2>Training Effectiveness Assessment</h2>
-          <p>Record post-training effectiveness, competency and improvement outcomes.</p>
+          <p>Record post training effectiveness, competency and improvement outcomes.</p>
         </div>
         <div class="task-card-footer">
           <span class="task-card-status"><?= $canTea ? '<i class="bi bi-circle-fill"></i> Ready to apply' : '<i class="bi bi-lock-fill"></i> HoD only' ?></span>
@@ -160,7 +160,7 @@ if ($role === 'staff') {
     <section class="task-followup-section">
       <div class="task-followup-heading">
         <div>
-          <span>Post-training follow-up</span>
+          <span>Post training follow up</span>
           <h2>Continue the training lifecycle</h2>
           <p>These approved BPL records are ready for their next required form.</p>
         </div>
