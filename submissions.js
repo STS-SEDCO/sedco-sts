@@ -51,6 +51,10 @@
         return { label:'Training Department', cls:'training', icon:'bi-briefcase' };
       case 'gm':
         return { label:'General Manager', cls:'gm', icon:'bi-person-badge' };
+      case 'chairman':
+        return { label:'Pengerusi', cls:'chairman', icon:'bi-award' };
+      case 'finance':
+        return { label:'Kewangan', cls:'finance', icon:'bi-cash-stack' };
       case 'completed':
         return { label:'Completed', cls:'completed', icon:'bi-check2-all' };
       default:
