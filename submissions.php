@@ -87,7 +87,7 @@ $stmt->close();
   <title>Smart Training System: Approval</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-  <link rel="stylesheet" href="sedco-saas.css?v=20261003-05">
+  <link rel="stylesheet" href="sedco-saas.css?v=20261003-06">
   <link rel="stylesheet" href="sedco-shell.css?v=20260930-56">
 </head>
 <body class="app-page submissions-page" data-page="submissions" data-role="<?= e(normalized_role($user['role'] ?? '')) ?>">
@@ -219,44 +219,78 @@ $stmt->close();
   </div>
 </main>
 
-<div class="modal fade submissions-modal" id="submissionModal" tabindex="-1" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered modal-lg">
+<div class="modal fade submissions-modal approval-detail-modal" id="submissionModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-xl">
     <div class="modal-content">
-      <div class="modal-header">
-        <div>
+      <div class="modal-header approval-detail-header">
+        <div class="approval-detail-heading">
           <div class="submission-modal-kicker" id="submissionModalRef">Submission</div>
-          <h2 class="modal-title mt-1" id="submissionModalTitle">Submission details</h2>
+          <h2 class="modal-title" id="submissionModalTitle">Submission details</h2>
+          <p>Review the application information before making a decision.</p>
         </div>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
 
-      <div class="modal-body">
-        <div class="submission-modal-status-row">
-          <span id="submissionModalStatus" class="status-pill status-pending">
-            <i class="bi bi-clock-history"></i>Pending review
-          </span>
+      <div class="modal-body approval-detail-body">
+        <div class="approval-detail-topbar">
+          <div class="approval-detail-badges">
+            <span id="submissionModalStatus" class="status-pill status-pending">
+              <i class="bi bi-clock-history"></i>Pending review
+            </span>
+            <span id="submissionModalStageBadge" class="submission-stage-pill stage-none">
+              <i class="bi bi-diagram-3"></i><span id="submissionModalStage">Not available</span>
+            </span>
+          </div>
+          <span class="approval-detail-sync"><i class="bi bi-shield-check"></i> Ready for review</span>
         </div>
 
-        <div class="submission-modal-summary">
+        <div class="submission-modal-summary approval-detail-summary">
           <div>
-            <span>Applicant</span>
+            <span><i class="bi bi-person"></i> Applicant</span>
             <strong id="submissionModalApplicant">Not available</strong>
           </div>
           <div>
-            <span>Form type</span>
+            <span><i class="bi bi-file-earmark-text"></i> Form Type</span>
             <strong id="submissionModalType">Not available</strong>
           </div>
           <div>
-            <span>Submitted</span>
+            <span><i class="bi bi-calendar3"></i> Submitted</span>
             <strong id="submissionModalDate">Not available</strong>
           </div>
           <div>
-            <span>Current stage</span>
-            <strong id="submissionModalStage">Not available</strong>
+            <span><i class="bi bi-building"></i> Department</span>
+            <strong id="submissionModalDepartment">Not available</strong>
           </div>
         </div>
 
-        <div id="submissionModalFields" class="submission-detail-grid"></div>
+        <div class="approval-detail-section-heading">
+          <div>
+            <span>Application details</span>
+            <h3>Submitted information</h3>
+          </div>
+          <small>Information provided by the applicant</small>
+        </div>
+
+        <div id="submissionModalFields" class="submission-detail-grid approval-detail-grid"></div>
+      </div>
+
+      <div class="modal-footer approval-detail-footer">
+        <a id="submissionModalOpenForm" class="approval-detail-open-form" href="#">
+          <i class="bi bi-box-arrow-up-right"></i>
+          <span>Open Full Form</span>
+        </a>
+
+        <div class="approval-detail-actions" id="submissionModalActions">
+          <button type="button" class="approval-detail-action is-approve" data-detail-review-action="approved">
+            <i class="bi bi-check2"></i><span>Approve</span>
+          </button>
+          <button type="button" class="approval-detail-action is-correction" data-detail-review-action="correction">
+            <i class="bi bi-arrow-counterclockwise"></i><span>Request Correction</span>
+          </button>
+          <button type="button" class="approval-detail-action is-reject" data-detail-review-action="rejected">
+            <i class="bi bi-x-lg"></i><span>Reject</span>
+          </button>
+        </div>
       </div>
     </div>
   </div>
@@ -336,7 +370,7 @@ window.SEDCO_SUBMISSIONS = <?= json_encode(
     | JSON_HEX_QUOT
 ) ?>;
 </script>
-<script src="submissions.js?v=20261003-02"></script>
+<script src="submissions.js?v=20261003-03"></script>
 <script src="sedco-shell.js?v=20261003-02"></script>
 </body>
 </html>
