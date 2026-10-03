@@ -47,7 +47,7 @@ $reviewsStmt->close();
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title><?= e($applicationNo) ?> - Print</title>
+<title>Print Application: <?= e($applicationNo) ?></title>
 <link rel="stylesheet" href="sts-print.css?v=20260930-52">
 </head>
 <body>
@@ -58,7 +58,7 @@ $reviewsStmt->close();
 </header>
 <section class="print-meta">
   <div><span>Applicant</span><strong><?= e($app['applicant_name']) ?></strong></div>
-  <div><span>Department</span><strong><?= e($app['department'] ?: '—') ?></strong></div>
+  <div><span>Department</span><strong><?= e($app['department'] ?: 'Not available') ?></strong></div>
   <div><span>Submitted</span><strong><?= e(date('d M Y', strtotime((string) $app['submitted_at']))) ?></strong></div>
 </section>
 <h2 class="print-section-title">Form Information</h2>
@@ -72,7 +72,7 @@ $reviewsStmt->close();
 <?php if (!$reviews): ?><p>No approval history recorded.</p><?php endif; ?>
 <?php foreach ($reviews as $review): ?>
 <div class="print-review">
-  <strong><?= e(stage_label((string) $review['review_stage'])) ?> — <?= e(ucfirst((string) $review['decision'])) ?></strong><br>
+  <strong><?= e(stage_label((string) $review['review_stage'])) ?>: <?= e(ucfirst((string) $review['decision'])) ?></strong><br>
   <?= e($review['fullname']) ?> · <?= e(date('d M Y, g:i A', strtotime((string) $review['reviewed_at']))) ?>
   <?php if (!empty($review['note'])): ?><br><?= e($review['note']) ?><?php endif; ?>
 </div>
