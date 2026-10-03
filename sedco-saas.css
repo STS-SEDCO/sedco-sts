@@ -12111,3 +12111,36 @@ body.profile-page .modal-backdrop{
     min-width:0 !important;
   }
 }
+
+
+/* ===== PKK LINKED PROFILE AND BPL FIELDS ===== */
+.pkk-page .pkk-auto-field[readonly]{
+  background:#f1f2f3 !important;
+  border-color:#dedfe3 !important;
+  color:#72747a !important;
+  cursor:default !important;
+  box-shadow:none !important;
+}
+
+.pkk-page .pkk-training-select{
+  background-color:#fff !important;
+  border-color:#d8d9de !important;
+  font-weight:620 !important;
+  cursor:pointer;
+}
+
+.pkk-page .pkk-training-select:disabled{
+  background:#f1f2f3 !important;
+  color:#96979d !important;
+  cursor:not-allowed !important;
+}
+
+.pkk-page .pkk-information-card .sts-profile-source-note{
+  margin:14px 16px 0 !important;
+}
+
+@media(max-width:700px){
+  .pkk-page .pkk-information-card .sts-profile-source-note{
+    margin:12px 12px 0 !important;
+  }
+}
