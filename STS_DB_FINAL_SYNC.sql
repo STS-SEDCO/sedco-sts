@@ -367,8 +367,10 @@ CREATE TABLE IF NOT EXISTS tasks (
 --
 -- Strict rule:
 -- Staff: Training -> HOD -> GM -> Pengerusi -> Kewangan.
--- HOD as applicant: Training -> GM -> Pengerusi -> Kewangan.
--- An applicant never approves their own application.
+-- HOD applicant: Training -> GM -> Pengerusi -> Kewangan.
+-- GM applicant: Training -> Pengerusi -> Kewangan.
+-- Pengerusi applicant: Training -> Kewangan.
+-- Training is mandatory for every applicant and nobody approves their own application.
 -- ============================================================
 
 UPDATE applications a
@@ -382,7 +384,12 @@ SET a.current_stage = CASE
           AND r.decision = 'approved'
     ) THEN 'training'
 
-    WHEN applicant.role NOT IN ('head_of_department', 'head_of_division')
+    WHEN applicant.role NOT IN (
+            'head_of_department',
+            'head_of_division',
+            'general_manager',
+            'pengerusi_besar'
+         )
          AND NOT EXISTS (
             SELECT 1
             FROM application_reviews r
@@ -391,21 +398,23 @@ SET a.current_stage = CASE
               AND r.decision = 'approved'
          ) THEN 'hod'
 
-    WHEN NOT EXISTS (
-        SELECT 1
-        FROM application_reviews r
-        WHERE r.application_id = a.id
-          AND r.review_stage = 'gm'
-          AND r.decision = 'approved'
-    ) THEN 'gm'
+    WHEN applicant.role NOT IN ('general_manager', 'pengerusi_besar')
+         AND NOT EXISTS (
+            SELECT 1
+            FROM application_reviews r
+            WHERE r.application_id = a.id
+              AND r.review_stage = 'gm'
+              AND r.decision = 'approved'
+         ) THEN 'gm'
 
-    WHEN NOT EXISTS (
-        SELECT 1
-        FROM application_reviews r
-        WHERE r.application_id = a.id
-          AND r.review_stage = 'chairman'
-          AND r.decision = 'approved'
-    ) THEN 'chairman'
+    WHEN applicant.role <> 'pengerusi_besar'
+         AND NOT EXISTS (
+            SELECT 1
+            FROM application_reviews r
+            WHERE r.application_id = a.id
+              AND r.review_stage = 'chairman'
+              AND r.decision = 'approved'
+         ) THEN 'chairman'
 
     WHEN NOT EXISTS (
         SELECT 1
