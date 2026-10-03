@@ -84,7 +84,7 @@ $stmt->close();
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Submissions - Smart Training System</title>
+  <title>Smart Training System: Submissions</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
   <link rel="stylesheet" href="sedco-saas.css?v=20260930-65">
@@ -246,19 +246,19 @@ $stmt->close();
         <div class="submission-modal-summary">
           <div>
             <span>Applicant</span>
-            <strong id="submissionModalApplicant">—</strong>
+            <strong id="submissionModalApplicant">Not available</strong>
           </div>
           <div>
             <span>Form type</span>
-            <strong id="submissionModalType">—</strong>
+            <strong id="submissionModalType">Not available</strong>
           </div>
           <div>
             <span>Submitted</span>
-            <strong id="submissionModalDate">—</strong>
+            <strong id="submissionModalDate">Not available</strong>
           </div>
           <div>
             <span>Current stage</span>
-            <strong id="submissionModalStage">—</strong>
+            <strong id="submissionModalStage">Not available</strong>
           </div>
         </div>
 
