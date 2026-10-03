@@ -288,6 +288,17 @@ function sts_notify_stage(
     $title = 'Application ready for review';
     $message = $applicationNo . ' is waiting for your review.';
 
+    if ($stage === 'training') {
+        sts_notify_role(
+            ['training_section'],
+            $title,
+            $message,
+            $link,
+            'review'
+        );
+        return;
+    }
+
     if ($stage === 'hod') {
         sts_notify_role(
             ['head_of_department', 'head_of_division'],
@@ -301,9 +312,9 @@ function sts_notify_stage(
         return;
     }
 
-    if ($stage === 'training') {
+    if ($stage === 'gm') {
         sts_notify_role(
-            ['training_section'],
+            ['general_manager'],
             $title,
             $message,
             $link,
@@ -312,9 +323,20 @@ function sts_notify_stage(
         return;
     }
 
-    if ($stage === 'gm') {
+    if ($stage === 'chairman') {
         sts_notify_role(
-            ['general_manager', 'pengerusi_besar'],
+            ['pengerusi_besar'],
+            $title,
+            $message,
+            $link,
+            'review'
+        );
+        return;
+    }
+
+    if ($stage === 'finance') {
+        sts_notify_role(
+            ['finance'],
             $title,
             $message,
             $link,
