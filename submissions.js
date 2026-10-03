@@ -201,14 +201,14 @@
              <button class="submission-action-view" type="button" data-submission-id="${escapeHtml(item.id)}" title="View application details">
                <i class="bi bi-eye"></i><span>View</span>
              </button>
-             <button class="submission-action-btn is-approve" type="button" data-review-action="approved" data-review-id="${escapeHtml(item.id)}">
+             <button class="submission-action-btn is-approve" type="button" data-review-decision="approved" data-review-id="${escapeHtml(item.id)}">
                <i class="bi bi-check2"></i><span>Approve</span>
              </button>
              ${canRequestCorrection ? `
-             <button class="submission-action-btn is-correction" type="button" data-review-action="correction" data-review-id="${escapeHtml(item.id)}">
+             <button class="submission-action-btn is-correction" type="button" data-review-decision="correction" data-review-id="${escapeHtml(item.id)}">
                <i class="bi bi-arrow-counterclockwise"></i><span>Correction</span>
              </button>` : ''}
-             <button class="submission-action-btn is-reject" type="button" data-review-action="rejected" data-review-id="${escapeHtml(item.id)}">
+             <button class="submission-action-btn is-reject" type="button" data-review-decision="rejected" data-review-id="${escapeHtml(item.id)}">
                <i class="bi bi-x-lg"></i><span>Reject</span>
              </button>
            </div>`
@@ -250,9 +250,9 @@
       button.addEventListener('click', () => openDetails(button.dataset.submissionId));
     });
 
-    tbody.querySelectorAll('[data-review-action][data-review-id]').forEach(button => {
+    tbody.querySelectorAll('[data-review-decision][data-review-id]').forEach(button => {
       button.addEventListener('click', () => {
-        openQuickReview(button.dataset.reviewId, button.dataset.reviewAction);
+        openQuickReview(button.dataset.reviewId, button.dataset.reviewDecision);
       });
     });
   }
@@ -384,8 +384,8 @@
     const actions = $('submissionModalActions');
     if (actions) {
       actions.hidden = !item.canReview;
-      actions.querySelectorAll('[data-detail-review-action]').forEach(button => {
-        const action = button.dataset.detailReviewAction;
+      actions.querySelectorAll('[data-detail-review-decision]').forEach(button => {
+        const action = button.dataset.detailReviewDecision;
         button.hidden = action === 'correction'
           && !['training','hod'].includes(String(item.currentStage || '').toLowerCase());
       });
@@ -596,9 +596,9 @@
       submit.innerHTML = '<span class="spinner-border spinner-border-sm" aria-hidden="true"></span> Saving...';
     });
 
-    document.querySelectorAll('[data-detail-review-action]').forEach(button => {
+    document.querySelectorAll('[data-detail-review-decision]').forEach(button => {
       button.addEventListener('click', () => {
-        openReviewFromDetails(button.dataset.detailReviewAction);
+        openReviewFromDetails(button.dataset.detailReviewDecision);
       });
     });
 
