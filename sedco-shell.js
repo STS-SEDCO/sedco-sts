@@ -56,9 +56,9 @@
 
   const visibleItems = items.filter(([key]) => {
     if (['submissions','approval-history'].includes(key)) {
-      return ['admin','training_section','general_manager','head_of_department'].includes(userRole);
+      return ['admin','training_section','general_manager','head_of_department','pengerusi_besar','finance'].includes(userRole);
     }
-    if (key === 'reports') return ['admin','training_section','general_manager','head_of_department'].includes(userRole);
+    if (key === 'reports') return ['admin','training_section','general_manager','head_of_department','pengerusi_besar','finance'].includes(userRole);
     if (['admin-users','admin-settings','audit-log'].includes(key)) return userRole === 'admin';
     return true;
   });
@@ -216,7 +216,7 @@
       })
       .catch(() => {});
 
-    if (['admin','training_section','general_manager','head_of_department'].includes(userRole)) {
+    if (['admin','training_section','general_manager','head_of_department','pengerusi_besar','finance'].includes(userRole)) {
       fetch('approval-count.php', { credentials: 'same-origin' })
         .then(response => response.ok ? response.json() : null)
         .then(data => {
