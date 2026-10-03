@@ -519,11 +519,20 @@ function sts_bpl_applicant_role(array $application): string
 function sts_bpl_required_stages(array $application): array
 {
     $stages = ['training', 'hod', 'gm', 'chairman', 'finance'];
+    $applicantRole = sts_bpl_applicant_role($application);
 
-    if (sts_bpl_applicant_role($application) === 'head_of_department') {
+    $skipByRole = [
+        'head_of_department' => ['hod'],
+        'general_manager' => ['hod', 'gm'],
+        'pengerusi_besar' => ['hod', 'gm', 'chairman'],
+    ];
+
+    $skipStages = $skipByRole[$applicantRole] ?? [];
+
+    if ($skipStages) {
         $stages = array_values(array_filter(
             $stages,
-            static fn (string $stage): bool => $stage !== 'hod'
+            static fn (string $stage): bool => !in_array($stage, $skipStages, true)
         ));
     }
 
