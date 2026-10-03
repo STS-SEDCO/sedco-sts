@@ -46,7 +46,7 @@ $db->begin_transaction();
 try {
     $stmt = $db->prepare(
         'SELECT id, application_no, user_id, form_type, title, department,
-                assigned_hod_id, payload, status, current_stage
+                assigned_hod_id, parent_application_id, payload, status, current_stage
          FROM applications
          WHERE application_no = ?
          LIMIT 1
@@ -66,7 +66,14 @@ try {
         throw new RuntimeException('You can only cancel your own application.');
     }
 
-    if (!in_array((string) $application['status'], ['pending', 'correction'], true)) {
+    $standardCancellation = in_array(
+        (string) $application['status'],
+        ['pending', 'correction'],
+        true
+    );
+    $pkkCancellation = sts_can_cancel_pkk($application, $user);
+
+    if (!$standardCancellation && !$pkkCancellation) {
         throw new RuntimeException('This application can no longer be cancelled.');
     }
 
