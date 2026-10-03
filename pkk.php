@@ -9,23 +9,69 @@ if (!$user) {
     exit;
 }
 
-$sedcoDepartments = sts_sedco_departments();
-
 $parent = null;
 $parentPayload = [];
 $parentId = max(0, (int) ($_GET['parent'] ?? 0));
+$userId = (int) ($user['id'] ?? 0);
+$malaysiaToday = (new DateTimeImmutable('today', new DateTimeZone('Asia/Kuala_Lumpur')))->format('Y-m-d');
+$eligibleTrainings = [];
 
-if ($parentId > 0) {
-    $parent = sts_validate_parent_bpl($parentId, $user, 'PKK');
+$trainingStmt = db()->prepare(
+    'SELECT b.id, b.application_no, b.title, b.payload, b.training_end
+     FROM applications b
+     WHERE b.user_id = ?
+       AND b.form_type = "BPL"
+       AND b.status = "approved"
+       AND b.training_end IS NOT NULL
+       AND b.training_end <= ?
+       AND NOT EXISTS (
+         SELECT 1 FROM applications p
+         WHERE p.parent_application_id = b.id
+           AND p.form_type = "PKK"
+       )
+     ORDER BY b.training_end DESC, b.id DESC'
+);
+$trainingStmt->bind_param('is', $userId, $malaysiaToday);
+$trainingStmt->execute();
+$trainingResult = $trainingStmt->get_result();
 
-    if (!$parent) {
-        http_response_code(403);
-        exit('This training record is not available for PKK follow up.');
+while ($training = $trainingResult->fetch_assoc()) {
+    $trainingPayload = json_decode((string) ($training['payload'] ?? ''), true);
+    $trainingPayload = is_array($trainingPayload) ? $trainingPayload : [];
+
+    $training['course_title'] = trim((string) (
+        $trainingPayload['tajuk']
+        ?? $training['title']
+        ?? ''
+    ));
+    $training['course_date'] = trim((string) (
+        $trainingPayload['tarikh_tamat']
+        ?? $training['training_end']
+        ?? ''
+    ));
+    $training['course_place'] = trim((string) (
+        $trainingPayload['tempat']
+        ?? ''
+    ));
+
+    $eligibleTrainings[] = $training;
+
+    if ($parentId > 0 && (int) $training['id'] === $parentId) {
+        $parent = $training;
+        $parentPayload = $trainingPayload;
     }
-
-    $parentPayload = json_decode((string) $parent['payload'], true);
-    $parentPayload = is_array($parentPayload) ? $parentPayload : [];
 }
+$trainingStmt->close();
+
+if ($parentId > 0 && !$parent) {
+    http_response_code(403);
+    exit('This training record is not available for PKK evaluation.');
+}
+
+$profileName = trim((string) ($user['fullname'] ?? ''));
+$profileDepartment = trim((string) ($user['department'] ?? ''));
+$profileJobTitle = trim((string) ($user['job_title'] ?? ''));
+$profileComplete = $profileName !== '' && $profileDepartment !== '' && $profileJobTitle !== '';
 ?>
 <!DOCTYPE html>
 <html lang="ms">
@@ -35,7 +81,7 @@ if ($parentId > 0) {
   <title>Smart Training System: Borang Penilaian</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-  <link rel="stylesheet" href="sedco-saas.css?v=20261003-02">
+  <link rel="stylesheet" href="sedco-saas.css?v=20261003-03">
   <link rel="stylesheet" href="sedco-shell.css?v=20260930-56">
 </head>
 <body class="app-page form-page pkk-page" data-page="task" data-role="<?= e(normalized_role($user['role'] ?? '')) ?>">
@@ -52,9 +98,9 @@ if ($parentId > 0) {
 
       <?php if ($parent): ?>
       <div class="form-linked-training">
-        <span><i class="bi bi-link-45deg"></i> Linked approved training</span>
-        <strong><?= e($parent['application_no']) ?> · <?= e($parent['title']) ?></strong>
-        <a href="application-detail.php?application=<?= rawurlencode((string) $parent['application_no']) ?>">View BPL <i class="bi bi-arrow-up-right"></i></a>
+        <span><i class="bi bi-link-45deg"></i> Rekod BPL dipilih</span>
+        <strong><?= e((string) $parent['application_no']) ?>: <?= e((string) ($parent['course_title'] ?? $parent['title'])) ?></strong>
+        <a href="application-detail.php?application=<?= rawurlencode((string) $parent['application_no']) ?>">Lihat BPL <i class="bi bi-arrow-up-right"></i></a>
       </div>
       <?php endif; ?>
 
@@ -62,7 +108,12 @@ if ($parentId > 0) {
 
       <form data-form-owner="staff" method="post" action="submit_application.php?type=PKK" enctype="multipart/form-data">
         <?= csrf_field() ?>
-        <?php if ($parent): ?><input type="hidden" name="parent_application_id" value="<?= (int) $parent['id'] ?>"><?php endif; ?>
+        <?php if (!$profileComplete): ?>
+        <div class="sts-profile-source-note is-warning">
+          <i class="bi bi-exclamation-circle"></i>
+          <span>Lengkapkan Nama, Bahagian dan Jawatan di <a href="profile.php">Profile</a> sebelum mengisi PKK.</span>
+        </div>
+        <?php endif; ?>
         <section class="pkk-form-card pkk-information-card">
           <div class="pkk-section-heading">
             <span class="pkk-section-number">01</span>
@@ -71,37 +122,45 @@ if ($parentId > 0) {
           <div class="row g-3 pkk-info-row">
           <div class="col-md-4">
             <label class="form-label fw-semibold"><i class="bi bi-person"></i> Nama Pegawai/Staf</label>
-            <input type="text" class="form-control" name="nama" required value="<?= e((string) ($parentPayload['nama'] ?? $user['fullname'] ?? '')) ?>">
+            <input type="text" class="form-control pkk-auto-field" name="nama" required readonly value="<?= e($profileName) ?>">
           </div>
           <div class="col-md-4">
             <label class="form-label fw-semibold"><i class="bi bi-building"></i> Bahagian</label>
-            <?php $selectedDepartment = (string) ($parentPayload['bahagian'] ?? $user['department'] ?? ''); ?>
-            <select class="form-control sts-department-select" name="bahagian" required>
-              <option value="">Pilih nama penuh bahagian SEDCO</option>
-              <?php foreach ($sedcoDepartments as $departmentName): ?>
-              <option value="<?= e($departmentName) ?>" <?= $selectedDepartment === $departmentName ? 'selected' : '' ?>><?= e($departmentName) ?></option>
-              <?php endforeach; ?>
-            </select>
+            <input type="text" class="form-control pkk-auto-field" name="bahagian" required readonly value="<?= e($profileDepartment) ?>">
           </div>
           <div class="col-md-4">
             <label class="form-label fw-semibold"><i class="bi bi-briefcase"></i> Jawatan</label>
-            <input type="text" class="form-control" name="jawatan" required value="<?= e((string) ($parentPayload['jawatan'] ?? $user['job_title'] ?? '')) ?>">
+            <input type="text" class="form-control pkk-auto-field" name="jawatan" required readonly value="<?= e($profileJobTitle) ?>">
           </div>
         </div>
 
         <div class="row g-3 pkk-info-row pkk-info-row-secondary">
           <div class="col-md-4">
             <label class="form-label fw-semibold"><i class="bi bi-mortarboard"></i> Tajuk Kursus/Seminar</label>
-            <input type="text" class="form-control" name="tajuk" required value="<?= e((string) ($parentPayload['tajuk'] ?? '')) ?>">
+            <select class="form-control pkk-training-select" name="parent_application_id" id="pkkTrainingSelect" required <?= $eligibleTrainings ? '' : 'disabled' ?>>
+              <option value=""><?= $eligibleTrainings ? 'Pilih kursus daripada BPL yang telah selesai' : 'Tiada kursus BPL yang tersedia untuk dinilai' ?></option>
+              <?php foreach ($eligibleTrainings as $training): ?>
+              <option
+                value="<?= (int) $training['id'] ?>"
+                data-title="<?= e((string) $training['course_title']) ?>"
+                data-date="<?= e((string) $training['course_date']) ?>"
+                data-place="<?= e((string) $training['course_place']) ?>"
+                <?= $parent && (int) $parent['id'] === (int) $training['id'] ? 'selected' : '' ?>
+              >
+                <?= e((string) $training['course_title']) ?> (<?= e((string) $training['application_no']) ?>)
+              </option>
+              <?php endforeach; ?>
+            </select>
           </div>
           <div class="col-md-4">
-            <label class="form-label fw-semibold"><i class="bi bi-calendar3"></i> Tarikh / Hari</label>
-            <input type="date" class="form-control" name="tarikh" required value="<?= e((string) ($parentPayload['tarikh_tamat'] ?? '')) ?>">
+            <label class="form-label fw-semibold"><i class="bi bi-calendar3"></i> Tarikh Tamat Kursus</label>
+            <input type="date" class="form-control pkk-auto-field" name="tarikh" id="pkkCourseDate" required readonly value="<?= e((string) ($parent['course_date'] ?? '')) ?>">
           </div>
           <div class="col-md-4">
             <label class="form-label fw-semibold"><i class="bi bi-geo-alt"></i> Tempat</label>
-            <input type="text" class="form-control" name="tempat" required value="<?= e((string) ($parentPayload['tempat'] ?? '')) ?>">
+            <input type="text" class="form-control pkk-auto-field" name="tempat" id="pkkCoursePlace" required readonly value="<?= e((string) ($parent['course_place'] ?? '')) ?>">
           </div>
+          <input type="hidden" name="tajuk" id="pkkCourseTitle" value="<?= e((string) ($parent['course_title'] ?? '')) ?>">
         </div>
         </section>
 
@@ -209,6 +268,28 @@ if ($parentId > 0) {
   </main>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+(() => {
+  const select = document.getElementById('pkkTrainingSelect');
+  const title = document.getElementById('pkkCourseTitle');
+  const date = document.getElementById('pkkCourseDate');
+  const place = document.getElementById('pkkCoursePlace');
+
+  if (!select || !title || !date || !place) return;
+
+  const syncTraining = () => {
+    const option = select.options[select.selectedIndex];
+    const hasSelection = Boolean(select.value && option);
+
+    title.value = hasSelection ? (option.dataset.title || '') : '';
+    date.value = hasSelection ? (option.dataset.date || '') : '';
+    place.value = hasSelection ? (option.dataset.place || '') : '';
+  };
+
+  select.addEventListener('change', syncTraining);
+  syncTraining();
+})();
+</script>
   <script>
 window.SEDCO_FORM_CONTEXT = { role: <?= json_encode($user['role'] ?? 'staff') ?>, mode: 'new', formType: 'PKK' };
 </script>
