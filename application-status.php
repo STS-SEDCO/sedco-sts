@@ -11,8 +11,10 @@ if (!$user) {
 }
 
 $stmt = db()->prepare(
-    'SELECT a.application_no, a.form_type, a.title, a.payload, a.status,
-            a.current_stage, a.review_note, a.submitted_at, a.updated_at, u.fullname
+    'SELECT a.id, a.application_no, a.user_id, a.parent_application_id,
+            a.form_type, a.title, a.payload, a.status,
+            a.current_stage, a.review_note, a.cancelled_at,
+            a.cancellation_reason, a.submitted_at, a.updated_at, u.fullname
      FROM applications a
      INNER JOIN users u ON u.id = a.user_id
      WHERE a.user_id = ?
@@ -35,6 +37,9 @@ while ($row = $result->fetch_assoc()) {
         ?? $payload['tarikh_penilaian']
         ?? $row['submitted_at'];
 
+    $canEditPkk = sts_can_edit_pkk($row, $user);
+    $canCancelPkk = sts_can_cancel_pkk($row, $user);
+
     $applications[] = [
         'id' => $row['application_no'],
         'type' => $row['form_type'],
@@ -50,14 +55,19 @@ while ($row = $result->fetch_assoc()) {
         'currentStage' => $row['current_stage'],
         'stageLabel' => stage_label($row['current_stage']),
         'reviewNote' => $row['review_note'],
-        'cancelledAt' => null,
-        'cancellationReason' => null,
-        'canCancel' => sts_cancel_application_supported()
-            && in_array($row['status'], ['pending', 'correction'], true),
+        'cancelledAt' => $row['cancelled_at'],
+        'cancellationReason' => $row['cancellation_reason'],
+        'canCancel' => (
+            sts_cancel_application_supported()
+            && in_array($row['status'], ['pending', 'correction'], true)
+        ) || $canCancelPkk,
         'viewUrl' => 'application-detail.php?application=' . rawurlencode((string) $row['application_no']),
         'editUrl' => $row['form_type'] === 'BPL' && $row['status'] === 'correction'
             ? 'bpl.php?application=' . rawurlencode((string) $row['application_no'])
-            : null,
+            : ($canEditPkk
+                ? 'pkk.php?application=' . rawurlencode((string) $row['application_no'])
+                : null),
+        'editLabel' => $canEditPkk ? 'Edit submission' : 'Correct form',
         'submittedAt' => $row['submitted_at'],
         'updatedAt' => $row['updated_at'],
         'data' => $payload,
@@ -228,8 +238,8 @@ $stmt->close();
           <div class="cancel-warning-card">
             <span><i class="bi bi-exclamation-triangle"></i></span>
             <div>
-              <strong>This action will stop the approval workflow.</strong>
-              <p>The application stays in your history as Cancelled and cannot continue for review.</p>
+              <strong>This submission will be cancelled.</strong>
+              <p>The record will remain in your history as Cancelled. A cancelled PKK can be submitted again from its linked BPL course.</p>
             </div>
           </div>
 
@@ -272,7 +282,7 @@ window.SEDCO_APPLICATIONS = <?= json_encode(
     | JSON_HEX_QUOT
 ) ?>;
 </script>
-<script src="application-status.js?v=20260930-66"></script>
+<script src="application-status.js?v=20261003-01"></script>
 <script src="sedco-shell.js?v=20260930-56"></script>
 </body>
 </html>
