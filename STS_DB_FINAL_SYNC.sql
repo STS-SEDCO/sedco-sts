@@ -21,7 +21,8 @@ ALTER TABLE users
         'training_section',
         'pengerusi_besar',
         'general_manager',
-        'head_of_department'
+        'head_of_department',
+        'finance'
     ) NOT NULL DEFAULT 'staff';
 
 -- Main application workflow support
@@ -49,11 +50,13 @@ ALTER TABLE applications
 
 ALTER TABLE applications
     MODIFY COLUMN current_stage ENUM(
-        'hod',
         'training',
+        'hod',
         'gm',
+        'chairman',
+        'finance',
         'completed'
-    ) NOT NULL DEFAULT 'hod';
+    ) NOT NULL DEFAULT 'training';
 
 -- Approval history
 CREATE TABLE IF NOT EXISTS application_reviews (
