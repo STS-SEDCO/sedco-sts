@@ -21,7 +21,7 @@ if ($applicationNo !== '') {
     $stmt = db()->prepare(
         'SELECT a.id, a.application_no, a.user_id, a.form_type, a.title, a.payload,
                 a.department, a.assigned_hod_id, a.sla_due_at,
-                a.status, a.current_stage, a.submitted_at, u.fullname AS applicant_name
+                a.status, a.current_stage, a.review_note, a.submitted_at, u.fullname AS applicant_name
          FROM applications a
          INNER JOIN users u ON u.id = a.user_id
          WHERE a.application_no = ?
@@ -124,6 +124,15 @@ $canReviewCurrentStage = $mode === 'review'
         <?php endif; ?>
 
         <div class="form-permission-notice" data-form-permission-notice></div>
+        <?php if ($canResubmitCorrection && !empty($application['review_note'])): ?>
+        <div class="sts-correction-note">
+          <i class="bi bi-chat-left-text"></i>
+          <div>
+            <strong>Correction requested by <?= e(stage_label($currentStage)) ?></strong>
+            <p><?= e((string) $application['review_note']) ?></p>
+          </div>
+        </div>
+        <?php endif; ?>
 
         <form method="post" action="<?= e($formAction) ?>" enctype="multipart/form-data">
       <?= csrf_field() ?>
@@ -279,7 +288,7 @@ $canReviewCurrentStage = $mode === 'review'
             </table>
 
             <!-- ULASAN D - H -->
-            <table class="bpl-section-card bpl-review-card bpl-section-training-review form-section-locked" data-form-owner="training_section" inert aria-disabled="true">
+            <table class="bpl-section-card bpl-review-card bpl-section-training-review form-section-locked" data-form-owner="admin" inert aria-disabled="true">
                 <tr><th colspan="2"><div class="bpl-table-heading"><span class="bpl-table-heading-icon"><i class="bi bi-chat-square-text"></i></span><div class="bpl-table-heading-copy"><strong>D. ULASAN PENGURUS SEKSYEN LATIHAN</strong><small>Semakan dan ulasan oleh Seksyen Latihan</small></div></div></th></tr>
                 <tr>
                     <td>Ulasan</td>
@@ -311,7 +320,7 @@ $canReviewCurrentStage = $mode === 'review'
                 </tr>
             </table>
 
-            <table class="bpl-section-card bpl-review-card bpl-section-gm-review form-section-locked" data-form-owner="general_manager" inert aria-disabled="true">
+            <table class="bpl-section-card bpl-review-card bpl-section-gm-review form-section-locked" data-form-owner="admin" inert aria-disabled="true">
                 <tr><th colspan="2"><div class="bpl-table-heading"><span class="bpl-table-heading-icon"><i class="bi bi-patch-check"></i></span><div class="bpl-table-heading-copy"><strong>F. ULASAN PENGURUS BESAR KUMPULAN SEDCO</strong><small>Keputusan Pengurus Besar Kumpulan SEDCO</small></div></div></th></tr>
                 <tr>
                     <td>Kelulusan</td>
@@ -330,7 +339,7 @@ $canReviewCurrentStage = $mode === 'review'
                 </tr>
             </table>
 
-            <table class="bpl-section-card bpl-review-card bpl-section-admin-review form-section-locked" data-form-owner="admin" inert aria-disabled="true">
+            <table class="bpl-section-card bpl-review-card bpl-section-admin-review form-section-locked" data-form-owner="general_manager" inert aria-disabled="true">
                 <tr><th colspan="2"><div class="bpl-table-heading"><span class="bpl-table-heading-icon"><i class="bi bi-shield-check"></i></span><div class="bpl-table-heading-copy"><strong>G. ULASAN PENGURUS SEDCO</strong><small>Keputusan dan pengesahan Pengurus SEDCO</small></div></div></th></tr>
                 <tr>
                     <td>Kelulusan</td>
@@ -381,11 +390,13 @@ $canReviewCurrentStage = $mode === 'review'
                 </button>
                 <?php elseif ($canReviewCurrentStage): ?>
                 <button type="submit" name="decision" value="approved" class="btn-maroon btn-review-approve">
-                  <i class="bi bi-check2"></i> <?= $currentStage === 'gm' ? 'Approve & Complete' : 'Approve & Continue' ?>
+                  <i class="bi bi-check2"></i> <?= $currentStage === 'training' ? 'Approve & Complete' : 'Approve & Continue' ?>
                 </button>
-                <button type="submit" name="decision" value="correction" class="btn-review-secondary">
-                  <i class="bi bi-arrow-counterclockwise"></i> Needs Correction
+                <?php if ($currentStage === 'hod'): ?>
+                <button type="submit" name="decision" value="correction" class="btn-review-secondary" formnovalidate>
+                  <i class="bi bi-arrow-counterclockwise"></i> Request Correction
                 </button>
+                <?php endif; ?>
                 <button type="submit" name="decision" value="rejected" class="btn-review-reject">
                   <i class="bi bi-x-lg"></i> Reject
                 </button>
@@ -417,7 +428,7 @@ window.SEDCO_FORM_CONTEXT = {
 </script>
 <script src="bpl-workflow.js?v=20261001-02"></script>
 <script src="form-permissions.js?v=20261002-03"></script>
-<script src="form-ux.js?v=20261001-09"></script>
+<script src="form-ux.js?v=20261003-01"></script>
 <script src="form-enhancements.js?v=20260930-59"></script>
 <script src="sedco-shell.js?v=20260930-56"></script>
 </body>
