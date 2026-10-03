@@ -48,6 +48,10 @@ try {
         throw new RuntimeException('Application not found.');
     }
 
+    if ((string) $application['status'] === 'pending') {
+        $application['current_stage'] = sts_sync_bpl_pending_stage($application);
+    }
+
     if (!sts_can_review_application($application, $user)) {
         http_response_code(403);
         throw new RuntimeException('This application is not assigned to your current review stage.');
