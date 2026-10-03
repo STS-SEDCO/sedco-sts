@@ -567,7 +567,30 @@ function sts_validate_parent_bpl(
     $role = normalized_role($user['role'] ?? '');
 
     if (strtoupper($followupType) === 'PKK') {
-        return (int) $parent['user_id'] === (int) $user['id'] ? $parent : null;
+        if ((int) $parent['user_id'] !== (int) $user['id']) {
+            return null;
+        }
+
+        $trainingEnd = trim((string) ($parent['training_end'] ?? ''));
+        $today = (new DateTimeImmutable('today', new DateTimeZone('Asia/Kuala_Lumpur')))->format('Y-m-d');
+
+        if ($trainingEnd === '' || $trainingEnd > $today) {
+            return null;
+        }
+
+        $duplicate = db()->prepare(
+            'SELECT id
+             FROM applications
+             WHERE parent_application_id = ?
+               AND form_type = "PKK"
+             LIMIT 1'
+        );
+        $duplicate->bind_param('i', $parentApplicationId);
+        $duplicate->execute();
+        $existing = $duplicate->get_result()->fetch_assoc();
+        $duplicate->close();
+
+        return $existing ? null : $parent;
     }
 
     if (strtoupper($followupType) === 'TEA') {
