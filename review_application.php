@@ -60,9 +60,11 @@ try {
         throw new RuntimeException('Correction requests are available only at the Head of Department stage.');
     }
     $allowedByStage = [
+        'training' => ['ulasan_latihan', 'tarikh_latihan', 'tt_latihan'],
         'hod' => ['ulasan_bahagian', 'tarikh_bahagian', 'tt_bahagian'],
-        'gm' => ['kelulusan_sedco', 'tarikh_sedco', 'tt_sedco'],
-        'training' => ['bayaran_kursus', 'pendahuluan_diterima', 'telah_didaftar'],
+        'gm' => ['kelulusan_pgs', 'tarikh_pgs', 'tt_pgs'],
+        'chairman' => ['kelulusan_sedco', 'tarikh_sedco', 'tt_sedco'],
+        'finance' => ['bayaran_kursus', 'pendahuluan_diterima', 'telah_didaftar'],
     ];
 
     $payload = json_decode((string) $application['payload'], true);
@@ -79,11 +81,13 @@ try {
     $submittedFields = array_intersect_key($_POST, array_flip($allowedKeys));
 
     $requiredReviewFields = match ($stage) {
+        'training' => ['ulasan_latihan', 'tarikh_latihan', 'tt_latihan'],
         'hod' => $decision === 'correction'
             ? ['ulasan_bahagian']
             : ['ulasan_bahagian', 'tarikh_bahagian', 'tt_bahagian'],
-        'gm' => ['tarikh_sedco', 'tt_sedco'],
-        'training' => ['bayaran_kursus', 'pendahuluan_diterima', 'telah_didaftar'],
+        'gm' => ['tarikh_pgs', 'tt_pgs'],
+        'chairman' => ['tarikh_sedco', 'tt_sedco'],
+        'finance' => ['bayaran_kursus', 'pendahuluan_diterima', 'telah_didaftar'],
         default => [],
     };
 
@@ -106,6 +110,14 @@ try {
 
     if ($stage === 'gm') {
         if ($decision === 'approved') {
+            $payload['kelulusan_pgs'] = 'Diluluskan';
+        } elseif ($decision === 'rejected') {
+            $payload['kelulusan_pgs'] = 'Tidak Diluluskan';
+        }
+    }
+
+    if ($stage === 'chairman') {
+        if ($decision === 'approved') {
             $payload['kelulusan_sedco'] = 'Diluluskan';
         } elseif ($decision === 'rejected') {
             $payload['kelulusan_sedco'] = 'Tidak Diluluskan';
@@ -116,9 +128,11 @@ try {
 
     if ($note === '') {
         $note = match ($stage) {
+            'training' => trim((string) ($payload['ulasan_latihan'] ?? '')),
             'hod' => trim((string) ($payload['ulasan_bahagian'] ?? '')),
-            'gm' => trim((string) ($payload['kelulusan_sedco'] ?? '')),
-            'training' => 'Training Department processing completed',
+            'gm' => trim((string) ($payload['kelulusan_pgs'] ?? '')),
+            'chairman' => trim((string) ($payload['kelulusan_sedco'] ?? '')),
+            'finance' => 'Financial processing completed',
             default => '',
         };
     }
@@ -147,9 +161,11 @@ try {
 
     if ($decision === 'approved') {
         $nextStage = match ($stage) {
+            'training' => 'hod',
             'hod' => 'gm',
-            'gm' => 'training',
-            'training' => 'completed',
+            'gm' => 'chairman',
+            'chairman' => 'finance',
+            'finance' => 'completed',
             default => 'completed',
         };
 
