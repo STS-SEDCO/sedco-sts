@@ -20,42 +20,42 @@ if (!in_array($decisionFilter, $allowedFilters, true)) {
     $decisionFilter = 'all';
 }
 
-$baseSql = '
-    SELECT r.id, r.review_stage, r.decision, r.note, r.reviewed_at,
-           a.application_no, a.title, a.department, a.status,
-           applicant.fullname AS applicant_name,
-           reviewer.fullname AS reviewer_name
-    FROM application_reviews r
-    INNER JOIN applications a ON a.id = r.application_id
-    INNER JOIN users applicant ON applicant.id = a.user_id
-    INNER JOIN users reviewer ON reviewer.id = r.reviewer_id
-    WHERE a.form_type = "BPL"
-';
-
-if ($role === 'admin' && $decisionFilter === 'all') {
-    $stmt = db()->prepare($baseSql . ' ORDER BY r.reviewed_at DESC, r.id DESC');
-} elseif ($role === 'admin') {
-    $stmt = db()->prepare(
-        $baseSql . ' AND r.decision = ? ORDER BY r.reviewed_at DESC, r.id DESC'
-    );
-    $stmt->bind_param('s', $decisionFilter);
-} elseif ($decisionFilter === 'all') {
-    $stmt = db()->prepare(
-        $baseSql . ' AND r.reviewer_id = ? ORDER BY r.reviewed_at DESC, r.id DESC'
-    );
-    $stmt->bind_param('i', $userId);
-} else {
-    $stmt = db()->prepare(
-        $baseSql . ' AND r.reviewer_id = ? AND r.decision = ?
-                     ORDER BY r.reviewed_at DESC, r.id DESC'
-    );
-    $stmt->bind_param('is', $userId, $decisionFilter);
-}
-
 $history = [];
 $historyUnavailable = false;
 
 try {
+    $baseSql = '
+        SELECT r.id, r.review_stage, r.decision, r.note, r.reviewed_at,
+               a.application_no, a.title, a.department, a.status,
+               applicant.fullname AS applicant_name,
+               reviewer.fullname AS reviewer_name
+        FROM application_reviews r
+        INNER JOIN applications a ON a.id = r.application_id
+        INNER JOIN users applicant ON applicant.id = a.user_id
+        INNER JOIN users reviewer ON reviewer.id = r.reviewer_id
+        WHERE a.form_type = "BPL"
+    ';
+
+    if ($role === 'admin' && $decisionFilter === 'all') {
+        $stmt = db()->prepare($baseSql . ' ORDER BY r.reviewed_at DESC, r.id DESC');
+    } elseif ($role === 'admin') {
+        $stmt = db()->prepare(
+            $baseSql . ' AND r.decision = ? ORDER BY r.reviewed_at DESC, r.id DESC'
+        );
+        $stmt->bind_param('s', $decisionFilter);
+    } elseif ($decisionFilter === 'all') {
+        $stmt = db()->prepare(
+            $baseSql . ' AND r.reviewer_id = ? ORDER BY r.reviewed_at DESC, r.id DESC'
+        );
+        $stmt->bind_param('i', $userId);
+    } else {
+        $stmt = db()->prepare(
+            $baseSql . ' AND r.reviewer_id = ? AND r.decision = ?
+                         ORDER BY r.reviewed_at DESC, r.id DESC'
+        );
+        $stmt->bind_param('is', $userId, $decisionFilter);
+    }
+
     $stmt->execute();
     $result = $stmt->get_result();
 
@@ -204,7 +204,7 @@ function approval_decision_label(string $decision): string
               <th>Decision</th>
               <th>Review Note</th>
               <th>Reviewed</th>
-              <th></th>
+              <th class="submission-actions-heading">Actions</th>
             </tr>
           </thead>
           <tbody>
