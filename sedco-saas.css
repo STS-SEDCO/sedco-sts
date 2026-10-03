@@ -12144,3 +12144,32 @@ body.profile-page .modal-backdrop{
     margin:12px 12px 0 !important;
   }
 }
+
+
+/* ===== CORRECTION NOTE ===== */
+.sts-correction-note{
+  max-width:1120px;
+  margin:0 auto 14px;
+  display:flex;
+  gap:11px;
+  align-items:flex-start;
+  padding:13px 14px;
+  border:1px solid #efd0a7;
+  border-radius:12px;
+  background:#fff9f1;
+  color:#6f4c22;
+}
+.sts-correction-note > i{
+  margin-top:2px;
+  color:#b56b13;
+}
+.sts-correction-note strong{
+  display:block;
+  margin-bottom:3px;
+  font-size:11px;
+}
+.sts-correction-note p{
+  margin:0;
+  font-size:11px;
+  line-height:1.55;
+}
