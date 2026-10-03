@@ -256,6 +256,14 @@ foreach ($requiredByType[$type] as $requiredKey) {
     }
 }
 
+if ($type === 'PKK') {
+    $title = trim((string) ($payload['tajuk'] ?? ''));
+
+    if ($title === '') {
+        $title = 'Penilaian Keberkesanan Kursus';
+    }
+}
+
 $db = db();
 $db->begin_transaction();
 
