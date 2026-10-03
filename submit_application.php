@@ -32,6 +32,8 @@ if (!user_can_submit_form_type($type, $user)) {
     exit('You do not have permission to submit this form.');
 }
 
+$parentApplicationId = max(0, (int) ($_POST['parent_application_id'] ?? 0));
+
 $payload = $_POST;
 unset(
     $payload['submit'],
@@ -81,15 +83,6 @@ $requiredByType = [
     ],
     'TEA' => ['employee_name', 'division', 'month', 'head_division', 'date', 'signature'],
 ];
-
-foreach ($requiredByType[$type] as $requiredKey) {
-    $value = $payload[$requiredKey] ?? '';
-
-    if (is_array($value) || trim((string) $value) === '') {
-        http_response_code(422);
-        exit('Please complete all required fields before submitting.');
-    }
-}
 
 if ($type === 'BPL') {
     $vehicles = $payload['kenderaan'] ?? [];
@@ -173,6 +166,21 @@ if ($type === 'BPL') {
     ];
 
     $payload = array_intersect_key($payload, array_flip($allowedKeys));
+} elseif ($type === 'PKK') {
+    $allowedKeys = [
+        'nama', 'bahagian', 'jawatan', 'tajuk', 'tarikh', 'tempat',
+        'objektif', 'perkara1', 'perkara2', 'perkara3', 'perkara4', 'perkara5',
+        'cadangan1', 'cadangan2', 'cadangan3',
+        'p1', 'p2', 'p3', 'p4', 'p5',
+        'aspect0_p1', 'aspect0_p2', 'aspect0_p3', 'aspect0_p4', 'aspect0_p5',
+        'aspect1_p1', 'aspect1_p2', 'aspect1_p3', 'aspect1_p4', 'aspect1_p5',
+        'aspect2_p1', 'aspect2_p2', 'aspect2_p3', 'aspect2_p4', 'aspect2_p5',
+        'aspect3_p1', 'aspect3_p2', 'aspect3_p3', 'aspect3_p4', 'aspect3_p5',
+        'aspect4_p1', 'aspect4_p2', 'aspect4_p3', 'aspect4_p4', 'aspect4_p5',
+        'tandatangan', 'tarikh_penilaian'
+    ];
+
+    $payload = array_intersect_key($payload, array_flip($allowedKeys));
 }
 
 $title = match ($type) {
@@ -185,8 +193,12 @@ if ($title === '') {
     $title = sts_form_name($type);
 }
 
-$parentApplicationId = max(0, (int) ($_POST['parent_application_id'] ?? 0));
 $parent = null;
+
+if ($type === 'PKK' && $parentApplicationId <= 0) {
+    http_response_code(422);
+    exit('Please select a completed BPL training record before submitting PKK.');
+}
 
 if (in_array($type, ['PKK', 'TEA'], true) && $parentApplicationId > 0) {
     $parent = sts_validate_parent_bpl($parentApplicationId, $user, $type);
@@ -194,6 +206,53 @@ if (in_array($type, ['PKK', 'TEA'], true) && $parentApplicationId > 0) {
     if (!$parent) {
         http_response_code(403);
         exit('The selected training record is not available for this follow up form.');
+    }
+}
+
+if ($type === 'PKK' && $parent) {
+    $parentPayload = json_decode((string) ($parent['payload'] ?? ''), true);
+    $parentPayload = is_array($parentPayload) ? $parentPayload : [];
+
+    $payload['nama'] = trim((string) ($user['fullname'] ?? ''));
+    $payload['bahagian'] = trim((string) ($user['department'] ?? ''));
+    $payload['jawatan'] = trim((string) ($user['job_title'] ?? ''));
+    $payload['tajuk'] = trim((string) (
+        $parentPayload['tajuk']
+        ?? $parent['title']
+        ?? ''
+    ));
+    $payload['tarikh'] = trim((string) (
+        $parentPayload['tarikh_tamat']
+        ?? $parent['training_end']
+        ?? ''
+    ));
+    $payload['tempat'] = trim((string) ($parentPayload['tempat'] ?? ''));
+
+    if (
+        $payload['nama'] === ''
+        || $payload['bahagian'] === ''
+        || $payload['jawatan'] === ''
+    ) {
+        http_response_code(422);
+        exit('Please complete your Name, Department and Position in Profile before submitting PKK.');
+    }
+
+    if (
+        $payload['tajuk'] === ''
+        || $payload['tarikh'] === ''
+        || $payload['tempat'] === ''
+    ) {
+        http_response_code(422);
+        exit('The selected BPL training record is incomplete. Please contact the Training Section.');
+    }
+}
+
+foreach ($requiredByType[$type] as $requiredKey) {
+    $value = $payload[$requiredKey] ?? '';
+
+    if (is_array($value) || trim((string) $value) === '') {
+        http_response_code(422);
+        exit('Please complete all required fields before submitting.');
     }
 }
 
