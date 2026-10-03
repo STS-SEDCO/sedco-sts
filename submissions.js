@@ -218,24 +218,109 @@
     return String(key || '').replaceAll('_',' ').replace(/\b\w/g, c => c.toUpperCase());
   }
 
+  const DETAIL_LABELS = {
+    nama:'Nama',
+    bahagian:'Bahagian',
+    jawatan:'Jawatan',
+    kursus:'Kursus / Seminar',
+    tarikh:'Tarikh Permohonan',
+    tajuk:'Tajuk Kursus / Seminar',
+    penganjur:'Penganjur',
+    tarikh_mula:'Tarikh Mula',
+    tarikh_tamat:'Tarikh Tamat',
+    tempat:'Tempat',
+    yuran:'Yuran Kursus',
+    kandungan:'Kandungan Kursus',
+    tempat_tugas:'Tempat Bertugas',
+    kenderaan:'Kenderaan',
+    kenderaan_other:'Kenderaan Lain',
+    masa_bertolak:'Masa Bertolak',
+    masa_kembali:'Masa Kembali',
+    pendahuluan:'Pendahuluan',
+    ulasan_latihan:'Ulasan Seksyen Training',
+    tarikh_latihan:'Tarikh Semakan Training',
+    tt_latihan:'Pengesahan Training',
+    ulasan_bahagian:'Ulasan HOD',
+    tarikh_bahagian:'Tarikh Semakan HOD',
+    tt_bahagian:'Pengesahan HOD',
+    kelulusan_pgs:'Keputusan GM',
+    tarikh_pgs:'Tarikh Keputusan GM',
+    tt_pgs:'Pengesahan GM',
+    kelulusan_sedco:'Keputusan Pengerusi',
+    tarikh_sedco:'Tarikh Keputusan Pengerusi',
+    tt_sedco:'Pengesahan Pengerusi',
+    bayaran_kursus:'Bayaran Kursus',
+    pendahuluan_diterima:'Pendahuluan Diterima',
+    telah_didaftar:'Status Pendaftaran'
+  };
+
+  function detailLabel(key) {
+    return DETAIL_LABELS[key] || humanize(key);
+  }
+
+  function detailValue(key, value) {
+    if (Array.isArray(value)) return value.join(', ');
+    if (value === null || value === undefined || String(value).trim() === '') return 'Not provided';
+
+    if (/^tarikh(_|$)/i.test(key) || ['tarikh_mula','tarikh_tamat'].includes(key)) {
+      const parsed = new Date(String(value) + (String(value).length === 10 ? 'T00:00:00' : ''));
+      if (!Number.isNaN(parsed.getTime())) {
+        return new Intl.DateTimeFormat('en-MY', {
+          day:'2-digit',
+          month:'short',
+          year:'numeric'
+        }).format(parsed);
+      }
+    }
+
+    if (key === 'yuran' || key === 'bayaran_kursus') {
+      const number = Number(value);
+      if (!Number.isNaN(number)) {
+        return new Intl.NumberFormat('en-MY', {
+          style:'currency',
+          currency:'MYR',
+          minimumFractionDigits:2
+        }).format(number);
+      }
+    }
+
+    return String(value);
+  }
+
+  function isReviewField(key) {
+    return [
+      'ulasan_latihan','tarikh_latihan','tt_latihan',
+      'ulasan_bahagian','tarikh_bahagian','tt_bahagian',
+      'kelulusan_pgs','tarikh_pgs','tt_pgs',
+      'kelulusan_sedco','tarikh_sedco','tt_sedco',
+      'bayaran_kursus','pendahuluan_diterima','telah_didaftar'
+    ].includes(key);
+  }
+
   function openDetails(id) {
-    const item = submissions.find(x => x.id === id);
+    const item = submissions.find(x => String(x.id) === String(id));
     if (!item) return;
 
     const meta = statusMeta(item.status);
+    const stage = stageMeta(item.currentStage);
 
+    $('submissionModal').dataset.currentSubmissionId = item.id || '';
     $('submissionModalRef').textContent = item.id || 'Submission';
     $('submissionModalTitle').textContent = item.title || item.formName || 'Submission details';
     $('submissionModalStatus').className = `status-pill status-${meta.cls}`;
     $('submissionModalStatus').innerHTML = `<i class="bi ${meta.icon}"></i>${meta.label}`;
-    $('submissionModalApplicant').textContent = item.applicant || 'Guest';
-    $('submissionModalType').textContent = item.type || 'FORM';
-    $('submissionModalDate').textContent = formatDate(item.submittedAt, true);
-    if ($('submissionModalStage')) {
-      $('submissionModalStage').textContent = item.stageLabel || stageMeta(item.currentStage).label;
-    }
 
-    const entries = Object.entries(item.data || {}).filter(([,value]) => {
+    $('submissionModalStageBadge').className = `submission-stage-pill stage-${stage.cls}`;
+    $('submissionModalStageBadge').innerHTML = `<i class="bi ${stage.icon}"></i><span id="submissionModalStage">${escapeHtml(stage.label)}</span>`;
+
+    $('submissionModalApplicant').textContent = item.applicant || 'Not available';
+    $('submissionModalType').textContent = item.formName || item.type || 'Not available';
+    $('submissionModalDate').textContent = formatDate(item.submittedAt, true);
+    $('submissionModalDepartment').textContent = item.department || 'Not assigned';
+    $('submissionModalOpenForm').href = item.reviewUrl || '#';
+
+    const entries = Object.entries(item.data || {}).filter(([key,value]) => {
+      if (isReviewField(key)) return false;
       if (Array.isArray(value)) return value.some(v => String(v || '').trim());
       return String(value || '').trim() !== '';
     });
@@ -243,13 +328,39 @@
     $('submissionModalFields').innerHTML = entries.length
       ? entries.map(([key,value]) => `
           <div class="submission-detail-field">
-            <span>${escapeHtml(humanize(key))}</span>
-            <strong>${escapeHtml(Array.isArray(value) ? value.join(', ') : value)}</strong>
+            <span>${escapeHtml(detailLabel(key))}</span>
+            <strong>${escapeHtml(detailValue(key, value))}</strong>
           </div>
         `).join('')
-      : '<div class="submission-detail-empty">No additional form details available.</div>';
+      : '<div class="submission-detail-empty">No application information is available.</div>';
+
+    const actions = $('submissionModalActions');
+    if (actions) {
+      actions.hidden = !item.canReview;
+      actions.querySelectorAll('[data-detail-review-action]').forEach(button => {
+        const action = button.dataset.detailReviewAction;
+        button.hidden = action === 'correction'
+          && !['training','hod'].includes(String(item.currentStage || '').toLowerCase());
+      });
+    }
 
     bootstrap.Modal.getOrCreateInstance($('submissionModal')).show();
+  }
+
+  function openReviewFromDetails(decision) {
+    const modal = $('submissionModal');
+    const id = modal?.dataset.currentSubmissionId || '';
+    if (!id) return;
+
+    const detailsInstance = bootstrap.Modal.getOrCreateInstance(modal);
+    detailsInstance.hide();
+
+    const launch = () => {
+      modal.removeEventListener('hidden.bs.modal', launch);
+      openQuickReview(id, decision);
+    };
+
+    modal.addEventListener('hidden.bs.modal', launch);
   }
 
   function fieldValue(item, name) {
@@ -415,6 +526,12 @@
       if (!submit) return;
       submit.disabled = true;
       submit.innerHTML = '<span class="spinner-border spinner-border-sm" aria-hidden="true"></span> Saving...';
+    });
+
+    document.querySelectorAll('[data-detail-review-action]').forEach(button => {
+      button.addEventListener('click', () => {
+        openReviewFromDetails(button.dataset.detailReviewAction);
+      });
     });
 
     const departmentSelect = $('submissionDepartment');
