@@ -13201,3 +13201,78 @@ body.profile-page .modal-backdrop{
     font-size:12px !important;
   }
 }
+
+
+/* ===== APPROVAL HISTORY POLISH V8 ===== */
+.approval-history-page .approval-history-table{
+  min-width:1320px;
+}
+
+.approval-history-page .approval-history-note-cell{
+  max-width:250px;
+  color:#65666b;
+  font-size:11.5px;
+  line-height:1.45;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+
+.approval-history-page .is-history-date{
+  min-width:128px;
+  color:#6e6f74;
+}
+
+.approval-history-page .approval-history-note{
+  min-height:92px;
+  padding:15px 16px;
+  border:1px solid #e7e7ea;
+  border-radius:12px;
+  background:#fafafb;
+  color:#45464b;
+  font-size:12px;
+  line-height:1.65;
+}
+
+.approval-history-page .submissions-toolbar{
+  gap:14px;
+}
+
+.approval-history-page .submissions-table td{
+  vertical-align:middle;
+}
+
+.approval-history-page .submissions-table td>strong{
+  display:block;
+  color:#26272b;
+  font-size:12.5px;
+}
+
+.approval-history-page .submissions-table td>small{
+  display:block;
+  margin-top:4px;
+  color:#96979c;
+  font-size:10.5px;
+}
+
+.approval-history-page .view-btn{
+  min-height:36px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:6px;
+  padding:0 11px;
+  border:1px solid #dfdfe3;
+  border-radius:9px;
+  background:#fff;
+  color:#505156;
+  font-size:10.5px;
+  font-weight:720;
+  text-decoration:none;
+}
+
+.approval-history-page .view-btn:hover{
+  border-color:#cdced3;
+  background:#f8f8f9;
+  color:#222327;
+}
