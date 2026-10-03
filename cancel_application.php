@@ -148,9 +148,25 @@ try {
         );
     } elseif ($application['current_stage'] === 'gm') {
         sts_notify_role(
-            ['general_manager', 'pengerusi_besar'],
+            ['general_manager'],
             'Application cancelled',
             $reviewerMessage,
+            'submissions.php',
+            'warning'
+        );
+    } elseif ($application['current_stage'] === 'chairman') {
+        sts_notify_role(
+            ['pengerusi_besar'],
+            'Application cancelled',
+            $applicationNo . ' was cancelled by the applicant.',
+            'submissions.php',
+            'warning'
+        );
+    } elseif ($application['current_stage'] === 'finance') {
+        sts_notify_role(
+            ['finance'],
+            'Application cancelled',
+            $applicationNo . ' was cancelled by the applicant.',
             'submissions.php',
             'warning'
         );
