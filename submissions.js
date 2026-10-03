@@ -152,13 +152,26 @@
     tbody.innerHTML = rows.map(item => {
       const meta = statusMeta(item.status);
       const stage = stageMeta(item.currentStage);
-      const action = item.reviewUrl
-        ? `<a class="submission-review-btn${item.canReview ? ' is-ready' : ''}" href="${escapeHtml(item.reviewUrl)}">
-             ${item.canReview ? 'Review' : 'View form'} <i class="bi bi-arrow-up-right"></i>
-           </a>`
-        : `<button class="submission-view-btn" type="button" data-submission-id="${escapeHtml(item.id)}">
-             View <i class="bi bi-arrow-up-right"></i>
-           </button>`;
+      const canRequestCorrection = ['training','hod'].includes(String(item.currentStage || '').toLowerCase());
+      const action = item.canReview
+        ? `<div class="submission-action-group">
+             <a class="submission-action-view" href="${escapeHtml(item.reviewUrl || '#')}" title="View full form">
+               <i class="bi bi-eye"></i><span>View</span>
+             </a>
+             <button class="submission-action-btn is-approve" type="button" data-review-action="approved" data-review-id="${escapeHtml(item.id)}">
+               <i class="bi bi-check2"></i><span>Approve</span>
+             </button>
+             ${canRequestCorrection ? `
+             <button class="submission-action-btn is-correction" type="button" data-review-action="correction" data-review-id="${escapeHtml(item.id)}">
+               <i class="bi bi-arrow-counterclockwise"></i><span>Correction</span>
+             </button>` : ''}
+             <button class="submission-action-btn is-reject" type="button" data-review-action="rejected" data-review-id="${escapeHtml(item.id)}">
+               <i class="bi bi-x-lg"></i><span>Reject</span>
+             </button>
+           </div>`
+        : `<a class="submission-action-view" href="${escapeHtml(item.reviewUrl || '#')}">
+             <i class="bi bi-eye"></i><span>View</span>
+           </a>`;
 
       return `
         <tr>
@@ -192,6 +205,12 @@
 
     tbody.querySelectorAll('[data-submission-id]').forEach(button => {
       button.addEventListener('click', () => openDetails(button.dataset.submissionId));
+    });
+
+    tbody.querySelectorAll('[data-review-action][data-review-id]').forEach(button => {
+      button.addEventListener('click', () => {
+        openQuickReview(button.dataset.reviewId, button.dataset.reviewAction);
+      });
     });
   }
 
@@ -233,6 +252,153 @@
     bootstrap.Modal.getOrCreateInstance($('submissionModal')).show();
   }
 
+  function fieldValue(item, name) {
+    const value = item?.data?.[name];
+    if (Array.isArray(value)) return value[0] ?? '';
+    return value ?? '';
+  }
+
+  function textField(name, label, value = '', options = {}) {
+    const required = options.required !== false;
+    const type = options.type || 'text';
+    const placeholder = options.placeholder || '';
+    const input = type === 'textarea'
+      ? `<textarea name="${escapeHtml(name)}" rows="4" ${required ? 'required' : ''} placeholder="${escapeHtml(placeholder)}">${escapeHtml(value)}</textarea>`
+      : `<input type="${escapeHtml(type)}" name="${escapeHtml(name)}" value="${escapeHtml(value)}" ${required ? 'required' : ''} placeholder="${escapeHtml(placeholder)}">`;
+
+    return `<label class="quick-review-field">
+      <span>${escapeHtml(label)}${required ? ' <b>*</b>' : ''}</span>
+      ${input}
+    </label>`;
+  }
+
+  function choiceField(name, label, value = '') {
+    return `<div class="quick-review-field">
+      <span>${escapeHtml(label)} <b>*</b></span>
+      <div class="quick-review-choice">
+        <label><input type="radio" name="${escapeHtml(name)}" value="Ya" ${String(value) === 'Ya' ? 'checked' : ''} required> Ya</label>
+        <label><input type="radio" name="${escapeHtml(name)}" value="Tidak" ${String(value) === 'Tidak' ? 'checked' : ''}> Tidak</label>
+      </div>
+    </div>`;
+  }
+
+  function stageReviewFields(item, decision) {
+    const stage = String(item.currentStage || '').toLowerCase();
+    const correction = decision === 'correction';
+
+    if (stage === 'training') {
+      if (correction) {
+        return textField(
+          'ulasan_latihan',
+          'Arahan pembetulan Seksyen Training',
+          fieldValue(item, 'ulasan_latihan'),
+          { type:'textarea', placeholder:'Nyatakan dengan jelas perkara yang perlu dibetulkan oleh pemohon' }
+        );
+      }
+
+      return [
+        textField('ulasan_latihan', 'Ulasan Seksyen Training', fieldValue(item,'ulasan_latihan'), {
+          type:'textarea',
+          placeholder:'Masukkan ulasan semakan'
+        }),
+        textField('tarikh_latihan', 'Tarikh', fieldValue(item,'tarikh_latihan'), { type:'date' }),
+        textField('tt_latihan', 'Tandatangan / Nama Pegawai', fieldValue(item,'tt_latihan'))
+      ].join('');
+    }
+
+    if (stage === 'hod') {
+      if (correction) {
+        return textField(
+          'ulasan_bahagian',
+          'Arahan pembetulan HOD',
+          fieldValue(item, 'ulasan_bahagian'),
+          { type:'textarea', placeholder:'Nyatakan dengan jelas perkara yang perlu dibetulkan oleh pemohon' }
+        );
+      }
+
+      return [
+        textField('ulasan_bahagian', 'Ulasan HOD', fieldValue(item,'ulasan_bahagian'), {
+          type:'textarea',
+          placeholder:'Masukkan ulasan semakan'
+        }),
+        textField('tarikh_bahagian', 'Tarikh', fieldValue(item,'tarikh_bahagian'), { type:'date' }),
+        textField('tt_bahagian', 'Tandatangan / Nama HOD', fieldValue(item,'tt_bahagian'))
+      ].join('');
+    }
+
+    if (stage === 'gm') {
+      return [
+        textField('tarikh_pgs', 'Tarikh keputusan GM', fieldValue(item,'tarikh_pgs'), { type:'date' }),
+        textField('tt_pgs', 'Tandatangan / Nama GM', fieldValue(item,'tt_pgs'))
+      ].join('');
+    }
+
+    if (stage === 'chairman') {
+      return [
+        textField('tarikh_sedco', 'Tarikh keputusan Pengerusi', fieldValue(item,'tarikh_sedco'), { type:'date' }),
+        textField('tt_sedco', 'Tandatangan / Nama Pengerusi', fieldValue(item,'tt_sedco'))
+      ].join('');
+    }
+
+    if (stage === 'finance') {
+      return [
+        textField('bayaran_kursus', 'Bayaran Kursus (RM)', fieldValue(item,'bayaran_kursus'), {
+          placeholder:'Contoh: 350.00'
+        }),
+        choiceField('pendahuluan_diterima', 'Permohonan Pendahuluan Diterima', fieldValue(item,'pendahuluan_diterima')),
+        choiceField('telah_didaftar', 'Telah Didaftarkan', fieldValue(item,'telah_didaftar'))
+      ].join('');
+    }
+
+    return '<div class="quick-review-empty">No quick review fields are available for this stage.</div>';
+  }
+
+  function openQuickReview(id, decision) {
+    const item = submissions.find(entry => String(entry.id) === String(id));
+    if (!item || !item.canReview) return;
+
+    const stage = stageMeta(item.currentStage);
+    const decisionMeta = {
+      approved: {
+        label:'Approve application',
+        icon:'bi-check2-circle',
+        cls:'is-approve',
+        hint:'After approval, this application will move to the next approval stage.'
+      },
+      correction: {
+        label:'Request correction',
+        icon:'bi-arrow-counterclockwise',
+        cls:'is-correction',
+        hint:'The applicant will receive your correction instructions and the application will return to this same stage after resubmission.'
+      },
+      rejected: {
+        label:'Reject application',
+        icon:'bi-x-circle',
+        cls:'is-reject',
+        hint:'This will end the approval workflow for this application.'
+      }
+    }[decision];
+
+    if (!decisionMeta) return;
+
+    $('quickReviewApplication').value = item.id || '';
+    $('quickReviewDecision').value = decision;
+    $('quickReviewRef').textContent = item.id || 'BPL Review';
+    $('quickReviewTitle').textContent = item.title || 'Review application';
+    $('quickReviewApplicant').textContent = item.applicant || 'Not available';
+    $('quickReviewStage').textContent = stage.label;
+    $('quickReviewFields').innerHTML = stageReviewFields(item, decision);
+    $('quickReviewComment').value = '';
+    $('quickReviewHint').textContent = decisionMeta.hint;
+    $('quickReviewDecisionBadge').className = 'quick-review-decision ' + decisionMeta.cls;
+    $('quickReviewDecisionBadge').innerHTML = `<i class="bi ${decisionMeta.icon}"></i><span>${decisionMeta.label}</span>`;
+    $('quickReviewSubmit').className = 'quick-review-submit ' + decisionMeta.cls;
+    $('quickReviewSubmit').innerHTML = `<i class="bi ${decisionMeta.icon}"></i> ${decisionMeta.label}`;
+    $('quickReviewOpenForm').href = item.reviewUrl || '#';
+
+    bootstrap.Modal.getOrCreateInstance($('quickReviewModal')).show();
+  }
+
   function setFilter(next) {
     filter = next;
     document.querySelectorAll('[data-submission-filter]').forEach(button => {
@@ -243,6 +409,13 @@
 
   document.addEventListener('DOMContentLoaded', () => {
     load();
+
+    $('quickReviewForm')?.addEventListener('submit', () => {
+      const submit = $('quickReviewSubmit');
+      if (!submit) return;
+      submit.disabled = true;
+      submit.innerHTML = '<span class="spinner-border spinner-border-sm" aria-hidden="true"></span> Saving...';
+    });
 
     const departmentSelect = $('submissionDepartment');
     if (departmentSelect) {
