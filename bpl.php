@@ -37,6 +37,10 @@ if ($applicationNo !== '') {
         exit('Application not found.');
     }
 
+    if ((string) $application['status'] === 'pending') {
+        $application['current_stage'] = sts_sync_bpl_pending_stage($application);
+    }
+
     $isOwner = (int) $application['user_id'] === (int) $user['id'];
 
     if (!$isOwner && !sts_can_view_application($application, $user)) {
