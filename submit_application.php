@@ -193,7 +193,7 @@ if (in_array($type, ['PKK', 'TEA'], true) && $parentApplicationId > 0) {
 
     if (!$parent) {
         http_response_code(403);
-        exit('The selected training record is not available for this follow-up form.');
+        exit('The selected training record is not available for this follow up form.');
     }
 }
 
@@ -342,7 +342,7 @@ try {
         if ($parentOwnerId !== $userId) {
             sts_notify(
                 $parentOwnerId,
-                $type . ' follow-up completed',
+                $type . ' follow up completed',
                 $applicationNo . ' has been linked to ' . $parent['application_no'] . '.',
                 'application-detail.php?application=' . rawurlencode($parent['application_no']),
                 'success'
