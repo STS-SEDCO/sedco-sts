@@ -87,7 +87,7 @@ $stmt->close();
   <title>Smart Training System: Approval</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-  <link rel="stylesheet" href="sedco-saas.css?v=20260930-65">
+  <link rel="stylesheet" href="sedco-saas.css?v=20261003-05">
   <link rel="stylesheet" href="sedco-shell.css?v=20260930-56">
 </head>
 <body class="app-page submissions-page" data-page="submissions" data-role="<?= e(normalized_role($user['role'] ?? '')) ?>">
@@ -96,9 +96,9 @@ $stmt->close();
   <div class="submissions-shell">
     <header class="submissions-heading">
       <div>
-        <div class="submissions-eyebrow">Review workspace</div>
+        <div class="submissions-eyebrow">Approval workspace</div>
         <h1>Approval</h1>
-        <p>Review BPL applications currently waiting for your action.</p>
+        <p>Review, approve or return BPL applications assigned to your current approval stage.</p>
       </div>
 
       <div class="submissions-heading-actions">
@@ -125,7 +125,7 @@ $stmt->close();
       <article class="submission-stat-card stat-total">
         <div class="submission-stat-top">
           <span class="submission-stat-icon"><i class="bi bi-inbox"></i></span>
-          <span class="submission-stat-caption">All time</span>
+          <span class="submission-stat-caption">Current queue</span>
         </div>
         <strong id="submissionTotal">0</strong>
         <span>Waiting for action</span>
@@ -143,7 +143,7 @@ $stmt->close();
       <article class="submission-stat-card stat-reviewed">
         <div class="submission-stat-top">
           <span class="submission-stat-icon"><i class="bi bi-check2-circle"></i></span>
-          <span class="submission-stat-caption">Processed</span>
+          <span class="submission-stat-caption">Attention</span>
         </div>
         <strong id="submissionReviewed">0</strong>
         <span>Overdue</span>
@@ -152,7 +152,7 @@ $stmt->close();
       <article class="submission-stat-card stat-week">
         <div class="submission-stat-top">
           <span class="submission-stat-icon"><i class="bi bi-calendar3"></i></span>
-          <span class="submission-stat-caption">Recent</span>
+          <span class="submission-stat-caption">Activity</span>
         </div>
         <strong id="submissionWeek">0</strong>
         <span>This week</span>
@@ -197,7 +197,7 @@ $stmt->close();
               <th>Submission</th>
               <th>Status</th>
               <th>Stage</th>
-              <th></th>
+              <th class="submission-actions-heading">Actions</th>
             </tr>
           </thead>
           <tbody id="submissionRows"></tbody>
@@ -262,6 +262,68 @@ $stmt->close();
   </div>
 </div>
 
+<div class="modal fade submissions-modal quick-review-modal" id="quickReviewModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <form id="quickReviewForm" method="post" action="review_application.php">
+        <?= csrf_field() ?>
+        <input type="hidden" name="application_no" id="quickReviewApplication">
+        <input type="hidden" name="decision" id="quickReviewDecision">
+
+        <div class="modal-header">
+          <div>
+            <div class="submission-modal-kicker" id="quickReviewRef">BPL Review</div>
+            <h2 class="modal-title mt-1" id="quickReviewTitle">Review application</h2>
+          </div>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+
+        <div class="modal-body">
+          <div class="quick-review-context">
+            <div>
+              <span>Applicant</span>
+              <strong id="quickReviewApplicant">Not available</strong>
+            </div>
+            <div>
+              <span>Current stage</span>
+              <strong id="quickReviewStage">Not available</strong>
+            </div>
+          </div>
+
+          <div class="quick-review-decision" id="quickReviewDecisionBadge"></div>
+
+          <div id="quickReviewFields" class="quick-review-fields"></div>
+
+          <div class="quick-review-note-wrap">
+            <label for="quickReviewComment">Additional review note <span>Optional</span></label>
+            <textarea
+              id="quickReviewComment"
+              name="review_comment"
+              rows="3"
+              maxlength="1000"
+              placeholder="Add a short note for this decision if needed"
+            ></textarea>
+          </div>
+
+          <div class="quick-review-hint" id="quickReviewHint"></div>
+        </div>
+
+        <div class="modal-footer">
+          <a id="quickReviewOpenForm" class="quick-review-open-form" href="#">
+            <i class="bi bi-box-arrow-up-right"></i> View full form
+          </a>
+          <div class="quick-review-footer-actions">
+            <button type="button" class="quick-review-cancel" data-bs-dismiss="modal">Cancel</button>
+            <button type="submit" class="quick-review-submit" id="quickReviewSubmit">
+              Confirm
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script>
 window.SEDCO_SUBMISSIONS = <?= json_encode(
@@ -274,7 +336,7 @@ window.SEDCO_SUBMISSIONS = <?= json_encode(
     | JSON_HEX_QUOT
 ) ?>;
 </script>
-<script src="submissions.js?v=20261003-01"></script>
+<script src="submissions.js?v=20261003-02"></script>
 <script src="sedco-shell.js?v=20261003-02"></script>
 </body>
 </html>
