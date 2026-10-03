@@ -236,6 +236,6 @@ function approval_decision_label(string $decision): string
   </div>
 </main>
 
-<script src="sedco-shell.js?v=20261003-01"></script>
+<script src="sedco-shell.js?v=20261003-02"></script>
 </body>
 </html>
