@@ -89,16 +89,20 @@ if ($role === 'staff') {
 } else {
     $dashboardTitle = match ($role) {
         'head_of_department' => 'Department review workspace',
-        'training_section' => 'Training operations workspace',
-        'general_manager' => 'Final approval workspace',
+        'training_section' => 'Training review workspace',
+        'general_manager' => 'General Manager approval workspace',
+        'pengerusi_besar' => 'Pengerusi approval workspace',
+        'finance' => 'Kewangan processing workspace',
         'admin' => 'System overview',
         default => 'Review workspace',
     };
 
     $dashboardSubtitle = match ($role) {
         'head_of_department' => 'Review your department queue and complete post training assessments.',
-        'training_section' => 'Process training applications, deadlines and follow up records.',
-        'general_manager' => 'Review final approvals and monitor training outcomes.',
+        'training_section' => 'Review the Training section before applications continue to the Head of Department.',
+        'general_manager' => 'Review applications approved by the Head of Department.',
+        'pengerusi_besar' => 'Review applications approved by the General Manager.',
+        'finance' => 'Complete the final financial processing for approved training applications.',
         'admin' => 'Monitor users, workflow activity, approvals and system health.',
         default => 'Review applications assigned to your role.',
     };
