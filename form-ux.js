@@ -239,7 +239,7 @@
         kandungan: 'Ringkaskan kandungan utama kursus / seminar...',
         tempat_tugas: 'Lokasi tugas luar daerah',
         kenderaan_other: 'Contoh: Grab, teksi, bas...',
-        ulasan_latihan: 'Tulis ulasan Training Department...',
+        ulasan_latihan: 'Tulis ulasan atau arahan pembetulan untuk pemohon...',
         ulasan_bahagian: 'Tulis ulasan Head of Department...',
         ulasan_pengurus: 'Tulis ulasan pengurus...',
         ulasan_kewangan: 'Tulis ulasan kewangan...'
