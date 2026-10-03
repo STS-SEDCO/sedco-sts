@@ -11,10 +11,47 @@ if (!$user) {
 
 $parent = null;
 $parentPayload = [];
-$parentId = max(0, (int) ($_GET['parent'] ?? 0));
+$editApplication = null;
+$editPayload = [];
+$isEditMode = false;
+$editApplicationNo = trim((string) ($_GET['application'] ?? ''));
 $userId = (int) ($user['id'] ?? 0);
-$malaysiaToday = (new DateTimeImmutable('today', new DateTimeZone('Asia/Kuala_Lumpur')))->format('Y-m-d');
+$parentId = max(0, (int) ($_GET['parent'] ?? 0));
+
+if ($editApplicationNo !== '') {
+    $editStmt = db()->prepare(
+        'SELECT id, application_no, user_id, parent_application_id, form_type,
+                title, payload, status, current_stage
+         FROM applications
+         WHERE application_no = ?
+         LIMIT 1'
+    );
+    $editStmt->bind_param('s', $editApplicationNo);
+    $editStmt->execute();
+    $editApplication = $editStmt->get_result()->fetch_assoc();
+    $editStmt->close();
+
+    if (
+        !$editApplication
+        || (string) $editApplication['form_type'] !== 'PKK'
+        || !sts_can_edit_pkk($editApplication, $user)
+    ) {
+        http_response_code(403);
+        exit('This PKK submission can no longer be edited.');
+    }
+
+    $isEditMode = true;
+    $parentId = (int) ($editApplication['parent_application_id'] ?? 0);
+    $editPayload = json_decode((string) ($editApplication['payload'] ?? ''), true);
+    $editPayload = is_array($editPayload) ? $editPayload : [];
+}
+
+$malaysiaToday = (new DateTimeImmutable(
+    'today',
+    new DateTimeZone('Asia/Kuala_Lumpur')
+))->format('Y-m-d');
 $eligibleTrainings = [];
+$includeParentId = $isEditMode ? $parentId : 0;
 
 $trainingStmt = db()->prepare(
     'SELECT b.id, b.application_no, b.title, b.payload, b.training_end
@@ -24,15 +61,18 @@ $trainingStmt = db()->prepare(
        AND b.status = "approved"
        AND b.training_end IS NOT NULL
        AND b.training_end <= ?
-       AND NOT EXISTS (
-         SELECT 1 FROM applications p
-         WHERE p.parent_application_id = b.id
-           AND p.form_type = "PKK"
-           AND p.status <> "cancelled"
+       AND (
+         b.id = ?
+         OR NOT EXISTS (
+           SELECT 1 FROM applications p
+           WHERE p.parent_application_id = b.id
+             AND p.form_type = "PKK"
+             AND p.status <> "cancelled"
+         )
        )
      ORDER BY b.training_end DESC, b.id DESC'
 );
-$trainingStmt->bind_param('is', $userId, $malaysiaToday);
+$trainingStmt->bind_param('isi', $userId, $malaysiaToday, $includeParentId);
 $trainingStmt->execute();
 $trainingResult = $trainingStmt->get_result();
 
@@ -73,6 +113,7 @@ $profileName = trim((string) ($user['fullname'] ?? ''));
 $profileDepartment = trim((string) ($user['department'] ?? ''));
 $profileJobTitle = trim((string) ($user['job_title'] ?? ''));
 $profileComplete = $profileName !== '' && $profileDepartment !== '' && $profileJobTitle !== '';
+$formAction = $isEditMode ? 'update_pkk.php' : 'submit_application.php?type=PKK';
 ?>
 <!DOCTYPE html>
 <html lang="ms">
@@ -82,7 +123,7 @@ $profileComplete = $profileName !== '' && $profileDepartment !== '' && $profileJ
   <title>Smart Training System: Borang Penilaian</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-  <link rel="stylesheet" href="sedco-saas.css?v=20261003-03">
+  <link rel="stylesheet" href="sedco-saas.css?v=20261003-04">
   <link rel="stylesheet" href="sedco-shell.css?v=20260930-56">
 </head>
 <body class="app-page form-page pkk-page" data-page="task" data-role="<?= e(normalized_role($user['role'] ?? '')) ?>">
@@ -107,8 +148,11 @@ $profileComplete = $profileName !== '' && $profileDepartment !== '' && $profileJ
 
       <div class="form-permission-notice" data-form-permission-notice></div>
 
-      <form data-form-owner="staff" method="post" action="submit_application.php?type=PKK" enctype="multipart/form-data">
+      <form data-form-owner="staff" method="post" action="<?= e($formAction) ?>" enctype="multipart/form-data">
         <?= csrf_field() ?>
+        <?php if ($isEditMode): ?>
+        <input type="hidden" name="application_no" value="<?= e((string) $editApplication['application_no']) ?>">
+        <?php endif; ?>
         <?php if (!$profileComplete): ?>
         <div class="sts-profile-source-note is-warning">
           <i class="bi bi-exclamation-circle"></i>
@@ -138,7 +182,10 @@ $profileComplete = $profileName !== '' && $profileDepartment !== '' && $profileJ
         <div class="row g-3 pkk-info-row pkk-info-row-secondary">
           <div class="col-md-4">
             <label class="form-label fw-semibold"><i class="bi bi-mortarboard"></i> Tajuk Kursus/Seminar</label>
-            <select class="form-control pkk-training-select" name="parent_application_id" id="pkkTrainingSelect" required <?= $eligibleTrainings ? '' : 'disabled' ?>>
+            <?php if ($isEditMode): ?>
+            <input type="hidden" name="parent_application_id" value="<?= (int) $parentId ?>">
+            <?php endif; ?>
+            <select class="form-control pkk-training-select" <?= $isEditMode ? '' : 'name="parent_application_id"' ?> id="pkkTrainingSelect" required <?= $eligibleTrainings && !$isEditMode ? '' : 'disabled' ?>>
               <option value=""><?= $eligibleTrainings ? 'Pilih kursus daripada BPL yang telah selesai' : 'Tiada kursus BPL yang tersedia untuk dinilai' ?></option>
               <?php foreach ($eligibleTrainings as $training): ?>
               <option
@@ -262,13 +309,43 @@ $profileComplete = $profileName !== '' && $profileDepartment !== '' && $profileJ
 
         <div class="pkk-form-actions no-print">
           <button type="button" class="btn btn-secondary form-print-button" onclick="window.print()"><i class="bi bi-printer"></i> Print</button>
-          <button type="submit" class="btn btn-primary"><i class="bi bi-send-check"></i> Submit</button>
+          <button type="submit" class="btn btn-primary"><i class="bi <?= $isEditMode ? 'bi-check2-circle' : 'bi-send-check' ?>"></i> <?= $isEditMode ? 'Update Submission' : 'Submit' ?></button>
         </div>
       </form>
     </div>
   </main>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+window.SEDCO_PKK_DATA = <?= json_encode(
+    $editPayload,
+    JSON_UNESCAPED_UNICODE
+    | JSON_UNESCAPED_SLASHES
+    | JSON_HEX_TAG
+    | JSON_HEX_AMP
+    | JSON_HEX_APOS
+    | JSON_HEX_QUOT
+) ?>;
+(() => {
+  const data = window.SEDCO_PKK_DATA || {};
+  const form = document.querySelector('.pkk-page form');
+  if (!form) return;
+
+  Object.entries(data).forEach(([name, value]) => {
+    if (['nama','bahagian','jawatan','tajuk','tarikh','tempat'].includes(name)) return;
+
+    const fields = [...form.querySelectorAll('[name="' + CSS.escape(name) + '"], [name="' + CSS.escape(name) + '[]"]')];
+    fields.forEach(field => {
+      if (field.type === 'checkbox' || field.type === 'radio') {
+        const values = Array.isArray(value) ? value.map(String) : [String(value)];
+        field.checked = values.includes(String(field.value));
+      } else if (value !== null && value !== undefined) {
+        field.value = String(value);
+      }
+    });
+  });
+})();
+</script>
   <script>
 (() => {
   const select = document.getElementById('pkkTrainingSelect');
@@ -292,7 +369,7 @@ $profileComplete = $profileName !== '' && $profileDepartment !== '' && $profileJ
 })();
 </script>
   <script>
-window.SEDCO_FORM_CONTEXT = { role: <?= json_encode($user['role'] ?? 'staff') ?>, mode: 'new', formType: 'PKK' };
+window.SEDCO_FORM_CONTEXT = { role: <?= json_encode($user['role'] ?? 'staff') ?>, mode: <?= json_encode($isEditMode ? 'edit' : 'new') ?>, formType: 'PKK' };
 </script>
 <script src="form-permissions.js?v=20260930-59"></script>
 <script src="form-ux.js?v=20261001-09"></script>
