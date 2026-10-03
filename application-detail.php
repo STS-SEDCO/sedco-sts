@@ -78,7 +78,8 @@ $linkedStmt = db()->prepare(
     'SELECT application_no, form_type, title, status, submitted_at
      FROM applications
      WHERE parent_application_id = ?
-     ORDER BY submitted_at ASC'
+     ORDER BY CASE WHEN status = "cancelled" THEN 1 ELSE 0 END ASC,
+              submitted_at DESC'
 );
 $linkedStmt->bind_param('i', $applicationId);
 $linkedStmt->execute();
@@ -126,10 +127,15 @@ while ($row = $versionResult->fetch_assoc()) {
 
 $versionStmt->close();
 
+$canEditPkk = sts_can_edit_pkk($application, $user);
+
 $canCancelApplication =
-    sts_cancel_application_supported()
-    && (int) $application['user_id'] === (int) $user['id']
-    && in_array((string) $application['status'], ['pending', 'correction'], true);
+    (
+        sts_cancel_application_supported()
+        && (int) $application['user_id'] === (int) $user['id']
+        && in_array((string) $application['status'], ['pending', 'correction'], true)
+    )
+    || sts_can_cancel_pkk($application, $user);
 
 $statusClass = match ((string) $application['status']) {
     'approved' => 'approved',
@@ -168,6 +174,10 @@ function detail_value_label(string $key): string
         <?php if ($application['form_type'] === 'BPL'): ?>
         <a class="sts-secondary-btn" href="bpl.php?application=<?= rawurlencode($applicationNo) ?>">
           <i class="bi bi-file-earmark-text"></i> Open form
+        </a>
+        <?php elseif ($canEditPkk): ?>
+        <a class="sts-secondary-btn" href="pkk.php?application=<?= rawurlencode($applicationNo) ?>">
+          <i class="bi bi-pencil-square"></i> Edit submission
         </a>
         <?php endif; ?>
         <a class="sts-primary-btn" href="application-print.php?application=<?= rawurlencode($applicationNo) ?>" target="_blank">
@@ -384,8 +394,8 @@ function detail_value_label(string $key): string
           <div class="cancel-warning-card">
             <span><i class="bi bi-exclamation-triangle"></i></span>
             <div>
-              <strong>This will stop the current approval workflow.</strong>
-              <p>The record will remain in Application Status as Cancelled for audit and reference.</p>
+              <strong><?= $application['form_type'] === 'PKK' ? 'This PKK submission will be cancelled.' : 'This will stop the current approval workflow.' ?></strong>
+              <p><?= $application['form_type'] === 'PKK' ? 'The linked BPL course will become available for a new PKK submission.' : 'The record will remain in Application Status as Cancelled for audit and reference.' ?></p>
             </div>
           </div>
           <label class="cancel-reason-field">
