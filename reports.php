@@ -109,7 +109,7 @@ $query=http_build_query(array_filter([
 <!DOCTYPE html>
 <html lang="en"><head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>Reports & Analytics - Smart Training System</title>
+<title>Smart Training System: Reports and Analytics</title>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 <link rel="stylesheet" href="sedco-saas.css?v=20260930-64"><link rel="stylesheet" href="sedco-shell.css?v=20260930-56">
@@ -134,7 +134,7 @@ $query=http_build_query(array_filter([
 <section class="report-kpis">
 <article><span><i class="bi bi-files"></i></span><div><strong><?= count($rows) ?></strong><small>Total records</small></div></article>
 <article><span><i class="bi bi-check2-circle"></i></span><div><strong><?= e((string)$approvalRate) ?>%</strong><small>Approval rate</small></div></article>
-<article><span><i class="bi bi-clock-history"></i></span><div><strong><?= $avgProcessingDays===null?'—':e((string)$avgProcessingDays).' d' ?></strong><small>Avg. processing</small></div></article>
+<article><span><i class="bi bi-clock-history"></i></span><div><strong><?= $avgProcessingDays===null?'Not available':e((string)$avgProcessingDays).' d' ?></strong><small>Avg. processing</small></div></article>
 <article><span><i class="bi bi-cash-stack"></i></span><div><strong>RM <?= e(number_format($totalFees,2)) ?></strong><small>Submitted BPL fees</small></div></article>
 </section>
 
@@ -168,7 +168,7 @@ $query=http_build_query(array_filter([
 <div class="sts-card-heading"><div><span>Records</span><h2>Application register</h2></div><span class="report-record-count"><?= count($rows) ?> results</span></div>
 <div class="report-table-wrap"><table class="report-table"><thead><tr><th>Reference</th><th>Applicant</th><th>Department</th><th>Form</th><th>Status</th><th>Stage</th><th>Submitted</th><th></th></tr></thead><tbody>
 <?php foreach($rows as $row): ?><tr>
-<td><strong><?= e($row['application_no']) ?></strong></td><td><?= e($row['fullname']) ?></td><td><?= e($row['department']?:'—') ?></td><td><?= e($row['form_type']) ?></td>
+<td><strong><?= e($row['application_no']) ?></strong></td><td><?= e($row['fullname']) ?></td><td><?= e($row['department']?:'Not available') ?></td><td><?= e($row['form_type']) ?></td>
 <td><span class="status-pill status-<?= e($row['status']) ?>"><?= e(ucfirst((string)$row['status'])) ?></span></td><td><?= e(stage_label((string)$row['current_stage'])) ?></td>
 <td><?= e(date('d M Y',strtotime((string)$row['submitted_at']))) ?></td><td><a href="application-detail.php?application=<?= rawurlencode((string)$row['application_no']) ?>">View <i class="bi bi-arrow-up-right"></i></a></td>
 </tr><?php endforeach; ?>
