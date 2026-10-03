@@ -131,6 +131,8 @@
       case 'hod': return 'Head of Department';
       case 'training': return 'Training Department';
       case 'gm': return 'General Manager';
+      case 'chairman': return 'Pengerusi';
+      case 'finance': return 'Kewangan';
       case 'completed': return 'Completed';
       default: return 'Pending';
     }
