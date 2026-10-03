@@ -7,8 +7,7 @@
   const applicationStatus = String(context.status || '').toLowerCase();
 
   const aliases = {
-    head_of_division: 'head_of_department',
-    pengerusi_besar: 'general_manager'
+    head_of_division: 'head_of_department'
   };
 
   const normalizedRole = aliases[role] || role;
@@ -18,14 +17,18 @@
     head_of_department: 'Head of Department',
     training_section: 'Training Department',
     general_manager: 'General Manager',
+    pengerusi_besar: 'Pengerusi',
+    finance: 'Kewangan',
     admin: 'System Administrator'
   };
 
   function stageOwner(stage) {
     return {
-      hod: 'head_of_department',
       training: 'training_section',
-      gm: 'general_manager'
+      hod: 'head_of_department',
+      gm: 'general_manager',
+      chairman: 'pengerusi_besar',
+      finance: 'finance'
     }[stage] || null;
   }
 
