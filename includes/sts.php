@@ -478,8 +478,116 @@ function sts_can_view_application(array $application, array $user): bool
     return true;
 }
 
+function sts_expected_bpl_stage(array $application): string
+{
+    if ((string) ($application['form_type'] ?? '') !== 'BPL') {
+        return (string) ($application['current_stage'] ?? 'completed');
+    }
+
+    if ((string) ($application['status'] ?? '') !== 'pending') {
+        return (string) ($application['current_stage'] ?? 'training');
+    }
+
+    $applicationId = (int) ($application['id'] ?? 0);
+
+    if ($applicationId <= 0) {
+        return 'training';
+    }
+
+    $approvedStages = [];
+
+    try {
+        $stmt = db()->prepare(
+            'SELECT review_stage
+             FROM application_reviews
+             WHERE application_id = ?
+               AND decision = "approved"
+             ORDER BY reviewed_at ASC, id ASC'
+        );
+        $stmt->bind_param('i', $applicationId);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        while ($row = $result->fetch_assoc()) {
+            $approvedStages[(string) $row['review_stage']] = true;
+        }
+
+        $stmt->close();
+    } catch (Throwable) {
+        return (string) ($application['current_stage'] ?? 'training');
+    }
+
+    foreach (['training', 'hod', 'gm', 'chairman', 'finance'] as $stage) {
+        if (empty($approvedStages[$stage])) {
+            return $stage;
+        }
+    }
+
+    return 'completed';
+}
+
+function sts_sync_bpl_pending_stage(array $application): string
+{
+    $expectedStage = sts_expected_bpl_stage($application);
+    $currentStage = (string) ($application['current_stage'] ?? '');
+
+    if (
+        (string) ($application['form_type'] ?? '') !== 'BPL'
+        || (string) ($application['status'] ?? '') !== 'pending'
+        || $expectedStage === $currentStage
+    ) {
+        return $expectedStage;
+    }
+
+    $applicationId = (int) ($application['id'] ?? 0);
+
+    if ($applicationId <= 0) {
+        return $expectedStage;
+    }
+
+    try {
+        $slaDueAt = $expectedStage === 'completed'
+            ? null
+            : sts_review_sla_due();
+
+        $stmt = db()->prepare(
+            'UPDATE applications
+             SET current_stage = ?, sla_due_at = ?
+             WHERE id = ?
+               AND status = "pending"'
+        );
+        $stmt->bind_param('ssi', $expectedStage, $slaDueAt, $applicationId);
+        $stmt->execute();
+        $stmt->close();
+    } catch (Throwable) {
+        // Stage validation still uses the expected stage even if repair cannot be persisted.
+    }
+
+    return $expectedStage;
+}
+
+function sts_stage_prerequisites_met(array $application): bool
+{
+    if ((string) ($application['form_type'] ?? '') !== 'BPL') {
+        return true;
+    }
+
+    if ((string) ($application['status'] ?? '') !== 'pending') {
+        return false;
+    }
+
+    $expectedStage = sts_expected_bpl_stage($application);
+    $currentStage = (string) ($application['current_stage'] ?? '');
+
+    return $currentStage === $expectedStage;
+}
+
 function sts_can_review_application(array $application, array $user): bool
 {
+    if (!sts_stage_prerequisites_met($application)) {
+        return false;
+    }
+
     $stage = (string) ($application['current_stage'] ?? '');
 
     if (!user_can_review_stage($stage, $user)) {
