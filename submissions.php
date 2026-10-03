@@ -169,9 +169,11 @@ $stmt->close();
         <div class="submissions-advanced-filters">
           <select id="submissionStage" aria-label="Filter by stage">
             <option value="all">All stages</option>
-            <option value="hod">Head of Department</option>
             <option value="training">Training Department</option>
+            <option value="hod">Head of Department</option>
             <option value="gm">General Manager</option>
+            <option value="chairman">Pengerusi</option>
+            <option value="finance">Kewangan</option>
             <option value="completed">Completed</option>
           </select>
           <select id="submissionDepartment" aria-label="Filter by department">
@@ -273,6 +275,6 @@ window.SEDCO_SUBMISSIONS = <?= json_encode(
 ) ?>;
 </script>
 <script src="submissions.js?v=20261003-01"></script>
-<script src="sedco-shell.js?v=20261003-01"></script>
+<script src="sedco-shell.js?v=20261003-02"></script>
 </body>
 </html>
