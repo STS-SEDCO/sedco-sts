@@ -626,6 +626,7 @@ function sts_validate_parent_bpl(
              FROM applications
              WHERE parent_application_id = ?
                AND form_type = "PKK"
+               AND status <> "cancelled"
              LIMIT 1'
         );
         $duplicate->bind_param('i', $parentApplicationId);
@@ -674,6 +675,7 @@ function sts_ensure_followup_notifications(array $user): void
                      SELECT 1 FROM applications p
                      WHERE p.parent_application_id = b.id
                        AND p.form_type = "PKK"
+                       AND p.status <> "cancelled"
                    )
                  ORDER BY b.training_end ASC'
             );
