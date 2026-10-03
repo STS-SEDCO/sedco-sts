@@ -54,12 +54,12 @@
       case 'completed':
         return { label:'Completed', cls:'completed', icon:'bi-check2-all' };
       default:
-        return { label:'—', cls:'none', icon:'bi-dash' };
+        return { label:'Not available', cls:'none', icon:'bi-dash' };
     }
   }
 
   function formatDate(value, includeTime = false) {
-    if (!value) return '—';
+    if (!value) return 'Not available';
     const date = new Date(value);
     if (Number.isNaN(date.getTime())) return escapeHtml(value);
 
