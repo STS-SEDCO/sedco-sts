@@ -28,7 +28,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $jobTitle = trim((string) ($_POST['job_title'] ?? ''));
         $isActive = isset($_POST['is_active']) ? 1 : 0;
 
-        $allowedRoles = ['admin','staff','head_of_department','training_section','general_manager'];
+        $allowedRoles = ['admin','staff','training_section','head_of_department','general_manager','pengerusi_besar','finance'];
 
         if (!in_array($role, $allowedRoles, true)) {
             $error = 'Invalid role.';
@@ -158,7 +158,7 @@ while ($row = $departmentResult->fetch_assoc()) $departments[] = $row['name'];
         <input type="hidden" name="user_id" value="<?= (int) $account['id'] ?>">
         <div class="admin-form-grid">
           <label><span>Role</span><select name="role">
-            <?php foreach (['staff'=>'Staff / Applicant','head_of_department'=>'Head of Department','training_section'=>'Training Department','general_manager'=>'General Manager','admin'=>'System Administrator'] as $value=>$label): ?>
+            <?php foreach (['staff'=>'Staff / Applicant','training_section'=>'Training Department','head_of_department'=>'Head of Department','general_manager'=>'General Manager','pengerusi_besar'=>'Pengerusi','finance'=>'Kewangan','admin'=>'System Administrator'] as $value=>$label): ?>
             <option value="<?= e($value) ?>" <?= normalized_role((string) $account['role']) === $value ? 'selected' : '' ?>><?= e($label) ?></option>
             <?php endforeach; ?>
           </select></label>
