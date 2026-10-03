@@ -17,8 +17,10 @@ if (!user_can_review_applications($user)) {
     exit;
 }
 
+sts_repair_pending_bpl_stages();
+
 $stmt = db()->prepare(
-    'SELECT a.application_no, a.user_id, a.form_type, a.title, a.payload, a.status,
+    'SELECT a.id, a.application_no, a.user_id, a.form_type, a.title, a.payload, a.status,
             a.department, a.assigned_hod_id, a.current_stage, a.review_note,
             a.sla_due_at, a.submitted_at, a.updated_at, u.fullname
      FROM applications a
