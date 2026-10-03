@@ -149,7 +149,7 @@ function detail_value_label(string $key): string
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title><?= e($applicationNo) ?> - Smart Training System</title>
+  <title>Smart Training System: <?= e($applicationNo) ?></title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
   <link rel="stylesheet" href="sedco-saas.css?v=20260930-64">
@@ -196,7 +196,7 @@ function detail_value_label(string $key): string
       </div>
       <div>
         <span>Department</span>
-        <strong><?= e($application['department'] ?: '—') ?></strong>
+        <strong><?= e($application['department'] ?: 'Not available') ?></strong>
       </div>
       <div>
         <span>Submitted</span>
@@ -204,7 +204,7 @@ function detail_value_label(string $key): string
       </div>
       <div>
         <span>SLA due</span>
-        <strong><?= !empty($application['sla_due_at']) ? e(date('d M Y, g:i A', strtotime((string) $application['sla_due_at']))) : '—' ?></strong>
+        <strong><?= !empty($application['sla_due_at']) ? e(date('d M Y, g:i A', strtotime((string) $application['sla_due_at']))) : 'Not assigned' ?></strong>
       </div>
     </section>
 
@@ -293,7 +293,7 @@ function detail_value_label(string $key): string
               <small><?= e(ucfirst((string) $match['status'])) ?></small>
               <?php else: ?>
               <strong>Not submitted</strong>
-              <small>Follow-up pending</small>
+              <small>Follow up pending</small>
               <?php endif; ?>
             </div>
           </div>
