@@ -6,7 +6,7 @@ require_login();
 $user = current_user();
 sts_ensure_followup_notifications($user);
 $role = normalized_role($user['role'] ?? '');
-$canStaffForms = in_array($role, ['staff', 'admin'], true);
+$canStaffForms = in_array($role, ['staff', 'head_of_department', 'admin'], true);
 $canTea = in_array($role, ['head_of_department', 'admin'], true);
 
 $userId = (int) ($user['id'] ?? 0);
@@ -41,6 +41,33 @@ if ($role === 'staff') {
     }
     $followStmt->close();
 } elseif ($role === 'head_of_department') {
+    $ownStmt = db()->prepare(
+        'SELECT b.id, b.application_no, b.title, b.training_end,
+                EXISTS(
+                  SELECT 1 FROM applications p
+                  WHERE p.parent_application_id = b.id
+                    AND p.form_type = "PKK"
+                    AND p.status <> "cancelled"
+                ) AS has_followup
+         FROM applications b
+         WHERE b.user_id = ?
+           AND b.form_type = "BPL"
+           AND b.status = "approved"
+           AND b.training_end IS NOT NULL
+         ORDER BY b.training_end DESC'
+    );
+    $ownStmt->bind_param('i', $userId);
+    $ownStmt->execute();
+    $ownResult = $ownStmt->get_result();
+
+    while ($row = $ownResult->fetch_assoc()) {
+        if (!(int) $row['has_followup']) {
+            $row['follow_type'] = 'PKK';
+            $followupItems[] = $row;
+        }
+    }
+    $ownStmt->close();
+
     $followStmt = db()->prepare(
         'SELECT b.id, b.application_no, b.title, b.training_end, b.department,
                 EXISTS(
@@ -50,6 +77,7 @@ if ($role === 'staff') {
          FROM applications b
          WHERE b.form_type = "BPL"
            AND b.status = "approved"
+           AND b.user_id <> ?
            AND (
              b.assigned_hod_id = ?
              OR (
@@ -59,7 +87,7 @@ if ($role === 'staff') {
            )
          ORDER BY b.training_end DESC'
     );
-    $followStmt->bind_param('is', $userId, $department);
+    $followStmt->bind_param('iis', $userId, $userId, $department);
     $followStmt->execute();
     $followResult = $followStmt->get_result();
 
@@ -110,7 +138,7 @@ if ($role === 'staff') {
           <p>Submit a training request for review and approval through the STS workflow.</p>
         </div>
         <div class="task-card-footer">
-          <span class="task-card-status"><?= $canStaffForms ? '<i class="bi bi-circle-fill"></i> Ready to apply' : '<i class="bi bi-lock-fill"></i> Staff only' ?></span>
+          <span class="task-card-status"><?= $canStaffForms ? '<i class="bi bi-circle-fill"></i> Ready to apply' : '<i class="bi bi-lock-fill"></i> Applicant access' ?></span>
           <?php if ($canStaffForms): ?>
           <a href="bpl.php" class="task-apply-btn">Apply now <i class="bi bi-arrow-up-right"></i></a>
           <?php else: ?>
@@ -129,7 +157,7 @@ if ($role === 'staff') {
           <p>Complete the course effectiveness evaluation after attending training.</p>
         </div>
         <div class="task-card-footer">
-          <span class="task-card-status"><?= $canStaffForms ? '<i class="bi bi-circle-fill"></i> Ready to apply' : '<i class="bi bi-lock-fill"></i> Staff only' ?></span>
+          <span class="task-card-status"><?= $canStaffForms ? '<i class="bi bi-circle-fill"></i> Ready to apply' : '<i class="bi bi-lock-fill"></i> Applicant access' ?></span>
           <?php if ($canStaffForms): ?>
           <a href="pkk.php" class="task-apply-btn">Apply now <i class="bi bi-arrow-up-right"></i></a>
           <?php else: ?>
