@@ -20,7 +20,7 @@ if ($parentId > 0) {
 
     if (!$parent) {
         http_response_code(403);
-        exit('This training record is not available for TEA follow-up.');
+        exit('This training record is not available for TEA follow up.');
     }
 
     $parentPayload = json_decode((string) $parent['payload'], true);
@@ -32,7 +32,7 @@ if ($parentId > 0) {
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Training Effectiveness Form - Tasks</title>
+  <title>Training Effectiveness Form: Tasks</title>
 
   <!-- Bootstrap CSS and Font Awesome -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -53,7 +53,7 @@ if ($parentId > 0) {
   <div class="form-container">
     <div class="center mb-4">
       <h5 class="mt-3 fw-bold">TRAINING EFFECTIVENESS ASSESSMENT FORM</h5>
-      <em>Post-Training Evaluation – Improvement Assessment (Conducted in June or December of the Training Year)</em>
+      <em>Post Training Evaluation: Improvement Assessment (Conducted in June or December of the Training Year)</em>
     </div>
 
     <div class="form-permission-notice" data-form-permission-notice></div>
@@ -141,9 +141,9 @@ if ($parentId > 0) {
           <tr><th>Ranking</th><th>Description</th></tr>
         </thead>
         <tbody>
-          <tr><td>Fail</td><td>0 – 7 points. No significant improvement observed. Re-training recommended.</td></tr>
-          <tr><td>Probation</td><td>8 – 12 points. Requires supervision for 6 months. Re-assessment needed.</td></tr>
-          <tr><td>Pass</td><td>13 – 17 points. Can perform tasks with minimal supervision.</td></tr>
+          <tr><td>Fail</td><td>0 to 7 points. No significant improvement observed. Additional training is recommended.</td></tr>
+          <tr><td>Probation</td><td>8 to 12 points. Requires supervision for 6 months. A reassessment is required.</td></tr>
+          <tr><td>Pass</td><td>13 to 17 points. Can perform tasks with minimal supervision.</td></tr>
           <tr><td>Merit</td><td>18 points. Shows excellent competency. Can guide others.</td></tr>
         </tbody>
       </table>
