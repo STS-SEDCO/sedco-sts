@@ -55,9 +55,9 @@ try {
 
     $stage = (string) $application['current_stage'];
 
-    if ($decision === 'correction' && $stage !== 'hod') {
+    if ($decision === 'correction' && !in_array($stage, ['training', 'hod'], true)) {
         http_response_code(403);
-        throw new RuntimeException('Correction requests are available only at the Head of Department stage.');
+        throw new RuntimeException('Correction requests are available only at the Training Department or Head of Department stage.');
     }
     $allowedByStage = [
         'training' => ['ulasan_latihan', 'tarikh_latihan', 'tt_latihan'],
@@ -81,7 +81,9 @@ try {
     $submittedFields = array_intersect_key($_POST, array_flip($allowedKeys));
 
     $requiredReviewFields = match ($stage) {
-        'training' => ['ulasan_latihan', 'tarikh_latihan', 'tt_latihan'],
+        'training' => $decision === 'correction'
+            ? ['ulasan_latihan']
+            : ['ulasan_latihan', 'tarikh_latihan', 'tt_latihan'],
         'hod' => $decision === 'correction'
             ? ['ulasan_bahagian']
             : ['ulasan_bahagian', 'tarikh_bahagian', 'tt_bahagian'],
@@ -137,9 +139,21 @@ try {
         };
     }
 
-    if ($decision === 'correction' && trim((string) ($payload['ulasan_bahagian'] ?? '')) === '') {
-        http_response_code(422);
-        throw new RuntimeException('Please write the correction instructions in Section E before sending the form back to the applicant.');
+    if ($decision === 'correction') {
+        $correctionNote = match ($stage) {
+            'training' => trim((string) ($payload['ulasan_latihan'] ?? '')),
+            'hod' => trim((string) ($payload['ulasan_bahagian'] ?? '')),
+            default => '',
+        };
+
+        if ($correctionNote === '') {
+            http_response_code(422);
+            throw new RuntimeException(
+                $stage === 'training'
+                    ? 'Please write the correction instructions in Section D before sending the form back to the applicant.'
+                    : 'Please write the correction instructions in Section E before sending the form back to the applicant.'
+            );
+        }
     }
 
     $payloadJson = json_encode(
