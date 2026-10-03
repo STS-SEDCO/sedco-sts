@@ -13013,3 +13013,191 @@ body.profile-page .modal-backdrop{
     width:100%;
   }
 }
+
+
+/* ===== APPROVAL TYPOGRAPHY AND HISTORY V7 ===== */
+.submissions-page .submissions-eyebrow{
+  font-size:11px !important;
+  letter-spacing:.1em !important;
+}
+
+.submissions-page .submissions-heading h1{
+  font-size:42px !important;
+  line-height:1.05 !important;
+}
+
+.submissions-page .submissions-heading p{
+  font-size:14px !important;
+  line-height:1.6 !important;
+}
+
+.submissions-page .submissions-section-label{
+  font-size:13px !important;
+  font-weight:760 !important;
+}
+
+.submissions-page .submissions-section-note{
+  font-size:12px !important;
+}
+
+.submissions-page .submissions-sync-chip,
+.submissions-page .submissions-heading-actions a{
+  font-size:12px !important;
+}
+
+.submissions-page .submission-stat-caption{
+  font-size:10px !important;
+}
+
+.submissions-page .submission-stat-card>strong{
+  font-size:28px !important;
+}
+
+.submissions-page .submission-stat-card>span:last-child{
+  font-size:12px !important;
+}
+
+.submissions-page .submission-filter{
+  min-height:38px !important;
+  padding:0 14px !important;
+  font-size:12px !important;
+}
+
+.submissions-page .submissions-advanced-filters select,
+.submissions-page .submissions-advanced-filters input,
+.submissions-page .submissions-search input{
+  font-size:12px !important;
+}
+
+.submissions-page .submissions-table th{
+  height:48px !important;
+  font-size:10px !important;
+  letter-spacing:.065em !important;
+}
+
+.submissions-page .submissions-table td{
+  padding:15px 14px !important;
+  font-size:12px !important;
+}
+
+.submissions-page .submission-ref,
+.submissions-page .submission-person,
+.submissions-page .submission-title{
+  font-size:13px !important;
+  line-height:1.4 !important;
+}
+
+.submissions-page .submission-subtext{
+  margin-top:4px !important;
+  font-size:11px !important;
+}
+
+.submissions-page .type-pill,
+.submissions-page .status-pill,
+.submissions-page .submission-stage-pill{
+  font-size:10.5px !important;
+}
+
+.submissions-page .submission-action-view,
+.submissions-page .submission-action-btn{
+  min-height:36px !important;
+  padding:0 11px !important;
+  font-size:10.5px !important;
+  cursor:pointer !important;
+  position:relative;
+  z-index:2;
+}
+
+.submissions-page button.submission-action-view{
+  appearance:none;
+  font-family:inherit;
+}
+
+.submissions-page .approval-detail-heading .modal-title{
+  font-size:26px !important;
+}
+
+.submissions-page .approval-detail-heading p{
+  font-size:12px !important;
+}
+
+.submissions-page .approval-detail-summary span,
+.submissions-page .approval-detail-grid .submission-detail-field span{
+  font-size:10px !important;
+}
+
+.submissions-page .approval-detail-summary strong,
+.submissions-page .approval-detail-grid .submission-detail-field strong{
+  font-size:12px !important;
+}
+
+.submissions-page .approval-detail-action,
+.submissions-page .approval-detail-open-form,
+.submissions-page .quick-review-cancel,
+.submissions-page .quick-review-submit{
+  font-size:11px !important;
+}
+
+.submissions-page .quick-review-field>span,
+.submissions-page .quick-review-note-wrap>label,
+.submissions-page .quick-review-context strong{
+  font-size:11px !important;
+}
+
+.submissions-page .quick-review-context span,
+.submissions-page .quick-review-hint{
+  font-size:9.5px !important;
+}
+
+.submissions-page .quick-review-field input[type="text"],
+.submissions-page .quick-review-field input[type="date"],
+.submissions-page .quick-review-field textarea,
+.submissions-page .quick-review-note-wrap textarea{
+  font-size:12px !important;
+}
+
+.approval-history-notice{
+  display:flex;
+  align-items:flex-start;
+  gap:12px;
+  margin:0 0 14px;
+  padding:14px 16px;
+  border:1px solid #ead8b6;
+  border-radius:13px;
+  background:#fffaf1;
+  color:#6b532b;
+}
+
+.approval-history-notice>i{
+  margin-top:2px;
+  color:#af751a;
+  font-size:18px;
+}
+
+.approval-history-notice strong{
+  display:block;
+  margin-bottom:3px;
+  font-size:12px;
+}
+
+.approval-history-notice span{
+  display:block;
+  font-size:11px;
+  line-height:1.5;
+}
+
+@media(max-width:760px){
+  .submissions-page .submissions-heading h1{
+    font-size:34px !important;
+  }
+
+  .submissions-page .submissions-heading p{
+    font-size:12.5px !important;
+  }
+
+  .submissions-page .submission-ref,
+  .submissions-page .submission-person,
+  .submissions-page .submission-title{
+    font-size:12px !important;
+  }
+}
