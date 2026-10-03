@@ -269,7 +269,7 @@ if ($hasExtendedProfile) {
 
 $displayRole = role_label($user['role'] ?? '');
 $joinedAt = !empty($user['created_at']) ? strtotime((string) $user['created_at']) : false;
-$memberSince = $joinedAt ? date('d M Y', $joinedAt) : '—';
+$memberSince = $joinedAt ? date('d M Y', $joinedAt) : 'Not available';
 
 $nameParts = preg_split('/\s+/', trim((string) $user['fullname'])) ?: [];
 $initials = '';
@@ -387,7 +387,7 @@ if ($normalizedRole === 'staff') {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Profile - Smart Training System</title>
+    <title>Smart Training System: My Profile</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link rel="stylesheet" href="sedco-saas.css?v=20261001-14">
