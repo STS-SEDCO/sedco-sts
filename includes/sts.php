@@ -566,6 +566,30 @@ function sts_sync_bpl_pending_stage(array $application): string
     return $expectedStage;
 }
 
+function sts_repair_pending_bpl_stages(): void
+{
+    try {
+        $result = db()->query(
+            'SELECT id, application_no, form_type, status, current_stage
+             FROM applications
+             WHERE form_type = "BPL"
+               AND status = "pending"'
+        );
+
+        $applications = [];
+
+        while ($row = $result->fetch_assoc()) {
+            $applications[] = $row;
+        }
+
+        foreach ($applications as $application) {
+            sts_sync_bpl_pending_stage($application);
+        }
+    } catch (Throwable) {
+        // Approval screens still enforce stage prerequisites even if repair fails.
+    }
+}
+
 function sts_stage_prerequisites_met(array $application): bool
 {
     if ((string) ($application['form_type'] ?? '') !== 'BPL') {
