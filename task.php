@@ -6,41 +6,20 @@ require_login();
 $user = current_user();
 sts_ensure_followup_notifications($user);
 $role = normalized_role($user['role'] ?? '');
-$canStaffForms = in_array($role, ['staff', 'head_of_department', 'admin'], true);
+$canStaffForms = in_array(
+    $role,
+    ['staff', 'head_of_department', 'general_manager', 'pengerusi_besar', 'admin'],
+    true
+);
 $canTea = in_array($role, ['head_of_department', 'admin'], true);
 
 $userId = (int) ($user['id'] ?? 0);
 $department = trim((string) ($user['department'] ?? ''));
 $followupItems = [];
 
-if ($role === 'staff') {
-    $followStmt = db()->prepare(
-        'SELECT b.id, b.application_no, b.title, b.training_end,
-                EXISTS(
-                  SELECT 1 FROM applications p
-                  WHERE p.parent_application_id = b.id
-                    AND p.form_type = "PKK"
-                    AND p.status <> "cancelled"
-                ) AS has_followup
-         FROM applications b
-         WHERE b.user_id = ?
-           AND b.form_type = "BPL"
-           AND b.status = "approved"
-           AND b.training_end IS NOT NULL
-         ORDER BY b.training_end DESC'
-    );
-    $followStmt->bind_param('i', $userId);
-    $followStmt->execute();
-    $followResult = $followStmt->get_result();
+$applicantRoles = ['staff', 'head_of_department', 'general_manager', 'pengerusi_besar'];
 
-    while ($row = $followResult->fetch_assoc()) {
-        if (!(int) $row['has_followup']) {
-            $row['follow_type'] = 'PKK';
-            $followupItems[] = $row;
-        }
-    }
-    $followStmt->close();
-} elseif ($role === 'head_of_department') {
+if (in_array($role, $applicantRoles, true)) {
     $ownStmt = db()->prepare(
         'SELECT b.id, b.application_no, b.title, b.training_end,
                 EXISTS(
@@ -67,7 +46,9 @@ if ($role === 'staff') {
         }
     }
     $ownStmt->close();
+}
 
+if ($role === 'head_of_department') {
     $followStmt = db()->prepare(
         'SELECT b.id, b.application_no, b.title, b.training_end, b.department,
                 EXISTS(
