@@ -317,7 +317,7 @@ try {
     if ($type === 'BPL') {
         $assignedHodId = sts_department_hod($departmentValue);
         $status = 'pending';
-        $currentStage = 'hod';
+        $currentStage = 'training';
         $slaDueAt = sts_review_sla_due();
         $trainingStart = trim((string) ($payload['tarikh_mula'] ?? '')) ?: null;
         $trainingEnd = trim((string) ($payload['tarikh_tamat'] ?? '')) ?: null;
@@ -398,7 +398,7 @@ try {
 
     if ($type === 'BPL') {
         sts_notify_stage(
-            'hod',
+            'training',
             $applicationNo,
             $departmentValue,
             $assignedHodId
