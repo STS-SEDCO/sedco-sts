@@ -12173,3 +12173,499 @@ body.profile-page .modal-backdrop{
   font-size:11px;
   line-height:1.55;
 }
+
+
+/* ===== APPROVAL WORKSPACE PREMIUM V5 ===== */
+.submissions-page{
+  background:
+    radial-gradient(circle at 14% 0%,rgba(143,16,16,.04),transparent 26%),
+    #f7f7f8;
+}
+
+.submissions-page .submissions-content{
+  padding-top:104px;
+}
+
+.submissions-page .submissions-shell{
+  max-width:1520px;
+}
+
+.submissions-page .submissions-heading{
+  margin-bottom:18px;
+  padding:2px 2px 0;
+}
+
+.submissions-page .submissions-heading h1{
+  font-size:36px;
+}
+
+.submissions-page .submissions-heading p{
+  max-width:720px;
+  font-size:11.5px;
+}
+
+.submissions-page .submissions-stats{
+  gap:10px;
+  margin-bottom:14px;
+}
+
+.submissions-page .submission-stat-card{
+  min-height:112px;
+  padding:14px 15px;
+  border-radius:14px;
+}
+
+.submissions-page .submission-stat-top{
+  margin-bottom:10px;
+}
+
+.submissions-page .submission-stat-icon{
+  width:34px;
+  height:34px;
+  border-radius:10px;
+  font-size:13px;
+}
+
+.submissions-page .submission-stat-card>strong{
+  font-size:22px;
+}
+
+.submissions-page .submissions-panel{
+  border-radius:18px;
+  box-shadow:0 10px 32px rgba(20,20,20,.04);
+}
+
+.submissions-page .submissions-toolbar{
+  min-height:64px;
+  background:linear-gradient(180deg,#fff,#fdfdfd);
+}
+
+.submissions-page .submissions-advanced-filters{
+  display:flex;
+  align-items:center;
+  gap:7px;
+  margin-left:auto;
+}
+
+.submissions-page .submissions-advanced-filters select,
+.submissions-page .submissions-advanced-filters input{
+  height:38px;
+  padding:0 10px;
+  border:1px solid #e6e6e9;
+  border-radius:9px;
+  background:#fafafb;
+  color:#65656a;
+  font-size:10px;
+  outline:none;
+}
+
+.submissions-page .submissions-advanced-filters select:focus,
+.submissions-page .submissions-advanced-filters input:focus{
+  border-color:rgba(143,16,16,.28);
+  background:#fff;
+  box-shadow:0 0 0 3px rgba(143,16,16,.05);
+}
+
+.submissions-page .submissions-table{
+  min-width:1220px;
+}
+
+.submissions-page .submissions-table th{
+  height:44px;
+  padding:0 14px;
+  background:#fafafb;
+}
+
+.submissions-page .submissions-table td{
+  padding:13px 14px;
+}
+
+.submissions-page .submissions-table tbody tr:hover{
+  background:#fdfafa;
+}
+
+.submissions-page .submission-actions-heading{
+  min-width:315px;
+  text-align:right !important;
+}
+
+.submissions-page .submission-action-group{
+  display:flex;
+  align-items:center;
+  justify-content:flex-end;
+  gap:5px;
+  white-space:nowrap;
+}
+
+.submissions-page .submission-action-view,
+.submissions-page .submission-action-btn{
+  min-height:32px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:5px;
+  padding:0 9px;
+  border:1px solid;
+  border-radius:9px;
+  background:#fff;
+  font-size:9px;
+  font-weight:720;
+  text-decoration:none;
+  transition:transform .14s ease,background .14s ease,border-color .14s ease,box-shadow .14s ease;
+}
+
+.submissions-page .submission-action-view{
+  border-color:#e1e1e5;
+  color:#55565b;
+}
+
+.submissions-page .submission-action-view:hover{
+  border-color:#d2d2d7;
+  background:#f8f8f9;
+  color:#29292d;
+}
+
+.submissions-page .submission-action-btn:hover,
+.submissions-page .submission-action-view:hover{
+  transform:translateY(-1px);
+}
+
+.submissions-page .submission-action-btn.is-approve{
+  border-color:#bfe8d1;
+  background:#f2fbf6;
+  color:#147447;
+}
+
+.submissions-page .submission-action-btn.is-approve:hover{
+  border-color:#9fd9b9;
+  background:#eaf8f0;
+  box-shadow:0 5px 12px rgba(20,116,71,.08);
+}
+
+.submissions-page .submission-action-btn.is-correction{
+  border-color:#f0d7a6;
+  background:#fff9ed;
+  color:#a35d0b;
+}
+
+.submissions-page .submission-action-btn.is-correction:hover{
+  border-color:#e4c47f;
+  background:#fff5df;
+}
+
+.submissions-page .submission-action-btn.is-reject{
+  border-color:#efc4c9;
+  background:#fff5f6;
+  color:#a82634;
+}
+
+.submissions-page .submission-action-btn.is-reject:hover{
+  border-color:#e4aab2;
+  background:#ffedef;
+}
+
+.submissions-page .submission-stage-pill{
+  min-height:26px;
+  display:inline-flex;
+  align-items:center;
+  gap:5px;
+  padding:5px 9px;
+  border:1px solid #e3e3e6;
+  border-radius:999px;
+  background:#fafafb;
+  color:#67676c;
+  font-size:9px;
+  font-weight:700;
+  white-space:nowrap;
+}
+
+.submissions-page .stage-training{background:#f4f7ff;border-color:#dce5ff;color:#4664a8}
+.submissions-page .stage-hod{background:#f7f4ff;border-color:#e4dcff;color:#6c4cab}
+.submissions-page .stage-gm{background:#fff6ef;border-color:#f4ddc8;color:#9a5a25}
+.submissions-page .stage-chairman{background:#fff4f7;border-color:#efd2da;color:#9b3d59}
+.submissions-page .stage-finance{background:#f1faf6;border-color:#cfe9db;color:#32745a}
+
+.submissions-page .quick-review-modal .modal-dialog{
+  max-width:590px;
+}
+
+.submissions-page .quick-review-modal .modal-content{
+  border-radius:18px;
+}
+
+.submissions-page .quick-review-context{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:8px;
+  margin-bottom:12px;
+}
+
+.submissions-page .quick-review-context>div{
+  padding:10px 11px;
+  border:1px solid #ececef;
+  border-radius:10px;
+  background:#fafafb;
+}
+
+.submissions-page .quick-review-context span{
+  display:block;
+  margin-bottom:4px;
+  color:#9b9ba0;
+  font-size:8px;
+  font-weight:750;
+  text-transform:uppercase;
+  letter-spacing:.055em;
+}
+
+.submissions-page .quick-review-context strong{
+  color:#333338;
+  font-size:10.5px;
+  font-weight:680;
+}
+
+.submissions-page .quick-review-decision{
+  min-height:38px;
+  display:flex;
+  align-items:center;
+  gap:8px;
+  margin-bottom:14px;
+  padding:0 11px;
+  border:1px solid;
+  border-radius:10px;
+  font-size:10.5px;
+  font-weight:750;
+}
+
+.submissions-page .quick-review-decision.is-approve{
+  border-color:#bee5cf;
+  background:#f0faf5;
+  color:#147447;
+}
+
+.submissions-page .quick-review-decision.is-correction{
+  border-color:#efd7a7;
+  background:#fff9ee;
+  color:#a35d0b;
+}
+
+.submissions-page .quick-review-decision.is-reject{
+  border-color:#ecc2c8;
+  background:#fff4f5;
+  color:#a82634;
+}
+
+.submissions-page .quick-review-fields{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+}
+
+.submissions-page .quick-review-field{
+  display:block;
+}
+
+.submissions-page .quick-review-field:has(textarea),
+.submissions-page .quick-review-field:has(.quick-review-choice){
+  grid-column:1 / -1;
+}
+
+.submissions-page .quick-review-field>span,
+.submissions-page .quick-review-note-wrap>label{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:8px;
+  margin-bottom:6px;
+  color:#55565b;
+  font-size:9.5px;
+  font-weight:720;
+}
+
+.submissions-page .quick-review-field>span b{
+  color:#a51c29;
+}
+
+.submissions-page .quick-review-note-wrap>label span{
+  color:#aaaab0;
+  font-size:8px;
+  font-weight:600;
+}
+
+.submissions-page .quick-review-field input[type="text"],
+.submissions-page .quick-review-field input[type="date"],
+.submissions-page .quick-review-field textarea,
+.submissions-page .quick-review-note-wrap textarea{
+  width:100%;
+  min-height:40px;
+  padding:9px 10px;
+  border:1px solid #e1e1e5;
+  border-radius:10px;
+  background:#fbfbfc;
+  color:#303035;
+  font-size:10.5px;
+  outline:none;
+}
+
+.submissions-page .quick-review-field textarea,
+.submissions-page .quick-review-note-wrap textarea{
+  min-height:84px;
+  resize:vertical;
+  line-height:1.55;
+}
+
+.submissions-page .quick-review-field input:focus,
+.submissions-page .quick-review-field textarea:focus,
+.submissions-page .quick-review-note-wrap textarea:focus{
+  border-color:rgba(143,16,16,.34);
+  background:#fff;
+  box-shadow:0 0 0 3px rgba(143,16,16,.055);
+}
+
+.submissions-page .quick-review-choice{
+  display:flex;
+  gap:8px;
+}
+
+.submissions-page .quick-review-choice label{
+  flex:1;
+  min-height:40px;
+  display:flex;
+  align-items:center;
+  gap:7px;
+  padding:0 11px;
+  border:1px solid #e4e4e7;
+  border-radius:10px;
+  background:#fbfbfc;
+  color:#57575c;
+  font-size:10px;
+  font-weight:650;
+}
+
+.submissions-page .quick-review-choice input{
+  accent-color:#8f1010;
+}
+
+.submissions-page .quick-review-note-wrap{
+  margin-top:12px;
+  padding-top:12px;
+  border-top:1px solid #eeeeef;
+}
+
+.submissions-page .quick-review-hint{
+  margin-top:10px;
+  color:#88888d;
+  font-size:9px;
+  line-height:1.55;
+}
+
+.submissions-page .quick-review-modal .modal-footer{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  padding:13px 18px;
+  border-top:1px solid #ececef;
+  background:#fbfbfc;
+}
+
+.submissions-page .quick-review-open-form{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  color:#66666b;
+  font-size:9.5px;
+  font-weight:700;
+  text-decoration:none;
+}
+
+.submissions-page .quick-review-footer-actions{
+  display:flex;
+  align-items:center;
+  gap:7px;
+}
+
+.submissions-page .quick-review-cancel,
+.submissions-page .quick-review-submit{
+  min-height:36px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:6px;
+  padding:0 12px;
+  border:1px solid;
+  border-radius:9px;
+  font-size:9.5px;
+  font-weight:730;
+}
+
+.submissions-page .quick-review-cancel{
+  border-color:#dfdfe3;
+  background:#fff;
+  color:#55565b;
+}
+
+.submissions-page .quick-review-submit.is-approve{
+  border-color:#12663f;
+  background:#167a4b;
+  color:#fff;
+}
+
+.submissions-page .quick-review-submit.is-correction{
+  border-color:#9d5a0b;
+  background:#b66c13;
+  color:#fff;
+}
+
+.submissions-page .quick-review-submit.is-reject{
+  border-color:#8e1e2b;
+  background:#a82634;
+  color:#fff;
+}
+
+.submissions-page .quick-review-submit:disabled{
+  opacity:.62;
+  cursor:not-allowed;
+}
+
+@media(max-width:1100px){
+  .submissions-page .submissions-advanced-filters{
+    margin-left:0;
+    flex-wrap:wrap;
+  }
+}
+
+@media(max-width:760px){
+  .submissions-page .submissions-content{
+    padding-top:90px;
+  }
+
+  .submissions-page .submissions-heading h1{
+    font-size:30px;
+  }
+
+  .submissions-page .submissions-stats{
+    grid-template-columns:repeat(2,minmax(0,1fr));
+  }
+
+  .submissions-page .quick-review-fields,
+  .submissions-page .quick-review-context{
+    grid-template-columns:1fr;
+  }
+
+  .submissions-page .quick-review-modal .modal-footer{
+    align-items:stretch;
+    flex-direction:column;
+  }
+
+  .submissions-page .quick-review-footer-actions{
+    width:100%;
+  }
+
+  .submissions-page .quick-review-footer-actions button{
+    flex:1;
+  }
+
+  .submissions-page .quick-review-open-form{
+    align-self:flex-start;
+  }
+}
