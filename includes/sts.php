@@ -478,6 +478,70 @@ function sts_can_view_application(array $application, array $user): bool
     return true;
 }
 
+function sts_bpl_applicant_role(array $application): string
+{
+    if (!empty($application['applicant_role'])) {
+        return normalized_role((string) $application['applicant_role']);
+    }
+
+    $userId = (int) ($application['user_id'] ?? 0);
+
+    if ($userId <= 0) {
+        return '';
+    }
+
+    static $roleCache = [];
+
+    if (array_key_exists($userId, $roleCache)) {
+        return $roleCache[$userId];
+    }
+
+    try {
+        $stmt = db()->prepare(
+            'SELECT role
+             FROM users
+             WHERE id = ?
+             LIMIT 1'
+        );
+        $stmt->bind_param('i', $userId);
+        $stmt->execute();
+        $row = $stmt->get_result()->fetch_assoc();
+        $stmt->close();
+
+        $roleCache[$userId] = normalized_role((string) ($row['role'] ?? ''));
+    } catch (Throwable) {
+        $roleCache[$userId] = '';
+    }
+
+    return $roleCache[$userId];
+}
+
+function sts_bpl_required_stages(array $application): array
+{
+    $stages = ['training', 'hod', 'gm', 'chairman', 'finance'];
+
+    if (sts_bpl_applicant_role($application) === 'head_of_department') {
+        $stages = array_values(array_filter(
+            $stages,
+            static fn (string $stage): bool => $stage !== 'hod'
+        ));
+    }
+
+    return $stages;
+}
+
+function sts_next_bpl_stage(array $application, string $currentStage): string
+{
+    $stages = sts_bpl_required_stages($application);
+    $index = array_search($currentStage, $stages, true);
+
+    if ($index === false) {
+        return $stages[0] ?? 'completed';
+    }
+
+    return $stages[$index + 1] ?? 'completed';
+}
+
 function sts_expected_bpl_stage(array $application): string
 {
     if ((string) ($application['form_type'] ?? '') !== 'BPL') {
@@ -517,7 +581,7 @@ function sts_expected_bpl_stage(array $application): string
         return (string) ($application['current_stage'] ?? 'training');
     }
 
-    foreach (['training', 'hod', 'gm', 'chairman', 'finance'] as $stage) {
+    foreach (sts_bpl_required_stages($application) as $stage) {
         if (empty($approvedStages[$stage])) {
             return $stage;
         }
@@ -570,10 +634,12 @@ function sts_repair_pending_bpl_stages(): void
 {
     try {
         $result = db()->query(
-            'SELECT id, application_no, form_type, status, current_stage
-             FROM applications
-             WHERE form_type = "BPL"
-               AND status = "pending"'
+            'SELECT a.id, a.application_no, a.user_id, a.form_type,
+                    a.status, a.current_stage, u.role AS applicant_role
+             FROM applications a
+             INNER JOIN users u ON u.id = a.user_id
+             WHERE a.form_type = "BPL"
+               AND a.status = "pending"'
         );
 
         $applications = [];
@@ -613,6 +679,13 @@ function sts_can_review_application(array $application, array $user): bool
     }
 
     $stage = (string) ($application['current_stage'] ?? '');
+
+    if (
+        (int) ($application['user_id'] ?? 0) === (int) ($user['id'] ?? 0)
+        && normalized_role($user['role'] ?? '') !== 'admin'
+    ) {
+        return false;
+    }
 
     if (!user_can_review_stage($stage, $user)) {
         return false;
