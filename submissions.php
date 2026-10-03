@@ -11,6 +11,8 @@ if (!$user) {
 }
 
 $normalizedRole = normalized_role($user['role'] ?? '');
+$reviewerStage = review_stage_for_role($user['role'] ?? '');
+$reviewerStageLabel = $reviewerStage ? stage_label($reviewerStage) : 'All approval stages';
 
 if (!user_can_review_applications($user)) {
     header('Location: application-status.php');
@@ -89,7 +91,7 @@ $stmt->close();
   <title>Smart Training System: Approval</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-  <link rel="stylesheet" href="sedco-saas.css?v=20261003-09">
+  <link rel="stylesheet" href="sedco-saas.css?v=20261003-10">
   <link rel="stylesheet" href="sedco-shell.css?v=20260930-56">
 </head>
 <body class="app-page submissions-page" data-page="submissions" data-role="<?= e(normalized_role($user['role'] ?? '')) ?>">
@@ -115,6 +117,43 @@ $stmt->close();
       </div>
     </header>
 
+    <section class="approval-lifecycle" aria-label="BPL approval lifecycle">
+      <div class="approval-lifecycle-intro">
+        <span>Approval lifecycle</span>
+        <strong>Sequential governance</strong>
+        <small>Every application advances only after the previous required stage is approved.</small>
+      </div>
+
+      <div class="approval-lifecycle-track">
+        <?php foreach ([
+          'training' => ['Training', 'bi-briefcase'],
+          'hod' => ['HOD', 'bi-person-check'],
+          'gm' => ['GM', 'bi-person-badge'],
+          'chairman' => ['Pengerusi', 'bi-award'],
+          'finance' => ['Kewangan', 'bi-cash-stack'],
+        ] as $stageKey => [$stageName, $stageIcon]): ?>
+          <div class="approval-flow-step<?= $reviewerStage === $stageKey ? ' is-current' : '' ?>">
+            <span class="approval-flow-icon"><i class="bi <?= e($stageIcon) ?>"></i></span>
+            <div>
+              <small><?= $reviewerStage === $stageKey ? 'Your stage' : 'Stage' ?></small>
+              <strong><?= e($stageName) ?></strong>
+            </div>
+          </div>
+          <?php if ($stageKey !== 'finance'): ?>
+            <span class="approval-flow-arrow"><i class="bi bi-chevron-right"></i></span>
+          <?php endif; ?>
+        <?php endforeach; ?>
+      </div>
+
+      <div class="approval-lifecycle-scope">
+        <i class="bi bi-shield-lock"></i>
+        <div>
+          <span>Current queue scope</span>
+          <strong><?= e($reviewerStageLabel) ?></strong>
+        </div>
+      </div>
+    </section>
+
     <div class="submissions-meta-row">
       <div>
         <span class="submissions-section-label">Approval queue</span>
@@ -127,37 +166,37 @@ $stmt->close();
       <article class="submission-stat-card stat-total">
         <div class="submission-stat-top">
           <span class="submission-stat-icon"><i class="bi bi-inbox"></i></span>
-          <span class="submission-stat-caption">Current queue</span>
+          <span class="submission-stat-caption">Assigned</span>
         </div>
         <strong id="submissionTotal">0</strong>
-        <span>Waiting for action</span>
+        <span>Assigned to you</span>
       </article>
 
       <article class="submission-stat-card stat-pending">
         <div class="submission-stat-top">
           <span class="submission-stat-icon"><i class="bi bi-hourglass-split"></i></span>
-          <span class="submission-stat-caption">Queue</span>
+          <span class="submission-stat-caption">Pending</span>
         </div>
         <strong id="submissionPending">0</strong>
-        <span>Awaiting review</span>
+        <span>Pending review</span>
       </article>
 
       <article class="submission-stat-card stat-reviewed">
         <div class="submission-stat-top">
           <span class="submission-stat-icon"><i class="bi bi-check2-circle"></i></span>
-          <span class="submission-stat-caption">Attention</span>
+          <span class="submission-stat-caption">SLA</span>
         </div>
         <strong id="submissionReviewed">0</strong>
-        <span>Overdue</span>
+        <span>Overdue review</span>
       </article>
 
       <article class="submission-stat-card stat-week">
         <div class="submission-stat-top">
           <span class="submission-stat-icon"><i class="bi bi-calendar3"></i></span>
-          <span class="submission-stat-caption">Activity</span>
+          <span class="submission-stat-caption">Recent</span>
         </div>
         <strong id="submissionWeek">0</strong>
-        <span>This week</span>
+        <span>Received this week</span>
       </article>
     </section>
 
