@@ -21,7 +21,7 @@ $logs=[]; while($row=$result->fetch_assoc())$logs[]=$row;
 <!DOCTYPE html>
 <html lang="en"><head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>Audit Log - Smart Training System</title>
+<title>Smart Training System: Audit Log</title>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 <link rel="stylesheet" href="sedco-saas.css?v=20260930-42"><link rel="stylesheet" href="sedco-shell.css?v=20260930-56">
@@ -35,9 +35,9 @@ $logs=[]; while($row=$result->fetch_assoc())$logs[]=$row;
 <td><?= e(date('d M Y, g:i A',strtotime((string)$log['created_at']))) ?></td>
 <td><?= e($log['fullname']?:'System') ?></td>
 <td><span class="audit-action"><?= e(ucwords(str_replace('_',' ',(string)$log['action']))) ?></span></td>
-<td><?= e(($log['entity_type']?:'—').($log['entity_id']?' · '.$log['entity_id']:'')) ?></td>
-<td><code><?= e($log['metadata']?:'—') ?></code></td>
-<td><?= e($log['ip_address']?:'—') ?></td>
+<td><?= e(($log['entity_type']?:'Not available').($log['entity_id']?' · '.$log['entity_id']:'')) ?></td>
+<td><code><?= e($log['metadata']?:'Not available') ?></code></td>
+<td><?= e($log['ip_address']?:'Not available') ?></td>
 </tr><?php endforeach; ?>
 <?php if(!$logs): ?><tr><td colspan="6" class="text-center py-5 text-muted">No audit records yet.</td></tr><?php endif; ?>
 </tbody></table></div>
