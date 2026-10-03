@@ -15,6 +15,8 @@ sts_ensure_followup_notifications($user);
 
 $db = db();
 $userId = (int) $user['id'];
+
+sts_repair_pending_bpl_stages();
 $role = normalized_role($user['role'] ?? '');
 $department = trim((string) ($user['department'] ?? ''));
 
