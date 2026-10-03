@@ -8,6 +8,7 @@
 
   const activePage = body.dataset.page || (
     path.includes('application-status') ? 'application-status'
+      : path.includes('approval-history') ? 'approval-history'
       : path.includes('submissions') ? 'submissions'
       : path.includes('profile') ? 'profile'
       : path.includes('notifications') ? 'notifications'
@@ -44,7 +45,8 @@
     ['dashboard', 'Dashboard', 'bi-grid-1x2-fill', pageUrl('dashboard')],
     ['task', 'Training Forms', 'bi-file-earmark-text', pageUrl('task')],
     ['application-status', 'Application status', 'bi-clipboard-check', pageUrl('application-status')],
-    ['submissions', 'Submissions', 'bi-inbox', pageUrl('submissions')],
+    ['submissions', 'Approval', 'bi-check2-square', pageUrl('submissions')],
+    ['approval-history', 'Approval History', 'bi-clock-history', pageUrl('approval-history')],
     ['notifications', 'Notifications', 'bi-bell', pageUrl('notifications')],
     ['reports', 'Reports & Analytics', 'bi-bar-chart-line', pageUrl('reports')],
     ['admin-users', 'User Management', 'bi-people', pageUrl('admin-users')],
@@ -53,7 +55,9 @@
   ];
 
   const visibleItems = items.filter(([key]) => {
-    if (key === 'submissions') return userRole !== '' && userRole !== 'staff';
+    if (['submissions','approval-history'].includes(key)) {
+      return ['admin','training_section','general_manager','head_of_department'].includes(userRole);
+    }
     if (key === 'reports') return ['admin','training_section','general_manager','head_of_department'].includes(userRole);
     if (['admin-users','admin-settings','audit-log'].includes(key)) return userRole === 'admin';
     return true;
@@ -64,6 +68,7 @@
       <i class="bi ${icon}"></i>
       <span>${label}</span>
       ${key === 'notifications' ? '<b class="sedco-nav-badge" data-notification-badge hidden>0</b>' : ''}
+      ${key === 'submissions' ? '<b class="sedco-nav-badge" data-approval-badge hidden>0</b>' : ''}
     </a>
   `).join('');
 
@@ -210,5 +215,18 @@
         badge.hidden = false;
       })
       .catch(() => {});
+
+    if (['admin','training_section','general_manager','head_of_department'].includes(userRole)) {
+      fetch('approval-count.php', { credentials: 'same-origin' })
+        .then(response => response.ok ? response.json() : null)
+        .then(data => {
+          const badge = document.querySelector('[data-approval-badge]');
+          const count = Number(data?.count || 0);
+          if (!badge || count <= 0) return;
+          badge.textContent = count > 99 ? '99+' : String(count);
+          badge.hidden = false;
+        })
+        .catch(() => {});
+    }
   }
 })();
