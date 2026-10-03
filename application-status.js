@@ -135,7 +135,7 @@
       const actionUrl = application.editUrl || application.viewUrl;
       const primaryAction = actionUrl
         ? `<a class="view-btn${application.editUrl ? ' is-correction' : ''}" href="${escapeHtml(actionUrl)}">
-             ${application.editUrl ? 'Correct form' : 'View details'} <i class="bi bi-arrow-up-right"></i>
+             ${application.editUrl ? (application.editLabel || 'Edit submission') : 'View details'} <i class="bi bi-arrow-up-right"></i>
            </a>`
         : `<button class="view-btn" type="button" data-view-id="${escapeHtml(application.id)}">
              View details <i class="bi bi-arrow-up-right"></i>
