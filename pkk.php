@@ -28,6 +28,7 @@ $trainingStmt = db()->prepare(
          SELECT 1 FROM applications p
          WHERE p.parent_application_id = b.id
            AND p.form_type = "PKK"
+           AND p.status <> "cancelled"
        )
      ORDER BY b.training_end DESC, b.id DESC'
 );
