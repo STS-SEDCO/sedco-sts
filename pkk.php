@@ -371,7 +371,7 @@ window.SEDCO_PKK_DATA = <?= json_encode(
   <script>
 window.SEDCO_FORM_CONTEXT = { role: <?= json_encode($user['role'] ?? 'staff') ?>, mode: <?= json_encode($isEditMode ? 'edit' : 'new') ?>, formType: 'PKK' };
 </script>
-<script src="form-permissions.js?v=20261003-05"></script>
+<script src="form-permissions.js?v=20261003-06"></script>
 <script src="form-ux.js?v=20261001-09"></script>
 <script src="form-enhancements.js?v=20260930-59"></script>
 <script src="sedco-shell.js?v=20260930-56"></script>
