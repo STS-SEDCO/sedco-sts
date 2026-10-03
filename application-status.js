@@ -70,7 +70,7 @@
   }
 
   function formatDate(value, includeTime = false) {
-    if (!value) return '—';
+    if (!value) return 'Not available';
 
     const date = new Date(value);
     if (Number.isNaN(date.getTime())) return escapeHtml(value);
@@ -236,7 +236,7 @@
 
     const noteTarget = $('modalReviewNote');
     if (noteTarget) {
-      noteTarget.textContent = application.reviewNote || '—';
+      noteTarget.textContent = application.reviewNote || 'No review note';
     }
 
     const entries = Object.entries(application.data || {}).filter(([, value]) => {
