@@ -366,13 +366,13 @@ CREATE TABLE IF NOT EXISTS tasks (
 -- 14. REPAIR OLD / STALE BPL APPROVAL STAGES
 --
 -- Strict rule:
--- Training must approve before HOD can see the application.
--- HOD must approve before GM.
--- GM must approve before Pengerusi.
--- Pengerusi must approve before Kewangan.
+-- Staff: Training -> HOD -> GM -> Pengerusi -> Kewangan.
+-- HOD as applicant: Training -> GM -> Pengerusi -> Kewangan.
+-- An applicant never approves their own application.
 -- ============================================================
 
 UPDATE applications a
+INNER JOIN users applicant ON applicant.id = a.user_id
 SET a.current_stage = CASE
     WHEN NOT EXISTS (
         SELECT 1
@@ -382,13 +382,14 @@ SET a.current_stage = CASE
           AND r.decision = 'approved'
     ) THEN 'training'
 
-    WHEN NOT EXISTS (
-        SELECT 1
-        FROM application_reviews r
-        WHERE r.application_id = a.id
-          AND r.review_stage = 'hod'
-          AND r.decision = 'approved'
-    ) THEN 'hod'
+    WHEN applicant.role NOT IN ('head_of_department', 'head_of_division')
+         AND NOT EXISTS (
+            SELECT 1
+            FROM application_reviews r
+            WHERE r.application_id = a.id
+              AND r.review_stage = 'hod'
+              AND r.decision = 'approved'
+         ) THEN 'hod'
 
     WHEN NOT EXISTS (
         SELECT 1
