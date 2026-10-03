@@ -178,15 +178,7 @@ try {
     $reviewStmt->close();
 
     if ($decision === 'approved') {
-        $nextStage = match ($stage) {
-            'training' => 'hod',
-            'hod' => 'gm',
-            'gm' => 'chairman',
-            'chairman' => 'finance',
-            'finance' => 'completed',
-            default => 'completed',
-        };
-
+        $nextStage = sts_next_bpl_stage($application, $stage);
         $nextStatus = $nextStage === 'completed' ? 'approved' : 'pending';
     } elseif ($decision === 'rejected') {
         $nextStage = 'completed';
