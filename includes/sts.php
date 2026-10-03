@@ -379,6 +379,49 @@ function sts_cancel_application_supported(): bool
     return $supported;
 }
 
+function sts_pkk_has_downstream_tea(array $application): bool
+{
+    $parentBplId = (int) ($application['parent_application_id'] ?? 0);
+
+    if ($parentBplId <= 0) {
+        return true;
+    }
+
+    $stmt = db()->prepare(
+        'SELECT id
+         FROM applications
+         WHERE parent_application_id = ?
+           AND form_type = "TEA"
+           AND status <> "cancelled"
+         LIMIT 1'
+    );
+    $stmt->bind_param('i', $parentBplId);
+    $stmt->execute();
+    $exists = $stmt->get_result()->fetch_assoc();
+    $stmt->close();
+
+    return (bool) $exists;
+}
+
+function sts_can_edit_pkk(array $application, array $user): bool
+{
+    if (
+        (string) ($application['form_type'] ?? '') !== 'PKK'
+        || (int) ($application['user_id'] ?? 0) !== (int) ($user['id'] ?? 0)
+        || (string) ($application['status'] ?? '') === 'cancelled'
+    ) {
+        return false;
+    }
+
+    return !sts_pkk_has_downstream_tea($application);
+}
+
+function sts_can_cancel_pkk(array $application, array $user): bool
+{
+    return sts_cancel_application_supported()
+        && sts_can_edit_pkk($application, $user);
+}
+
 function sts_can_view_application(array $application, array $user): bool
 {
     $role = normalized_role($user['role'] ?? '');
