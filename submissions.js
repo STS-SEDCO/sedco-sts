@@ -85,9 +85,7 @@
   function updateStats() {
     $('submissionTotal').textContent = submissions.length;
     $('submissionPending').textContent = submissions.filter(x => (x.status || 'pending') === 'pending').length;
-    $('submissionReviewed').textContent = submissions.filter(x =>
-      ['approved','rejected','correction'].includes(x.status || 'pending')
-    ).length;
+    $('submissionReviewed').textContent = submissions.filter(x => x.overdue === true).length;
     $('submissionWeek').textContent = submissions.filter(x => isThisWeek(x.submittedAt)).length;
   }
 
