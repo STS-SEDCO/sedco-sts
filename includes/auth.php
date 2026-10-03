@@ -120,7 +120,11 @@ function user_can_submit_form_type(string $formType, ?array $user = null): bool
     }
 
     return match (strtoupper($formType)) {
-        'BPL', 'PKK' => in_array($role, ['staff', 'head_of_department'], true),
+        'BPL', 'PKK' => in_array(
+            $role,
+            ['staff', 'head_of_department', 'general_manager', 'pengerusi_besar'],
+            true
+        ),
         'TEA' => $role === 'head_of_department',
         default => false,
     };
