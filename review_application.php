@@ -54,13 +54,15 @@ try {
     }
 
     $stage = (string) $application['current_stage'];
+
+    if ($decision === 'correction' && $stage !== 'hod') {
+        http_response_code(403);
+        throw new RuntimeException('Correction requests are available only at the Head of Department stage.');
+    }
     $allowedByStage = [
         'hod' => ['ulasan_bahagian', 'tarikh_bahagian', 'tt_bahagian'],
-        'training' => [
-            'ulasan_latihan', 'tarikh_latihan', 'tt_latihan',
-            'bayaran_kursus', 'pendahuluan_diterima', 'telah_didaftar'
-        ],
-        'gm' => ['kelulusan_pgs', 'tarikh_pgs', 'tt_pgs'],
+        'gm' => ['kelulusan_sedco', 'tarikh_sedco', 'tt_sedco'],
+        'training' => ['bayaran_kursus', 'pendahuluan_diterima', 'telah_didaftar'],
     ];
 
     $payload = json_decode((string) $application['payload'], true);
@@ -77,12 +79,11 @@ try {
     $submittedFields = array_intersect_key($_POST, array_flip($allowedKeys));
 
     $requiredReviewFields = match ($stage) {
-        'hod' => ['ulasan_bahagian', 'tarikh_bahagian', 'tt_bahagian'],
-        'training' => [
-            'ulasan_latihan', 'tarikh_latihan', 'tt_latihan',
-            'bayaran_kursus', 'pendahuluan_diterima', 'telah_didaftar'
-        ],
-        'gm' => ['tarikh_pgs', 'tt_pgs'],
+        'hod' => $decision === 'correction'
+            ? ['ulasan_bahagian']
+            : ['ulasan_bahagian', 'tarikh_bahagian', 'tt_bahagian'],
+        'gm' => ['tarikh_sedco', 'tt_sedco'],
+        'training' => ['bayaran_kursus', 'pendahuluan_diterima', 'telah_didaftar'],
         default => [],
     };
 
@@ -105,9 +106,9 @@ try {
 
     if ($stage === 'gm') {
         if ($decision === 'approved') {
-            $payload['kelulusan_pgs'] = 'Diluluskan';
+            $payload['kelulusan_sedco'] = 'Diluluskan';
         } elseif ($decision === 'rejected') {
-            $payload['kelulusan_pgs'] = 'Tidak Diluluskan';
+            $payload['kelulusan_sedco'] = 'Tidak Diluluskan';
         }
     }
 
@@ -116,10 +117,15 @@ try {
     if ($note === '') {
         $note = match ($stage) {
             'hod' => trim((string) ($payload['ulasan_bahagian'] ?? '')),
-            'training' => trim((string) ($payload['ulasan_latihan'] ?? '')),
-            'gm' => trim((string) ($payload['kelulusan_pgs'] ?? '')),
+            'gm' => trim((string) ($payload['kelulusan_sedco'] ?? '')),
+            'training' => 'Training Department processing completed',
             default => '',
         };
+    }
+
+    if ($decision === 'correction' && trim((string) ($payload['ulasan_bahagian'] ?? '')) === '') {
+        http_response_code(422);
+        throw new RuntimeException('Please write the correction instructions in Section E before sending the form back to the applicant.');
     }
 
     $payloadJson = json_encode(
@@ -141,9 +147,9 @@ try {
 
     if ($decision === 'approved') {
         $nextStage = match ($stage) {
-            'hod' => 'training',
-            'training' => 'gm',
-            'gm' => 'completed',
+            'hod' => 'gm',
+            'gm' => 'training',
+            'training' => 'completed',
             default => 'completed',
         };
 
