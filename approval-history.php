@@ -20,7 +20,7 @@ if (!in_array($decisionFilter, $allowedFilters, true)) {
     $decisionFilter = 'all';
 }
 
-$sql = '
+$baseSql = '
     SELECT r.id, r.review_stage, r.decision, r.note, r.reviewed_at,
            a.application_no, a.title, a.department, a.status,
            applicant.fullname AS applicant_name,
@@ -31,27 +31,25 @@ $sql = '
     INNER JOIN users reviewer ON reviewer.id = r.reviewer_id
     WHERE a.form_type = "BPL"
 ';
-$params = [];
-$types = '';
 
-if ($role !== 'admin') {
-    $sql .= ' AND r.reviewer_id = ?';
-    $params[] = $userId;
-    $types .= 'i';
-}
-
-if ($decisionFilter !== 'all') {
-    $sql .= ' AND r.decision = ?';
-    $params[] = $decisionFilter;
-    $types .= 's';
-}
-
-$sql .= ' ORDER BY r.reviewed_at DESC, r.id DESC';
-
-$stmt = db()->prepare($sql);
-
-if ($params) {
-    $stmt->bind_param($types, ...$params);
+if ($role === 'admin' && $decisionFilter === 'all') {
+    $stmt = db()->prepare($baseSql . ' ORDER BY r.reviewed_at DESC, r.id DESC');
+} elseif ($role === 'admin') {
+    $stmt = db()->prepare(
+        $baseSql . ' AND r.decision = ? ORDER BY r.reviewed_at DESC, r.id DESC'
+    );
+    $stmt->bind_param('s', $decisionFilter);
+} elseif ($decisionFilter === 'all') {
+    $stmt = db()->prepare(
+        $baseSql . ' AND r.reviewer_id = ? ORDER BY r.reviewed_at DESC, r.id DESC'
+    );
+    $stmt->bind_param('i', $userId);
+} else {
+    $stmt = db()->prepare(
+        $baseSql . ' AND r.reviewer_id = ? AND r.decision = ?
+                     ORDER BY r.reviewed_at DESC, r.id DESC'
+    );
+    $stmt->bind_param('is', $userId, $decisionFilter);
 }
 
 $stmt->execute();
