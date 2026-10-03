@@ -18,7 +18,8 @@ CREATE TABLE IF NOT EXISTS users (
         'training_section',
         'pengerusi_besar',
         'general_manager',
-        'head_of_department'
+        'head_of_department',
+        'finance'
     ) NOT NULL DEFAULT 'staff',
     is_active TINYINT(1) NOT NULL DEFAULT 1,
     password VARCHAR(255) NOT NULL,
@@ -47,7 +48,7 @@ CREATE TABLE IF NOT EXISTS applications (
     assigned_hod_id INT UNSIGNED DEFAULT NULL,
     payload JSON NOT NULL,
     status ENUM('pending', 'approved', 'correction', 'rejected', 'cancelled') NOT NULL DEFAULT 'pending',
-    current_stage ENUM('hod', 'training', 'gm', 'completed') NOT NULL DEFAULT 'hod',
+    current_stage ENUM('training', 'hod', 'gm', 'chairman', 'finance', 'completed') NOT NULL DEFAULT 'training',
     sla_due_at DATETIME DEFAULT NULL,
     training_start DATE DEFAULT NULL,
     training_end DATE DEFAULT NULL,
@@ -72,7 +73,7 @@ CREATE TABLE IF NOT EXISTS application_reviews (
     id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     application_id BIGINT UNSIGNED NOT NULL,
     reviewer_id INT UNSIGNED NOT NULL,
-    review_stage ENUM('hod', 'training', 'gm') NOT NULL,
+    review_stage ENUM('training', 'hod', 'gm', 'chairman', 'finance') NOT NULL,
     decision ENUM('approved', 'rejected', 'correction') NOT NULL,
     note TEXT DEFAULT NULL,
     reviewed_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
