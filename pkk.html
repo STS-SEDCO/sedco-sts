@@ -6,27 +6,36 @@
   <title>Smart Training System - Borang Penilaian</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-  <link rel="stylesheet" href="sedco-saas.css?v=20261001-24">
+  <link rel="stylesheet" href="sedco-saas.css?v=20261003-02">
   <link rel="stylesheet" href="sedco-shell.css?v=20260930-56">
 </head>
 <body class="app-page form-page pkk-page" data-page="task">
   <main class="main-content">
-    <div class="container shadow-lg p-5 bg-white rounded-4">
-      <h2 class="text-center mb-3 text-uppercase fw-bold">Borang Penilaian Keberkesanan Kursus / Seminar</h2>
-      <p class="text-center text-muted mb-4">
-        <em>Borang ini hendaklah diisi dalam masa tujuh (7) hari bekerja selepas menghadiri kursus/seminar.</em>
-      </p>
+    <div class="container pkk-form-shell">
+      <header class="pkk-form-header">
+        <div class="pkk-form-header-icon"><i class="bi bi-clipboard2-check"></i></div>
+        <div class="pkk-form-header-copy">
+          <span class="pkk-form-kicker">PENILAIAN SELEPAS LATIHAN</span>
+          <h2>Borang Penilaian Keberkesanan Kursus / Seminar</h2>
+          <p>Borang ini hendaklah diisi dalam masa tujuh (7) hari bekerja selepas menghadiri kursus/seminar.</p>
+        </div>
+      </header>
 
       <div class="form-permission-notice" data-form-permission-notice></div>
 
       <form data-form-owner="staff" method="post" action="#">
-        <div class="row g-3 mb-4">
+        <section class="pkk-form-card pkk-information-card">
+          <div class="pkk-section-heading">
+            <span class="pkk-section-number">01</span>
+            <div><strong>Maklumat Pemohon & Kursus</strong><small>Semak maklumat asas sebelum meneruskan penilaian</small></div>
+          </div>
+          <div class="row g-3 pkk-info-row">
           <div class="col-md-4">
-            <label class="form-label fw-semibold">Nama Pegawai/Staf</label>
+            <label class="form-label fw-semibold"><i class="bi bi-person"></i> Nama Pegawai/Staf</label>
             <input type="text" class="form-control" name="nama" required>
           </div>
           <div class="col-md-4">
-            <label class="form-label fw-semibold">Bahagian</label>
+            <label class="form-label fw-semibold"><i class="bi bi-building"></i> Bahagian</label>
             <select class="form-control sts-department-select" name="bahagian" required>
                         <option value="">Pilih nama penuh bahagian SEDCO</option>
                         <option value="Bahagian Audit Dalam (IAD)">Bahagian Audit Dalam (IAD)</option>
@@ -39,35 +48,40 @@
             </select>
           </div>
           <div class="col-md-4">
-            <label class="form-label fw-semibold">Jawatan</label>
+            <label class="form-label fw-semibold"><i class="bi bi-briefcase"></i> Jawatan</label>
             <input type="text" class="form-control" name="jawatan" required>
           </div>
         </div>
 
-        <div class="row g-3 mb-4">
+        <div class="row g-3 pkk-info-row pkk-info-row-secondary">
           <div class="col-md-4">
-            <label class="form-label fw-semibold">Tajuk Kursus/Seminar</label>
+            <label class="form-label fw-semibold"><i class="bi bi-mortarboard"></i> Tajuk Kursus/Seminar</label>
             <input type="text" class="form-control" name="tajuk" required>
           </div>
           <div class="col-md-4">
-            <label class="form-label fw-semibold">Tarikh / Hari</label>
+            <label class="form-label fw-semibold"><i class="bi bi-calendar3"></i> Tarikh / Hari</label>
             <input type="date" class="form-control" name="tarikh" required>
           </div>
           <div class="col-md-4">
-            <label class="form-label fw-semibold">Tempat</label>
+            <label class="form-label fw-semibold"><i class="bi bi-geo-alt"></i> Tempat</label>
             <input type="text" class="form-control" name="tempat" required>
           </div>
         </div>
+        </section>
 
-        <hr class="my-4">
+        <section class="pkk-form-card pkk-reflection-card page-break">
+          <div class="pkk-section-heading">
+            <span class="pkk-section-number">02</span>
+            <div><strong>Refleksi & Pembelajaran</strong><small>Catat hasil pembelajaran dan cadangan penambahbaikan</small></div>
+          </div>
 
-        <div class="mb-3 page-break">
-          <label class="form-label fw-semibold">1. Objektif menghadiri kursus:</label>
+        <div class="pkk-question-block">
+          <label class="form-label fw-semibold"><span class="pkk-question-number">1</span> Objektif menghadiri kursus</label>
           <textarea class="form-control" name="objektif" rows="3" required></textarea>
         </div>
 
-        <div class="mb-3">
-          <label class="form-label fw-semibold">2. Lima (5) perkara yang anda pelajari:</label>
+        <div class="pkk-question-block">
+          <label class="form-label fw-semibold"><span class="pkk-question-number">2</span> Lima (5) perkara yang anda pelajari</label>
           <ol class="ps-3">
             <li><textarea class="form-control my-2" name="perkara1" rows="2" required></textarea></li>
             <li><textarea class="form-control my-2" name="perkara2" rows="2" required></textarea></li>
@@ -77,19 +91,24 @@
           </ol>
         </div>
 
-        <div class="mb-4">
-          <label class="form-label fw-semibold">3. Cadangan/Penambahbaikan:</label>
+        <div class="pkk-question-block">
+          <label class="form-label fw-semibold"><span class="pkk-question-number">3</span> Cadangan / Penambahbaikan</label>
           <ol class="ps-3">
             <li><textarea class="form-control my-2" name="cadangan1" rows="2" required></textarea></li>
             <li><textarea class="form-control my-2" name="cadangan2" rows="2" required></textarea></li>
             <li><textarea class="form-control my-2" name="cadangan3" rows="2" required></textarea></li>
           </ol>
         </div>
+        </section>
 
-        <hr class="my-4">
+        <section class="pkk-form-card pkk-speaker-card page-break">
+          <div class="pkk-section-heading">
+            <span class="pkk-section-number">03</span>
+            <div><strong>Penilaian Penceramah</strong><small>Masukkan nama penceramah dan skor bagi setiap aspek</small></div>
+          </div>
 
-        <h5 class="fw-bold page-break">Penceramah</h5>
-        <div class="row g-3 mb-4">
+        <div class="pkk-speaker-label"><i class="bi bi-people"></i> Nama Penceramah</div>
+        <div class="row g-3 pkk-speaker-grid">
           <div class="col"><input type="text" class="form-control" name="p1" placeholder="Penceramah 1" required></div>
           <div class="col"><input type="text" class="form-control" name="p2" placeholder="Penceramah 2"></div>
           <div class="col"><input type="text" class="form-control" name="p3" placeholder="Penceramah 3"></div>
@@ -97,12 +116,16 @@
           <div class="col"><input type="text" class="form-control" name="p5" placeholder="Penceramah 5"></div>
         </div>
 
-        <p class="text-muted">
-          Skala penilaian: <strong>10–9: Cemerlang, 8–6: Baik, 5–4: Sederhana, 3–1: Lemah</strong>
-        </p>
+        <div class="pkk-scale-guide">
+          <span class="pkk-scale-title"><i class="bi bi-bar-chart"></i> Skala Penilaian</span>
+          <span><b>10–9</b> Cemerlang</span>
+          <span><b>8–6</b> Baik</span>
+          <span><b>5–4</b> Sederhana</span>
+          <span><b>3–1</b> Lemah</span>
+        </div>
 
-        <div class="table-responsive">
-          <table class="table table-bordered align-middle text-center">
+        <div class="table-responsive pkk-score-table-wrap">
+          <table class="table table-bordered align-middle text-center pkk-score-table">
             <thead class="table-dark">
               <tr>
                 <th>Aspek</th>
@@ -122,21 +145,28 @@
             </tbody>
           </table>
         </div>
+        </section>
 
-        <div class="row g-3 mt-4">
+        <section class="pkk-form-card pkk-confirmation-card">
+          <div class="pkk-section-heading">
+            <span class="pkk-section-number">04</span>
+            <div><strong>Pengesahan</strong><small>Lengkapkan tandatangan dan tarikh penilaian</small></div>
+          </div>
+        <div class="row g-3 pkk-confirmation-grid">
           <div class="col-md-6">
-            <label class="form-label fw-semibold">Tandatangan</label>
+            <label class="form-label fw-semibold"><i class="bi bi-pen"></i> Tandatangan</label>
             <input type="text" class="form-control" name="tandatangan" required>
           </div>
           <div class="col-md-6">
-            <label class="form-label fw-semibold">Tarikh</label>
+            <label class="form-label fw-semibold"><i class="bi bi-calendar-check"></i> Tarikh</label>
             <input type="date" class="form-control" name="tarikh_penilaian" required>
           </div>
         </div>
+        </section>
 
-        <div class="text-end mt-4 no-print">
-          <button type="submit" class="btn btn-primary px-4 py-2 fw-semibold">Submit</button>
-          <button type="button" class="btn btn-secondary px-4 py-2 fw-semibold ms-2 form-print-button" onclick="window.print()">Print</button>
+        <div class="pkk-form-actions no-print">
+          <button type="button" class="btn btn-secondary form-print-button" onclick="window.print()"><i class="bi bi-printer"></i> Print</button>
+          <button type="submit" class="btn btn-primary"><i class="bi bi-send-check"></i> Submit</button>
         </div>
       </form>
     </div>
