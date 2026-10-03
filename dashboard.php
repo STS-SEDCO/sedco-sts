@@ -29,7 +29,7 @@ $queue = [];
 $followups = [];
 $calendarEvents = [];
 $dashboardTitle = 'Your training workspace';
-$dashboardSubtitle = 'Track applications, follow-ups and your training schedule.';
+$dashboardSubtitle = 'Track applications, follow ups and your training schedule.';
 
 if ($role === 'staff') {
     $countStmt = $db->prepare(
@@ -96,8 +96,8 @@ if ($role === 'staff') {
     };
 
     $dashboardSubtitle = match ($role) {
-        'head_of_department' => 'Review your department queue and complete post-training assessments.',
-        'training_section' => 'Process training applications, deadlines and follow-up records.',
+        'head_of_department' => 'Review your department queue and complete post training assessments.',
+        'training_section' => 'Process training applications, deadlines and follow up records.',
         'general_manager' => 'Review final approvals and monitor training outcomes.',
         'admin' => 'Monitor users, workflow activity, approvals and system health.',
         default => 'Review applications assigned to your role.',
@@ -301,7 +301,7 @@ $unreadNotifications = sts_unread_notifications($userId);
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Dashboard - Smart Training System</title>
+  <title>Smart Training System: Dashboard</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
   <link rel="stylesheet" href="sedco-saas.css?v=20260930-70">
@@ -435,8 +435,8 @@ $unreadNotifications = sts_unread_notifications($userId);
     <section class="dashboard-followup-panel">
       <div class="dashboard-card-heading-v4">
         <div>
-          <span class="dashboard-card-kicker">Post-training</span>
-          <h2>Follow-up actions</h2>
+          <span class="dashboard-card-kicker">Post training</span>
+          <h2>Follow up actions</h2>
           <p>Complete the next required training lifecycle step.</p>
         </div>
         <span class="dashboard-followup-count"><?= count($followups) ?> pending</span>
