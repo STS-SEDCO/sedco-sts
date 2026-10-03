@@ -26,6 +26,49 @@
     } catch {
       submissions = [];
     }
+
+    if (location.pathname.toLowerCase().endsWith('.html')) {
+      let previewUser = null;
+      try {
+        previewUser = JSON.parse(localStorage.getItem('sedcoPreviewUser') || 'null');
+      } catch {}
+
+      const role = String(previewUser?.role || '').toLowerCase();
+      const department = String(previewUser?.department || '').trim();
+
+      const roleStage = {
+        training_section:'training',
+        head_of_department:'hod',
+        general_manager:'gm',
+        pengerusi_besar:'chairman',
+        finance:'finance'
+      };
+
+      submissions = submissions
+        .filter(item => String(item.type || item.form_type || '').toUpperCase() === 'BPL')
+        .map(item => {
+          const currentStage = String(item.currentStage || item.current_stage || 'training').toLowerCase();
+          const itemDepartment = String(item.department || item.data?.bahagian || '').trim();
+          const stageForRole = roleStage[role] || currentStage;
+          const roleCanReview = role === 'admin'
+            || (
+              currentStage === stageForRole
+              && (role !== 'head_of_department' || !department || !itemDepartment || department === itemDepartment)
+            );
+
+          return {
+            ...item,
+            type:'BPL',
+            formName:item.formName || 'Permohonan Latihan',
+            currentStage,
+            department:itemDepartment || 'Unassigned',
+            stageLabel:stageMeta(currentStage).label,
+            canReview:String(item.status || 'pending').toLowerCase() === 'pending' && roleCanReview,
+            reviewUrl:item.reviewUrl || 'bpl.html'
+          };
+        })
+        .filter(item => role === 'admin' || item.canReview);
+    }
   }
 
   function statusMeta(status) {
