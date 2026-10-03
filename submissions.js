@@ -155,9 +155,9 @@
       const canRequestCorrection = ['training','hod'].includes(String(item.currentStage || '').toLowerCase());
       const action = item.canReview
         ? `<div class="submission-action-group">
-             <a class="submission-action-view" href="${escapeHtml(item.reviewUrl || '#')}" title="View full form">
+             <button class="submission-action-view" type="button" data-submission-id="${escapeHtml(item.id)}" title="View application details">
                <i class="bi bi-eye"></i><span>View</span>
-             </a>
+             </button>
              <button class="submission-action-btn is-approve" type="button" data-review-action="approved" data-review-id="${escapeHtml(item.id)}">
                <i class="bi bi-check2"></i><span>Approve</span>
              </button>
@@ -169,9 +169,9 @@
                <i class="bi bi-x-lg"></i><span>Reject</span>
              </button>
            </div>`
-        : `<a class="submission-action-view" href="${escapeHtml(item.reviewUrl || '#')}">
+        : `<button class="submission-action-view" type="button" data-submission-id="${escapeHtml(item.id)}">
              <i class="bi bi-eye"></i><span>View</span>
-           </a>`;
+           </button>`;
 
       return `
         <tr>
@@ -317,7 +317,11 @@
     $('submissionModalType').textContent = item.formName || item.type || 'Not available';
     $('submissionModalDate').textContent = formatDate(item.submittedAt, true);
     $('submissionModalDepartment').textContent = item.department || 'Not assigned';
-    $('submissionModalOpenForm').href = item.reviewUrl || '#';
+    const isStaticPreview = location.pathname.toLowerCase().endsWith('.html');
+    const fallbackForm = String(item.type || '').toUpperCase() === 'BPL'
+      ? (isStaticPreview ? 'bpl.html' : 'bpl.php')
+      : '#';
+    $('submissionModalOpenForm').href = item.reviewUrl || fallbackForm;
 
     const entries = Object.entries(item.data || {}).filter(([key,value]) => {
       if (isReviewField(key)) return false;
@@ -521,9 +525,30 @@
   document.addEventListener('DOMContentLoaded', () => {
     load();
 
-    $('quickReviewForm')?.addEventListener('submit', () => {
+    $('quickReviewForm')?.addEventListener('submit', event => {
+      const isStaticPreview = location.pathname.toLowerCase().endsWith('.html');
       const submit = $('quickReviewSubmit');
       if (!submit) return;
+
+      if (isStaticPreview) {
+        event.preventDefault();
+        const decision = $('quickReviewDecision')?.value || 'approved';
+        const id = $('quickReviewApplication')?.value || '';
+        const item = submissions.find(entry => String(entry.id) === String(id));
+
+        if (item) {
+          item.status = decision === 'approved'
+            ? 'approved'
+            : (decision === 'correction' ? 'correction' : 'rejected');
+          try {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(submissions));
+          } catch {}
+          bootstrap.Modal.getOrCreateInstance($('quickReviewModal')).hide();
+          render();
+        }
+        return;
+      }
+
       submit.disabled = true;
       submit.innerHTML = '<span class="spinner-border spinner-border-sm" aria-hidden="true"></span> Saving...';
     });
