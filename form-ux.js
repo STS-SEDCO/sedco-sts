@@ -136,11 +136,11 @@
         if (currentStage === 'hod') {
           return ['ulasan_bahagian','tarikh_bahagian','tt_bahagian'];
         }
-        if (currentStage === 'training') {
-          return ['ulasan_latihan','tarikh_latihan','tt_latihan','bayaran_kursus'];
-        }
         if (currentStage === 'gm') {
-          return ['tarikh_pgs','tt_pgs'];
+          return ['tarikh_sedco','tt_sedco'];
+        }
+        if (currentStage === 'training') {
+          return ['bayaran_kursus'];
         }
       }
 
@@ -168,11 +168,11 @@
 
   function requiredGroups() {
     if (formType === 'BPL' && mode === 'review' && status === 'pending') {
+      if (currentStage === 'gm') {
+        return ['kelulusan_sedco'];
+      }
       if (currentStage === 'training') {
         return ['pendahuluan_diterima','telah_didaftar'];
-      }
-      if (currentStage === 'gm') {
-        return ['kelulusan_pgs'];
       }
     }
 
