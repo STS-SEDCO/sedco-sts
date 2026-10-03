@@ -38,7 +38,7 @@ $result = $stmt->get_result();
 $submissions = [];
 
 while ($row = $result->fetch_assoc()) {
-    if ($normalizedRole === 'head_of_department' && !sts_can_view_application($row, $user)) {
+    if (!sts_can_review_application($row, $user)) {
         continue;
     }
 
@@ -84,7 +84,7 @@ $stmt->close();
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Smart Training System: Submissions</title>
+  <title>Smart Training System: Approval</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
   <link rel="stylesheet" href="sedco-saas.css?v=20260930-65">
@@ -97,8 +97,8 @@ $stmt->close();
     <header class="submissions-heading">
       <div>
         <div class="submissions-eyebrow">Review workspace</div>
-        <h1>Submissions</h1>
-        <p>Review submitted training forms, follow their progress, and keep every application organised.</p>
+        <h1>Approval</h1>
+        <p>Review BPL applications currently waiting for your action.</p>
       </div>
 
       <div class="submissions-heading-actions">
@@ -106,21 +106,17 @@ $stmt->close();
           <i class="bi bi-file-earmark-spreadsheet"></i>
           Export CSV
         </a>
-        <a class="submissions-secondary-action" href="application-status.php">
-          <i class="bi bi-clipboard-data"></i>
-          Application status
-        </a>
-        <a class="submissions-primary-action" href="task.php">
-          <i class="bi bi-plus-lg"></i>
-          New submission
+        <a class="submissions-secondary-action" href="approval-history.php">
+          <i class="bi bi-clock-history"></i>
+          Approval History
         </a>
       </div>
     </header>
 
     <div class="submissions-meta-row">
       <div>
-        <span class="submissions-section-label">Submission overview</span>
-        <span class="submissions-section-note">Latest activity across submitted forms</span>
+        <span class="submissions-section-label">Approval queue</span>
+        <span class="submissions-section-note">Applications currently assigned to you</span>
       </div>
       <span class="submissions-sync-chip"><span></span>Synced</span>
     </div>
@@ -132,7 +128,7 @@ $stmt->close();
           <span class="submission-stat-caption">All time</span>
         </div>
         <strong id="submissionTotal">0</strong>
-        <span>Total received</span>
+        <span>Waiting for action</span>
       </article>
 
       <article class="submission-stat-card stat-pending">
@@ -150,7 +146,7 @@ $stmt->close();
           <span class="submission-stat-caption">Processed</span>
         </div>
         <strong id="submissionReviewed">0</strong>
-        <span>Reviewed</span>
+        <span>Overdue</span>
       </article>
 
       <article class="submission-stat-card stat-week">
@@ -168,10 +164,6 @@ $stmt->close();
         <div class="submissions-filter-group">
           <button class="submission-filter active" type="button" data-submission-filter="all">All</button>
           <button class="submission-filter" type="button" data-submission-filter="pending">Pending</button>
-          <button class="submission-filter" type="button" data-submission-filter="approved">Approved</button>
-          <button class="submission-filter" type="button" data-submission-filter="correction">Needs correction</button>
-          <button class="submission-filter" type="button" data-submission-filter="rejected">Rejected</button>
-          <button class="submission-filter" type="button" data-submission-filter="cancelled">Cancelled</button>
         </div>
 
         <div class="submissions-advanced-filters">
@@ -215,10 +207,10 @@ $stmt->close();
           <div class="submission-empty-icon"><i class="bi bi-inbox"></i></div>
           <span class="submission-empty-orbit"></span>
         </div>
-        <h3>No submissions yet</h3>
-        <p>Once a training form is submitted, it will appear here automatically for easy tracking and review.</p>
-        <a href="task.php" class="submission-empty-action">
-          Create submission <i class="bi bi-arrow-right"></i>
+        <h3>No approvals waiting</h3>
+        <p>There are currently no BPL applications waiting for your review.</p>
+        <a href="approval-history.php" class="submission-empty-action">
+          View approval history <i class="bi bi-arrow-right"></i>
         </a>
       </div>
     </section>
@@ -280,7 +272,7 @@ window.SEDCO_SUBMISSIONS = <?= json_encode(
     | JSON_HEX_QUOT
 ) ?>;
 </script>
-<script src="submissions.js?v=20260930-65"></script>
-<script src="sedco-shell.js?v=20260930-56"></script>
+<script src="submissions.js?v=20261003-01"></script>
+<script src="sedco-shell.js?v=20261003-01"></script>
 </body>
 </html>
