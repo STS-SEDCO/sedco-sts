@@ -283,13 +283,13 @@ $stmt->close();
         </a>
 
         <div class="approval-detail-actions" id="submissionModalActions">
-          <button type="button" class="approval-detail-action is-approve" data-detail-review-action="approved">
+          <button type="button" class="approval-detail-action is-approve" data-detail-review-decision="approved">
             <i class="bi bi-check2"></i><span>Approve</span>
           </button>
-          <button type="button" class="approval-detail-action is-correction" data-detail-review-action="correction">
+          <button type="button" class="approval-detail-action is-correction" data-detail-review-decision="correction">
             <i class="bi bi-arrow-counterclockwise"></i><span>Request Correction</span>
           </button>
-          <button type="button" class="approval-detail-action is-reject" data-detail-review-action="rejected">
+          <button type="button" class="approval-detail-action is-reject" data-detail-review-decision="rejected">
             <i class="bi bi-x-lg"></i><span>Reject</span>
           </button>
         </div>
