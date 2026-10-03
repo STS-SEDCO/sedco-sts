@@ -20,7 +20,7 @@ if ($parentId > 0) {
 
     if (!$parent) {
         http_response_code(403);
-        exit('This training record is not available for PKK follow-up.');
+        exit('This training record is not available for PKK follow up.');
     }
 
     $parentPayload = json_decode((string) $parent['payload'], true);
@@ -32,7 +32,7 @@ if ($parentId > 0) {
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Smart Training System - Borang Penilaian</title>
+  <title>Smart Training System: Borang Penilaian</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
   <link rel="stylesheet" href="sedco-saas.css?v=20261003-02">
@@ -154,10 +154,10 @@ if ($parentId > 0) {
 
         <div class="pkk-scale-guide">
           <span class="pkk-scale-title"><i class="bi bi-bar-chart"></i> Skala Penilaian</span>
-          <span><b>10–9</b> Cemerlang</span>
-          <span><b>8–6</b> Baik</span>
-          <span><b>5–4</b> Sederhana</span>
-          <span><b>3–1</b> Lemah</span>
+          <span><b>9 hingga 10</b> Cemerlang</span>
+          <span><b>6 hingga 8</b> Baik</span>
+          <span><b>4 hingga 5</b> Sederhana</span>
+          <span><b>1 hingga 3</b> Lemah</span>
         </div>
 
         <div class="table-responsive pkk-score-table-wrap">
