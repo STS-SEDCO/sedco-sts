@@ -89,7 +89,7 @@ $stmt->close();
   <title>Smart Training System: Approval</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-  <link rel="stylesheet" href="sedco-saas.css?v=20261003-06">
+  <link rel="stylesheet" href="sedco-saas.css?v=20261003-08">
   <link rel="stylesheet" href="sedco-shell.css?v=20260930-56">
 </head>
 <body class="app-page submissions-page" data-page="submissions" data-role="<?= e(normalized_role($user['role'] ?? '')) ?>">
@@ -372,7 +372,7 @@ window.SEDCO_SUBMISSIONS = <?= json_encode(
     | JSON_HEX_QUOT
 ) ?>;
 </script>
-<script src="submissions.js?v=20261003-03"></script>
+<script src="submissions.js?v=20261003-05"></script>
 <script src="sedco-shell.js?v=20261003-02"></script>
 </body>
 </html>
