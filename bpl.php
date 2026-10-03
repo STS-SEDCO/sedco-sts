@@ -392,7 +392,7 @@ $canReviewCurrentStage = $mode === 'review'
                 <button type="submit" name="decision" value="approved" class="btn-maroon btn-review-approve">
                   <i class="bi bi-check2"></i> <?= $currentStage === 'finance' ? 'Approve & Complete' : 'Approve & Continue' ?>
                 </button>
-                <?php if ($currentStage === 'hod'): ?>
+                <?php if (in_array($currentStage, ['training', 'hod'], true)): ?>
                 <button type="submit" name="decision" value="correction" class="btn-review-secondary" formnovalidate>
                   <i class="bi bi-arrow-counterclockwise"></i> Request Correction
                 </button>
