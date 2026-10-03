@@ -27,7 +27,8 @@ ALTER TABLE users
         'training_section',
         'pengerusi_besar',
         'general_manager',
-        'head_of_department'
+        'head_of_department',
+        'finance'
     ) NOT NULL DEFAULT 'staff';
 
 -- Fill missing values on legacy accounts so the new columns can become required.
@@ -68,7 +69,7 @@ CREATE TABLE IF NOT EXISTS applications (
     title VARCHAR(255) NOT NULL,
     payload JSON NOT NULL,
     status ENUM('pending', 'approved', 'correction', 'rejected') NOT NULL DEFAULT 'pending',
-    current_stage ENUM('hod', 'training', 'gm', 'completed') NOT NULL DEFAULT 'hod',
+    current_stage ENUM('training', 'hod', 'gm', 'chairman', 'finance', 'completed') NOT NULL DEFAULT 'training',
     review_note TEXT DEFAULT NULL,
     submitted_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
@@ -84,12 +85,12 @@ CREATE TABLE IF NOT EXISTS applications (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- 4) Review history for the approval flow:
--- Staff -> HoD -> Training Department -> GM.
+-- Staff -> Training Department -> HoD -> GM -> Pengerusi -> Kewangan.
 CREATE TABLE IF NOT EXISTS application_reviews (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     application_id BIGINT NOT NULL,
     reviewer_id INT NOT NULL,
-    review_stage ENUM('hod', 'training', 'gm') NOT NULL,
+    review_stage ENUM('training', 'hod', 'gm', 'chairman', 'finance') NOT NULL,
     decision ENUM('approved', 'rejected', 'correction') NOT NULL,
     note TEXT DEFAULT NULL,
     reviewed_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
