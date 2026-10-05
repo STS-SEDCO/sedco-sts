@@ -16204,3 +16204,10 @@ body.tea-premium-page .tea-competency-output.is-merit{
   background:#f5f3ff;
   color:#6d28d9;
 }
+
+/* ===== TEA SCORE GUARD V20261005 ===== */
+body.tea-premium-page .score-input-small.is-score-corrected{
+  border-color:#d97706 !important;
+  background:#fff8eb !important;
+  box-shadow:0 0 0 3px rgba(217,119,6,.09) !important;
+}
