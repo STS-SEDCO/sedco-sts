@@ -13,6 +13,10 @@ if (!$user) {
 $normalizedRole = normalized_role($user['role'] ?? '');
 $reviewerStage = review_stage_for_role($user['role'] ?? '');
 $reviewerStageLabel = $reviewerStage ? stage_label($reviewerStage) : 'All approval stages';
+$approvalStageOrder = ['training', 'hod', 'gm', 'chairman', 'finance'];
+$reviewerStageIndex = $reviewerStage !== null
+    ? array_search($reviewerStage, $approvalStageOrder, true)
+    : false;
 
 if (!user_can_review_applications($user)) {
     header('Location: application-status.php');
@@ -91,7 +95,7 @@ $stmt->close();
   <title>Smart Training System: Approval</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-  <link rel="stylesheet" href="sedco-saas.css?v=20261003-10">
+  <link rel="stylesheet" href="sedco-saas.css?v=20261005-01">
   <link rel="stylesheet" href="sedco-shell.css?v=20260930-56">
 </head>
 <body class="app-page submissions-page" data-page="submissions" data-role="<?= e(normalized_role($user['role'] ?? '')) ?>">
@@ -132,10 +136,33 @@ $stmt->close();
           'chairman' => ['Pengerusi', 'bi-award'],
           'finance' => ['Kewangan', 'bi-cash-stack'],
         ] as $stageKey => [$stageName, $stageIcon]): ?>
-          <div class="approval-flow-step<?= $reviewerStage === $stageKey ? ' is-current' : '' ?>">
-            <span class="approval-flow-icon"><i class="bi <?= e($stageIcon) ?>"></i></span>
+          <?php
+            $stageIndex = array_search($stageKey, $approvalStageOrder, true);
+            $stageState = '';
+
+            if ($reviewerStageIndex !== false && $stageIndex !== false) {
+                if ($stageIndex < $reviewerStageIndex) {
+                    $stageState = ' is-passed';
+                } elseif ($stageIndex === $reviewerStageIndex) {
+                    $stageState = ' is-current';
+                } else {
+                    $stageState = ' is-upcoming';
+                }
+            }
+
+            $stageCaption = match ($stageState) {
+                ' is-passed' => 'Passed',
+                ' is-current' => 'Your stage',
+                ' is-upcoming' => 'Upcoming',
+                default => 'Stage',
+            };
+          ?>
+          <div class="approval-flow-step<?= e($stageState) ?>">
+            <span class="approval-flow-icon">
+              <i class="bi <?= $stageState === ' is-passed' ? 'bi-check2' : e($stageIcon) ?>"></i>
+            </span>
             <div>
-              <small><?= $reviewerStage === $stageKey ? 'Your stage' : 'Stage' ?></small>
+              <small><?= e($stageCaption) ?></small>
               <strong><?= e($stageName) ?></strong>
             </div>
           </div>
