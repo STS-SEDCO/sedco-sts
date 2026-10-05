@@ -40,7 +40,7 @@ if ($parentId > 0) {
   <title>Training Effectiveness Assessment: STS</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-  <link rel="stylesheet" href="sedco-saas.css?v=20261005-11">
+  <link rel="stylesheet" href="sedco-saas.css?v=20261005-12">
   <link rel="stylesheet" href="sedco-shell.css?v=20261005-03">
   <script>
     function printForm() { window.print(); }
@@ -196,12 +196,10 @@ if ($parentId > 0) {
                 <td><input type="number" name="score_0[]" min="1" max="4" class="score-input-small" placeholder="1–4" required></td>
                 <td><input type="text" name="total_score_0" class="tea-total-input" readonly placeholder="Auto"></td>
                 <td>
-                  <select name="competency_level_0" class="tea-competency-select">
-                    <option value="Fail">Fail</option>
-                    <option value="Probation">Probation</option>
-                    <option value="Pass">Pass</option>
-                    <option value="Merit">Merit</option>
-                  </select>
+                  <input type="hidden" name="competency_level_0" value="">
+                  <span class="tea-competency-output is-auto" data-competency-output="0">
+                    <i class="bi bi-stars"></i><span>Auto</span>
+                  </span>
                 </td>
                 <td><input type="text" name="comments_0" class="tea-comment-input" placeholder="Optional comment"></td>
               </tr>
@@ -214,12 +212,10 @@ if ($parentId > 0) {
                 <td><input type="number" name="score_1[]" min="1" max="4" class="score-input-small" placeholder="1–4" required></td>
                 <td><input type="text" name="total_score_1" class="tea-total-input" readonly placeholder="Auto"></td>
                 <td>
-                  <select name="competency_level_1" class="tea-competency-select">
-                    <option value="Fail">Fail</option>
-                    <option value="Probation">Probation</option>
-                    <option value="Pass">Pass</option>
-                    <option value="Merit">Merit</option>
-                  </select>
+                  <input type="hidden" name="competency_level_1" value="">
+                  <span class="tea-competency-output is-auto" data-competency-output="1">
+                    <i class="bi bi-stars"></i><span>Auto</span>
+                  </span>
                 </td>
                 <td><input type="text" name="comments_1" class="tea-comment-input" placeholder="Optional comment"></td>
               </tr>
@@ -337,7 +333,7 @@ if ($parentId > 0) {
 
 <script>window.SEDCO_FORM_CONTEXT = { role: <?= json_encode($user['role'] ?? 'staff') ?>, mode: 'new', formType: 'TEA' };</script>
 <script src="form-permissions.js?v=20261005-04"></script>
-<script src="form-ux.js?v=20261005-01"></script>
+<script src="form-ux.js?v=20261005-02"></script>
 <script src="form-enhancements.js?v=20260930-59"></script>
 <script src="sedco-shell.js?v=20261005-03"></script>
 </body>
