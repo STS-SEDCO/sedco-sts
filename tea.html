@@ -135,10 +135,35 @@
     </form>
   </div>
 
+<script>
+(() => {
+  let user = {};
+  try {
+    user = JSON.parse(localStorage.getItem('sedcoPreviewUser') || '{}') || {};
+  } catch {}
+
+  const role = String(user.role || 'staff').toLowerCase();
+  document.body.dataset.role = role;
+
+  if (role !== 'head_of_department') {
+    location.replace('task.html');
+    return;
+  }
+
+  window.SEDCO_FORM_CONTEXT = { role, mode: 'new', formType: 'TEA' };
+
+  const head = document.querySelector('input[name="head_division"]');
+  if (head && !head.value) head.value = user.fullname || '';
+
+  const division = document.querySelector('select[name="division"]');
+  if (division && user.department && [...division.options].some(option => option.value === user.department)) {
+    division.value = user.department;
+  }
+})();
+</script>
 <script src="sedco-submission.js?v=20260930-68"></script>
-<script>window.SEDCO_FORM_CONTEXT = { role: 'staff', mode: 'new', formType: 'TEA' };</script>
-<script src="form-permissions.js?v=20260930-58"></script>
+<script src="form-permissions.js?v=20261005-03"></script>
 <script src="form-ux.js?v=20261001-09"></script>
-<script src="sedco-shell.js?v=20260930-68"></script>
+<script src="sedco-shell.js?v=20261005-03"></script>
 </body>
 </html>
