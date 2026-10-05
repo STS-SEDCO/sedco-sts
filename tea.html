@@ -3,166 +3,187 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Training Effectiveness Form: Tasks</title>
-
-  <!-- Bootstrap CSS and Font Awesome -->
+  <title>Training Effectiveness Assessment: STS</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-<script>
-    function printForm() {
-      window.print();
-    }
-  </script>
-    <link rel="stylesheet" href="sedco-saas.css?v=20261001-24">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-  <link rel="stylesheet" href="sedco-shell.css?v=20260930-56">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <link rel="stylesheet" href="sedco-saas.css?v=20261005-04">
+  <link rel="stylesheet" href="sedco-shell.css?v=20261005-03">
+  <script>function printForm(){ window.print(); }</script>
 </head>
-<body class="app-page form-page tea-page" data-page="task">
+<body class="app-page form-page tea-page tea-premium-page" data-page="task">
 
-  <!-- Navbar -->
-  <!-- Sidebar -->
-  <!-- Main Content -->
-  <div class="form-container">
-    <div class="center mb-4">
-      <h5 class="mt-3 fw-bold">TRAINING EFFECTIVENESS ASSESSMENT FORM</h5>
-      <em>Post Training Evaluation: Improvement Assessment (Conducted in June or December of the Training Year)</em>
-    </div>
-
-    <div class="form-permission-notice" data-form-permission-notice></div>
-
-    <form data-form-owner="head_of_department" method="post" action="#">
-      <table>
-        <tr>
-          <td class="no-border" colspan="2">Employee Name: <input type="text" name="employee_name" class="input-field" required></td>
-          <td class="no-border" colspan="2">Division/Section:
-            <select name="division" class="input-field sts-department-select" required>
-              <option value="">Pilih nama penuh bahagian SEDCO</option>
-              <option value="Bahagian Audit Dalam (IAD)">Bahagian Audit Dalam (IAD)</option>
-              <option value="Bahagian Pembangunan Perniagaan dan Pelaburan (BDI)">Bahagian Pembangunan Perniagaan dan Pelaburan (BDI)</option>
-              <option value="Bahagian Kewangan (FND)">Bahagian Kewangan (FND)</option>
-              <option value="Bahagian Pembangunan Usahawan (EDD)">Bahagian Pembangunan Usahawan (EDD)</option>
-              <option value="Bahagian Pengurusan Strategik (SMD)">Bahagian Pengurusan Strategik (SMD)</option>
-              <option value="Bahagian Pengurusan Hartanah (PMD)">Bahagian Pengurusan Hartanah (PMD)</option>
-              <option value="Bahagian Sumber Manusia dan Pentadbiran (HRAD)">Bahagian Sumber Manusia dan Pentadbiran (HRAD)</option>
-            </select></td>
-        </tr>
-        <tr>
-          <td class="no-border" colspan="4">
-            Evaluation Period:
-            <label><input type="radio" name="month" value="June" required> January / June</label>
-            <label><input type="radio" name="month" value="December" checked> July / December</label>
-            <br><small class="text-muted">(Please tick (√) the applicable evaluation period)</small>
-          </td>
-        </tr>
-      </table>
-
-      <div class="center my-3">
-        <strong>Rating Scale</strong><br>
-        <span class="rating-info">Poor (1) &nbsp; Average (2) &nbsp; Good (3) &nbsp; Excellent (4)</span>
+<main class="tea-premium-content">
+  <div class="form-container tea-premium-shell">
+    <header class="tea-premium-hero">
+      <div class="tea-premium-hero-copy">
+        <span class="tea-premium-kicker"><i class="bi bi-graph-up-arrow"></i> Post-training evaluation</span>
+        <h1>Training Effectiveness Assessment</h1>
+        <p>Improvement assessment conducted in June or December of the training year.</p>
       </div>
+      <div class="tea-premium-hero-badge">
+        <i class="bi bi-person-check"></i>
+        <div><span>Form owner</span><strong>Head of Department</strong></div>
+      </div>
+    </header>
 
-      <table>
-        <thead>
-          <tr>
-            <th rowspan="2">Training Title</th>
-            <th colspan="5">Assessment Criteria</th>
-            <th rowspan="2">Total Score</th>
-            <th rowspan="2">Competency Level</th>
-            <th rowspan="2">Additional Comments</th>
-          </tr>
-          <tr>
-            <th>Productivity</th>
-            <th>Quality of Work</th>
-            <th>Skill Enhancement</th>
-            <th>Application of Knowledge</th>
-            <th>Attitude</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-                <td>Bengkel Klasifikasi Sistem Fail Fungsian</td><td><input type="number" name="score_0[]" min="1" max="4" class="score-input-small" required></td><td><input type="number" name="score_0[]" min="1" max="4" class="score-input-small" required></td><td><input type="number" name="score_0[]" min="1" max="4" class="score-input-small" required></td><td><input type="number" name="score_0[]" min="1" max="4" class="score-input-small" required></td><td><input type="number" name="score_0[]" min="1" max="4" class="score-input-small" required></td>
-                <td><input type="text" name="total_score_0" class="score-input-small"></td>
-                <td>
-                  <select name='competency_level_0'>
-                    <option value='Fail'>Fail</option>
-                    <option value='Probation'>Probation</option>
-                    <option value='Pass'>Pass</option>
-                    <option value='Merit'>Merit</option>
-                  </select>
-                </td>
-                <td><input type='text' name='comments_0'></td>
+    <div class="form-permission-notice tea-premium-permission" data-form-permission-notice></div>
+
+    <form class="tea-premium-form" data-form-owner="head_of_department" method="post" action="#">
+      <section class="tea-section-card tea-section-overview">
+        <div class="tea-section-heading">
+          <div><span class="tea-section-eyebrow">Employee &amp; evaluation</span><h2>Assessment information</h2></div>
+          <span class="tea-section-number">01</span>
+        </div>
+        <div class="tea-info-grid">
+          <label class="tea-field">
+            <span>Employee name <b>*</b></span>
+            <div class="tea-control-wrap"><i class="bi bi-person"></i><input type="text" name="employee_name" class="input-field" required placeholder="Enter employee name"></div>
+          </label>
+          <label class="tea-field">
+            <span>Division / Section <b>*</b></span>
+            <div class="tea-control-wrap">
+              <i class="bi bi-building"></i>
+              <select name="division" class="input-field sts-department-select" required>
+                <option value="">Select SEDCO Department / Division</option>
+                <option value="Bahagian Audit Dalam (IAD)">Bahagian Audit Dalam (IAD)</option>
+                <option value="Bahagian Pembangunan Perniagaan dan Pelaburan (BDI)">Bahagian Pembangunan Perniagaan dan Pelaburan (BDI)</option>
+                <option value="Bahagian Kewangan (FND)">Bahagian Kewangan (FND)</option>
+                <option value="Bahagian Pembangunan Usahawan (EDD)">Bahagian Pembangunan Usahawan (EDD)</option>
+                <option value="Bahagian Pengurusan Strategik (SMD)">Bahagian Pengurusan Strategik (SMD)</option>
+                <option value="Bahagian Pengurusan Hartanah (PMD)">Bahagian Pengurusan Hartanah (PMD)</option>
+                <option value="Bahagian Sumber Manusia dan Pentadbiran (HRAD)">Bahagian Sumber Manusia dan Pentadbiran (HRAD)</option>
+              </select>
+            </div>
+          </label>
+        </div>
+        <div class="tea-period-block">
+          <div class="tea-period-copy"><strong>Evaluation period</strong><span>Select the applicable assessment cycle.</span></div>
+          <div class="tea-period-options">
+            <label class="tea-period-option"><input type="radio" name="month" value="June" required><span><i class="bi bi-calendar3"></i> January / June</span></label>
+            <label class="tea-period-option"><input type="radio" name="month" value="December" checked><span><i class="bi bi-calendar3"></i> July / December</span></label>
+          </div>
+        </div>
+      </section>
+
+      <section class="tea-section-card tea-rating-panel">
+        <div class="tea-section-heading compact">
+          <div><span class="tea-section-eyebrow">Scoring guide</span><h2>Rating scale</h2></div>
+          <span class="tea-section-number">02</span>
+        </div>
+        <div class="tea-rating-grid">
+          <div><strong>1</strong><span>Poor</span></div><div><strong>2</strong><span>Average</span></div>
+          <div><strong>3</strong><span>Good</span></div><div><strong>4</strong><span>Excellent</span></div>
+        </div>
+      </section>
+
+      <section class="tea-section-card tea-assessment-section">
+        <div class="tea-section-heading">
+          <div><span class="tea-section-eyebrow">Performance review</span><h2>Assessment criteria</h2></div>
+          <span class="tea-section-number">03</span>
+        </div>
+        <div class="tea-table-scroll">
+          <table class="tea-assessment-table">
+            <thead>
+              <tr>
+                <th rowspan="2" class="tea-title-col">Training Title</th>
+                <th colspan="5">Assessment Criteria</th>
+                <th rowspan="2">Total Score</th>
+                <th rowspan="2">Competency Level</th>
+                <th rowspan="2" class="tea-comments-col">Additional Comments</th>
               </tr>
-<tr>
-                <td>Public Speaking & Presentation Skill</td><td><input type="number" name="score_1[]" min="1" max="4" class="score-input-small" required></td><td><input type="number" name="score_1[]" min="1" max="4" class="score-input-small" required></td><td><input type="number" name="score_1[]" min="1" max="4" class="score-input-small" required></td><td><input type="number" name="score_1[]" min="1" max="4" class="score-input-small" required></td><td><input type="number" name="score_1[]" min="1" max="4" class="score-input-small" required></td>
-                <td><input type="text" name="total_score_1" class="score-input-small"></td>
-                <td>
-                  <select name='competency_level_1'>
-                    <option value='Fail'>Fail</option>
-                    <option value='Probation'>Probation</option>
-                    <option value='Pass'>Pass</option>
-                    <option value='Merit'>Merit</option>
-                  </select>
-                </td>
-                <td><input type='text' name='comments_1'></td>
+              <tr><th>Productivity</th><th>Quality of Work</th><th>Skill Enhancement</th><th>Application of Knowledge</th><th>Attitude</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="tea-training-title">Bengkel Klasifikasi Sistem Fail Fungsian</td>
+                <td><input type="number" name="score_0[]" min="1" max="4" class="score-input-small" required></td>
+                <td><input type="number" name="score_0[]" min="1" max="4" class="score-input-small" required></td>
+                <td><input type="number" name="score_0[]" min="1" max="4" class="score-input-small" required></td>
+                <td><input type="number" name="score_0[]" min="1" max="4" class="score-input-small" required></td>
+                <td><input type="number" name="score_0[]" min="1" max="4" class="score-input-small" required></td>
+                <td><input type="text" name="total_score_0" class="tea-total-input"></td>
+                <td><select name="competency_level_0" class="tea-competency-select"><option>Fail</option><option>Probation</option><option>Pass</option><option>Merit</option></select></td>
+                <td><input type="text" name="comments_0" class="tea-comment-input" placeholder="Add comment"></td>
               </tr>
-        </tbody>
-      </table>
+              <tr>
+                <td class="tea-training-title">Public Speaking &amp; Presentation Skill</td>
+                <td><input type="number" name="score_1[]" min="1" max="4" class="score-input-small" required></td>
+                <td><input type="number" name="score_1[]" min="1" max="4" class="score-input-small" required></td>
+                <td><input type="number" name="score_1[]" min="1" max="4" class="score-input-small" required></td>
+                <td><input type="number" name="score_1[]" min="1" max="4" class="score-input-small" required></td>
+                <td><input type="number" name="score_1[]" min="1" max="4" class="score-input-small" required></td>
+                <td><input type="text" name="total_score_1" class="tea-total-input"></td>
+                <td><select name="competency_level_1" class="tea-competency-select"><option>Fail</option><option>Probation</option><option>Pass</option><option>Merit</option></select></td>
+                <td><input type="text" name="comments_1" class="tea-comment-input" placeholder="Add comment"></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="tea-inline-note"><i class="bi bi-info-circle"></i><span>Select the competency ranking that best reflects the employee's performance after training.</span></div>
+      </section>
 
-      <p><strong>Note:</strong> Please select the appropriate competency ranking based on the employee’s performance after training.</p>
+      <section class="tea-section-card tea-ranking-section">
+        <div class="tea-section-heading">
+          <div><span class="tea-section-eyebrow">Reference</span><h2>Competency ranking guide</h2></div>
+          <span class="tea-section-number">04</span>
+        </div>
+        <div class="tea-ranking-grid">
+          <article><span class="tea-ranking-score">0–7</span><div><strong>Fail</strong><p>No significant improvement observed. Additional training is recommended.</p></div></article>
+          <article><span class="tea-ranking-score">8–12</span><div><strong>Probation</strong><p>Requires supervision for 6 months. A reassessment is required.</p></div></article>
+          <article><span class="tea-ranking-score">13–17</span><div><strong>Pass</strong><p>Can perform tasks with minimal supervision.</p></div></article>
+          <article><span class="tea-ranking-score">18</span><div><strong>Merit</strong><p>Shows excellent competency and can guide others.</p></div></article>
+        </div>
+      </section>
 
-      <table>
-        <thead>
-          <tr><th>Ranking</th><th>Description</th></tr>
-        </thead>
-        <tbody>
-          <tr><td>Fail</td><td>0 to 7 points. No significant improvement observed. Additional training is recommended.</td></tr>
-          <tr><td>Probation</td><td>8 to 12 points. Requires supervision for 6 months. A reassessment is required.</td></tr>
-          <tr><td>Pass</td><td>13 to 17 points. Can perform tasks with minimal supervision.</td></tr>
-          <tr><td>Merit</td><td>18 points. Shows excellent competency. Can guide others.</td></tr>
-        </tbody>
-      </table>
+      <section class="tea-section-card tea-evaluator-section">
+        <div class="tea-section-heading">
+          <div><span class="tea-section-eyebrow">Confirmation</span><h2>Evaluator details</h2></div>
+          <span class="tea-section-number">05</span>
+        </div>
+        <div class="tea-info-grid tea-evaluator-grid">
+          <label class="tea-field">
+            <span>Head of Division / Section <b>*</b></span>
+            <div class="tea-control-wrap"><i class="bi bi-person-badge"></i><input type="text" name="head_division" class="input-field" required></div>
+          </label>
+          <label class="tea-field">
+            <span>Date of Evaluation <b>*</b></span>
+            <div class="tea-control-wrap"><i class="bi bi-calendar-check"></i><input type="date" name="date" class="input-field" required></div>
+          </label>
+          <label class="tea-field tea-field-full">
+            <span>Signature / Confirmation <b>*</b></span>
+            <div class="tea-control-wrap"><i class="bi bi-pen"></i><input type="text" name="signature" class="input-field" required placeholder="Enter evaluator confirmation"></div>
+          </label>
+        </div>
+      </section>
 
-      <table>
-        <tr><td class="no-border">Evaluated by: <strong></strong></td></tr>
-        <tr><td class="no-border">Head of Division/Section: <input type="text" name="head_division" class="input-field" required></td></tr>
-        <tr><td class="no-border">Date of Evaluation: <input type="date" name="date" class="input-field" required></td></tr>
-        <tr><td class="no-border">Signature: <input type="text" name="signature" class="input-field" required></td></tr>
-      </table>
-
-      <div class="center mt-4">
-        <input type="submit" value="Submit Form" class="btn btn-primary">
-        <button type="button" onclick="printForm()" class="btn btn-secondary ms-3 form-print-button">Print Form</button>
+      <div class="tea-action-bar">
+        <button type="button" onclick="printForm()" class="tea-action-secondary form-print-button"><i class="bi bi-printer"></i> Print form</button>
+        <button type="submit" class="tea-action-primary"><i class="bi bi-check2-circle"></i> Submit assessment</button>
       </div>
     </form>
   </div>
+</main>
 
 <script>
 (() => {
   let user = {};
-  try {
-    user = JSON.parse(localStorage.getItem('sedcoPreviewUser') || '{}') || {};
-  } catch {}
-
+  try { user = JSON.parse(localStorage.getItem('sedcoPreviewUser') || '{}') || {}; } catch {}
   const role = String(user.role || 'staff').toLowerCase();
   document.body.dataset.role = role;
-
-  if (role !== 'head_of_department') {
-    location.replace('task.html');
-    return;
-  }
-
+  if (role !== 'head_of_department') { location.replace('task.html'); return; }
   window.SEDCO_FORM_CONTEXT = { role, mode: 'new', formType: 'TEA' };
 
+  const employee = document.querySelector('input[name="employee_name"]');
   const head = document.querySelector('input[name="head_division"]');
-  if (head && !head.value) head.value = user.fullname || '';
-
   const division = document.querySelector('select[name="division"]');
-  if (division && user.department && [...division.options].some(option => option.value === user.department)) {
-    division.value = user.department;
-  }
+
+  if (head && !head.value) head.value = user.fullname || '';
+  if (employee && !employee.value) employee.value = '';
+  if (division && user.department && [...division.options].some(option => option.value === user.department)) division.value = user.department;
 })();
 </script>
 <script src="sedco-submission.js?v=20260930-68"></script>
-<script src="form-permissions.js?v=20261005-03"></script>
+<script src="form-permissions.js?v=20261005-04"></script>
 <script src="form-ux.js?v=20261001-09"></script>
 <script src="sedco-shell.js?v=20261005-03"></script>
 </body>
