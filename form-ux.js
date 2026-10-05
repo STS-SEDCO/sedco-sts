@@ -380,6 +380,90 @@
     });
   }
 
+  function setupTeaRatingPicker() {
+    if (formType !== 'TEA') return;
+
+    const choices = [...form.querySelectorAll('[data-tea-rating]')];
+    const helper = form.querySelector('[data-tea-rating-helper]');
+    const scoreInputs = [...form.querySelectorAll('.score-input-small[type="number"]')];
+
+    if (!choices.length || !scoreInputs.length) return;
+
+    let activeScoreInput = null;
+    let selectedRating = '';
+
+    const labelForRating = value => ({
+      '1':'Poor',
+      '2':'Average',
+      '3':'Good',
+      '4':'Excellent'
+    }[String(value)] || '');
+
+    const syncChoices = value => {
+      choices.forEach(button => {
+        const active = String(button.dataset.teaRating || '') === String(value || '');
+        button.classList.toggle('is-selected', active);
+        button.setAttribute('aria-pressed', active ? 'true' : 'false');
+      });
+    };
+
+    const updateHelper = message => {
+      if (!helper) return;
+      const text = helper.querySelector('span');
+      if (text) text.textContent = message;
+    };
+
+    scoreInputs.forEach(input => {
+      input.addEventListener('focus', () => {
+        activeScoreInput = input;
+        input.classList.add('is-rating-target');
+        scoreInputs.forEach(other => {
+          if (other !== input) other.classList.remove('is-rating-target');
+        });
+
+        if (input.value && /^[1-4]$/.test(String(input.value))) {
+          selectedRating = String(input.value);
+          syncChoices(selectedRating);
+        }
+
+        updateHelper('Score box selected. Choose 1–4 above to apply the rating.');
+      });
+
+      input.addEventListener('click', () => {
+        activeScoreInput = input;
+      });
+
+      input.addEventListener('input', () => {
+        if (/^[1-4]$/.test(String(input.value))) {
+          selectedRating = String(input.value);
+          syncChoices(selectedRating);
+        }
+      });
+    });
+
+    choices.forEach(button => {
+      button.addEventListener('click', () => {
+        const rating = String(button.dataset.teaRating || '');
+        if (!/^[1-4]$/.test(rating)) return;
+
+        selectedRating = rating;
+        syncChoices(rating);
+
+        if (activeScoreInput) {
+          activeScoreInput.value = rating;
+          activeScoreInput.dispatchEvent(new Event('input', { bubbles:true }));
+          activeScoreInput.dispatchEvent(new Event('change', { bubbles:true }));
+          activeScoreInput.classList.add('is-rating-applied');
+          window.setTimeout(() => activeScoreInput?.classList.remove('is-rating-applied'), 320);
+
+          updateHelper('Applied ' + rating + ' (' + labelForRating(rating) + ') to the selected score box.');
+        } else {
+          updateHelper('Rating ' + rating + ' (' + labelForRating(rating) + ') selected. Now click a score box to apply it.');
+        }
+      });
+    });
+  }
+
   function setupTeaTotals() {
     if (formType !== 'TEA') return;
 
@@ -1271,6 +1355,7 @@
 
   enhanceWritingFields();
   setupOtherFields();
+  setupTeaRatingPicker();
   setupTeaTotals();
   setupPkkSpeakerRules();
   makeRequiredMarkers();
