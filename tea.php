@@ -37,164 +37,182 @@ if ($parentId > 0) {
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SEDCO Training Effectiveness Assessment Form 2025</title>
+  <title>Training Effectiveness Assessment: STS</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-  <link rel="stylesheet" href="sedco-saas.css?v=20261005-19">
+  <link rel="stylesheet" href="sedco-saas.css?v=20261005-20">
   <link rel="stylesheet" href="sedco-shell.css?v=20261005-03">
   <script>function printForm(){ window.print(); }</script>
 </head>
-<body class="app-page form-page tea-page tea-official-page" data-page="task" data-role="<?= e(normalized_role($user['role'] ?? '')) ?>">
-
-<main class="tea-official-content">
-  <div class="tea-official-paper">
-    <header class="tea-official-header">
-      <div class="tea-official-mark" aria-hidden="true">
-        <span>SEDCO</span>
-        <small>SABAH</small>
+<body class="app-page form-page tea-page tea-system-page" data-page="task" data-role="<?= e(normalized_role($user['role'] ?? '')) ?>">
+<main class="tea-system-content">
+  <div class="tea-system-shell">
+    <header class="tea-system-header">
+      <div class="tea-system-header-icon"><i class="bi bi-graph-up-arrow"></i></div>
+      <div class="tea-system-header-copy">
+        <span class="tea-system-kicker">TRAINING EFFECTIVENESS ASSESSMENT FORM 2025</span>
+        <h1>Training Effectiveness Assessment</h1>
+        <p>Improvement after attending training, evaluated in June or December of the training year.</p>
       </div>
-      <div class="tea-official-header-copy">
-        <strong>PERBADANAN PEMBANGUNAN EKONOMI SABAH (SEDCO)</strong>
-        <h1>TRAINING EFFECTIVENESS ASSESSMENT FORM 2025</h1>
-        <p>Improvement after attending training (to be evaluated in June or December in year of training)</p>
-      </div>
+      <span class="tea-system-owner"><i class="bi bi-person-check"></i> HOD only</span>
     </header>
 
     <?php if ($parent): ?>
-    <div class="form-linked-training tea-official-linked">
-      <span><i class="bi bi-link-45deg"></i> Rekod BPL dipilih</span>
+    <div class="form-linked-training tea-system-linked">
+      <span><i class="bi bi-link-45deg"></i> Linked BPL record</span>
       <strong><?= e((string) $parent['application_no']) ?> · <?= e((string) ($parent['title'] ?? 'Training')) ?></strong>
-      <a href="application-detail.php?application=<?= rawurlencode((string) $parent['application_no']) ?>">Lihat BPL <i class="bi bi-arrow-up-right"></i></a>
+      <a href="application-detail.php?application=<?= rawurlencode((string) $parent['application_no']) ?>">View BPL <i class="bi bi-arrow-up-right"></i></a>
     </div>
     <?php endif; ?>
 
-    <div class="form-permission-notice tea-official-permission" data-form-permission-notice></div>
+    <div class="form-permission-notice tea-system-permission" data-form-permission-notice></div>
 
-    <form class="tea-official-form" data-form-owner="head_of_department" method="post" action="submit_application.php?type=TEA">
+    <form class="tea-official-form tea-system-form" data-form-owner="head_of_department" method="post" action="submit_application.php?type=TEA">
       <?= csrf_field() ?>
       <?php if ($parentId > 0): ?>
       <input type="hidden" name="parent_application_id" value="<?= (int) $parentId ?>">
       <?php endif; ?>
 
-      <section class="tea-official-info">
-        <div class="tea-official-line-field">
-          <label for="teaEmployee">Employee Name</label>
-          <input id="teaEmployee" type="text" name="employee_name" required value="<?= e((string) ($parentPayload['nama'] ?? '')) ?>">
+      <section class="tea-system-card">
+        <div class="tea-system-section-heading">
+          <span class="tea-system-section-number">01</span>
+          <div><strong>Employee & Evaluation Details</strong><small>Basic employee information and evaluation period</small></div>
         </div>
-        <div class="tea-official-line-field">
-          <label for="teaDivision">Division/Section</label>
-          <?php $selectedDivision = (string) ($parent['department'] ?? $parentPayload['bahagian'] ?? ''); ?>
-          <select id="teaDivision" name="division" class="sts-department-select" required>
-            <option value="">Select SEDCO Department / Division</option>
-            <?php foreach ($sedcoDepartments as $departmentName): ?>
-            <option value="<?= e($departmentName) ?>" <?= $selectedDivision === $departmentName ? 'selected' : '' ?>><?= e($departmentName) ?></option>
-            <?php endforeach; ?>
-          </select>
-        </div>
-        <div class="tea-official-month-row">
-          <strong>Month</strong>
-          <label><input type="radio" name="month" value="June" required> Jan/June</label>
-          <label><input type="radio" name="month" value="December" checked> July/Dec</label>
-          <span>(tick √ for the month of evaluation)</span>
-        </div>
-      </section>
-
-      <section class="tea-official-rating">
-        <strong>Rating</strong>
-        <div class="tea-official-rating-cells" role="group" aria-label="Rating scale">
-          <button type="button" data-tea-rating="1"><span>Poor</span><b>(1)</b></button>
-          <button type="button" data-tea-rating="2"><span>Average</span><b>(2)</b></button>
-          <button type="button" data-tea-rating="3"><span>Good</span><b>(3)</b></button>
-          <button type="button" data-tea-rating="4"><span>Excellent</span><b>(4)</b></button>
-        </div>
-      </section>
-
-      <section class="tea-official-assessment">
-        <div class="tea-table-tools no-print">
-          <div class="tea-table-tools-left">
-            <button type="button" class="tea-tool-btn" data-add-training><i class="bi bi-plus-lg"></i> Add Training Row</button>
+        <div class="tea-system-card-body">
+          <div class="tea-system-info-grid">
+            <label class="tea-system-field">
+              <span><i class="bi bi-person"></i> Employee Name <b>*</b></span>
+              <input type="text" name="employee_name" class="form-control" required value="<?= e((string) ($parentPayload['nama'] ?? '')) ?>" placeholder="Enter employee name">
+            </label>
+            <label class="tea-system-field">
+              <span><i class="bi bi-building"></i> Division / Section <b>*</b></span>
+              <?php $selectedDivision = (string) ($parent['department'] ?? $parentPayload['bahagian'] ?? ''); ?>
+              <select name="division" class="form-control sts-department-select" required>
+                <option value="">Select SEDCO Department / Division</option>
+                <?php foreach ($sedcoDepartments as $departmentName): ?>
+                <option value="<?= e($departmentName) ?>" <?= $selectedDivision === $departmentName ? 'selected' : '' ?>><?= e($departmentName) ?></option>
+                <?php endforeach; ?>
+              </select>
+            </label>
           </div>
-          <div class="tea-table-tools-right">
-            <input type="text" data-new-criterion placeholder="New criterion name">
-            <button type="button" class="tea-tool-btn" data-add-criterion><i class="bi bi-layout-three-columns"></i> Add Column</button>
+          <div class="tea-system-period-row">
+            <div><strong>Month of evaluation</strong><span>Select the applicable evaluation period.</span></div>
+            <div class="tea-system-period-options">
+              <label><input type="radio" name="month" value="June" required><span><i class="bi bi-calendar3"></i> Jan / June</span></label>
+              <label><input type="radio" name="month" value="December" checked><span><i class="bi bi-calendar3"></i> July / Dec</span></label>
+            </div>
           </div>
         </div>
-        <div class="tea-table-note no-print">
-          <i class="bi bi-info-circle"></i>
-          <span>Additional columns are saved as extra criteria. The official competency total remains based on the five original SEDCO criteria.</span>
-        </div>
+      </section>
 
-        <div class="tea-official-table-wrap">
-          <table class="tea-official-table" data-tea-table>
-            <thead>
-              <tr>
-                <th rowspan="2" class="tea-col-training">Training Title</th>
-                <th colspan="5" class="tea-criteria-group" data-criteria-group>Criteria</th>
-                <th rowspan="2" class="tea-col-total">Total<br>Score</th>
-                <th rowspan="2" class="tea-col-level">Competency<br>Level <small>(please refer indicator ** below)</small></th>
-                <th rowspan="2" class="tea-col-comments">Other improvements or comments <small>(please specify)</small></th>
-              </tr>
-              <tr data-criteria-head>
-                <th>Productivity</th>
-                <th>Quality<br>Of Work</th>
-                <th>Skill<br>Enhancement</th>
-                <th>Application<br>Of Knowledge</th>
-                <th>Attitude</th>
-              </tr>
-            </thead>
-            <tbody data-training-body>
-              <tr data-training-row="0">
-                <td class="tea-training-cell">
-                  <input type="text" name="training_title_0" required value="<?= e((string) ($parent['title'] ?? $parentPayload['tajuk'] ?? '')) ?>" placeholder="Training title">
-                  <button type="button" class="tea-row-remove no-print" data-remove-row title="Remove row" hidden><i class="bi bi-x-lg"></i></button>
-                </td>
-                <td><input type="number" name="score_0[]" min="1" max="4" class="tea-score tea-score-standard" required></td>
-                <td><input type="number" name="score_0[]" min="1" max="4" class="tea-score tea-score-standard" required></td>
-                <td><input type="number" name="score_0[]" min="1" max="4" class="tea-score tea-score-standard" required></td>
-                <td><input type="number" name="score_0[]" min="1" max="4" class="tea-score tea-score-standard" required></td>
-                <td><input type="number" name="score_0[]" min="1" max="4" class="tea-score tea-score-standard" required></td>
-                <td><input type="text" name="total_score_0" class="tea-total" readonly></td>
-                <td>
-                  <input type="hidden" name="competency_level_0" value="">
-                  <span class="tea-level is-auto" data-level-output="0">Auto</span>
-                </td>
-                <td><textarea name="comments_0" rows="2" placeholder="Comments"></textarea></td>
-              </tr>
-            </tbody>
-          </table>
+      <section class="tea-system-card">
+        <div class="tea-system-section-heading">
+          <span class="tea-system-section-number">02</span>
+          <div><strong>Rating Scale</strong><small>Select a score, then apply it to the active score field</small></div>
+        </div>
+        <div class="tea-system-card-body">
+          <div class="tea-system-rating-grid" role="group" aria-label="Rating scale">
+            <button type="button" data-tea-rating="1"><strong>1</strong><span>Poor</span></button>
+            <button type="button" data-tea-rating="2"><strong>2</strong><span>Average</span></button>
+            <button type="button" data-tea-rating="3"><strong>3</strong><span>Good</span></button>
+            <button type="button" data-tea-rating="4"><strong>4</strong><span>Excellent</span></button>
+          </div>
         </div>
       </section>
 
-      <section class="tea-official-ranking">
-        <p><strong>** Please choose the appropriate ranking for the competency level of the employee after being trained</strong></p>
-        <table>
-          <thead><tr><th>Ranking</th><th>Remarks</th></tr></thead>
-          <tbody>
-            <tr><td>Fail</td><td>Scored 0 - 7 points. The employee has not shown any progress in his work. Re-training shall be provided on the particular topic.</td></tr>
-            <tr><td>Probation</td><td>Scored 8 - 12 points. Still requires to be supervised by their immediate supervisor for another 6 month. Re-assessment required for the particular subject.</td></tr>
-            <tr><td>Pass</td><td>Scored 13 - 17 points. Employee able to execute the job with minimum supervision.</td></tr>
-            <tr><td>Merit</td><td>Scored 18 - 20 points. Employee to conduct training/guide other employees on the knowledge learnt on particular topic.</td></tr>
-          </tbody>
-        </table>
-      </section>
-
-      <section class="tea-official-evaluated">
-        <h2>Evaluated by</h2>
-        <div class="tea-evaluated-grid">
-          <label><span>Head of Division/Section</span><input type="text" name="head_division" required readonly value="<?= e($user['fullname']) ?>"></label>
-          <label><span>Date</span><input type="date" name="date" required></label>
-          <label><span>Signature</span><input type="text" name="signature" required placeholder="Type your name as confirmation"></label>
+      <section class="tea-system-card tea-system-assessment-card">
+        <div class="tea-system-section-heading">
+          <span class="tea-system-section-number">03</span>
+          <div><strong>Assessment Criteria</strong><small>Rate each training using the five official criteria. Add more criteria when required.</small></div>
+          <span class="tea-system-owner-chip"><i class="bi bi-pencil-square"></i> Your section</span>
+        </div>
+        <div class="tea-system-card-body">
+          <div class="tea-system-table-tools no-print">
+            <button type="button" class="tea-system-tool-btn" data-add-training><i class="bi bi-plus-lg"></i> Add Training Row</button>
+            <div class="tea-system-add-column">
+              <input type="text" data-new-criterion placeholder="New criterion name">
+              <button type="button" class="tea-system-tool-btn" data-add-criterion><i class="bi bi-layout-three-columns"></i> Add Column</button>
+            </div>
+          </div>
+          <div class="tea-system-table-note no-print">
+            <i class="bi bi-info-circle"></i>
+            <span>Extra columns are additional criteria. Total Score and Competency Level continue to use the five original SEDCO criteria.</span>
+          </div>
+          <div class="tea-system-table-wrap">
+            <table class="tea-official-table tea-system-table" data-tea-table>
+              <thead>
+                <tr>
+                  <th rowspan="2" class="tea-col-training">Training Title</th>
+                  <th colspan="5" class="tea-criteria-group" data-criteria-group>Criteria</th>
+                  <th rowspan="2" class="tea-col-total">Total Score</th>
+                  <th rowspan="2" class="tea-col-level">Competency Level</th>
+                  <th rowspan="2" class="tea-col-comments">Other Improvements / Comments</th>
+                </tr>
+                <tr data-criteria-head>
+                  <th>Productivity</th><th>Quality of Work</th><th>Skill Enhancement</th><th>Application of Knowledge</th><th>Attitude</th>
+                </tr>
+              </thead>
+              <tbody data-training-body>
+                <tr data-training-row="0">
+                  <td class="tea-training-cell">
+                    <input type="text" name="training_title_0" required value="<?= e((string) ($parent['title'] ?? $parentPayload['tajuk'] ?? '')) ?>" placeholder="Training title">
+                    <button type="button" class="tea-row-remove no-print" data-remove-row title="Remove row" hidden><i class="bi bi-x-lg"></i></button>
+                  </td>
+                  <td><input type="number" name="score_0[]" min="1" max="4" class="tea-score tea-score-standard" required placeholder="1-4"></td>
+                  <td><input type="number" name="score_0[]" min="1" max="4" class="tea-score tea-score-standard" required placeholder="1-4"></td>
+                  <td><input type="number" name="score_0[]" min="1" max="4" class="tea-score tea-score-standard" required placeholder="1-4"></td>
+                  <td><input type="number" name="score_0[]" min="1" max="4" class="tea-score tea-score-standard" required placeholder="1-4"></td>
+                  <td><input type="number" name="score_0[]" min="1" max="4" class="tea-score tea-score-standard" required placeholder="1-4"></td>
+                  <td><input type="text" name="total_score_0" class="tea-total" readonly placeholder="Auto"></td>
+                  <td><input type="hidden" name="competency_level_0" value=""><span class="tea-level is-auto" data-level-output="0">Auto</span></td>
+                  <td><textarea name="comments_0" rows="2" placeholder="Optional comments"></textarea></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
         </div>
       </section>
 
-      <div class="tea-official-actions no-print">
+      <section class="tea-system-card">
+        <div class="tea-system-section-heading">
+          <span class="tea-system-section-number">04</span>
+          <div><strong>Competency Ranking Guide</strong><small>Reference level based on the official assessment score</small></div>
+        </div>
+        <div class="tea-system-card-body">
+          <div class="tea-system-ranking-grid">
+            <article class="rank-fail"><span class="tea-system-rank-icon"><i class="bi bi-exclamation-circle"></i></span><span class="tea-system-rank-score">0–7</span><div><strong>Fail</strong><p>The employee has not shown progress. Re-training shall be provided on the particular topic.</p></div></article>
+            <article class="rank-probation"><span class="tea-system-rank-icon"><i class="bi bi-hourglass-split"></i></span><span class="tea-system-rank-score">8–12</span><div><strong>Probation</strong><p>Requires supervision for another 6 months and reassessment for the particular subject.</p></div></article>
+            <article class="rank-pass"><span class="tea-system-rank-icon"><i class="bi bi-check2-circle"></i></span><span class="tea-system-rank-score">13–17</span><div><strong>Pass</strong><p>Employee is able to execute the job with minimum supervision.</p></div></article>
+            <article class="rank-merit"><span class="tea-system-rank-icon"><i class="bi bi-stars"></i></span><span class="tea-system-rank-score">18–20</span><div><strong>Merit</strong><p>Employee can conduct training or guide others using the knowledge learnt.</p></div></article>
+          </div>
+        </div>
+      </section>
+
+      <section class="tea-system-card">
+        <div class="tea-system-section-heading">
+          <span class="tea-system-section-number">05</span>
+          <div><strong>Evaluator Confirmation</strong><small>Complete the official HOD evaluation details before submission</small></div>
+        </div>
+        <div class="tea-system-card-body">
+          <div class="tea-system-confirmation-note">
+            <i class="bi bi-shield-check"></i>
+            <div><strong>Evaluated by</strong><span>HOD details are recorded together with this assessment.</span></div>
+          </div>
+          <div class="tea-system-confirmation-grid">
+            <label class="tea-system-field"><span><i class="bi bi-person-badge"></i> Head of Division / Section <b>*</b></span><input type="text" name="head_division" class="form-control tea-auto-field" required readonly value="<?= e($user['fullname']) ?>"></label>
+            <label class="tea-system-field"><span><i class="bi bi-calendar-check"></i> Date <b>*</b></span><input type="date" name="date" class="form-control" required></label>
+            <label class="tea-system-field tea-system-field-full"><span><i class="bi bi-pen"></i> Signature / Confirmation <b>*</b></span><input type="text" name="signature" class="form-control" required placeholder="Type your name as confirmation"></label>
+          </div>
+        </div>
+      </section>
+
+      <div class="tea-system-actions no-print">
         <button type="button" class="btn btn-secondary form-print-button" onclick="printForm()"><i class="bi bi-printer"></i> Print</button>
         <button type="submit" class="btn btn-primary"><i class="bi bi-send-check"></i> Submit Assessment</button>
       </div>
     </form>
   </div>
 </main>
-
 <script>
 window.SEDCO_FORM_CONTEXT = { role: <?= json_encode($user['role'] ?? 'staff') ?>, mode: 'new', formType: 'TEA' };
 </script>
