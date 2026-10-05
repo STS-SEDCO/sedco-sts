@@ -15068,3 +15068,98 @@ body.profile-page .modal-backdrop{
     border-color:#999 !important;
   }
 }
+
+/* ===== TEA PREMIUM LAYOUT FIX V20261005-2 ===== */
+
+/* sedco-shell.css also targets .form-container on form pages.
+   TEA has its own outer content shell, so neutralise the nested shell offset. */
+body.tea-premium-page .form-container.tea-premium-shell{
+  margin-left:0 !important;
+  width:100% !important;
+  padding-top:0 !important;
+}
+
+/* Keep only one page offset: sidebar + fixed topbar. */
+body.tea-premium-page .tea-premium-content{
+  margin-left:var(--sedco-sidebar-width) !important;
+  width:calc(100% - var(--sedco-sidebar-width)) !important;
+  padding:96px 34px 56px !important;
+}
+
+/* The whole TEA form is the HOD-owned section; don't draw a second outline around it. */
+body.tea-premium-page .tea-premium-form.form-section-editable{
+  box-shadow:none !important;
+}
+
+/* We already render required asterisks inside the premium labels. */
+body.tea-premium-page .tea-premium-form .sts-required-mark{
+  display:none !important;
+}
+
+/* Department custom dropdown is inserted by form-ux.js. Match it to the premium field. */
+body.tea-premium-page .tea-control-wrap .sts-department-combobox{
+  width:100% !important;
+}
+
+body.tea-premium-page .tea-control-wrap .sts-department-trigger{
+  min-height:46px !important;
+  padding:0 38px !important;
+  border:1px solid #dedfe3 !important;
+  border-radius:12px !important;
+  background:#fff !important;
+  color:#30323a !important;
+  font-size:11.5px !important;
+  font-weight:580 !important;
+  box-shadow:0 1px 2px rgba(20,20,25,.02) !important;
+}
+
+body.tea-premium-page .tea-control-wrap .sts-department-trigger:focus,
+body.tea-premium-page .tea-control-wrap .sts-department-trigger[aria-expanded="true"]{
+  border-color:#c48183 !important;
+  box-shadow:0 0 0 3px rgba(143,16,16,.07) !important;
+}
+
+body.tea-premium-page .tea-control-wrap .sts-department-trigger-icon{
+  font-size:16px !important;
+}
+
+/* Final controls belong after the form content, not floating over the current section. */
+body.tea-premium-page .tea-action-bar{
+  position:static !important;
+  bottom:auto !important;
+  margin-top:0 !important;
+}
+
+/* Attachments/autosave block belongs directly before the final actions. */
+body.tea-premium-page .sts-form-support{
+  margin:0 !important;
+}
+
+/* Keep the desktop layout comfortably below the 72px fixed header. */
+@media(min-width:901px){
+  body.tea-premium-page .tea-premium-content{
+    padding-top:96px !important;
+  }
+}
+
+@media(max-width:900px){
+  body.tea-premium-page .tea-premium-content{
+    margin-left:var(--sedco-sidebar-width) !important;
+    width:calc(100% - var(--sedco-sidebar-width)) !important;
+    padding:92px 14px 34px !important;
+  }
+
+  body.tea-premium-page .form-container.tea-premium-shell{
+    margin-left:0 !important;
+    width:100% !important;
+    padding-top:0 !important;
+  }
+}
+
+@media(max-width:760px){
+  body.tea-premium-page .tea-premium-content{
+    margin-left:0 !important;
+    width:100% !important;
+    padding:88px 14px 30px !important;
+  }
+}
