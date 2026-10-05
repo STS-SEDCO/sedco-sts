@@ -93,7 +93,7 @@
                     </div>
                     <div class="profile-detail">
                         <span class="profile-detail-icon"><i class="bi bi-person-badge"></i></span>
-                        <div><label>Role</label><strong>Staff / Applicant</strong></div>
+                        <div><label>Role</label><strong data-profile-detail-role>Staff / Applicant</strong></div>
                     </div>
                     <div class="profile-detail">
                         <span class="profile-detail-icon"><i class="bi bi-building"></i></span>
@@ -129,7 +129,7 @@
                     <i class="bi bi-shield-lock profile-panel-icon"></i>
                 </div>
 
-                <div class="profile-access-list">
+                <div class="profile-access-list" data-profile-access-list>
                     <div class="profile-access-item">
                         <span><i class="bi bi-file-earmark-plus"></i></span>
                         <div>
@@ -317,8 +317,43 @@
     training_section: 'Training Department',
     head_of_department: 'Head of Department',
     general_manager: 'General Manager',
+    pengerusi_besar: 'Pengerusi',
+    finance: 'Kewangan',
     staff: 'Staff / Applicant'
   }[role] || 'Staff / Applicant');
+
+  const accessItemsForRole = role => ({
+    staff: [
+      ['bi-file-earmark-plus', 'Submit training forms', 'Create BPL and PKK submissions.'],
+      ['bi-clipboard-data', 'Track applications', 'Follow every submission through its approval stage.']
+    ],
+    head_of_department: [
+      ['bi-inbox', 'Review BPL submissions', 'Review applications currently assigned to HOD.'],
+      ['bi-clipboard2-check', 'Complete TEA', 'Submit Training Effectiveness Assessments.']
+    ],
+    training_section: [
+      ['bi-inbox', 'Training review queue', 'Review applications at the Training stage.'],
+      ['bi-diagram-3', 'Manage workflow', 'Approve, reject or request correction before HOD review.']
+    ],
+    general_manager: [
+      ['bi-patch-check', 'GM approval', 'Review applications currently assigned to General Manager.'],
+      ['bi-inbox', 'Review queue', 'View applications waiting at the GM stage.']
+    ],
+    pengerusi_besar: [
+      ['bi-award', 'Pengerusi approval', 'Review applications currently assigned to Pengerusi.'],
+      ['bi-clock-history', 'Approval history', 'Review previous approval decisions.']
+    ],
+    finance: [
+      ['bi-cash-stack', 'Kewangan processing', 'Complete final financial processing for approved applications.'],
+      ['bi-clock-history', 'Approval history', 'Review previous approval decisions.']
+    ],
+    admin: [
+      ['bi-shield-check', 'System access', 'Access and review STS workflow configuration.'],
+      ['bi-people', 'User management', 'Manage users, roles and system access.']
+    ]
+  }[role] || [
+    ['bi-person-check', 'STS account', 'Access features assigned to your account role.']
+  ]);
 
   const valueOr = (value, fallback = 'Not provided') =>
     String(value || '').trim() || fallback;
@@ -345,8 +380,27 @@
     document.querySelector('[data-profile-detail-department]').textContent = department;
     document.querySelector('[data-profile-detail-job]').textContent = job;
 
+    const resolvedRole = user.role || 'staff';
+    const resolvedRoleLabel = roleLabel(resolvedRole);
+
     const roleNode = document.querySelector('.profile-role-pill');
-    if (roleNode) roleNode.innerHTML = '<i class="bi bi-shield-check"></i>' + roleLabel(user.role);
+    if (roleNode) roleNode.innerHTML = '<i class="bi bi-shield-check"></i>' + resolvedRoleLabel;
+
+    const detailRoleNode = document.querySelector('[data-profile-detail-role]');
+    if (detailRoleNode) detailRoleNode.textContent = resolvedRoleLabel;
+
+    const accessList = document.querySelector('[data-profile-access-list]');
+    if (accessList) {
+      accessList.innerHTML = accessItemsForRole(resolvedRole).map(([icon,title,description]) => `
+        <div class="profile-access-item">
+          <span><i class="bi ${icon}"></i></span>
+          <div>
+            <strong>${title}</strong>
+            <p>${description}</p>
+          </div>
+        </div>
+      `).join('');
+    }
 
     const avatar = document.querySelector('.profile-image');
     if (avatar) {
