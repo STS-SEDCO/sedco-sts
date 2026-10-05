@@ -530,7 +530,39 @@
         else setCompetency('Merit');
       };
 
-      scores.forEach(score => score.addEventListener('input', calculate));
+      const normalizeScore = score => {
+        const raw = String(score.value || '').trim();
+        if (raw === '') return;
+
+        let value = Number(raw);
+        if (!Number.isFinite(value)) {
+          score.value = '';
+          return;
+        }
+
+        value = Math.round(value);
+        if (value < 1) value = 1;
+        if (value > 4) value = 4;
+
+        if (String(score.value) !== String(value)) {
+          score.value = String(value);
+          score.classList.add('is-score-corrected');
+          window.setTimeout(() => score.classList.remove('is-score-corrected'), 500);
+        }
+      };
+
+      scores.forEach(score => {
+        score.addEventListener('input', () => {
+          normalizeScore(score);
+          calculate();
+        });
+
+        score.addEventListener('change', () => {
+          normalizeScore(score);
+          calculate();
+        });
+      });
+
       calculate();
     });
   }
