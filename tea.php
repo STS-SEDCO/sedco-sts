@@ -40,7 +40,7 @@ if ($parentId > 0) {
   <title>Training Effectiveness Assessment: STS</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-  <link rel="stylesheet" href="sedco-saas.css?v=20261005-20">
+  <link rel="stylesheet" href="sedco-saas.css?v=20261005-21">
   <link rel="stylesheet" href="sedco-shell.css?v=20261005-03">
   <script>function printForm(){ window.print(); }</script>
 </head>
@@ -213,6 +213,73 @@ if ($parentId > 0) {
     </form>
   </div>
 </main>
+
+<section class="tea-print-sheet" aria-hidden="true">
+  <header class="tea-print-header">
+    <div class="tea-print-logo" aria-hidden="true">
+      <div class="tea-print-logo-grid">
+        <span>S</span><span>E</span><span>D</span><span>C</span><span>O</span>
+      </div>
+      <small>Sabah Economic Development Corporation</small>
+    </div>
+    <div class="tea-print-title">
+      <strong>PERBADANAN PEMBANGUNAN EKONOMI SABAH (SEDCO)</strong>
+      <span>TRAINING EFFECTIVENESS ASSESSMENT FORM 2025</span>
+      <em>Improvement after attending training (to be evaluated in June or December in year of training)</em>
+    </div>
+    <div class="tea-print-header-spacer"></div>
+  </header>
+
+  <div class="tea-print-details">
+    <div><span>Employee Name</span><b>:</b><strong data-print-employee></strong></div>
+    <div><span>Division/Section</span><b>:</b><strong data-print-division></strong></div>
+    <div class="tea-print-month-line">
+      <span>Month</span><b>:</b>
+      <label>Jan/June <i data-print-month-june></i></label>
+      <label>July/Dec <i data-print-month-dec></i></label>
+      <em>(tick √ for the month of evaluation)</em>
+    </div>
+  </div>
+
+  <div class="tea-print-rating">
+    <strong>Rating</strong>
+    <div><span>Poor (1)</span><span>Average (2)</span><span>Good (3)</span><span>Excellent (4)</span></div>
+  </div>
+
+  <table class="tea-print-assessment-table" data-print-assessment>
+    <thead>
+      <tr>
+        <th rowspan="2" class="tea-print-training-title">Training Title</th>
+        <th class="tea-print-criteria-group" data-print-criteria-group>Criteria</th>
+        <th rowspan="2">Total<br>Score</th>
+        <th rowspan="2">Competency<br>Level <small>(please refer indicator ** below)</small></th>
+        <th rowspan="2" class="tea-print-comments-head">Other improvements or comments <small>(please specify)</small></th>
+      </tr>
+      <tr data-print-criteria-head></tr>
+    </thead>
+    <tbody data-print-training-body></tbody>
+  </table>
+
+  <div class="tea-print-ranking">
+    <p><strong>** Please choose the appropriate ranking for the competency level of the employee after being trained</strong></p>
+    <table>
+      <thead><tr><th>Ranking</th><th>Remarks</th></tr></thead>
+      <tbody>
+        <tr><td>Fail</td><td>Scored 0 - 7 points. The employee has not shown any progress in his work. Re-training shall be provided on the particular topic.</td></tr>
+        <tr><td>Probation</td><td>Scored 8 - 12 points. Still requires to be supervised by their immediate supervisor for another 6 month. Re-assessment required for the particular subject.</td></tr>
+        <tr><td>Pass</td><td>Scored 13 - 17 points. Employee able to execute the job with minimum supervision.</td></tr>
+        <tr><td>Merit</td><td>Scored 18 points. Employee to conduct training/guide other employees on the knowledge learnt on particular topic.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="tea-print-evaluated">
+    <strong>Evaluated by</strong>
+    <div><span>Head of Division/Section</span><b>:</b><em data-print-head></em></div>
+    <div><span>Date</span><b>:</b><em data-print-date></em></div>
+    <div><span>Signature</span><b>:</b><em data-print-signature></em></div>
+  </div>
+</section>
 <script>
 window.SEDCO_FORM_CONTEXT = { role: <?= json_encode($user['role'] ?? 'staff') ?>, mode: 'new', formType: 'TEA' };
 </script>
@@ -414,6 +481,108 @@ window.SEDCO_FORM_CONTEXT = { role: <?= json_encode($user['role'] ?? 'staff') ?>
 
   body.querySelectorAll('[data-training-row]').forEach(bindRow);
   syncRemoveButtons();
+})();
+</script>
+
+<script>
+(() => {
+  const form = document.querySelector('.tea-official-form');
+  const sheet = document.querySelector('.tea-print-sheet');
+  if (!form || !sheet) return;
+
+  const valueOf = name => {
+    const field = form.querySelector('[name="' + name + '"]');
+    if (!field) return '';
+    if (field.tagName === 'SELECT') {
+      return field.selectedOptions?.[0]?.textContent?.trim() || field.value || '';
+    }
+    return String(field.value || '').trim();
+  };
+
+  const formatDate = value => {
+    if (!value) return '';
+    const parts = String(value).split('-');
+    if (parts.length !== 3) return value;
+    return parts[2] + '/' + parts[1] + '/' + parts[0];
+  };
+
+  const setText = (selector, value) => {
+    const node = sheet.querySelector(selector);
+    if (node) node.textContent = value || '';
+  };
+
+  const buildPrintSheet = () => {
+    setText('[data-print-employee]', valueOf('employee_name'));
+    setText('[data-print-division]', valueOf('division'));
+    setText('[data-print-head]', valueOf('head_division'));
+    setText('[data-print-date]', formatDate(valueOf('date')));
+    setText('[data-print-signature]', valueOf('signature'));
+
+    const month = form.querySelector('input[name="month"]:checked')?.value || '';
+    const juneBox = sheet.querySelector('[data-print-month-june]');
+    const decBox = sheet.querySelector('[data-print-month-dec]');
+    if (juneBox) juneBox.textContent = month === 'June' ? '√' : '';
+    if (decBox) decBox.textContent = month === 'December' ? '√' : '';
+
+    const liveCriteria = [...form.querySelectorAll('[data-criteria-head] > th')];
+    const criteriaNames = liveCriteria.map(th => {
+      const clone = th.cloneNode(true);
+      clone.querySelectorAll('button').forEach(btn => btn.remove());
+      return clone.textContent.replace(/\s+/g,' ').trim();
+    }).filter(Boolean);
+
+    const printGroup = sheet.querySelector('[data-print-criteria-group]');
+    const printHead = sheet.querySelector('[data-print-criteria-head]');
+    const printBody = sheet.querySelector('[data-print-training-body]');
+    const printTable = sheet.querySelector('[data-print-assessment]');
+
+    if (printGroup) printGroup.colSpan = Math.max(1, criteriaNames.length);
+
+    if (printHead) {
+      printHead.innerHTML = '';
+      criteriaNames.forEach(name => {
+        const th = document.createElement('th');
+        th.textContent = name;
+        printHead.appendChild(th);
+      });
+    }
+
+    if (printBody) {
+      printBody.innerHTML = '';
+      [...form.querySelectorAll('[data-training-row]')].forEach(row => {
+        const tr = document.createElement('tr');
+        const title = row.querySelector('input[name^="training_title_"]')?.value?.trim() || '';
+        const standardScores = [...row.querySelectorAll('.tea-score-standard')].map(input => input.value || '');
+        const extraScores = [...row.querySelectorAll('.tea-score-extra')].map(input => input.value || '');
+        const scores = [...standardScores, ...extraScores];
+        const total = row.querySelector('.tea-total')?.value || '';
+        const level = row.querySelector('input[name^="competency_level_"]')?.value
+          || row.querySelector('[data-level-output]')?.textContent?.trim()
+          || '';
+        const comments = row.querySelector('textarea')?.value?.trim() || '';
+
+        const cells = [title, ...scores, total, level, comments];
+        cells.forEach((value, index) => {
+          const td = document.createElement('td');
+          td.textContent = value;
+          if (index === 0) td.className = 'tea-print-training-cell';
+          if (index === cells.length - 1) td.className = 'tea-print-comment-cell';
+          tr.appendChild(td);
+        });
+        printBody.appendChild(tr);
+      });
+    }
+
+    if (printTable) {
+      printTable.classList.toggle('has-extra-columns', criteriaNames.length > 5);
+      printTable.dataset.criteriaCount = String(criteriaNames.length);
+    }
+  };
+
+  window.addEventListener('beforeprint', buildPrintSheet);
+  document.querySelectorAll('.form-print-button').forEach(button => {
+    button.addEventListener('click', buildPrintSheet, { capture:true });
+  });
 })();
 </script>
 <script src="form-enhancements.js?v=20260930-59"></script>
