@@ -15653,3 +15653,195 @@ body.tea-premium-page .rank-merit .tea-ranking-icon{
     grid-column:1/-1;
   }
 }
+
+/* ===== TEA RANKING COLOR CARDS + USABILITY V20261005 ===== */
+
+body.tea-premium-page .tea-ranking-grid{
+  gap:14px !important;
+}
+
+body.tea-premium-page .tea-ranking-grid .tea-rank-card{
+  position:relative;
+  min-height:116px !important;
+  display:grid !important;
+  grid-template-columns:44px auto 1fr;
+  align-items:start;
+  gap:14px !important;
+  padding:18px !important;
+  overflow:hidden;
+  border-radius:18px !important;
+  border:1px solid #e5e7eb !important;
+  background:#fff !important;
+  transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease;
+}
+
+body.tea-premium-page .tea-ranking-grid .tea-rank-card:hover{
+  transform:translateY(-2px);
+  box-shadow:0 10px 24px rgba(15,23,42,.08);
+}
+
+body.tea-premium-page .tea-ranking-grid .tea-rank-card::before{
+  content:"";
+  position:absolute;
+  top:0;
+  left:0;
+  bottom:0;
+  width:5px;
+}
+
+body.tea-premium-page .tea-ranking-icon{
+  width:40px;
+  height:40px;
+  display:grid;
+  place-items:center;
+  border-radius:12px;
+  font-size:16px;
+}
+
+body.tea-premium-page .tea-ranking-score{
+  min-width:66px !important;
+  height:40px !important;
+  display:grid !important;
+  place-items:center !important;
+  margin:0 !important;
+  border-radius:12px !important;
+  font-size:13px !important;
+  font-weight:800 !important;
+  border:1px solid transparent !important;
+}
+
+body.tea-premium-page .tea-ranking-grid .tea-rank-card strong{
+  display:block;
+  margin:1px 0 6px !important;
+  font-size:18px !important;
+  line-height:1.2 !important;
+  font-weight:800 !important;
+}
+
+body.tea-premium-page .tea-ranking-grid .tea-rank-card p{
+  margin:0 !important;
+  font-size:13.5px !important;
+  line-height:1.6 !important;
+}
+
+/* Fail */
+body.tea-premium-page .tea-ranking-grid .rank-fail{
+  background:linear-gradient(180deg,#fff5f5 0%,#fff 100%) !important;
+  border-color:#f1b9b9 !important;
+  box-shadow:0 8px 20px rgba(185,28,28,.08);
+}
+body.tea-premium-page .rank-fail::before{ background:#dc2626 !important; }
+body.tea-premium-page .rank-fail .tea-ranking-icon{
+  background:#fee2e2 !important;
+  color:#b91c1c !important;
+}
+body.tea-premium-page .rank-fail .tea-ranking-score{
+  background:#fff1f2 !important;
+  border-color:#fecdd3 !important;
+  color:#b91c1c !important;
+}
+body.tea-premium-page .rank-fail strong,
+body.tea-premium-page .rank-fail p{ color:#991b1b !important; }
+
+/* Probation */
+body.tea-premium-page .tea-ranking-grid .rank-probation{
+  background:linear-gradient(180deg,#fff8ed 0%,#fff 100%) !important;
+  border-color:#f4d19b !important;
+  box-shadow:0 8px 20px rgba(217,119,6,.08);
+}
+body.tea-premium-page .rank-probation::before{ background:#f59e0b !important; }
+body.tea-premium-page .rank-probation .tea-ranking-icon{
+  background:#fef3c7 !important;
+  color:#b45309 !important;
+}
+body.tea-premium-page .rank-probation .tea-ranking-score{
+  background:#fff7ed !important;
+  border-color:#fed7aa !important;
+  color:#b45309 !important;
+}
+body.tea-premium-page .rank-probation strong,
+body.tea-premium-page .rank-probation p{ color:#92400e !important; }
+
+/* Pass */
+body.tea-premium-page .tea-ranking-grid .rank-pass{
+  background:linear-gradient(180deg,#effdf5 0%,#fff 100%) !important;
+  border-color:#b7e3c8 !important;
+  box-shadow:0 8px 20px rgba(22,163,74,.08);
+}
+body.tea-premium-page .rank-pass::before{ background:#16a34a !important; }
+body.tea-premium-page .rank-pass .tea-ranking-icon{
+  background:#dcfce7 !important;
+  color:#15803d !important;
+}
+body.tea-premium-page .rank-pass .tea-ranking-score{
+  background:#f0fdf4 !important;
+  border-color:#bbf7d0 !important;
+  color:#15803d !important;
+}
+body.tea-premium-page .rank-pass strong,
+body.tea-premium-page .rank-pass p{ color:#166534 !important; }
+
+/* Merit */
+body.tea-premium-page .tea-ranking-grid .rank-merit{
+  background:linear-gradient(180deg,#f5f3ff 0%,#fff 100%) !important;
+  border-color:#d8ccff !important;
+  box-shadow:0 8px 20px rgba(109,40,217,.08);
+}
+body.tea-premium-page .rank-merit::before{ background:#7c3aed !important; }
+body.tea-premium-page .rank-merit .tea-ranking-icon{
+  background:#ede9fe !important;
+  color:#6d28d9 !important;
+}
+body.tea-premium-page .rank-merit .tea-ranking-score{
+  background:#f5f3ff !important;
+  border-color:#ddd6fe !important;
+  color:#6d28d9 !important;
+}
+body.tea-premium-page .rank-merit strong,
+body.tea-premium-page .rank-merit p{ color:#5b21b6 !important; }
+
+/* Assessment inputs */
+body.tea-premium-page .score-input-small{
+  background:#fff !important;
+  border:1px solid #d6d9df !important;
+  box-shadow:inset 0 1px 2px rgba(15,23,42,.03);
+}
+
+body.tea-premium-page .score-input-small:focus{
+  border-color:#b91c1c !important;
+  box-shadow:0 0 0 4px rgba(185,28,28,.10) !important;
+}
+
+body.tea-premium-page .tea-total-input{
+  background:#f8fafc !important;
+  color:#334155 !important;
+  font-weight:800 !important;
+  text-align:center !important;
+  cursor:default !important;
+}
+
+body.tea-premium-page .tea-competency-select,
+body.tea-premium-page .tea-comment-input{
+  background:#fff !important;
+}
+
+body.tea-premium-page .tea-comment-input::placeholder,
+body.tea-premium-page .score-input-small::placeholder,
+body.tea-premium-page .tea-total-input::placeholder{
+  color:#a4a8b1 !important;
+  opacity:1 !important;
+}
+
+@media(max-width:760px){
+  body.tea-premium-page .tea-ranking-grid .tea-rank-card{
+    grid-template-columns:44px 1fr;
+  }
+
+  body.tea-premium-page .tea-ranking-grid .tea-rank-card>div{
+    grid-column:1/-1;
+  }
+
+  body.tea-premium-page .tea-ranking-score{
+    width:72px;
+  }
+}
