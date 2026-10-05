@@ -11,7 +11,7 @@ $canStaffForms = in_array(
     ['staff', 'head_of_department', 'general_manager', 'pengerusi_besar', 'admin'],
     true
 );
-$canTea = in_array($role, ['head_of_department', 'admin'], true);
+$canTea = $role === 'head_of_department';
 
 $userId = (int) ($user['id'] ?? 0);
 $department = trim((string) ($user['department'] ?? ''));
