@@ -15298,3 +15298,91 @@ body.tea-premium-page .form-edit-badge{
     font-size:17px !important;
   }
 }
+
+/* ===== TEA INTERACTIVE RATING PICKER V20261005 ===== */
+body.tea-premium-page .tea-rating-grid .tea-rating-choice{
+  width:100%;
+  min-height:72px;
+  display:flex;
+  align-items:center;
+  gap:12px;
+  padding:12px 14px;
+  border:1px solid #e2e3e7;
+  border-radius:14px;
+  background:#fafafb;
+  color:#5d6068;
+  text-align:left;
+  cursor:pointer;
+  transition:transform .15s ease,border-color .15s ease,background .15s ease,box-shadow .15s ease;
+}
+
+body.tea-premium-page .tea-rating-grid .tea-rating-choice:hover{
+  transform:translateY(-1px);
+  border-color:#d8b6b7;
+  background:#fff8f8;
+  box-shadow:0 7px 16px rgba(143,16,16,.055);
+}
+
+body.tea-premium-page .tea-rating-grid .tea-rating-choice:focus-visible{
+  outline:none;
+  border-color:#ba7779;
+  box-shadow:0 0 0 3px rgba(143,16,16,.08);
+}
+
+body.tea-premium-page .tea-rating-grid .tea-rating-choice.is-selected{
+  border-color:#c98183;
+  background:linear-gradient(180deg,#fff5f5,#fffafa);
+  box-shadow:0 0 0 2px rgba(143,16,16,.045),0 8px 18px rgba(143,16,16,.06);
+}
+
+body.tea-premium-page .tea-rating-grid .tea-rating-choice strong{
+  width:34px;
+  height:34px;
+  display:grid;
+  place-items:center;
+  flex:0 0 34px;
+  border-radius:10px;
+  background:#fff;
+  color:#8f1010;
+  font-size:13px !important;
+  font-weight:820;
+  box-shadow:0 1px 4px rgba(20,20,24,.07);
+}
+
+body.tea-premium-page .tea-rating-grid .tea-rating-choice.is-selected strong{
+  background:#8f1010;
+  color:#fff;
+}
+
+body.tea-premium-page .tea-rating-grid .tea-rating-choice span{
+  color:inherit;
+  font-size:12px !important;
+  font-weight:720;
+}
+
+body.tea-premium-page .tea-rating-helper{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  margin-top:10px;
+  padding:9px 11px;
+  border:1px dashed #dedfe3;
+  border-radius:10px;
+  background:#fcfcfd;
+  color:#777a82;
+  font-size:10.5px;
+}
+
+body.tea-premium-page .tea-rating-helper i{
+  color:#9b2023;
+}
+
+body.tea-premium-page .score-input-small.is-rating-target{
+  border-color:#c77d80 !important;
+  box-shadow:0 0 0 3px rgba(143,16,16,.08) !important;
+}
+
+body.tea-premium-page .score-input-small.is-rating-applied{
+  background:#fff4f4 !important;
+  border-color:#a92d30 !important;
+}
