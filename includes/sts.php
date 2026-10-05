@@ -401,6 +401,56 @@ function sts_cancel_application_supported(): bool
     return $supported;
 }
 
+function sts_bpl_has_downstream_tea(int $parentBplId): bool
+{
+    if ($parentBplId <= 0) {
+        return false;
+    }
+
+    static $evaluatedBplIds = null;
+
+    if ($evaluatedBplIds === null) {
+        $evaluatedBplIds = [];
+
+        $stmt = db()->prepare(
+            'SELECT parent_application_id, payload
+             FROM applications
+             WHERE form_type = "TEA"
+               AND status <> "cancelled"'
+        );
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        while ($row = $result->fetch_assoc()) {
+            $primaryParentId = (int) ($row['parent_application_id'] ?? 0);
+
+            if ($primaryParentId > 0) {
+                $evaluatedBplIds[$primaryParentId] = true;
+            }
+
+            $payload = json_decode((string) ($row['payload'] ?? ''), true);
+            $payload = is_array($payload) ? $payload : [];
+            $linkedIds = $payload['evaluated_parent_ids'] ?? [];
+
+            if (!is_array($linkedIds)) {
+                $linkedIds = [$linkedIds];
+            }
+
+            foreach ($linkedIds as $linkedId) {
+                $linkedId = (int) $linkedId;
+
+                if ($linkedId > 0) {
+                    $evaluatedBplIds[$linkedId] = true;
+                }
+            }
+        }
+
+        $stmt->close();
+    }
+
+    return isset($evaluatedBplIds[$parentBplId]);
+}
+
 function sts_pkk_has_downstream_tea(array $application): bool
 {
     $parentBplId = (int) ($application['parent_application_id'] ?? 0);
@@ -409,20 +459,7 @@ function sts_pkk_has_downstream_tea(array $application): bool
         return true;
     }
 
-    $stmt = db()->prepare(
-        'SELECT id
-         FROM applications
-         WHERE parent_application_id = ?
-           AND form_type = "TEA"
-           AND status <> "cancelled"
-         LIMIT 1'
-    );
-    $stmt->bind_param('i', $parentBplId);
-    $stmt->execute();
-    $exists = $stmt->get_result()->fetch_assoc();
-    $stmt->close();
-
-    return (bool) $exists;
+    return sts_bpl_has_downstream_tea($parentBplId);
 }
 
 function sts_can_edit_pkk(array $application, array $user): bool
@@ -896,20 +933,9 @@ function sts_validate_parent_bpl(
             return null;
         }
 
-        $teaCheck = db()->prepare(
-            'SELECT id
-             FROM applications
-             WHERE parent_application_id = ?
-               AND form_type = "TEA"
-               AND status <> "cancelled"
-             LIMIT 1'
-        );
-        $teaCheck->bind_param('i', $parentApplicationId);
-        $teaCheck->execute();
-        $alreadyEvaluated = (bool) $teaCheck->get_result()->fetch_assoc();
-        $teaCheck->close();
-
-        return $alreadyEvaluated ? null : $parent;
+        return sts_bpl_has_downstream_tea($parentApplicationId)
+            ? null
+            : $parent;
     }
 
     return null;
@@ -966,12 +992,6 @@ function sts_ensure_followup_notifications(array $user): void
                        AND p.status = "approved"
                        AND p.current_stage = "completed"
                    )
-                   AND NOT EXISTS (
-                     SELECT 1 FROM applications t
-                     WHERE t.parent_application_id = b.id
-                       AND t.form_type = "TEA"
-                       AND t.status <> "cancelled"
-                   )
                  ORDER BY b.training_end ASC'
             );
             $stmt->bind_param('is', $userId, $department);
@@ -982,6 +1002,10 @@ function sts_ensure_followup_notifications(array $user): void
         $result = $stmt->get_result();
 
         while ($row = $result->fetch_assoc()) {
+            if ($type === 'TEA' && sts_bpl_has_downstream_tea((int) ($row['id'] ?? 0))) {
+                continue;
+            }
+
             $due = sts_followup_due((string) $row['training_end'], $type);
 
             if (!$due || strtotime($due) > time()) {
