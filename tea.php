@@ -40,7 +40,7 @@ if ($parentId > 0) {
   <title>Training Effectiveness Assessment: STS</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-  <link rel="stylesheet" href="sedco-saas.css?v=20261005-13">
+  <link rel="stylesheet" href="sedco-saas.css?v=20261005-14">
   <link rel="stylesheet" href="sedco-shell.css?v=20261005-03">
   <script>
     function printForm() { window.print(); }
@@ -332,8 +332,144 @@ if ($parentId > 0) {
 </main>
 
 <script>window.SEDCO_FORM_CONTEXT = { role: <?= json_encode($user['role'] ?? 'staff') ?>, mode: 'new', formType: 'TEA' };</script>
+<script>
+(() => {
+  const initTeaCalculator = () => {
+    const form = document.querySelector('.tea-premium-form');
+    if (!form || form.dataset.teaCalculatorReady === '1') return;
+    form.dataset.teaCalculatorReady = '1';
+
+    const levelMeta = value => ({
+      Fail: { icon:'bi-exclamation-circle', cls:'is-fail' },
+      Probation: { icon:'bi-hourglass-split', cls:'is-probation' },
+      Pass: { icon:'bi-check2-circle', cls:'is-pass' },
+      Merit: { icon:'bi-stars', cls:'is-merit' }
+    }[value] || { icon:'bi-stars', cls:'is-auto' });
+
+    const updateRow = row => {
+      const scores = [...form.querySelectorAll('input[name="score_' + row + '[]"]')];
+      const total = form.querySelector('input[name="total_score_' + row + '"]');
+      const level = form.querySelector('input[name="competency_level_' + row + '"]');
+      const output = form.querySelector('[data-competency-output="' + row + '"]');
+
+      if (!scores.length || !total || !level || !output) return;
+
+      let complete = true;
+      const values = scores.map(input => {
+        const raw = String(input.value || '').trim();
+
+        if (raw === '') {
+          complete = false;
+          return 0;
+        }
+
+        let value = Number(raw);
+        if (!Number.isFinite(value)) {
+          input.value = '';
+          complete = false;
+          return 0;
+        }
+
+        value = Math.round(value);
+        value = Math.max(1, Math.min(4, value));
+
+        if (String(input.value) !== String(value)) {
+          input.value = String(value);
+          input.classList.add('is-score-corrected');
+          window.setTimeout(() => input.classList.remove('is-score-corrected'), 450);
+        }
+
+        return value;
+      });
+
+      output.classList.remove('is-auto','is-fail','is-probation','is-pass','is-merit');
+
+      if (!complete) {
+        total.value = '';
+        level.value = '';
+        output.classList.add('is-auto');
+        output.innerHTML = '<i class="bi bi-stars"></i><span>Auto</span>';
+        return;
+      }
+
+      const sum = values.reduce((acc, value) => acc + value, 0);
+      total.value = String(sum);
+
+      let competency = 'Merit';
+      if (sum <= 7) competency = 'Fail';
+      else if (sum <= 12) competency = 'Probation';
+      else if (sum <= 17) competency = 'Pass';
+
+      level.value = competency;
+      const meta = levelMeta(competency);
+      output.classList.add(meta.cls);
+      output.innerHTML = '<i class="bi ' + meta.icon + '"></i><span>' + competency + '</span>';
+    };
+
+    [0,1].forEach(row => {
+      const scores = [...form.querySelectorAll('input[name="score_' + row + '[]"]')];
+
+      scores.forEach(input => {
+        input.min = '1';
+        input.max = '4';
+        input.step = '1';
+        input.inputMode = 'numeric';
+
+        ['input','change','keyup','blur'].forEach(eventName => {
+          input.addEventListener(eventName, () => updateRow(row));
+        });
+      });
+
+      updateRow(row);
+    });
+
+    let activeScore = null;
+
+    form.querySelectorAll('.score-input-small').forEach(input => {
+      input.addEventListener('focus', () => {
+        activeScore = input;
+        form.querySelectorAll('.score-input-small').forEach(other => {
+          other.classList.toggle('is-rating-target', other === input);
+        });
+      });
+    });
+
+    form.querySelectorAll('[data-tea-rating]').forEach(button => {
+      button.addEventListener('click', () => {
+        if (!activeScore) {
+          const firstEmpty = [...form.querySelectorAll('.score-input-small')].find(input => !input.value);
+          activeScore = firstEmpty || form.querySelector('.score-input-small');
+        }
+
+        if (!activeScore) return;
+
+        const rating = Number(button.dataset.teaRating || 0);
+        if (rating < 1 || rating > 4) return;
+
+        activeScore.value = String(rating);
+        activeScore.dispatchEvent(new Event('input', { bubbles:true }));
+
+        const group = activeScore.name.includes('score_1') ? 1 : 0;
+        updateRow(group);
+
+        form.querySelectorAll('[data-tea-rating]').forEach(choice => {
+          const selected = choice === button;
+          choice.classList.toggle('is-selected', selected);
+          choice.setAttribute('aria-pressed', selected ? 'true' : 'false');
+        });
+      });
+    });
+  };
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initTeaCalculator, { once:true });
+  } else {
+    initTeaCalculator();
+  }
+})();
+</script>
 <script src="form-permissions.js?v=20261005-04"></script>
-<script src="form-ux.js?v=20261005-03"></script>
+<script src="form-ux.js?v=20261005-04"></script>
 <script src="form-enhancements.js?v=20260930-59"></script>
 <script src="sedco-shell.js?v=20261005-03"></script>
 </body>
