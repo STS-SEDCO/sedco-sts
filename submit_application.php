@@ -259,9 +259,13 @@ if ($title === '') {
 
 $parent = null;
 
-if ($type === 'PKK' && $parentApplicationId <= 0) {
+if (in_array($type, ['PKK', 'TEA'], true) && $parentApplicationId <= 0) {
     http_response_code(422);
-    exit('Please select a completed BPL training record before submitting PKK.');
+    exit(
+        $type === 'PKK'
+            ? 'Please select a completed BPL training record before submitting PKK.'
+            : 'Please select an employee/course pending TEA evaluation.'
+    );
 }
 
 if (in_array($type, ['PKK', 'TEA'], true) && $parentApplicationId > 0) {
@@ -309,6 +313,58 @@ if ($type === 'PKK' && $parent) {
         http_response_code(422);
         exit('The selected BPL training record is incomplete. Please contact the Training Section.');
     }
+}
+
+if ($type === 'TEA' && $parent) {
+    $parentPayload = json_decode((string) ($parent['payload'] ?? ''), true);
+    $parentPayload = is_array($parentPayload) ? $parentPayload : [];
+
+    $pkkStmt = db()->prepare(
+        'SELECT payload
+         FROM applications
+         WHERE parent_application_id = ?
+           AND form_type = "PKK"
+           AND status = "approved"
+           AND current_stage = "completed"
+         ORDER BY id DESC
+         LIMIT 1'
+    );
+    $pkkStmt->bind_param('i', $parentApplicationId);
+    $pkkStmt->execute();
+    $pkkRow = $pkkStmt->get_result()->fetch_assoc();
+    $pkkStmt->close();
+
+    if (!$pkkRow) {
+        http_response_code(422);
+        exit('The selected employee has not completed PKK yet.');
+    }
+
+    $pkkPayload = json_decode((string) ($pkkRow['payload'] ?? ''), true);
+    $pkkPayload = is_array($pkkPayload) ? $pkkPayload : [];
+
+    $payload['employee_name'] = trim((string) (
+        $pkkPayload['nama']
+        ?? $parentPayload['nama']
+        ?? $payload['employee_name']
+        ?? ''
+    ));
+    $payload['division'] = trim((string) (
+        $pkkPayload['bahagian']
+        ?? $parent['department']
+        ?? $parentPayload['bahagian']
+        ?? ''
+    ));
+    $payload['training_title_0'] = trim((string) (
+        $pkkPayload['tajuk']
+        ?? $parentPayload['tajuk']
+        ?? $parent['title']
+        ?? $payload['training_title_0']
+        ?? ''
+    ));
+
+    $title = $payload['training_title_0'] !== ''
+        ? $payload['training_title_0']
+        : 'Training Effectiveness Assessment';
 }
 
 foreach ($requiredByType[$type] as $requiredKey) {
