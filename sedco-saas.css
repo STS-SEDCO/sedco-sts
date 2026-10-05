@@ -18133,3 +18133,70 @@ body.tea-system-page .tea-print-sheet{
     display:none !important;
   }
 }
+
+/* ===== TEA PRINT SHELL RESET V20261005 ===== */
+@media print{
+  /* Remove the live STS chrome completely from the print preview. */
+  body.tea-system-page .sedco-navbar,
+  body.tea-system-page .sedco-sidebar,
+  body.tea-system-page .sedco-sidebar-backdrop,
+  body.tea-system-page #sedcoMobileToggle,
+  body.tea-system-page .sedco-top-links,
+  body.tea-system-page .tea-system-content{
+    display:none !important;
+    visibility:hidden !important;
+  }
+
+  /* Neutralise shell layout state so it cannot reserve/overlay space on paper. */
+  body.tea-system-page,
+  body.tea-system-page.sedco-sidebar-collapsed,
+  body.tea-system-page.sedco-menu-open{
+    margin:0 !important;
+    padding:0 !important;
+    width:100% !important;
+    min-width:0 !important;
+    overflow:visible !important;
+  }
+
+  body.tea-system-page .tea-print-sheet{
+    display:block !important;
+    visibility:visible !important;
+    position:static !important;
+    inset:auto !important;
+    width:100% !important;
+    max-width:none !important;
+    min-width:0 !important;
+    margin:0 !important;
+    padding:0 !important;
+    transform:none !important;
+    overflow:visible !important;
+  }
+
+  body.tea-system-page .tea-print-sheet,
+  body.tea-system-page .tea-print-sheet *{
+    visibility:visible !important;
+  }
+
+  /* Avoid browser scaling caused by any inherited app widths. */
+  body.tea-system-page .tea-print-header,
+  body.tea-system-page .tea-print-details,
+  body.tea-system-page .tea-print-rating,
+  body.tea-system-page .tea-print-assessment-table,
+  body.tea-system-page .tea-print-ranking,
+  body.tea-system-page .tea-print-evaluated{
+    max-width:100% !important;
+    box-sizing:border-box !important;
+  }
+
+  body.tea-system-page .tea-print-title{
+    min-width:0 !important;
+    overflow:visible !important;
+  }
+
+  body.tea-system-page .tea-print-title strong,
+  body.tea-system-page .tea-print-title span,
+  body.tea-system-page .tea-print-title em{
+    white-space:normal !important;
+    overflow:visible !important;
+  }
+}
