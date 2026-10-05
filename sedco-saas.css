@@ -16729,3 +16729,76 @@ body.tea-premium-page .tea-form-actions .btn-secondary{
     width:100% !important;
   }
 }
+
+/* ===== TEA RATING SELECTED STATE V20261005 ===== */
+body.tea-premium-page .tea-rating-choice{
+  position:relative;
+  border:1px solid #dedee3 !important;
+  background:#fbfbfc !important;
+  transition:
+    background .18s ease,
+    border-color .18s ease,
+    box-shadow .18s ease,
+    transform .18s ease !important;
+}
+
+body.tea-premium-page .tea-rating-choice:hover{
+  border-color:#d7c2c2 !important;
+  background:#fff !important;
+}
+
+body.tea-premium-page .tea-rating-choice.is-selected{
+  border-color:#b11212 !important;
+  background:linear-gradient(180deg,#fff5f5 0%,#ffecec 100%) !important;
+  box-shadow:
+    0 0 0 3px rgba(177,18,18,.10),
+    0 8px 18px rgba(177,18,18,.08) !important;
+  transform:translateY(-1px);
+}
+
+body.tea-premium-page .tea-rating-choice.is-selected strong{
+  background:linear-gradient(180deg,#b11212 0%,#8f1010 100%) !important;
+  color:#fff !important;
+  border-color:#8f1010 !important;
+  box-shadow:0 6px 14px rgba(143,16,16,.18) !important;
+}
+
+body.tea-premium-page .tea-rating-choice.is-selected span{
+  color:#8f1010 !important;
+  font-weight:780 !important;
+}
+
+body.tea-premium-page .tea-rating-choice.is-selected::after{
+  content:"Selected";
+  position:absolute;
+  top:9px;
+  right:11px;
+  display:inline-flex;
+  align-items:center;
+  min-height:22px;
+  padding:0 8px;
+  border-radius:999px;
+  background:#fff;
+  border:1px solid #efc5c6;
+  color:#a41215;
+  font-size:8.5px;
+  font-weight:800;
+  letter-spacing:.04em;
+  text-transform:uppercase;
+}
+
+body.tea-premium-page .tea-rating-helper{
+  background:#fffafa !important;
+  border-color:#ead3d4 !important;
+  color:#7c5557 !important;
+}
+
+@media(max-width:560px){
+  body.tea-premium-page .tea-rating-choice.is-selected::after{
+    content:"✓";
+    width:22px;
+    min-width:22px;
+    padding:0;
+    justify-content:center;
+  }
+}
