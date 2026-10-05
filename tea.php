@@ -40,7 +40,7 @@ if ($parentId > 0) {
   <title>Training Effectiveness Assessment: STS</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-  <link rel="stylesheet" href="sedco-saas.css?v=20261005-06">
+  <link rel="stylesheet" href="sedco-saas.css?v=20261005-07">
   <link rel="stylesheet" href="sedco-shell.css?v=20261005-03">
   <script>
     function printForm() { window.print(); }
@@ -131,11 +131,23 @@ if ($parentId > 0) {
           </div>
           <span class="tea-section-number">02</span>
         </div>
-        <div class="tea-rating-grid">
-          <div><strong>1</strong><span>Poor</span></div>
-          <div><strong>2</strong><span>Average</span></div>
-          <div><strong>3</strong><span>Good</span></div>
-          <div><strong>4</strong><span>Excellent</span></div>
+        <div class="tea-rating-grid" role="group" aria-label="Rating scale quick picker">
+          <button type="button" class="tea-rating-choice" data-tea-rating="1" aria-pressed="false">
+            <strong>1</strong><span>Poor</span>
+          </button>
+          <button type="button" class="tea-rating-choice" data-tea-rating="2" aria-pressed="false">
+            <strong>2</strong><span>Average</span>
+          </button>
+          <button type="button" class="tea-rating-choice" data-tea-rating="3" aria-pressed="false">
+            <strong>3</strong><span>Good</span>
+          </button>
+          <button type="button" class="tea-rating-choice" data-tea-rating="4" aria-pressed="false">
+            <strong>4</strong><span>Excellent</span>
+          </button>
+        </div>
+        <div class="tea-rating-helper" data-tea-rating-helper>
+          <i class="bi bi-cursor"></i>
+          <span>Click a score box in Assessment Criteria, then choose a rating above.</span>
         </div>
       </section>
 
@@ -290,7 +302,7 @@ if ($parentId > 0) {
 
 <script>window.SEDCO_FORM_CONTEXT = { role: <?= json_encode($user['role'] ?? 'staff') ?>, mode: 'new', formType: 'TEA' };</script>
 <script src="form-permissions.js?v=20261005-04"></script>
-<script src="form-ux.js?v=20261001-09"></script>
+<script src="form-ux.js?v=20261005-01"></script>
 <script src="form-enhancements.js?v=20260930-59"></script>
 <script src="sedco-shell.js?v=20261005-03"></script>
 </body>
