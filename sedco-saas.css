@@ -18200,3 +18200,31 @@ body.tea-system-page .tea-print-sheet{
     overflow:visible !important;
   }
 }
+
+/* ===== TEA DYNAMIC TABLE FIX V20261005 ===== */
+
+/* form-permissions.js injects a generic editable badge into the first table header.
+   TEA already has its own section-level "Your section" chip. */
+body.tea-system-page .tea-system-table .form-edit-badge,
+body.tea-system-page .tea-system-table .form-lock-badge{
+  display:none !important;
+}
+
+body.tea-system-page .tea-system-table tbody tr td{
+  vertical-align:middle !important;
+}
+
+body.tea-system-page .tea-system-table tbody tr[data-training-row] .tea-score,
+body.tea-system-page .tea-system-table tbody tr[data-training-row] .tea-total{
+  display:block;
+  margin-left:auto !important;
+  margin-right:auto !important;
+}
+
+body.tea-system-page .tea-system-table tbody tr[data-training-row] .tea-training-cell{
+  padding-right:30px !important;
+}
+
+body.tea-system-page .tea-system-table tbody tr[data-training-row] textarea{
+  min-height:54px !important;
+}
