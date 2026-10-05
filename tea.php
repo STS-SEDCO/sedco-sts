@@ -40,7 +40,7 @@ if ($parentId > 0) {
   <title>Training Effectiveness Assessment: STS</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-  <link rel="stylesheet" href="sedco-saas.css?v=20261005-14">
+  <link rel="stylesheet" href="sedco-saas.css?v=20261005-15">
   <link rel="stylesheet" href="sedco-shell.css?v=20261005-03">
   <script>
     function printForm() { window.print(); }
@@ -50,20 +50,23 @@ if ($parentId > 0) {
 
 <main class="tea-premium-content">
   <div class="form-container tea-premium-shell">
-    <header class="tea-premium-hero">
-      <div class="tea-premium-hero-copy">
-        <span class="tea-premium-kicker"><i class="bi bi-graph-up-arrow"></i> Post-training evaluation</span>
+    <header class="tea-form-header">
+      <div class="tea-form-header-icon"><i class="bi bi-graph-up-arrow"></i></div>
+      <div class="tea-form-header-copy">
+        <span class="tea-form-kicker">PENILAIAN KEBERKESANAN LATIHAN</span>
         <h1>Training Effectiveness Assessment</h1>
-        <p>Improvement assessment conducted in June or December of the training year.</p>
+        <p>Penilaian peningkatan prestasi selepas latihan, dilaksanakan pada bulan Jun atau Disember tahun latihan.</p>
       </div>
-      <div class="tea-premium-hero-badge">
-        <i class="bi bi-person-check"></i>
-        <div>
-          <span>Form owner</span>
-          <strong>Head of Department</strong>
-        </div>
-      </div>
+      <span class="tea-form-owner"><i class="bi bi-person-check"></i> Head of Department</span>
     </header>
+
+    <?php if ($parent): ?>
+    <div class="form-linked-training tea-linked-training">
+      <span><i class="bi bi-link-45deg"></i> Rekod BPL dipilih</span>
+      <strong><?= e((string) $parent['application_no']) ?> · <?= e((string) ($parent['title'] ?? 'Training')) ?></strong>
+      <a href="application-detail.php?application=<?= rawurlencode((string) $parent['application_no']) ?>">Lihat BPL <i class="bi bi-arrow-up-right"></i></a>
+    </div>
+    <?php endif; ?>
 
     <div class="form-permission-notice tea-premium-permission" data-form-permission-notice></div>
 
@@ -72,11 +75,11 @@ if ($parentId > 0) {
 
       <section class="tea-section-card tea-section-overview">
         <div class="tea-section-heading">
-          <div>
-            <span class="tea-section-eyebrow">Employee & evaluation</span>
-            <h2>Assessment information</h2>
-          </div>
           <span class="tea-section-number">01</span>
+          <div class="tea-section-heading-copy">
+            <strong>Assessment information</strong>
+            <small>Employee details and evaluation period</small>
+          </div>
         </div>
 
         <div class="tea-info-grid">
@@ -124,12 +127,12 @@ if ($parentId > 0) {
       </section>
 
       <section class="tea-section-card tea-rating-panel">
-        <div class="tea-section-heading compact">
-          <div>
-            <span class="tea-section-eyebrow">Scoring guide</span>
-            <h2>Rating scale</h2>
-          </div>
+        <div class="tea-section-heading">
           <span class="tea-section-number">02</span>
+          <div class="tea-section-heading-copy">
+            <strong>Rating scale</strong>
+            <small>Choose a score from 1 (Poor) to 4 (Excellent)</small>
+          </div>
         </div>
         <div class="tea-rating-grid" role="group" aria-label="Rating scale quick picker">
           <button type="button" class="tea-rating-choice" data-tea-rating="1" aria-pressed="false">
@@ -153,14 +156,12 @@ if ($parentId > 0) {
 
       <section class="tea-section-card tea-assessment-section">
         <div class="tea-section-heading">
-          <div>
-            <span class="tea-section-eyebrow">Performance review</span>
-            <h2>Assessment criteria</h2>
+          <span class="tea-section-number">03</span>
+          <div class="tea-section-heading-copy">
+            <strong>Assessment criteria</strong>
+            <small>Rate each performance criterion for the selected training</small>
           </div>
-          <div class="tea-section-heading-meta">
-            <span class="tea-owner-chip"><i class="bi bi-pencil-square"></i> Your section</span>
-            <span class="tea-section-number">03</span>
-          </div>
+          <span class="tea-owner-chip"><i class="bi bi-pencil-square"></i> Your section</span>
         </div>
 
         <div class="tea-assessment-summary">
@@ -231,11 +232,11 @@ if ($parentId > 0) {
 
       <section class="tea-section-card tea-ranking-section">
         <div class="tea-section-heading">
-          <div>
-            <span class="tea-section-eyebrow">Reference</span>
-            <h2>Competency ranking guide</h2>
-          </div>
           <span class="tea-section-number">04</span>
+          <div class="tea-section-heading-copy">
+            <strong>Competency ranking guide</strong>
+            <small>Reference level generated from the total assessment score</small>
+          </div>
         </div>
 
         <div class="tea-ranking-grid">
@@ -264,68 +265,36 @@ if ($parentId > 0) {
 
       <section class="tea-section-card tea-evaluator-section">
         <div class="tea-section-heading">
-          <div>
-            <span class="tea-section-eyebrow">Confirmation</span>
-            <h2>Evaluator details</h2>
-          </div>
           <span class="tea-section-number">05</span>
-        </div>
-
-        <div class="tea-evaluator-intro">
-          <span class="tea-evaluator-intro-icon"><i class="bi bi-shield-check"></i></span>
-          <div>
-            <strong>Final HOD confirmation</strong>
-            <p>Review the assessment, confirm your details and complete the declaration before submission.</p>
+          <div class="tea-section-heading-copy">
+            <strong>Evaluator confirmation</strong>
+            <small>Confirm HOD details, evaluation date and signature</small>
           </div>
-          <span class="tea-evaluator-status"><i class="bi bi-person-check"></i> HOD</span>
         </div>
 
-        <div class="tea-evaluator-grid">
-          <label class="tea-confirm-field">
-            <span class="tea-confirm-label">
-              <i class="bi bi-person-badge"></i>
-              <span>Head of Division / Section <b>*</b></span>
-            </span>
-            <input type="text" name="head_division" class="input-field" required value="<?= e($user['fullname']) ?>">
-            <small>Auto-filled from your STS profile.</small>
+        <div class="tea-confirmation-grid">
+          <label class="tea-field">
+            <span><i class="bi bi-person-badge"></i> Head of Division / Section <b>*</b></span>
+            <input type="text" name="head_division" class="input-field tea-auto-field" required readonly value="<?= e($user['fullname']) ?>">
           </label>
-
-          <label class="tea-confirm-field">
-            <span class="tea-confirm-label">
-              <i class="bi bi-calendar-check"></i>
-              <span>Date of Evaluation <b>*</b></span>
-            </span>
+          <label class="tea-field">
+            <span><i class="bi bi-calendar-check"></i> Date of Evaluation <b>*</b></span>
             <input type="date" name="date" class="input-field" required>
-            <small>Select the date this assessment is confirmed.</small>
           </label>
-
-          <label class="tea-confirm-field tea-confirm-signature">
-            <span class="tea-confirm-label">
-              <i class="bi bi-pen"></i>
-              <span>Signature / Confirmation <b>*</b></span>
-            </span>
+          <label class="tea-field tea-field-full">
+            <span><i class="bi bi-pen"></i> Signature / Confirmation <b>*</b></span>
             <input type="text" name="signature" class="input-field" required placeholder="Type your name as confirmation">
-            <small>Your typed name acts as the evaluator confirmation for this STS submission.</small>
           </label>
         </div>
       </section>
 
-      <div class="tea-action-bar form-actions">
-        <div class="tea-action-copy">
-          <span class="tea-action-copy-icon"><i class="bi bi-shield-check"></i></span>
-          <div>
-            <strong>Ready to submit?</strong>
-            <span>Check all scores and evaluator details before final submission.</span>
-          </div>
-        </div>
-        <div class="tea-action-buttons">
-          <button type="button" onclick="printForm()" class="tea-action-secondary form-print-button">
-            <i class="bi bi-printer"></i> Print form
-          </button>
-          <button type="submit" class="tea-action-primary">
-            <i class="bi bi-check2-circle"></i> Submit assessment
-          </button>
-        </div>
+      <div class="tea-form-actions form-actions no-print">
+        <button type="button" onclick="printForm()" class="btn btn-secondary form-print-button">
+          <i class="bi bi-printer"></i> Print
+        </button>
+        <button type="submit" class="btn btn-primary">
+          <i class="bi bi-send-check"></i> Submit Assessment
+        </button>
       </div>
     </form>
   </div>
