@@ -9,6 +9,11 @@ if (!$user) {
     exit;
 }
 
+if (normalized_role($user['role'] ?? '') !== 'head_of_department') {
+    http_response_code(403);
+    exit('Training Effectiveness Assessment is available to HOD accounts only.');
+}
+
 $sedcoDepartments = sts_sedco_departments();
 
 $parent = null;
