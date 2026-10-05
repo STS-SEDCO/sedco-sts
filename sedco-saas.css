@@ -18126,3 +18126,10 @@ body.tea-system-page .tea-print-sheet{
     font-size:6.6pt !important;
   }
 }
+
+/* ===== TEA PRINT SHEET VISIBILITY GUARD V20261005 ===== */
+@media screen{
+  body.tea-system-page .tea-print-sheet{
+    display:none !important;
+  }
+}
