@@ -40,7 +40,7 @@ if ($parentId > 0) {
   <title>Training Effectiveness Assessment: STS</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-  <link rel="stylesheet" href="sedco-saas.css?v=20261005-24">
+  <link rel="stylesheet" href="sedco-saas.css?v=20261005-25">
   <link rel="stylesheet" href="sedco-shell.css?v=20261005-03">
   <script>function printForm(){ window.print(); }</script>
 </head>
@@ -420,19 +420,32 @@ window.SEDCO_FORM_CONTEXT = { role: <?= json_encode($user['role'] ?? 'staff') ?>
     const idx=nextRow++;
     const tr=document.createElement('tr');
     tr.dataset.trainingRow=String(idx);
-    tr.innerHTML =
-      '<td class="tea-training-cell"><input type="text" name="training_title_'+idx+'" required placeholder="Training title"><button type="button" class="tea-row-remove no-print" data-remove-row title="Remove row"><i class="bi bi-x-lg"></i></button></td>'+
-      '<td><input type="number" name="score_'+idx+'[]" class="tea-score tea-score-standard" required></td>'.repeat(5)+
-      '<td><input type="text" name="total_score_'+idx+'" class="tea-total" readonly></td>'+
-      '<td><input type="hidden" name="competency_level_'+idx+'" value=""><span class="tea-level is-auto" data-level-output="'+idx+'">Auto</span></td>'+
-      '<td><textarea name="comments_'+idx+'" rows="2" placeholder="Comments"></textarea></td>';
 
-    const totalCell=tr.querySelector('.tea-total').closest('td');
-    extraCriteria.forEach(() => totalCell.before(buildExtraScoreCell(idx)));
+    const standardScoreCells = Array.from({ length: 5 }, (_, criterionIndex) =>
+      '<td><input type="number" name="score_'+idx+'[]" min="1" max="4" step="1" inputmode="numeric" class="tea-score tea-score-standard" required placeholder="1-4" aria-label="Criteria score '+(criterionIndex+1)+'"></td>'
+    ).join('');
+
+    tr.innerHTML =
+      '<td class="tea-training-cell">'+
+        '<input type="text" name="training_title_'+idx+'" required placeholder="Training title">'+
+        '<button type="button" class="tea-row-remove no-print" data-remove-row title="Remove row" aria-label="Remove training row"><i class="bi bi-x-lg"></i></button>'+
+      '</td>'+
+      standardScoreCells+
+      '<td><input type="text" name="total_score_'+idx+'" class="tea-total" readonly placeholder="Auto"></td>'+
+      '<td><input type="hidden" name="competency_level_'+idx+'" value=""><span class="tea-level is-auto" data-level-output="'+idx+'">Auto</span></td>'+
+      '<td><textarea name="comments_'+idx+'" rows="2" placeholder="Optional comments"></textarea></td>';
+
+    const totalCell=tr.querySelector('.tea-total')?.closest('td');
+    extraCriteria.forEach(() => {
+      if (totalCell) totalCell.before(buildExtraScoreCell(idx));
+    });
 
     body.appendChild(tr);
     bindRow(tr);
     syncRemoveButtons();
+
+    const titleInput=tr.querySelector('input[name^="training_title_"]');
+    titleInput?.focus();
   };
 
   let activeScore=null;
