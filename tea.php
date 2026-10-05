@@ -404,62 +404,41 @@ $eligibleEmployeeGroups = array_values($eligibleByEmployee);
   </div>
 </section>
 <script>
+window.TEA_ELIGIBLE_GROUPS = <?= json_encode(
+    $eligibleEmployeeGroups,
+    JSON_UNESCAPED_UNICODE
+    | JSON_UNESCAPED_SLASHES
+    | JSON_HEX_TAG
+    | JSON_HEX_AMP
+    | JSON_HEX_APOS
+    | JSON_HEX_QUOT
+) ?>;
+window.TEA_PRESELECT_USER_ID = <?= (int) $selectedEmployeeId ?>;
+</script>
+<script>
 window.SEDCO_FORM_CONTEXT = { role: <?= json_encode($user['role'] ?? 'staff') ?>, mode: 'new', formType: 'TEA' };
 </script>
 <script src="form-permissions.js?v=20261005-04"></script>
 
 <script>
 (() => {
-  const picker = document.getElementById('teaEligibleEmployee');
-  const parentInput = document.getElementById('teaParentApplicationId');
-  const divisionInput = document.getElementById('teaSelectedDivision');
-  const primaryTitle = document.querySelector('[data-primary-training-title]');
-  const meta = document.querySelector('[data-selected-training-meta]');
-  const metaBpl = document.querySelector('[data-selected-bpl]');
-  const metaPkk = document.querySelector('[data-selected-pkk]');
-  const metaDate = document.querySelector('[data-selected-date]');
-
-  if (!picker) return;
-
-  const applySelection = () => {
-    const option = picker.selectedOptions?.[0];
-    const hasSelection = Boolean(option?.value && option?.dataset?.parentId);
-
-    if (parentInput) parentInput.value = hasSelection ? option.dataset.parentId : '';
-    if (divisionInput) divisionInput.value = hasSelection ? (option.dataset.division || '') : '';
-    if (primaryTitle) {
-      primaryTitle.value = hasSelection ? (option.dataset.trainingTitle || '') : '';
-      primaryTitle.readOnly = hasSelection;
-    }
-
-    if (meta) meta.hidden = !hasSelection;
-    if (metaBpl) metaBpl.textContent = hasSelection ? (option.dataset.bplNo || '') : '';
-    if (metaPkk) metaPkk.textContent = hasSelection ? (option.dataset.pkkNo || '') : '';
-    if (metaDate) metaDate.textContent = hasSelection ? (option.dataset.trainingDate || '') : '';
-
-    primaryTitle?.dispatchEvent(new Event('input', { bubbles:true }));
-  };
-
-  picker.addEventListener('change', applySelection);
-  applySelection();
-})();
-</script>
-
-<script>
-(() => {
   const form = document.querySelector('.tea-official-form');
   if (!form) return;
 
-  const table = form.querySelector('[data-tea-table]');
   const body = form.querySelector('[data-training-body]');
   const criteriaHead = form.querySelector('[data-criteria-head]');
   const criteriaGroup = form.querySelector('[data-criteria-group]');
-  const addRowBtn = form.querySelector('[data-add-training]');
   const addCriterionBtn = form.querySelector('[data-add-criterion]');
   const criterionNameInput = form.querySelector('[data-new-criterion]');
+  const picker = document.getElementById('teaEligibleEmployee');
+  const parentInput = document.getElementById('teaParentApplicationId');
+  const divisionInput = document.getElementById('teaSelectedDivision');
+  const meta = document.querySelector('[data-selected-training-meta]');
+  const courseCountOutput = document.querySelector('[data-selected-course-count]');
+  const groups = Array.isArray(window.TEA_ELIGIBLE_GROUPS) ? window.TEA_ELIGIBLE_GROUPS : [];
 
-  let nextRow = 1;
   let extraCriteria = [];
+  let activeScore = null;
 
   const levelFor = total => {
     if (total <= 7) return 'Fail';
@@ -480,9 +459,18 @@ window.SEDCO_FORM_CONTEXT = { role: <?= json_encode($user['role'] ?? 'staff') ?>
     let complete = true;
     const values = standardScores.map(input => {
       const raw = String(input.value || '').trim();
-      if (!raw) { complete = false; return 0; }
+      if (!raw) {
+        complete = false;
+        return 0;
+      }
+
       let value = Math.round(Number(raw));
-      if (!Number.isFinite(value)) { input.value=''; complete=false; return 0; }
+      if (!Number.isFinite(value)) {
+        input.value = '';
+        complete = false;
+        return 0;
+      }
+
       value = Math.max(1, Math.min(4, value));
       input.value = String(value);
       return value;
@@ -498,8 +486,9 @@ window.SEDCO_FORM_CONTEXT = { role: <?= json_encode($user['role'] ?? 'staff') ?>
       return;
     }
 
-    const total = values.reduce((sum,value)=>sum+value,0);
+    const total = values.reduce((sum, value) => sum + value, 0);
     const level = levelFor(total);
+
     totalInput.value = String(total);
     hiddenLevel.value = level;
     levelOutput.textContent = level;
@@ -508,153 +497,229 @@ window.SEDCO_FORM_CONTEXT = { role: <?= json_encode($user['role'] ?? 'staff') ?>
 
   const bindRow = row => {
     row.querySelectorAll('.tea-score').forEach(input => {
-      input.min='1'; input.max='4'; input.step='1'; input.inputMode='numeric';
-      ['input','change','blur'].forEach(evt => input.addEventListener(evt, () => calculateRow(row)));
+      input.min = '1';
+      input.max = '4';
+      input.step = '1';
+      input.inputMode = 'numeric';
+
+      ['input','change','blur'].forEach(eventName => {
+        input.addEventListener(eventName, () => calculateRow(row));
+      });
+
       input.addEventListener('focus', () => {
-        form.querySelectorAll('.tea-score').forEach(other => other.classList.toggle('is-active-score', other===input));
+        activeScore = input;
+        form.querySelectorAll('.tea-score').forEach(other => {
+          other.classList.toggle('is-active-score', other === input);
+        });
       });
     });
-    row.querySelector('[data-remove-row]')?.addEventListener('click', () => {
-      row.remove();
-      syncRemoveButtons();
-    });
+
     calculateRow(row);
   };
 
-  const syncRemoveButtons = () => {
-    const rows=[...body.querySelectorAll('[data-training-row]')];
-    rows.forEach(row => {
-      const btn=row.querySelector('[data-remove-row]');
-      if (btn) btn.hidden=rows.length===1;
-    });
-  };
-
-  const buildExtraScoreCell = (rowIndex) => {
-    const td=document.createElement('td');
-    td.className='tea-extra-score-cell';
-    td.innerHTML='<input type="number" name="extra_score_'+rowIndex+'[]" min="1" max="4" class="tea-score tea-score-extra" aria-label="Additional criterion score">';
+  const buildExtraScoreCell = rowIndex => {
+    const td = document.createElement('td');
+    td.className = 'tea-extra-score-cell';
+    td.innerHTML = '<input type="number" name="extra_score_'+rowIndex+'[]" min="1" max="4" step="1" inputmode="numeric" class="tea-score tea-score-extra" placeholder="1-4" aria-label="Additional criterion score">';
     return td;
   };
 
-  const addCriterion = name => {
-    name=String(name||'').trim();
-    if(!name) return;
-    extraCriteria.push(name);
-
-    const th=document.createElement('th');
-    th.className='tea-extra-criterion-head';
-    th.innerHTML='<span></span><button type="button" class="no-print" title="Remove column"><i class="bi bi-x-lg"></i></button>';
-    th.querySelector('span').textContent=name;
-    criteriaHead.appendChild(th);
-
-    const hidden=document.createElement('input');
-    hidden.type='hidden';
-    hidden.name='extra_criteria[]';
-    hidden.value=name;
-    hidden.dataset.extraCriterion=name;
-    form.appendChild(hidden);
-
-    body.querySelectorAll('[data-training-row]').forEach(row => {
-      const idx=row.dataset.trainingRow;
-      const totalCell=row.querySelector('.tea-total')?.closest('td');
-      totalCell?.before(buildExtraScoreCell(idx));
-      bindRow(row);
-    });
-
-    criteriaGroup.colSpan=5+extraCriteria.length;
-
-    th.querySelector('button').addEventListener('click', () => {
-      const extraIndex=[...criteriaHead.querySelectorAll('.tea-extra-criterion-head')].indexOf(th);
-      if(extraIndex<0) return;
-      th.remove();
-      body.querySelectorAll('[data-training-row]').forEach(row => {
-        row.querySelectorAll('.tea-extra-score-cell')[extraIndex]?.remove();
-      });
-      const hiddenInputs=[...form.querySelectorAll('input[name="extra_criteria[]"]')];
-      hiddenInputs[extraIndex]?.remove();
-      extraCriteria.splice(extraIndex,1);
-      criteriaGroup.colSpan=5+extraCriteria.length;
-    });
-  };
-
-  const addTrainingRow = () => {
-    const idx=nextRow++;
-    const tr=document.createElement('tr');
-    tr.dataset.trainingRow=String(idx);
+  const makeTrainingRow = (course, rowIndex) => {
+    const tr = document.createElement('tr');
+    tr.dataset.trainingRow = String(rowIndex);
+    tr.dataset.parentId = String(course.parent_id || '');
 
     const standardScoreCells = Array.from({ length: 5 }, (_, criterionIndex) =>
-      '<td><input type="number" name="score_'+idx+'[]" min="1" max="4" step="1" inputmode="numeric" class="tea-score tea-score-standard" required placeholder="1-4" aria-label="Criteria score '+(criterionIndex+1)+'"></td>'
+      '<td><input type="number" name="score_'+rowIndex+'[]" min="1" max="4" step="1" inputmode="numeric" class="tea-score tea-score-standard" required placeholder="1-4" aria-label="Criteria score '+(criterionIndex+1)+'"></td>'
     ).join('');
 
     tr.innerHTML =
-      '<td class="tea-training-cell">'+
-        '<input type="text" name="training_title_'+idx+'" required placeholder="Training title">'+
-        '<button type="button" class="tea-row-remove no-print" data-remove-row title="Remove row" aria-label="Remove training row"><i class="bi bi-x-lg"></i></button>'+
+      '<td class="tea-training-cell tea-training-cell-auto">'+
+        '<input type="hidden" name="course_parent_id_'+rowIndex+'" value="'+String(course.parent_id || '')+'">'+
+        '<input type="hidden" name="evaluated_parent_ids[]" value="'+String(course.parent_id || '')+'">'+
+        '<input type="text" name="training_title_'+rowIndex+'" required readonly class="tea-auto-training-title" value="">'+
+        '<small class="tea-course-source"><i class="bi bi-link-45deg"></i> <span></span></small>'+
       '</td>'+
       standardScoreCells+
-      '<td><input type="text" name="total_score_'+idx+'" class="tea-total" readonly placeholder="Auto"></td>'+
-      '<td><input type="hidden" name="competency_level_'+idx+'" value=""><span class="tea-level is-auto" data-level-output="'+idx+'">Auto</span></td>'+
-      '<td><textarea name="comments_'+idx+'" rows="2" placeholder="Optional comments"></textarea></td>';
+      '<td><input type="text" name="total_score_'+rowIndex+'" class="tea-total" readonly placeholder="Auto"></td>'+
+      '<td><input type="hidden" name="competency_level_'+rowIndex+'" value=""><span class="tea-level is-auto" data-level-output="'+rowIndex+'">Auto</span></td>'+
+      '<td><textarea name="comments_'+rowIndex+'" rows="2" placeholder="Optional comments"></textarea></td>';
 
-    const totalCell=tr.querySelector('.tea-total')?.closest('td');
+    const titleInput = tr.querySelector('.tea-auto-training-title');
+    const sourceText = tr.querySelector('.tea-course-source span');
+
+    if (titleInput) titleInput.value = String(course.training_title || 'Training');
+    if (sourceText) {
+      sourceText.textContent = [course.bpl_no, course.pkk_no, course.training_date]
+        .filter(Boolean)
+        .join(' · ');
+    }
+
+    const totalCell = tr.querySelector('.tea-total')?.closest('td');
     extraCriteria.forEach(() => {
-      if (totalCell) totalCell.before(buildExtraScoreCell(idx));
+      if (totalCell) totalCell.before(buildExtraScoreCell(rowIndex));
     });
 
-    body.appendChild(tr);
     bindRow(tr);
-    syncRemoveButtons();
-
-    const titleInput=tr.querySelector('input[name^="training_title_"]');
-    titleInput?.focus();
+    return tr;
   };
 
-  let activeScore=null;
-  form.addEventListener('focusin', e => {
-    if(e.target.classList?.contains('tea-score')) activeScore=e.target;
-  });
+  const renderCourses = group => {
+    body.innerHTML = '';
+    activeScore = null;
+
+    const courses = Array.isArray(group?.courses) ? group.courses : [];
+
+    if (!courses.length) {
+      const empty = document.createElement('tr');
+      empty.className = 'tea-empty-training-row';
+      empty.innerHTML =
+        '<td colspan="'+String(9 + extraCriteria.length)+'">'+
+          '<div class="tea-empty-training-state">'+
+            '<i class="bi bi-person-check"></i>'+
+            '<strong>Select an employee above</strong>'+
+            '<span>All courses pending TEA evaluation will appear here automatically.</span>'+
+          '</div>'+
+        '</td>';
+      body.appendChild(empty);
+
+      if (parentInput) parentInput.value = '';
+      if (divisionInput) divisionInput.value = '';
+      if (meta) meta.hidden = true;
+      if (courseCountOutput) courseCountOutput.textContent = '0';
+      return;
+    }
+
+    courses.forEach((course, rowIndex) => {
+      body.appendChild(makeTrainingRow(course, rowIndex));
+    });
+
+    if (parentInput) parentInput.value = String(courses[0]?.parent_id || '');
+    if (divisionInput) divisionInput.value = String(group?.division || '');
+    if (meta) meta.hidden = false;
+    if (courseCountOutput) courseCountOutput.textContent = String(courses.length);
+  };
+
+  const selectedGroup = () => {
+    const option = picker?.selectedOptions?.[0];
+    const userId = Number(option?.dataset?.userId || 0);
+    return groups.find(group => Number(group.user_id) === userId) || null;
+  };
+
+  const addCriterion = name => {
+    name = String(name || '').trim();
+    if (!name) return;
+
+    extraCriteria.push(name);
+
+    const th = document.createElement('th');
+    th.className = 'tea-extra-criterion-head';
+    th.innerHTML = '<span></span><button type="button" class="no-print" title="Remove column" aria-label="Remove criterion"><i class="bi bi-x-lg"></i></button>';
+    th.querySelector('span').textContent = name;
+    criteriaHead.appendChild(th);
+
+    const hidden = document.createElement('input');
+    hidden.type = 'hidden';
+    hidden.name = 'extra_criteria[]';
+    hidden.value = name;
+    hidden.dataset.extraCriterion = name;
+    form.appendChild(hidden);
+
+    body.querySelectorAll('[data-training-row]').forEach(row => {
+      const totalCell = row.querySelector('.tea-total')?.closest('td');
+      if (totalCell) totalCell.before(buildExtraScoreCell(row.dataset.trainingRow || '0'));
+      bindRow(row);
+    });
+
+    criteriaGroup.colSpan = 5 + extraCriteria.length;
+
+    th.querySelector('button')?.addEventListener('click', () => {
+      const extraIndex = [...criteriaHead.querySelectorAll('.tea-extra-criterion-head')].indexOf(th);
+      if (extraIndex < 0) return;
+
+      th.remove();
+
+      body.querySelectorAll('[data-training-row]').forEach(row => {
+        row.querySelectorAll('.tea-extra-score-cell')[extraIndex]?.remove();
+      });
+
+      [...form.querySelectorAll('input[name="extra_criteria[]"]')][extraIndex]?.remove();
+      extraCriteria.splice(extraIndex, 1);
+      criteriaGroup.colSpan = 5 + extraCriteria.length;
+
+      const emptyCell = body.querySelector('.tea-empty-training-row td');
+      if (emptyCell) emptyCell.colSpan = 9 + extraCriteria.length;
+    });
+  };
+
+  picker?.addEventListener('change', () => renderCourses(selectedGroup()));
 
   form.querySelectorAll('[data-tea-rating]').forEach(button => {
     button.addEventListener('click', () => {
-      if(!activeScore) activeScore=form.querySelector('.tea-score');
-      if(!activeScore) return;
-      const value=String(button.dataset.teaRating||'');
-      activeScore.value=value;
-      activeScore.dispatchEvent(new Event('input',{bubbles:true}));
-      form.querySelectorAll('[data-tea-rating]').forEach(other => other.classList.toggle('is-selected',other===button));
+      if (!activeScore) activeScore = form.querySelector('.tea-score-standard');
+      if (!activeScore) return;
+
+      activeScore.value = String(button.dataset.teaRating || '');
+      activeScore.dispatchEvent(new Event('input', { bubbles:true }));
+
+      form.querySelectorAll('[data-tea-rating]').forEach(other => {
+        other.classList.toggle('is-selected', other === button);
+      });
+
       activeScore.focus();
     });
   });
 
-  addRowBtn?.addEventListener('click', addTrainingRow);
   addCriterionBtn?.addEventListener('click', () => {
     addCriterion(criterionNameInput?.value);
-    if(criterionNameInput) { criterionNameInput.value=''; criterionNameInput.focus(); }
-  });
-  criterionNameInput?.addEventListener('keydown', e => {
-    if(e.key==='Enter'){ e.preventDefault(); addCriterionBtn?.click(); }
-  });
-
-  form.addEventListener('submit', e => {
-    const rows=[...body.querySelectorAll('[data-training-row]')];
-    let firstInvalid=null;
-    rows.forEach(row => {
-      row.querySelectorAll('.tea-score-standard').forEach(score => {
-        const v=Number(score.value);
-        if(!score.value || !Number.isFinite(v) || v<1 || v>4) firstInvalid ||= score;
-      });
-      const title=row.querySelector('input[name^="training_title_"]');
-      if(title && !title.value.trim()) firstInvalid ||= title;
-    });
-    if(firstInvalid){
-      e.preventDefault();
-      firstInvalid.focus();
-      firstInvalid.scrollIntoView({behavior:'smooth',block:'center'});
+    if (criterionNameInput) {
+      criterionNameInput.value = '';
+      criterionNameInput.focus();
     }
   });
 
-  body.querySelectorAll('[data-training-row]').forEach(bindRow);
-  syncRemoveButtons();
+  criterionNameInput?.addEventListener('keydown', event => {
+    if (event.key === 'Enter') {
+      event.preventDefault();
+      addCriterionBtn?.click();
+    }
+  });
+
+  form.addEventListener('submit', event => {
+    const rows = [...body.querySelectorAll('[data-training-row]')];
+
+    if (!picker?.value || !rows.length) {
+      event.preventDefault();
+      picker?.focus();
+      picker?.scrollIntoView({ behavior:'smooth', block:'center' });
+      return;
+    }
+
+    let firstInvalid = null;
+
+    rows.forEach(row => {
+      row.querySelectorAll('.tea-score-standard').forEach(score => {
+        const value = Number(score.value);
+        if (!score.value || !Number.isFinite(value) || value < 1 || value > 4) {
+          firstInvalid ||= score;
+        }
+      });
+    });
+
+    if (firstInvalid) {
+      event.preventDefault();
+      firstInvalid.focus();
+      firstInvalid.scrollIntoView({ behavior:'smooth', block:'center' });
+    }
+  });
+
+  const preselectUserId = Number(window.TEA_PRESELECT_USER_ID || 0);
+  if (preselectUserId > 0 && picker) {
+    const option = [...picker.options].find(item => Number(item.dataset.userId || 0) === preselectUserId);
+    if (option) option.selected = true;
+  }
+
+  renderCourses(selectedGroup());
 })();
 </script>
 
