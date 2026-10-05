@@ -114,18 +114,23 @@ function user_can_submit_form_type(string $formType, ?array $user = null): bool
     }
 
     $role = normalized_role($user['role'] ?? '');
+    $formType = strtoupper($formType);
+
+    // TEA is strictly HOD-only, including for admin accounts.
+    if ($formType === 'TEA') {
+        return $role === 'head_of_department';
+    }
 
     if ($role === 'admin') {
         return true;
     }
 
-    return match (strtoupper($formType)) {
+    return match ($formType) {
         'BPL', 'PKK' => in_array(
             $role,
             ['staff', 'head_of_department', 'general_manager', 'pengerusi_besar'],
             true
         ),
-        'TEA' => $role === 'head_of_department',
         default => false,
     };
 }
