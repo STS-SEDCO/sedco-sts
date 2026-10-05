@@ -16830,3 +16830,198 @@ body.form-page.tea-premium-page .tea-premium-content > .form-container.tea-premi
     margin-right:auto !important;
   }
 }
+
+/* ===== TEA PROFESSIONAL RANKING + CONFIRMATION V20261005 ===== */
+
+/* Ranking guide: professional, restrained status treatment */
+body.tea-premium-page .tea-ranking-section .tea-ranking-grid{
+  gap:12px !important;
+}
+
+body.tea-premium-page .tea-ranking-section .tea-rank-card{
+  min-height:86px !important;
+  grid-template-columns:34px 58px 1fr !important;
+  align-items:center !important;
+  gap:11px !important;
+  padding:14px !important;
+  border-radius:13px !important;
+  background:#fff !important;
+  box-shadow:0 2px 7px rgba(20,22,28,.025) !important;
+}
+
+body.tea-premium-page .tea-ranking-section .tea-rank-card:hover{
+  transform:translateY(-1px);
+  box-shadow:0 7px 18px rgba(20,22,28,.055) !important;
+}
+
+body.tea-premium-page .tea-ranking-section .tea-ranking-icon{
+  width:34px !important;
+  height:34px !important;
+  border-radius:9px !important;
+  font-size:13px !important;
+}
+
+body.tea-premium-page .tea-ranking-section .tea-ranking-score{
+  width:58px !important;
+  min-width:58px !important;
+  height:34px !important;
+  border-radius:9px !important;
+  font-size:11px !important;
+  font-weight:800 !important;
+}
+
+body.tea-premium-page .tea-ranking-section .tea-rank-card strong{
+  margin:0 0 3px !important;
+  color:#30333a !important;
+  font-size:13.5px !important;
+  font-weight:780 !important;
+}
+
+body.tea-premium-page .tea-ranking-section .tea-rank-card p{
+  margin:0 !important;
+  color:#74777f !important;
+  font-size:10.75px !important;
+  line-height:1.45 !important;
+}
+
+/* Keep status color on accent/icon/score rather than all text */
+body.tea-premium-page .tea-ranking-section .rank-fail{
+  border-color:#efcccc !important;
+  background:linear-gradient(90deg,#fffafa 0,#fff 24%) !important;
+}
+body.tea-premium-page .tea-ranking-section .rank-probation{
+  border-color:#f0d6ad !important;
+  background:linear-gradient(90deg,#fffaf2 0,#fff 24%) !important;
+}
+body.tea-premium-page .tea-ranking-section .rank-pass{
+  border-color:#c4e3d2 !important;
+  background:linear-gradient(90deg,#f6fcf8 0,#fff 24%) !important;
+}
+body.tea-premium-page .tea-ranking-section .rank-merit{
+  border-color:#d7d2f3 !important;
+  background:linear-gradient(90deg,#faf9ff 0,#fff 24%) !important;
+}
+
+body.tea-premium-page .tea-ranking-section .rank-fail .tea-ranking-score{
+  background:#fff5f5 !important;
+  color:#b4232d !important;
+}
+body.tea-premium-page .tea-ranking-section .rank-probation .tea-ranking-score{
+  background:#fff8ec !important;
+  color:#a85a08 !important;
+}
+body.tea-premium-page .tea-ranking-section .rank-pass .tea-ranking-score{
+  background:#f0faf4 !important;
+  color:#247453 !important;
+}
+body.tea-premium-page .tea-ranking-section .rank-merit .tea-ranking-score{
+  background:#f5f3ff !important;
+  color:#6555b9 !important;
+}
+
+/* Evaluator confirmation */
+body.tea-premium-page .tea-confirmation-note{
+  display:flex;
+  align-items:center;
+  gap:11px;
+  margin:16px 16px 0;
+  padding:12px 13px;
+  border:1px solid #e6e7ea;
+  border-radius:12px;
+  background:#fafafb;
+}
+
+body.tea-premium-page .tea-confirmation-note-icon{
+  width:34px;
+  height:34px;
+  flex:0 0 34px;
+  display:grid;
+  place-items:center;
+  border:1px solid #dfe9e3;
+  border-radius:10px;
+  background:#f3faf6;
+  color:#347357;
+  font-size:13px;
+}
+
+body.tea-premium-page .tea-confirmation-note strong{
+  display:block;
+  color:#34373e;
+  font-size:11.5px;
+  font-weight:760;
+}
+
+body.tea-premium-page .tea-confirmation-note span:not(.tea-confirmation-note-icon){
+  display:block;
+  margin-top:2px;
+  color:#888b92;
+  font-size:10px;
+  line-height:1.45;
+}
+
+body.tea-premium-page .tea-confirmation-grid{
+  padding-top:14px !important;
+}
+
+body.tea-premium-page .tea-confirmation-grid .tea-field{
+  min-width:0;
+}
+
+body.tea-premium-page .tea-confirmation-grid .tea-field>span{
+  margin-bottom:7px !important;
+  color:#4b4e55 !important;
+  font-size:11.25px !important;
+}
+
+body.tea-premium-page .tea-confirmation-grid .input-field{
+  min-height:44px !important;
+  border-color:#dfe1e5 !important;
+  background:#fff !important;
+}
+
+body.tea-premium-page .tea-confirmation-grid .tea-auto-field{
+  background:#f6f7f8 !important;
+  color:#50535b !important;
+  font-weight:680 !important;
+  cursor:not-allowed;
+}
+
+body.tea-premium-page .tea-field-hint{
+  display:flex;
+  align-items:center;
+  gap:5px;
+  margin-top:6px;
+  color:#94979e;
+  font-size:9.5px;
+  line-height:1.35;
+  font-weight:500;
+}
+
+body.tea-premium-page .tea-field-hint i{
+  color:#4f8a6c;
+  font-size:9px;
+}
+
+body.tea-premium-page .tea-confirmation-grid .tea-field-full{
+  padding-top:2px;
+}
+
+/* subtle finishing line before final actions */
+body.tea-premium-page .tea-evaluator-section{
+  margin-bottom:0 !important;
+}
+
+body.tea-premium-page .tea-form-actions{
+  margin-top:18px !important;
+}
+
+@media(max-width:700px){
+  body.tea-premium-page .tea-confirmation-note{
+    margin-left:12px;
+    margin-right:12px;
+  }
+
+  body.tea-premium-page .tea-ranking-section .tea-rank-card{
+    grid-template-columns:34px 54px 1fr !important;
+  }
+}
