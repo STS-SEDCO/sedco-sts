@@ -148,7 +148,7 @@ $eligibleEmployeeGroups = array_values($eligibleByEmployee);
   <title>Training Effectiveness Assessment: STS</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-  <link rel="stylesheet" href="sedco-saas.css?v=20261005-26">
+  <link rel="stylesheet" href="sedco-saas.css?v=20261005-27">
   <link rel="stylesheet" href="sedco-shell.css?v=20261005-03">
   <script>function printForm(){ window.print(); }</script>
 </head>
@@ -165,11 +165,10 @@ $eligibleEmployeeGroups = array_values($eligibleByEmployee);
       <span class="tea-system-owner"><i class="bi bi-person-check"></i> HOD only</span>
     </header>
 
-    <?php if ($parent): ?>
+    <?php if ($selectedEmployeeId > 0 && isset($eligibleByEmployee[$selectedEmployeeId])): ?>
     <div class="form-linked-training tea-system-linked">
-      <span><i class="bi bi-link-45deg"></i> Linked BPL record</span>
-      <strong><?= e((string) $parent['application_no']) ?> · <?= e((string) ($parent['title'] ?? 'Training')) ?></strong>
-      <a href="application-detail.php?application=<?= rawurlencode((string) $parent['application_no']) ?>">View BPL <i class="bi bi-arrow-up-right"></i></a>
+      <span><i class="bi bi-person-check"></i> Employee selected</span>
+      <strong><?= e((string) $eligibleByEmployee[$selectedEmployeeId]['employee_name']) ?> · <?= count($eligibleByEmployee[$selectedEmployeeId]['courses']) ?> course(s) pending evaluation</strong>
     </div>
     <?php endif; ?>
 
@@ -189,23 +188,18 @@ $eligibleEmployeeGroups = array_values($eligibleByEmployee);
             <label class="tea-system-field tea-employee-picker-field">
               <span><i class="bi bi-person-check"></i> Employee Name <b>*</b></span>
               <select name="employee_name" id="teaEligibleEmployee" class="form-control tea-employee-picker" required>
-                <option value="">Select employee / course pending evaluation</option>
-                <?php foreach ($eligibleEvaluations as $evaluation): ?>
+                <option value="">Select employee pending evaluation</option>
+                <?php foreach ($eligibleByEmployee as $employeeId => $employeeGroup): ?>
                 <option
-                  value="<?= e((string) $evaluation['employee_name']) ?>"
-                  data-parent-id="<?= (int) $evaluation['id'] ?>"
-                  data-division="<?= e((string) $evaluation['division']) ?>"
-                  data-training-title="<?= e((string) $evaluation['training_title']) ?>"
-                  data-training-date="<?= e((string) $evaluation['training_date']) ?>"
-                  data-bpl-no="<?= e((string) $evaluation['application_no']) ?>"
-                  data-pkk-no="<?= e((string) $evaluation['pkk_application_no']) ?>"
-                  <?= $parentId === (int) $evaluation['id'] ? 'selected' : '' ?>
-                ><?= e((string) $evaluation['employee_name']) ?> — <?= e((string) $evaluation['training_title']) ?></option>
+                  value="<?= e((string) $employeeGroup['employee_name']) ?>"
+                  data-user-id="<?= (int) $employeeId ?>"
+                  <?= $selectedEmployeeId === (int) $employeeId ? 'selected' : '' ?>
+                ><?= e((string) $employeeGroup['employee_name']) ?> — <?= e((string) $employeeGroup['division']) ?> (<?= count($employeeGroup['courses']) ?> course<?= count($employeeGroup['courses']) === 1 ? '' : 's' ?>)</option>
                 <?php endforeach; ?>
               </select>
               <small class="tea-source-hint">
                 <i class="bi bi-database-check"></i>
-                Only employees with an approved BPL, completed PKK and no TEA yet are shown.
+                Select an employee once. All completed courses that still need TEA will load automatically.
               </small>
             </label>
             <label class="tea-system-field">
@@ -217,16 +211,16 @@ $eligibleEmployeeGroups = array_values($eligibleByEmployee);
                 class="form-control tea-auto-field"
                 required
                 readonly
-                value="<?= e((string) ($parent['division'] ?? '')) ?>"
+                value="<?= e((string) ($selectedEmployeeId > 0 ? ($eligibleByEmployee[$selectedEmployeeId]['division'] ?? '') : '')) ?>"
                 placeholder="Auto-filled from BPL / PKK"
               >
               <small class="tea-source-hint"><i class="bi bi-link-45deg"></i> Auto-filled from the selected employee's BPL / PKK record.</small>
             </label>
           </div>
-          <div class="tea-selected-training-meta" data-selected-training-meta <?= $parent ? '' : 'hidden' ?>>
-            <div><span>BPL</span><strong data-selected-bpl><?= e((string) ($parent['application_no'] ?? '')) ?></strong></div>
-            <div><span>PKK</span><strong data-selected-pkk><?= e((string) ($parent['pkk_application_no'] ?? '')) ?></strong></div>
-            <div><span>Training date</span><strong data-selected-date><?= e((string) ($parent['training_date'] ?? '')) ?></strong></div>
+          <div class="tea-selected-training-meta" data-selected-training-meta <?= $selectedEmployeeId > 0 ? '' : 'hidden' ?>>
+            <div><span>Courses pending</span><strong data-selected-course-count><?= $selectedEmployeeId > 0 ? count($eligibleByEmployee[$selectedEmployeeId]['courses']) : 0 ?></strong></div>
+            <div><span>Source</span><strong>BPL + PKK</strong></div>
+            <div><span>Status</span><strong>Ready to evaluate</strong></div>
           </div>
 
           <div class="tea-system-period-row">
@@ -261,8 +255,8 @@ $eligibleEmployeeGroups = array_values($eligibleByEmployee);
           <span class="tea-system-owner-chip"><i class="bi bi-pencil-square"></i> Your section</span>
         </div>
         <div class="tea-system-card-body">
-          <div class="tea-system-table-tools no-print">
-            <button type="button" class="tea-system-tool-btn" data-add-training><i class="bi bi-plus-lg"></i> Add Training Row</button>
+          <div class="tea-system-table-tools tea-system-table-tools-auto no-print">
+            <div class="tea-auto-course-note"><i class="bi bi-lightning-charge"></i><span>Courses load automatically from the selected employee's BPL + PKK records.</span></div>
             <div class="tea-system-add-column">
               <input type="text" data-new-criterion placeholder="New criterion name">
               <button type="button" class="tea-system-tool-btn" data-add-criterion><i class="bi bi-layout-three-columns"></i> Add Column</button>
@@ -270,7 +264,7 @@ $eligibleEmployeeGroups = array_values($eligibleByEmployee);
           </div>
           <div class="tea-system-table-note no-print">
             <i class="bi bi-info-circle"></i>
-            <span>Extra columns are additional criteria. Total Score and Competency Level continue to use the five original SEDCO criteria.</span>
+            <span>Just enter the scores. Training titles are locked to completed BPL + PKK records. Extra columns remain optional.</span>
           </div>
           <div class="tea-system-table-wrap">
             <table class="tea-official-table tea-system-table" data-tea-table>
@@ -287,19 +281,14 @@ $eligibleEmployeeGroups = array_values($eligibleByEmployee);
                 </tr>
               </thead>
               <tbody data-training-body>
-                <tr data-training-row="0">
-                  <td class="tea-training-cell">
-                    <input type="text" name="training_title_0" required value="<?= e((string) ($parent['training_title'] ?? '')) ?>" placeholder="Auto-filled training title" data-primary-training-title>
-                    <button type="button" class="tea-row-remove no-print" data-remove-row title="Remove row" hidden><i class="bi bi-x-lg"></i></button>
+                <tr class="tea-empty-training-row" data-empty-training-row>
+                  <td colspan="9">
+                    <div class="tea-empty-training-state">
+                      <i class="bi bi-person-check"></i>
+                      <strong>Select an employee above</strong>
+                      <span>All courses pending TEA evaluation will appear here automatically.</span>
+                    </div>
                   </td>
-                  <td><input type="number" name="score_0[]" min="1" max="4" class="tea-score tea-score-standard" required placeholder="1-4"></td>
-                  <td><input type="number" name="score_0[]" min="1" max="4" class="tea-score tea-score-standard" required placeholder="1-4"></td>
-                  <td><input type="number" name="score_0[]" min="1" max="4" class="tea-score tea-score-standard" required placeholder="1-4"></td>
-                  <td><input type="number" name="score_0[]" min="1" max="4" class="tea-score tea-score-standard" required placeholder="1-4"></td>
-                  <td><input type="number" name="score_0[]" min="1" max="4" class="tea-score tea-score-standard" required placeholder="1-4"></td>
-                  <td><input type="text" name="total_score_0" class="tea-total" readonly placeholder="Auto"></td>
-                  <td><input type="hidden" name="competency_level_0" value=""><span class="tea-level is-auto" data-level-output="0">Auto</span></td>
-                  <td><textarea name="comments_0" rows="2" placeholder="Optional comments"></textarea></td>
                 </tr>
               </tbody>
             </table>
