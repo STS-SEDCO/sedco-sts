@@ -139,6 +139,10 @@ if ($type === 'PKK') {
 
 if ($type === 'TEA') {
     $teaRows = [];
+    $evaluatedParentIds = [];
+    $teaEmployeeUserId = 0;
+    $canonicalEmployeeName = '';
+    $canonicalDivision = '';
 
     foreach ($payload as $key => $value) {
         if (preg_match('/^score_(\\d+)$/', (string) $key, $match)) {
@@ -148,22 +152,38 @@ if ($type === 'TEA') {
 
     if (!$teaRows) {
         http_response_code(422);
-        exit('Please add at least one training assessment row.');
+        exit('Please select an employee with courses pending TEA evaluation.');
     }
 
     ksort($teaRows);
 
     foreach ($teaRows as $row => $scores) {
-        $trainingTitle = trim((string) ($payload['training_title_' . $row] ?? ''));
+        $rowParentId = max(0, (int) ($payload['course_parent_id_' . $row] ?? 0));
 
-        if ($trainingTitle === '') {
+        if ($rowParentId <= 0 || in_array($rowParentId, $evaluatedParentIds, true)) {
             http_response_code(422);
-            exit('Please enter the training title for every assessment row.');
+            exit('Invalid or duplicate training record in the TEA assessment.');
+        }
+
+        $rowParent = sts_validate_parent_bpl($rowParentId, $user, 'TEA');
+
+        if (!$rowParent) {
+            http_response_code(403);
+            exit('One of the selected training records is no longer available for TEA evaluation.');
+        }
+
+        $rowEmployeeUserId = (int) ($rowParent['user_id'] ?? 0);
+
+        if ($teaEmployeeUserId === 0) {
+            $teaEmployeeUserId = $rowEmployeeUserId;
+        } elseif ($rowEmployeeUserId !== $teaEmployeeUserId) {
+            http_response_code(422);
+            exit('All TEA rows must belong to the same employee.');
         }
 
         if (!is_array($scores) || count($scores) !== 5) {
             http_response_code(422);
-            exit('Please complete the five official Training Effectiveness scores for every row.');
+            exit('Please complete the five official Training Effectiveness scores for every course.');
         }
 
         $total = 0;
@@ -179,6 +199,62 @@ if ($type === 'TEA') {
             $total += $numeric;
         }
 
+        $rowParentPayload = json_decode((string) ($rowParent['payload'] ?? ''), true);
+        $rowParentPayload = is_array($rowParentPayload) ? $rowParentPayload : [];
+
+        $pkkStmt = db()->prepare(
+            'SELECT payload
+             FROM applications
+             WHERE parent_application_id = ?
+               AND form_type = "PKK"
+               AND status = "approved"
+               AND current_stage = "completed"
+             ORDER BY id DESC
+             LIMIT 1'
+        );
+        $pkkStmt->bind_param('i', $rowParentId);
+        $pkkStmt->execute();
+        $pkkRow = $pkkStmt->get_result()->fetch_assoc();
+        $pkkStmt->close();
+
+        if (!$pkkRow) {
+            http_response_code(422);
+            exit('Every course must have a completed PKK before TEA evaluation.');
+        }
+
+        $pkkPayload = json_decode((string) ($pkkRow['payload'] ?? ''), true);
+        $pkkPayload = is_array($pkkPayload) ? $pkkPayload : [];
+
+        $canonicalTitle = trim((string) (
+            $pkkPayload['tajuk']
+            ?? $rowParentPayload['tajuk']
+            ?? $rowParent['title']
+            ?? ''
+        ));
+
+        if ($canonicalTitle === '') {
+            http_response_code(422);
+            exit('A selected training record is missing its course title.');
+        }
+
+        if ($canonicalEmployeeName === '') {
+            $canonicalEmployeeName = trim((string) (
+                $pkkPayload['nama']
+                ?? $rowParentPayload['nama']
+                ?? ''
+            ));
+        }
+
+        if ($canonicalDivision === '') {
+            $canonicalDivision = trim((string) (
+                $pkkPayload['bahagian']
+                ?? $rowParent['department']
+                ?? $rowParentPayload['bahagian']
+                ?? ''
+            ));
+        }
+
+        $payload['training_title_' . $row] = $canonicalTitle;
         $payload['total_score_' . $row] = (string) $total;
         $payload['competency_level_' . $row] = match (true) {
             $total <= 7 => 'Fail',
@@ -206,7 +282,29 @@ if ($type === 'TEA') {
                 exit('Additional criterion scores must be between 1 and 4.');
             }
         }
+
+        $evaluatedParentIds[] = $rowParentId;
     }
+
+    if ($canonicalEmployeeName === '') {
+        $employeeStmt = db()->prepare(
+            'SELECT fullname
+             FROM users
+             WHERE id = ?
+             LIMIT 1'
+        );
+        $employeeStmt->bind_param('i', $teaEmployeeUserId);
+        $employeeStmt->execute();
+        $employeeRow = $employeeStmt->get_result()->fetch_assoc();
+        $employeeStmt->close();
+
+        $canonicalEmployeeName = trim((string) ($employeeRow['fullname'] ?? ''));
+    }
+
+    $payload['employee_name'] = $canonicalEmployeeName;
+    $payload['division'] = $canonicalDivision;
+    $payload['evaluated_parent_ids'] = $evaluatedParentIds;
+    $parentApplicationId = (int) ($evaluatedParentIds[0] ?? 0);
 
     $extraCriteria = $payload['extra_criteria'] ?? [];
 
@@ -313,58 +411,6 @@ if ($type === 'PKK' && $parent) {
         http_response_code(422);
         exit('The selected BPL training record is incomplete. Please contact the Training Section.');
     }
-}
-
-if ($type === 'TEA' && $parent) {
-    $parentPayload = json_decode((string) ($parent['payload'] ?? ''), true);
-    $parentPayload = is_array($parentPayload) ? $parentPayload : [];
-
-    $pkkStmt = db()->prepare(
-        'SELECT payload
-         FROM applications
-         WHERE parent_application_id = ?
-           AND form_type = "PKK"
-           AND status = "approved"
-           AND current_stage = "completed"
-         ORDER BY id DESC
-         LIMIT 1'
-    );
-    $pkkStmt->bind_param('i', $parentApplicationId);
-    $pkkStmt->execute();
-    $pkkRow = $pkkStmt->get_result()->fetch_assoc();
-    $pkkStmt->close();
-
-    if (!$pkkRow) {
-        http_response_code(422);
-        exit('The selected employee has not completed PKK yet.');
-    }
-
-    $pkkPayload = json_decode((string) ($pkkRow['payload'] ?? ''), true);
-    $pkkPayload = is_array($pkkPayload) ? $pkkPayload : [];
-
-    $payload['employee_name'] = trim((string) (
-        $pkkPayload['nama']
-        ?? $parentPayload['nama']
-        ?? $payload['employee_name']
-        ?? ''
-    ));
-    $payload['division'] = trim((string) (
-        $pkkPayload['bahagian']
-        ?? $parent['department']
-        ?? $parentPayload['bahagian']
-        ?? ''
-    ));
-    $payload['training_title_0'] = trim((string) (
-        $pkkPayload['tajuk']
-        ?? $parentPayload['tajuk']
-        ?? $parent['title']
-        ?? $payload['training_title_0']
-        ?? ''
-    ));
-
-    $title = $payload['training_title_0'] !== ''
-        ? $payload['training_title_0']
-        : 'Training Effectiveness Assessment';
 }
 
 foreach ($requiredByType[$type] as $requiredKey) {
