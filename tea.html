@@ -6,7 +6,7 @@
   <title>Training Effectiveness Assessment: STS</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-  <link rel="stylesheet" href="sedco-saas.css?v=20261005-09">
+  <link rel="stylesheet" href="sedco-saas.css?v=20261005-10">
   <link rel="stylesheet" href="sedco-shell.css?v=20261005-03">
   <script>function printForm(){ window.print(); }</script>
 </head>
@@ -154,25 +154,49 @@
           <div><span class="tea-section-eyebrow">Confirmation</span><h2>Evaluator details</h2></div>
           <span class="tea-section-number">05</span>
         </div>
-        <div class="tea-info-grid tea-evaluator-grid">
-          <label class="tea-field">
-            <span>Head of Division / Section <b>*</b></span>
-            <div class="tea-control-wrap"><i class="bi bi-person-badge"></i><input type="text" name="head_division" class="input-field" required></div>
+
+        <div class="tea-evaluator-intro">
+          <span class="tea-evaluator-intro-icon"><i class="bi bi-shield-check"></i></span>
+          <div>
+            <strong>Final HOD confirmation</strong>
+            <p>Review the assessment, confirm your details and complete the declaration before submission.</p>
+          </div>
+          <span class="tea-evaluator-status"><i class="bi bi-person-check"></i> HOD</span>
+        </div>
+
+        <div class="tea-evaluator-grid">
+          <label class="tea-confirm-field">
+            <span class="tea-confirm-label"><i class="bi bi-person-badge"></i><span>Head of Division / Section <b>*</b></span></span>
+            <input type="text" name="head_division" class="input-field" required>
+            <small>Auto-filled from your STS profile.</small>
           </label>
-          <label class="tea-field">
-            <span>Date of Evaluation <b>*</b></span>
-            <div class="tea-control-wrap"><i class="bi bi-calendar-check"></i><input type="date" name="date" class="input-field" required></div>
+
+          <label class="tea-confirm-field">
+            <span class="tea-confirm-label"><i class="bi bi-calendar-check"></i><span>Date of Evaluation <b>*</b></span></span>
+            <input type="date" name="date" class="input-field" required>
+            <small>Select the date this assessment is confirmed.</small>
           </label>
-          <label class="tea-field tea-field-full">
-            <span>Signature / Confirmation <b>*</b></span>
-            <div class="tea-control-wrap"><i class="bi bi-pen"></i><input type="text" name="signature" class="input-field" required placeholder="Enter evaluator confirmation"></div>
+
+          <label class="tea-confirm-field tea-confirm-signature">
+            <span class="tea-confirm-label"><i class="bi bi-pen"></i><span>Signature / Confirmation <b>*</b></span></span>
+            <input type="text" name="signature" class="input-field" required placeholder="Type your name as confirmation">
+            <small>Your typed name acts as the evaluator confirmation for this STS submission.</small>
           </label>
         </div>
       </section>
 
       <div class="tea-action-bar form-actions">
-        <button type="button" onclick="printForm()" class="tea-action-secondary form-print-button"><i class="bi bi-printer"></i> Print form</button>
-        <button type="submit" class="tea-action-primary"><i class="bi bi-check2-circle"></i> Submit assessment</button>
+        <div class="tea-action-copy">
+          <span class="tea-action-copy-icon"><i class="bi bi-shield-check"></i></span>
+          <div>
+            <strong>Ready to submit?</strong>
+            <span>Check all scores and evaluator details before final submission.</span>
+          </div>
+        </div>
+        <div class="tea-action-buttons">
+          <button type="button" onclick="printForm()" class="tea-action-secondary form-print-button"><i class="bi bi-printer"></i> Print form</button>
+          <button type="submit" class="tea-action-primary"><i class="bi bi-check2-circle"></i> Submit assessment</button>
+        </div>
       </div>
     </form>
   </div>
