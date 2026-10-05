@@ -40,7 +40,7 @@ if ($parentId > 0) {
   <title>Training Effectiveness Assessment: STS</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-  <link rel="stylesheet" href="sedco-saas.css?v=20261005-08">
+  <link rel="stylesheet" href="sedco-saas.css?v=20261005-09">
   <link rel="stylesheet" href="sedco-shell.css?v=20261005-03">
   <script>
     function printForm() { window.print(); }
@@ -189,12 +189,12 @@ if ($parentId > 0) {
             <tbody>
               <tr>
                 <td class="tea-training-title"><?= e((string) ($parent['title'] ?? 'Bengkel Klasifikasi Sistem Fail Fungsian')) ?></td>
-                <td><input type="number" name="score_0[]" min="1" max="4" class="score-input-small" required></td>
-                <td><input type="number" name="score_0[]" min="1" max="4" class="score-input-small" required></td>
-                <td><input type="number" name="score_0[]" min="1" max="4" class="score-input-small" required></td>
-                <td><input type="number" name="score_0[]" min="1" max="4" class="score-input-small" required></td>
-                <td><input type="number" name="score_0[]" min="1" max="4" class="score-input-small" required></td>
-                <td><input type="text" name="total_score_0" class="tea-total-input"></td>
+                <td><input type="number" name="score_0[]" min="1" max="4" class="score-input-small" placeholder="1–4" required></td>
+                <td><input type="number" name="score_0[]" min="1" max="4" class="score-input-small" placeholder="1–4" required></td>
+                <td><input type="number" name="score_0[]" min="1" max="4" class="score-input-small" placeholder="1–4" required></td>
+                <td><input type="number" name="score_0[]" min="1" max="4" class="score-input-small" placeholder="1–4" required></td>
+                <td><input type="number" name="score_0[]" min="1" max="4" class="score-input-small" placeholder="1–4" required></td>
+                <td><input type="text" name="total_score_0" class="tea-total-input" readonly placeholder="Auto"></td>
                 <td>
                   <select name="competency_level_0" class="tea-competency-select">
                     <option value="Fail">Fail</option>
@@ -203,16 +203,16 @@ if ($parentId > 0) {
                     <option value="Merit">Merit</option>
                   </select>
                 </td>
-                <td><input type="text" name="comments_0" class="tea-comment-input" placeholder="Add comment"></td>
+                <td><input type="text" name="comments_0" class="tea-comment-input" placeholder="Optional comment"></td>
               </tr>
               <tr>
                 <td class="tea-training-title">Public Speaking &amp; Presentation Skill</td>
-                <td><input type="number" name="score_1[]" min="1" max="4" class="score-input-small" required></td>
-                <td><input type="number" name="score_1[]" min="1" max="4" class="score-input-small" required></td>
-                <td><input type="number" name="score_1[]" min="1" max="4" class="score-input-small" required></td>
-                <td><input type="number" name="score_1[]" min="1" max="4" class="score-input-small" required></td>
-                <td><input type="number" name="score_1[]" min="1" max="4" class="score-input-small" required></td>
-                <td><input type="text" name="total_score_1" class="tea-total-input"></td>
+                <td><input type="number" name="score_1[]" min="1" max="4" class="score-input-small" placeholder="1–4" required></td>
+                <td><input type="number" name="score_1[]" min="1" max="4" class="score-input-small" placeholder="1–4" required></td>
+                <td><input type="number" name="score_1[]" min="1" max="4" class="score-input-small" placeholder="1–4" required></td>
+                <td><input type="number" name="score_1[]" min="1" max="4" class="score-input-small" placeholder="1–4" required></td>
+                <td><input type="number" name="score_1[]" min="1" max="4" class="score-input-small" placeholder="1–4" required></td>
+                <td><input type="text" name="total_score_1" class="tea-total-input" readonly placeholder="Auto"></td>
                 <td>
                   <select name="competency_level_1" class="tea-competency-select">
                     <option value="Fail">Fail</option>
@@ -221,7 +221,7 @@ if ($parentId > 0) {
                     <option value="Merit">Merit</option>
                   </select>
                 </td>
-                <td><input type="text" name="comments_1" class="tea-comment-input" placeholder="Add comment"></td>
+                <td><input type="text" name="comments_1" class="tea-comment-input" placeholder="Optional comment"></td>
               </tr>
             </tbody>
           </table>
