@@ -382,6 +382,7 @@
 
   function setupTeaRatingPicker() {
     if (formType !== 'TEA') return;
+    if (form?.dataset?.teaCalculatorReady === '1') return;
 
     const choices = [...form.querySelectorAll('[data-tea-rating]')];
     const helper = form.querySelector('[data-tea-rating-helper]');
@@ -466,6 +467,7 @@
 
   function setupTeaTotals() {
     if (formType !== 'TEA') return;
+    if (form?.dataset?.teaCalculatorReady === '1') return;
 
     [0,1].forEach(row => {
       const scores = fieldsByName(`score_${row}[]`);
