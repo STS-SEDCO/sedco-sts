@@ -16157,3 +16157,50 @@ body.tea-premium-page .tea-ranking-grid .tea-rank-card p{
     grid-column:auto !important;
   }
 }
+
+/* ===== TEA AUTO COMPETENCY OUTPUT V20261005 ===== */
+
+body.tea-premium-page .tea-competency-output{
+  width:100%;
+  min-height:46px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  padding:0 12px;
+  border:1px solid #dde0e5;
+  border-radius:12px;
+  background:#f8fafc;
+  color:#64748b;
+  font-size:12.5px;
+  font-weight:760;
+  white-space:nowrap;
+}
+
+body.tea-premium-page .tea-competency-output i{
+  font-size:13px;
+}
+
+body.tea-premium-page .tea-competency-output.is-fail{
+  border-color:#fecaca;
+  background:#fff1f2;
+  color:#b91c1c;
+}
+
+body.tea-premium-page .tea-competency-output.is-probation{
+  border-color:#fed7aa;
+  background:#fff7ed;
+  color:#b45309;
+}
+
+body.tea-premium-page .tea-competency-output.is-pass{
+  border-color:#bbf7d0;
+  background:#f0fdf4;
+  color:#15803d;
+}
+
+body.tea-premium-page .tea-competency-output.is-merit{
+  border-color:#ddd6fe;
+  background:#f5f3ff;
+  color:#6d28d9;
+}
