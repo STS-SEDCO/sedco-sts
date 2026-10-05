@@ -15163,3 +15163,138 @@ body.tea-premium-page .sts-form-support{
     padding:88px 14px 30px !important;
   }
 }
+
+/* ===== TEA TYPOGRAPHY SCALE V20261005 ===== */
+body.tea-premium-page .tea-premium-kicker{
+  font-size:12px !important;
+}
+
+body.tea-premium-page .tea-premium-hero h1{
+  font-size:38px !important;
+  line-height:1.1 !important;
+}
+
+body.tea-premium-page .tea-premium-hero p{
+  font-size:15px !important;
+}
+
+body.tea-premium-page .tea-premium-hero-badge span{
+  font-size:9px !important;
+}
+
+body.tea-premium-page .tea-premium-hero-badge strong{
+  font-size:13px !important;
+}
+
+body.tea-premium-page .tea-premium-permission{
+  font-size:13px !important;
+}
+
+body.tea-premium-page .tea-premium-permission strong{
+  font-size:13.5px !important;
+}
+
+body.tea-premium-page .tea-section-eyebrow{
+  font-size:9.5px !important;
+}
+
+body.tea-premium-page .tea-section-heading h2{
+  font-size:19px !important;
+}
+
+body.tea-premium-page .tea-section-number{
+  font-size:9.5px !important;
+}
+
+body.tea-premium-page .tea-field>span{
+  font-size:12.5px !important;
+}
+
+body.tea-premium-page .tea-control-wrap .input-field,
+body.tea-premium-page .tea-control-wrap input,
+body.tea-premium-page .tea-control-wrap select,
+body.tea-premium-page .tea-control-wrap .sts-department-trigger{
+  font-size:13.5px !important;
+}
+
+body.tea-premium-page .tea-period-copy strong{
+  font-size:13px !important;
+}
+
+body.tea-premium-page .tea-period-copy span{
+  font-size:11px !important;
+}
+
+body.tea-premium-page .tea-period-option span{
+  font-size:12px !important;
+}
+
+body.tea-premium-page .tea-rating-grid strong{
+  font-size:13px !important;
+}
+
+body.tea-premium-page .tea-rating-grid span{
+  font-size:12px !important;
+}
+
+body.tea-premium-page .tea-assessment-table th{
+  font-size:11.5px !important;
+  line-height:1.35 !important;
+}
+
+body.tea-premium-page .tea-assessment-table td{
+  font-size:12px !important;
+}
+
+body.tea-premium-page .tea-training-title{
+  font-size:12.5px !important;
+}
+
+body.tea-premium-page .score-input-small{
+  font-size:13px !important;
+}
+
+body.tea-premium-page .tea-total-input,
+body.tea-premium-page .tea-comment-input,
+body.tea-premium-page .tea-competency-select{
+  font-size:12px !important;
+}
+
+body.tea-premium-page .tea-inline-note{
+  font-size:11.5px !important;
+}
+
+body.tea-premium-page .tea-ranking-score{
+  font-size:11px !important;
+}
+
+body.tea-premium-page .tea-ranking-grid strong{
+  font-size:13px !important;
+}
+
+body.tea-premium-page .tea-ranking-grid p{
+  font-size:11.5px !important;
+}
+
+body.tea-premium-page .tea-action-primary,
+body.tea-premium-page .tea-action-secondary{
+  font-size:12.5px !important;
+}
+
+body.tea-premium-page .form-edit-badge{
+  font-size:9.5px !important;
+}
+
+@media(max-width:760px){
+  body.tea-premium-page .tea-premium-hero h1{
+    font-size:29px !important;
+  }
+
+  body.tea-premium-page .tea-premium-hero p{
+    font-size:13px !important;
+  }
+
+  body.tea-premium-page .tea-section-heading h2{
+    font-size:17px !important;
+  }
+}
