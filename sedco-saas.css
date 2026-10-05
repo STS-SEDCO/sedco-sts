@@ -16802,3 +16802,31 @@ body.tea-premium-page .tea-rating-helper{
     justify-content:center;
   }
 }
+
+/* ===== TEA TRUE CENTER ALIGNMENT V20261005 ===== */
+
+/* sedco-shell.css also styles .form-container with a sidebar margin.
+   TEA already offsets the outer content, so the form shell itself must stay centered. */
+body.form-page.tea-premium-page .tea-premium-content > .form-container.tea-premium-shell{
+  width:min(100%,1120px) !important;
+  max-width:1120px !important;
+  margin-left:auto !important;
+  margin-right:auto !important;
+  padding-top:0 !important;
+}
+
+@media(max-width:900px){
+  body.form-page.tea-premium-page .tea-premium-content > .form-container.tea-premium-shell{
+    width:min(100%,1120px) !important;
+    margin-left:auto !important;
+    margin-right:auto !important;
+  }
+}
+
+@media(max-width:760px){
+  body.form-page.tea-premium-page .tea-premium-content > .form-container.tea-premium-shell{
+    width:100% !important;
+    margin-left:auto !important;
+    margin-right:auto !important;
+  }
+}
