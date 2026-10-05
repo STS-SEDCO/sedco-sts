@@ -18431,3 +18431,113 @@ body.tea-system-page .tea-selected-training-meta strong{
     border-bottom:0;
   }
 }
+
+/* ===== TEA AUTO COURSE LOADING V20261005 ===== */
+body.tea-system-page .tea-system-table-tools-auto{
+  align-items:center;
+}
+
+body.tea-system-page .tea-auto-course-note{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  min-height:35px;
+  color:#666a72;
+  font-size:10.5px;
+  font-weight:600;
+}
+
+body.tea-system-page .tea-auto-course-note i{
+  width:28px;
+  height:28px;
+  display:grid;
+  place-items:center;
+  border-radius:8px;
+  background:#fff4f4;
+  color:#9a171a;
+}
+
+body.tea-system-page .tea-training-cell-auto{
+  min-width:220px !important;
+}
+
+body.tea-system-page .tea-training-cell-auto .tea-auto-training-title{
+  padding-right:8px !important;
+  background:#f7f8fa !important;
+  border-color:#e2e4e8 !important;
+  color:#34373e !important;
+  font-weight:700 !important;
+  cursor:default;
+}
+
+body.tea-system-page .tea-course-source{
+  display:flex;
+  align-items:flex-start;
+  gap:5px;
+  margin-top:6px;
+  color:#92959c;
+  font-size:8.5px;
+  line-height:1.35;
+  text-align:left;
+}
+
+body.tea-system-page .tea-course-source i{
+  margin-top:1px;
+  color:#8f1010;
+}
+
+body.tea-system-page .tea-empty-training-row td{
+  padding:0 !important;
+}
+
+body.tea-system-page .tea-empty-training-state{
+  min-height:126px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:5px;
+  padding:22px;
+  background:#fbfbfc;
+  color:#8a8d94;
+  text-align:center;
+}
+
+body.tea-system-page .tea-empty-training-state i{
+  width:38px;
+  height:38px;
+  display:grid;
+  place-items:center;
+  margin-bottom:2px;
+  border:1px solid #ead9da;
+  border-radius:11px;
+  background:#fff6f6;
+  color:#9a171a;
+  font-size:16px;
+}
+
+body.tea-system-page .tea-empty-training-state strong{
+  color:#4b4e55;
+  font-size:11.5px;
+  font-weight:760;
+}
+
+body.tea-system-page .tea-empty-training-state span{
+  max-width:390px;
+  font-size:9.5px;
+  line-height:1.5;
+}
+
+body.tea-system-page .tea-employee-picker-field select{
+  font-weight:650;
+}
+
+@media(max-width:700px){
+  body.tea-system-page .tea-system-table-tools-auto{
+    align-items:stretch;
+  }
+
+  body.tea-system-page .tea-auto-course-note{
+    width:100%;
+  }
+}
