@@ -18,18 +18,104 @@ $sedcoDepartments = sts_sedco_departments();
 
 $parent = null;
 $parentPayload = [];
+$parentPkkPayload = [];
 $parentId = max(0, (int) ($_GET['parent'] ?? 0));
+$hodId = (int) ($user['id'] ?? 0);
+$hodDepartment = trim((string) ($user['department'] ?? ''));
+$eligibleEvaluations = [];
+
+$eligibleStmt = db()->prepare(
+    'SELECT
+        b.id,
+        b.application_no,
+        b.user_id,
+        b.department,
+        b.assigned_hod_id,
+        b.title,
+        b.payload,
+        b.training_end,
+        u.fullname,
+        p.application_no AS pkk_application_no,
+        p.payload AS pkk_payload,
+        p.completed_at AS pkk_completed_at
+     FROM applications b
+     INNER JOIN users u
+       ON u.id = b.user_id
+     INNER JOIN applications p
+       ON p.parent_application_id = b.id
+      AND p.form_type = "PKK"
+      AND p.status = "approved"
+      AND p.current_stage = "completed"
+     WHERE b.form_type = "BPL"
+       AND b.status = "approved"
+       AND b.training_end IS NOT NULL
+       AND (
+         b.assigned_hod_id = ?
+         OR (
+           b.assigned_hod_id IS NULL
+           AND b.department = ?
+         )
+       )
+       AND NOT EXISTS (
+         SELECT 1
+         FROM applications t
+         WHERE t.parent_application_id = b.id
+           AND t.form_type = "TEA"
+           AND t.status <> "cancelled"
+       )
+     ORDER BY u.fullname ASC, b.training_end DESC, b.id DESC'
+);
+$eligibleStmt->bind_param('is', $hodId, $hodDepartment);
+$eligibleStmt->execute();
+$eligibleResult = $eligibleStmt->get_result();
+
+while ($record = $eligibleResult->fetch_assoc()) {
+    $bplPayload = json_decode((string) ($record['payload'] ?? ''), true);
+    $bplPayload = is_array($bplPayload) ? $bplPayload : [];
+
+    $pkkPayload = json_decode((string) ($record['pkk_payload'] ?? ''), true);
+    $pkkPayload = is_array($pkkPayload) ? $pkkPayload : [];
+
+    $record['employee_name'] = trim((string) (
+        $pkkPayload['nama']
+        ?? $record['fullname']
+        ?? $bplPayload['nama']
+        ?? ''
+    ));
+    $record['division'] = trim((string) (
+        $pkkPayload['bahagian']
+        ?? $record['department']
+        ?? $bplPayload['bahagian']
+        ?? ''
+    ));
+    $record['training_title'] = trim((string) (
+        $pkkPayload['tajuk']
+        ?? $bplPayload['tajuk']
+        ?? $record['title']
+        ?? ''
+    ));
+    $record['training_date'] = trim((string) (
+        $pkkPayload['tarikh']
+        ?? $bplPayload['tarikh_tamat']
+        ?? $record['training_end']
+        ?? ''
+    ));
+    $record['pkk_payload_array'] = $pkkPayload;
+    $record['bpl_payload_array'] = $bplPayload;
+
+    $eligibleEvaluations[(int) $record['id']] = $record;
+}
+$eligibleStmt->close();
 
 if ($parentId > 0) {
-    $parent = sts_validate_parent_bpl($parentId, $user, 'TEA');
-
-    if (!$parent) {
+    if (!isset($eligibleEvaluations[$parentId])) {
         http_response_code(403);
-        exit('This training record is not available for TEA follow up.');
+        exit('This training record is not pending TEA evaluation.');
     }
 
-    $parentPayload = json_decode((string) $parent['payload'], true);
-    $parentPayload = is_array($parentPayload) ? $parentPayload : [];
+    $parent = $eligibleEvaluations[$parentId];
+    $parentPayload = $parent['bpl_payload_array'];
+    $parentPkkPayload = $parent['pkk_payload_array'];
 }
 ?>
 <!DOCTYPE html>
@@ -40,7 +126,7 @@ if ($parentId > 0) {
   <title>Training Effectiveness Assessment: STS</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-  <link rel="stylesheet" href="sedco-saas.css?v=20261005-25">
+  <link rel="stylesheet" href="sedco-saas.css?v=20261005-26">
   <link rel="stylesheet" href="sedco-shell.css?v=20261005-03">
   <script>function printForm(){ window.print(); }</script>
 </head>
@@ -69,9 +155,7 @@ if ($parentId > 0) {
 
     <form class="tea-official-form tea-system-form" data-form-owner="head_of_department" method="post" action="submit_application.php?type=TEA">
       <?= csrf_field() ?>
-      <?php if ($parentId > 0): ?>
-      <input type="hidden" name="parent_application_id" value="<?= (int) $parentId ?>">
-      <?php endif; ?>
+      <input type="hidden" name="parent_application_id" id="teaParentApplicationId" value="<?= $parentId > 0 ? (int) $parentId : '' ?>">
 
       <section class="tea-system-card">
         <div class="tea-system-section-heading">
@@ -80,21 +164,49 @@ if ($parentId > 0) {
         </div>
         <div class="tea-system-card-body">
           <div class="tea-system-info-grid">
-            <label class="tea-system-field">
-              <span><i class="bi bi-person"></i> Employee Name <b>*</b></span>
-              <input type="text" name="employee_name" class="form-control" required value="<?= e((string) ($parentPayload['nama'] ?? '')) ?>" placeholder="Enter employee name">
-            </label>
-            <label class="tea-system-field">
-              <span><i class="bi bi-building"></i> Division / Section <b>*</b></span>
-              <?php $selectedDivision = (string) ($parent['department'] ?? $parentPayload['bahagian'] ?? ''); ?>
-              <select name="division" class="form-control sts-department-select" required>
-                <option value="">Select SEDCO Department / Division</option>
-                <?php foreach ($sedcoDepartments as $departmentName): ?>
-                <option value="<?= e($departmentName) ?>" <?= $selectedDivision === $departmentName ? 'selected' : '' ?>><?= e($departmentName) ?></option>
+            <label class="tea-system-field tea-employee-picker-field">
+              <span><i class="bi bi-person-check"></i> Employee Name <b>*</b></span>
+              <select name="employee_name" id="teaEligibleEmployee" class="form-control tea-employee-picker" required>
+                <option value="">Select employee / course pending evaluation</option>
+                <?php foreach ($eligibleEvaluations as $evaluation): ?>
+                <option
+                  value="<?= e((string) $evaluation['employee_name']) ?>"
+                  data-parent-id="<?= (int) $evaluation['id'] ?>"
+                  data-division="<?= e((string) $evaluation['division']) ?>"
+                  data-training-title="<?= e((string) $evaluation['training_title']) ?>"
+                  data-training-date="<?= e((string) $evaluation['training_date']) ?>"
+                  data-bpl-no="<?= e((string) $evaluation['application_no']) ?>"
+                  data-pkk-no="<?= e((string) $evaluation['pkk_application_no']) ?>"
+                  <?= $parentId === (int) $evaluation['id'] ? 'selected' : '' ?>
+                ><?= e((string) $evaluation['employee_name']) ?> — <?= e((string) $evaluation['training_title']) ?></option>
                 <?php endforeach; ?>
               </select>
+              <small class="tea-source-hint">
+                <i class="bi bi-database-check"></i>
+                Only employees with an approved BPL, completed PKK and no TEA yet are shown.
+              </small>
+            </label>
+            <label class="tea-system-field">
+              <span><i class="bi bi-building-check"></i> Division / Section <b>*</b></span>
+              <input
+                type="text"
+                name="division"
+                id="teaSelectedDivision"
+                class="form-control tea-auto-field"
+                required
+                readonly
+                value="<?= e((string) ($parent['division'] ?? '')) ?>"
+                placeholder="Auto-filled from BPL / PKK"
+              >
+              <small class="tea-source-hint"><i class="bi bi-link-45deg"></i> Auto-filled from the selected employee's BPL / PKK record.</small>
             </label>
           </div>
+          <div class="tea-selected-training-meta" data-selected-training-meta <?= $parent ? '' : 'hidden' ?>>
+            <div><span>BPL</span><strong data-selected-bpl><?= e((string) ($parent['application_no'] ?? '')) ?></strong></div>
+            <div><span>PKK</span><strong data-selected-pkk><?= e((string) ($parent['pkk_application_no'] ?? '')) ?></strong></div>
+            <div><span>Training date</span><strong data-selected-date><?= e((string) ($parent['training_date'] ?? '')) ?></strong></div>
+          </div>
+
           <div class="tea-system-period-row">
             <div><strong>Month of evaluation</strong><span>Select the applicable evaluation period.</span></div>
             <div class="tea-system-period-options">
@@ -155,7 +267,7 @@ if ($parentId > 0) {
               <tbody data-training-body>
                 <tr data-training-row="0">
                   <td class="tea-training-cell">
-                    <input type="text" name="training_title_0" required value="<?= e((string) ($parent['title'] ?? $parentPayload['tajuk'] ?? '')) ?>" placeholder="Training title">
+                    <input type="text" name="training_title_0" required value="<?= e((string) ($parent['training_title'] ?? '')) ?>" placeholder="Auto-filled training title" data-primary-training-title>
                     <button type="button" class="tea-row-remove no-print" data-remove-row title="Remove row" hidden><i class="bi bi-x-lg"></i></button>
                   </td>
                   <td><input type="number" name="score_0[]" min="1" max="4" class="tea-score tea-score-standard" required placeholder="1-4"></td>
@@ -284,6 +396,44 @@ if ($parentId > 0) {
 window.SEDCO_FORM_CONTEXT = { role: <?= json_encode($user['role'] ?? 'staff') ?>, mode: 'new', formType: 'TEA' };
 </script>
 <script src="form-permissions.js?v=20261005-04"></script>
+
+<script>
+(() => {
+  const picker = document.getElementById('teaEligibleEmployee');
+  const parentInput = document.getElementById('teaParentApplicationId');
+  const divisionInput = document.getElementById('teaSelectedDivision');
+  const primaryTitle = document.querySelector('[data-primary-training-title]');
+  const meta = document.querySelector('[data-selected-training-meta]');
+  const metaBpl = document.querySelector('[data-selected-bpl]');
+  const metaPkk = document.querySelector('[data-selected-pkk]');
+  const metaDate = document.querySelector('[data-selected-date]');
+
+  if (!picker) return;
+
+  const applySelection = () => {
+    const option = picker.selectedOptions?.[0];
+    const hasSelection = Boolean(option?.value && option?.dataset?.parentId);
+
+    if (parentInput) parentInput.value = hasSelection ? option.dataset.parentId : '';
+    if (divisionInput) divisionInput.value = hasSelection ? (option.dataset.division || '') : '';
+    if (primaryTitle) {
+      primaryTitle.value = hasSelection ? (option.dataset.trainingTitle || '') : '';
+      primaryTitle.readOnly = hasSelection;
+    }
+
+    if (meta) meta.hidden = !hasSelection;
+    if (metaBpl) metaBpl.textContent = hasSelection ? (option.dataset.bplNo || '') : '';
+    if (metaPkk) metaPkk.textContent = hasSelection ? (option.dataset.pkkNo || '') : '';
+    if (metaDate) metaDate.textContent = hasSelection ? (option.dataset.trainingDate || '') : '';
+
+    primaryTitle?.dispatchEvent(new Event('input', { bubbles:true }));
+  };
+
+  picker.addEventListener('change', applySelection);
+  applySelection();
+})();
+</script>
+
 <script>
 (() => {
   const form = document.querySelector('.tea-official-form');
