@@ -14397,3 +14397,674 @@ body.profile-page .modal-backdrop{
     justify-content:flex-start;
   }
 }
+
+
+/* ===== TEA EXECUTIVE PREMIUM V20261005 ===== */
+.tea-premium-page{
+  background:
+    radial-gradient(circle at 82% 4%,rgba(143,16,16,.045),transparent 24%),
+    linear-gradient(180deg,#f8f9fb 0%,#f5f6f8 100%) !important;
+}
+
+.tea-premium-page .tea-premium-content{
+  min-height:100vh;
+  margin-left:var(--sedco-sidebar-width);
+  width:calc(100% - var(--sedco-sidebar-width));
+  padding:96px 34px 56px;
+}
+
+.tea-premium-page .tea-premium-shell{
+  max-width:1440px !important;
+  margin:0 auto !important;
+  padding:0 !important;
+  border:0 !important;
+  background:transparent !important;
+  box-shadow:none !important;
+}
+
+.tea-premium-page .tea-premium-hero{
+  display:flex;
+  align-items:flex-end;
+  justify-content:space-between;
+  gap:24px;
+  margin-bottom:18px;
+  padding:8px 2px 4px;
+}
+
+.tea-premium-page .tea-premium-kicker{
+  display:inline-flex;
+  align-items:center;
+  gap:7px;
+  margin-bottom:8px;
+  color:#981317;
+  font-size:10px;
+  font-weight:800;
+  letter-spacing:.11em;
+  text-transform:uppercase;
+}
+
+.tea-premium-page .tea-premium-hero h1{
+  margin:0;
+  color:#171b24;
+  font-size:32px !important;
+  line-height:1.12;
+  font-weight:820;
+  letter-spacing:-.04em;
+  text-transform:none !important;
+}
+
+.tea-premium-page .tea-premium-hero p{
+  margin:8px 0 0;
+  color:#777b85;
+  font-size:13px;
+  line-height:1.55;
+}
+
+.tea-premium-page .tea-premium-hero-badge{
+  min-width:210px;
+  display:flex;
+  align-items:center;
+  gap:11px;
+  padding:12px 14px;
+  border:1px solid #e5e6e9;
+  border-radius:14px;
+  background:#fff;
+  box-shadow:0 4px 14px rgba(22,24,29,.035);
+}
+
+.tea-premium-page .tea-premium-hero-badge>i{
+  width:34px;
+  height:34px;
+  display:grid;
+  place-items:center;
+  border-radius:10px;
+  background:#fff1f1;
+  color:#981317;
+  font-size:14px;
+}
+
+.tea-premium-page .tea-premium-hero-badge span{
+  display:block;
+  color:#9a9ca3;
+  font-size:8px;
+  line-height:1;
+  font-weight:800;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+}
+
+.tea-premium-page .tea-premium-hero-badge strong{
+  display:block;
+  margin-top:4px;
+  color:#32343a;
+  font-size:11.5px;
+  font-weight:750;
+}
+
+.tea-premium-page .tea-premium-permission{
+  margin:0 0 16px !important;
+  padding:14px 16px !important;
+  border:1px solid #eadede !important;
+  border-radius:14px !important;
+  background:linear-gradient(180deg,#fffafa,#fff) !important;
+  color:#62646b !important;
+  box-shadow:none !important;
+}
+
+.tea-premium-page .tea-premium-permission>i{
+  color:#981317 !important;
+}
+
+.tea-premium-page .tea-premium-form{
+  display:flex;
+  flex-direction:column;
+  gap:16px;
+}
+
+.tea-premium-page .tea-section-card{
+  position:relative;
+  overflow:hidden;
+  padding:22px !important;
+  border:1px solid #e4e5e8 !important;
+  border-radius:18px !important;
+  background:linear-gradient(180deg,#fff 0%,#fefefe 100%) !important;
+  box-shadow:0 1px 2px rgba(18,20,25,.02),0 10px 28px rgba(18,20,25,.035) !important;
+}
+
+.tea-premium-page .tea-section-card::before{
+  content:"";
+  position:absolute;
+  top:0;
+  left:22px;
+  right:22px;
+  height:2px;
+  border-radius:0 0 99px 99px;
+  background:linear-gradient(90deg,#8f1010,#c8585b);
+  opacity:.8;
+}
+
+.tea-premium-page .tea-section-heading{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:18px;
+  margin-bottom:18px;
+}
+
+.tea-premium-page .tea-section-heading.compact{
+  margin-bottom:14px;
+}
+
+.tea-premium-page .tea-section-eyebrow{
+  display:block;
+  margin-bottom:4px;
+  color:#9a1b1f;
+  font-size:8px;
+  font-weight:820;
+  letter-spacing:.09em;
+  text-transform:uppercase;
+}
+
+.tea-premium-page .tea-section-heading h2{
+  margin:0;
+  color:#2a2d33;
+  font-size:16px !important;
+  line-height:1.25;
+  font-weight:780;
+  letter-spacing:-.02em;
+}
+
+.tea-premium-page .tea-section-number{
+  min-width:32px;
+  height:26px;
+  display:grid;
+  place-items:center;
+  border:1px solid #e6e7ea;
+  border-radius:999px;
+  background:#f7f7f8;
+  color:#999ba2;
+  font-size:8px;
+  font-weight:800;
+  letter-spacing:.08em;
+}
+
+.tea-premium-page .tea-info-grid{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:16px;
+}
+
+.tea-premium-page .tea-field{
+  display:block !important;
+  margin:0 !important;
+}
+
+.tea-premium-page .tea-field>span{
+  display:block;
+  margin-bottom:7px;
+  color:#52555d;
+  font-size:10px;
+  font-weight:730;
+}
+
+.tea-premium-page .tea-field>span b{
+  color:#a31619;
+}
+
+.tea-premium-page .tea-control-wrap{
+  position:relative;
+}
+
+.tea-premium-page .tea-control-wrap>i{
+  position:absolute;
+  z-index:3;
+  left:13px;
+  top:50%;
+  transform:translateY(-50%);
+  color:#9699a1;
+  font-size:12px;
+  pointer-events:none;
+}
+
+.tea-premium-page .tea-control-wrap .input-field,
+.tea-premium-page .tea-control-wrap input,
+.tea-premium-page .tea-control-wrap select{
+  width:100% !important;
+  min-height:46px !important;
+  margin:0 !important;
+  padding:0 14px 0 38px !important;
+  border:1px solid #dedfe3 !important;
+  border-radius:12px !important;
+  background:#fff !important;
+  color:#30323a !important;
+  font-size:11.5px !important;
+  font-weight:580 !important;
+  box-shadow:0 1px 2px rgba(20,20,25,.02) !important;
+}
+
+.tea-premium-page .tea-control-wrap select{
+  padding-right:38px !important;
+}
+
+.tea-premium-page .tea-control-wrap .input-field:focus,
+.tea-premium-page .tea-control-wrap input:focus,
+.tea-premium-page .tea-control-wrap select:focus{
+  border-color:#c48183 !important;
+  outline:none !important;
+  box-shadow:0 0 0 3px rgba(143,16,16,.07) !important;
+}
+
+.tea-premium-page .tea-period-block{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:18px;
+  margin-top:18px;
+  padding-top:18px;
+  border-top:1px solid #efeff1;
+}
+
+.tea-premium-page .tea-period-copy strong{
+  display:block;
+  color:#3f4249;
+  font-size:11px;
+  font-weight:760;
+}
+
+.tea-premium-page .tea-period-copy span{
+  display:block;
+  margin-top:3px;
+  color:#999ba1;
+  font-size:9px;
+}
+
+.tea-premium-page .tea-period-options{
+  display:flex;
+  align-items:center;
+  gap:9px;
+  flex-wrap:wrap;
+}
+
+.tea-premium-page .tea-period-option{
+  position:relative;
+  margin:0 !important;
+}
+
+.tea-premium-page .tea-period-option input{
+  position:absolute;
+  opacity:0;
+  pointer-events:none;
+}
+
+.tea-premium-page .tea-period-option span{
+  min-height:40px;
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  padding:0 13px;
+  border:1px solid #e0e1e4;
+  border-radius:11px;
+  background:#fff;
+  color:#62656d;
+  font-size:10px;
+  font-weight:680;
+  cursor:pointer;
+  transition:.16s ease;
+}
+
+.tea-premium-page .tea-period-option input:checked+span{
+  border-color:#d9a6a8;
+  background:#fff5f5;
+  color:#8f1010;
+  box-shadow:0 0 0 2px rgba(143,16,16,.035);
+}
+
+.tea-premium-page .tea-period-option input:checked+span i{
+  color:#8f1010;
+}
+
+.tea-premium-page .tea-rating-grid{
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:10px;
+}
+
+.tea-premium-page .tea-rating-grid>div{
+  min-height:60px;
+  display:flex;
+  align-items:center;
+  gap:11px;
+  padding:11px 13px;
+  border:1px solid #e7e8eb;
+  border-radius:13px;
+  background:#fafafb;
+}
+
+.tea-premium-page .tea-rating-grid strong{
+  width:30px;
+  height:30px;
+  display:grid;
+  place-items:center;
+  flex:0 0 30px;
+  border-radius:9px;
+  background:#fff;
+  color:#8f1010;
+  font-size:11px;
+  font-weight:820;
+  box-shadow:0 1px 3px rgba(20,20,24,.06);
+}
+
+.tea-premium-page .tea-rating-grid span{
+  color:#5d6068;
+  font-size:10px;
+  font-weight:700;
+}
+
+.tea-premium-page .tea-table-scroll{
+  width:100%;
+  overflow:auto;
+  border:1px solid #e1e2e5;
+  border-radius:15px;
+  background:#fff;
+}
+
+.tea-premium-page .tea-assessment-table{
+  min-width:1120px;
+  margin:0 !important;
+  border:0 !important;
+  border-radius:0 !important;
+  box-shadow:none !important;
+}
+
+.tea-premium-page .tea-assessment-table th{
+  padding:12px 10px !important;
+  background:linear-gradient(180deg,#981316 0%,#851013 100%) !important;
+  border-color:rgba(255,255,255,.08) !important;
+  color:#fff !important;
+  font-size:9px !important;
+  line-height:1.25 !important;
+  font-weight:760 !important;
+  letter-spacing:.025em !important;
+  text-transform:none !important;
+  text-align:left;
+}
+
+.tea-premium-page .tea-assessment-table th[colspan]{
+  text-align:center;
+}
+
+.tea-premium-page .tea-assessment-table td{
+  padding:12px 9px !important;
+  border-color:#ededf0 !important;
+  background:#fff !important;
+  color:#4d5058 !important;
+  font-size:10px !important;
+}
+
+.tea-premium-page .tea-assessment-table tbody tr:hover td{
+  background:#fffafa !important;
+}
+
+.tea-premium-page .tea-title-col{min-width:180px}
+.tea-premium-page .tea-comments-col{min-width:165px}
+
+.tea-premium-page .tea-training-title{
+  color:#363942 !important;
+  font-weight:680;
+  line-height:1.45;
+}
+
+.tea-premium-page .score-input-small{
+  width:48px !important;
+  min-width:48px !important;
+  height:40px !important;
+  min-height:40px !important;
+  margin:auto !important;
+  padding:0 6px !important;
+  border:1px solid #dcdde1 !important;
+  border-radius:10px !important;
+  background:#fff !important;
+  color:#31343b !important;
+  font-size:11px !important;
+  font-weight:700 !important;
+  text-align:center !important;
+}
+
+.tea-premium-page .tea-total-input,
+.tea-premium-page .tea-comment-input,
+.tea-premium-page .tea-competency-select{
+  width:100% !important;
+  min-height:40px !important;
+  padding:0 10px !important;
+  border:1px solid #dcdde1 !important;
+  border-radius:10px !important;
+  background:#fff !important;
+  color:#41444c !important;
+  font-size:10px !important;
+}
+
+.tea-premium-page .tea-comment-input{
+  min-width:145px;
+}
+
+.tea-premium-page .tea-inline-note{
+  display:flex;
+  align-items:flex-start;
+  gap:9px;
+  margin-top:12px;
+  padding:10px 12px;
+  border:1px solid #ececef;
+  border-radius:11px;
+  background:#fafafb;
+  color:#767980;
+  font-size:9.5px;
+  line-height:1.5;
+}
+
+.tea-premium-page .tea-inline-note i{
+  margin-top:1px;
+  color:#9b2023;
+}
+
+.tea-premium-page .tea-ranking-grid{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:10px;
+}
+
+.tea-premium-page .tea-ranking-grid article{
+  display:flex;
+  align-items:flex-start;
+  gap:12px;
+  min-height:86px;
+  padding:13px;
+  border:1px solid #e8e8eb;
+  border-radius:13px;
+  background:#fbfbfc;
+}
+
+.tea-premium-page .tea-ranking-score{
+  min-width:46px;
+  height:30px;
+  display:grid;
+  place-items:center;
+  border:1px solid #ead8d8;
+  border-radius:9px;
+  background:#fff5f5;
+  color:#8f1010;
+  font-size:9px;
+  font-weight:820;
+}
+
+.tea-premium-page .tea-ranking-grid strong{
+  display:block;
+  margin:1px 0 4px;
+  color:#383b42;
+  font-size:11px;
+  font-weight:760;
+}
+
+.tea-premium-page .tea-ranking-grid p{
+  margin:0;
+  color:#777a82;
+  font-size:9.5px;
+  line-height:1.5;
+}
+
+.tea-premium-page .tea-evaluator-grid{
+  align-items:end;
+}
+
+.tea-premium-page .tea-field-full{
+  grid-column:1/-1;
+}
+
+.tea-premium-page .tea-action-bar{
+  position:sticky;
+  bottom:14px;
+  z-index:20;
+  display:flex;
+  justify-content:flex-end;
+  gap:9px;
+  padding:11px;
+  border:1px solid rgba(220,221,225,.9);
+  border-radius:15px;
+  background:rgba(255,255,255,.92);
+  box-shadow:0 10px 30px rgba(18,20,25,.08);
+  backdrop-filter:blur(12px);
+}
+
+.tea-premium-page .tea-action-primary,
+.tea-premium-page .tea-action-secondary{
+  min-height:42px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:7px;
+  padding:0 15px;
+  border-radius:11px;
+  font-size:10px;
+  font-weight:760;
+  transition:.16s ease;
+}
+
+.tea-premium-page .tea-action-primary{
+  border:1px solid #841012;
+  background:linear-gradient(180deg,#9f1518,#8b1013);
+  color:#fff;
+  box-shadow:0 6px 16px rgba(143,16,16,.16);
+}
+
+.tea-premium-page .tea-action-secondary{
+  border:1px solid #dedfe3;
+  background:#fff;
+  color:#575a62;
+}
+
+.tea-premium-page .tea-action-primary:hover,
+.tea-premium-page .tea-action-secondary:hover{
+  transform:translateY(-1px);
+}
+
+.tea-premium-page .form-edit-badge{
+  position:absolute !important;
+  top:15px !important;
+  right:64px !important;
+  z-index:4;
+  display:inline-flex !important;
+  align-items:center;
+  gap:5px;
+  min-height:25px;
+  padding:0 9px !important;
+  border:1px solid #e6cdce !important;
+  border-radius:999px !important;
+  background:#fff5f5 !important;
+  color:#8f1010 !important;
+  font-size:8px !important;
+  font-weight:760 !important;
+}
+
+@media(max-width:900px){
+  .tea-premium-page .tea-premium-content{
+    margin-left:0;
+    width:100%;
+    padding:88px 14px 34px;
+  }
+
+  .tea-premium-page .tea-premium-hero{
+    align-items:flex-start;
+    flex-direction:column;
+  }
+
+  .tea-premium-page .tea-premium-hero h1{
+    font-size:25px !important;
+  }
+
+  .tea-premium-page .tea-premium-hero-badge{
+    width:100%;
+  }
+
+  .tea-premium-page .tea-info-grid,
+  .tea-premium-page .tea-rating-grid,
+  .tea-premium-page .tea-ranking-grid{
+    grid-template-columns:1fr;
+  }
+
+  .tea-premium-page .tea-period-block{
+    align-items:flex-start;
+    flex-direction:column;
+  }
+
+  .tea-premium-page .tea-period-options{
+    width:100%;
+  }
+
+  .tea-premium-page .tea-period-option{
+    flex:1;
+  }
+
+  .tea-premium-page .tea-period-option span{
+    width:100%;
+    justify-content:center;
+  }
+
+  .tea-premium-page .tea-section-card{
+    padding:17px !important;
+  }
+
+  .tea-premium-page .tea-action-bar{
+    bottom:8px;
+  }
+
+  .tea-premium-page .tea-action-primary,
+  .tea-premium-page .tea-action-secondary{
+    flex:1;
+  }
+}
+
+@media print{
+  .tea-premium-page .tea-premium-content{
+    margin:0 !important;
+    width:100% !important;
+    padding:0 !important;
+  }
+
+  .tea-premium-page .tea-premium-hero-badge,
+  .tea-premium-page .tea-premium-permission,
+  .tea-premium-page .tea-action-bar,
+  .tea-premium-page .form-edit-badge{
+    display:none !important;
+  }
+
+  .tea-premium-page .tea-section-card{
+    break-inside:avoid;
+    box-shadow:none !important;
+    border-color:#bbb !important;
+  }
+
+  .tea-premium-page .tea-assessment-table th{
+    background:#fff !important;
+    color:#000 !important;
+    border-color:#999 !important;
+  }
+}
