@@ -470,9 +470,9 @@ function sts_can_view_application(array $application, array $user): bool
         $applicationDepartment = trim((string) ($application['department'] ?? ''));
         $userDepartment = trim((string) ($user['department'] ?? ''));
 
-        return $applicationDepartment === ''
-            || $userDepartment === ''
-            || strcasecmp($applicationDepartment, $userDepartment) === 0;
+        return $applicationDepartment !== ''
+            && $userDepartment !== ''
+            && strcasecmp($applicationDepartment, $userDepartment) === 0;
     }
 
     return true;
@@ -874,10 +874,6 @@ function sts_validate_parent_bpl(
     }
 
     if (strtoupper($followupType) === 'TEA') {
-        if ($role === 'admin') {
-            return $parent;
-        }
-
         if ($role !== 'head_of_department') {
             return null;
         }
