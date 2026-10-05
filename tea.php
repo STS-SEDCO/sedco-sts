@@ -40,7 +40,7 @@ if ($parentId > 0) {
   <title>Training Effectiveness Assessment: STS</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-  <link rel="stylesheet" href="sedco-saas.css?v=20261005-04">
+  <link rel="stylesheet" href="sedco-saas.css?v=20261005-05">
   <link rel="stylesheet" href="sedco-shell.css?v=20261005-03">
   <script>
     function printForm() { window.print(); }
@@ -276,7 +276,7 @@ if ($parentId > 0) {
         </div>
       </section>
 
-      <div class="tea-action-bar">
+      <div class="tea-action-bar form-actions">
         <button type="button" onclick="printForm()" class="tea-action-secondary form-print-button">
           <i class="bi bi-printer"></i> Print form
         </button>
