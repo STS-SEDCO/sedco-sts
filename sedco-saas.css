@@ -18228,3 +18228,124 @@ body.tea-system-page .tea-system-table tbody tr[data-training-row] .tea-training
 body.tea-system-page .tea-system-table tbody tr[data-training-row] textarea{
   min-height:54px !important;
 }
+
+
+/* ===== TEA COLOURED OFFICIAL TABLE REFINEMENT V20261005 ===== */
+
+/* Keep the previous STS card layout. Only make the assessment table
+   follow the original SEDCO table structure with a cleaner colour system. */
+@media screen{
+  body.tea-system-page .tea-system-table-wrap{
+    border:1px solid #e5cccc !important;
+    border-radius:12px !important;
+    background:#fff !important;
+    box-shadow:0 12px 28px -24px rgba(86,15,18,.28) !important;
+  }
+
+  body.tea-system-page .tea-system-table thead tr:first-child th{
+    background:linear-gradient(180deg,#8f1518,#721013) !important;
+    color:#fff !important;
+    border-right:1px solid rgba(255,255,255,.14) !important;
+    border-bottom:1px solid rgba(255,255,255,.16) !important;
+  }
+
+  body.tea-system-page .tea-system-table thead tr:nth-child(2) th{
+    background:#f7e9e9 !important;
+    color:#741316 !important;
+    border-right:1px solid #e6caca !important;
+    border-bottom:1px solid #dfbfc0 !important;
+    font-weight:800 !important;
+  }
+
+  body.tea-system-page .tea-system-table td{
+    border-right:1px solid #efe0e0 !important;
+    border-bottom:1px solid #efe0e0 !important;
+  }
+
+  body.tea-system-page .tea-system-table tbody tr:nth-child(even) td{
+    background:#fffafa !important;
+  }
+
+  body.tea-system-page .tea-system-table tbody tr:hover td{
+    background:#fff4f4 !important;
+  }
+
+  body.tea-system-page .tea-total{
+    background:#f8eeee !important;
+    color:#741316 !important;
+    border-color:#e4c8c9 !important;
+  }
+}
+
+@media print{
+  /* Restore the clearer table sizing from the previous version. */
+  body.tea-system-page .tea-print-assessment-table th,
+  body.tea-system-page .tea-print-assessment-table td{
+    padding:3px 4px !important;
+    font-size:7pt !important;
+    line-height:1.14 !important;
+    border:1px solid #b98789 !important;
+  }
+
+  body.tea-system-page .tea-print-assessment-table th small{
+    font-size:5.6pt !important;
+  }
+
+  body.tea-system-page .tea-print-assessment-table thead tr:first-child th{
+    background:#811417 !important;
+    color:#fff !important;
+    border-color:#6e1013 !important;
+    -webkit-print-color-adjust:exact !important;
+    print-color-adjust:exact !important;
+  }
+
+  body.tea-system-page .tea-print-assessment-table thead tr:nth-child(2) th{
+    background:#f3dddd !important;
+    color:#6f1114 !important;
+    border-color:#cfa5a6 !important;
+    font-weight:700 !important;
+    -webkit-print-color-adjust:exact !important;
+    print-color-adjust:exact !important;
+  }
+
+  body.tea-system-page .tea-print-assessment-table tbody td{
+    background:#fff !important;
+    color:#222 !important;
+  }
+
+  body.tea-system-page .tea-print-assessment-table tbody tr:nth-child(even) td{
+    background:#fff7f7 !important;
+    -webkit-print-color-adjust:exact !important;
+    print-color-adjust:exact !important;
+  }
+
+  body.tea-system-page .tea-print-assessment-table.has-extra-columns th,
+  body.tea-system-page .tea-print-assessment-table.has-extra-columns td{
+    padding-left:2px !important;
+    padding-right:2px !important;
+    font-size:6.2pt !important;
+  }
+
+  body.tea-system-page .tea-print-ranking table{
+    border-color:#c8a0a1 !important;
+  }
+
+  body.tea-system-page .tea-print-ranking th{
+    background:#811417 !important;
+    color:#fff !important;
+    border-color:#6e1013 !important;
+    -webkit-print-color-adjust:exact !important;
+    print-color-adjust:exact !important;
+  }
+
+  body.tea-system-page .tea-print-ranking td{
+    border-color:#cfa5a6 !important;
+    background:#fff !important;
+  }
+
+  body.tea-system-page .tea-print-ranking tbody tr:nth-child(even) td{
+    background:#fff7f7 !important;
+    -webkit-print-color-adjust:exact !important;
+    print-color-adjust:exact !important;
+  }
+}
