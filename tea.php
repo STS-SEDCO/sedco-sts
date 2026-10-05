@@ -17,12 +17,11 @@ if (normalized_role($user['role'] ?? '') !== 'head_of_department') {
 $sedcoDepartments = sts_sedco_departments();
 
 $parent = null;
-$parentPayload = [];
-$parentPkkPayload = [];
 $parentId = max(0, (int) ($_GET['parent'] ?? 0));
 $hodId = (int) ($user['id'] ?? 0);
 $hodDepartment = trim((string) ($user['department'] ?? ''));
 $eligibleEvaluations = [];
+$eligibleByEmployee = [];
 
 $eligibleStmt = db()->prepare(
     'SELECT
@@ -56,13 +55,6 @@ $eligibleStmt = db()->prepare(
            AND b.department = ?
          )
        )
-       AND NOT EXISTS (
-         SELECT 1
-         FROM applications t
-         WHERE t.parent_application_id = b.id
-           AND t.form_type = "TEA"
-           AND t.status <> "cancelled"
-       )
      ORDER BY u.fullname ASC, b.training_end DESC, b.id DESC'
 );
 $eligibleStmt->bind_param('is', $hodId, $hodDepartment);
@@ -70,6 +62,12 @@ $eligibleStmt->execute();
 $eligibleResult = $eligibleStmt->get_result();
 
 while ($record = $eligibleResult->fetch_assoc()) {
+    $recordId = (int) ($record['id'] ?? 0);
+
+    if ($recordId <= 0 || sts_bpl_has_downstream_tea($recordId)) {
+        continue;
+    }
+
     $bplPayload = json_decode((string) ($record['payload'] ?? ''), true);
     $bplPayload = is_array($bplPayload) ? $bplPayload : [];
 
@@ -100,12 +98,35 @@ while ($record = $eligibleResult->fetch_assoc()) {
         ?? $record['training_end']
         ?? ''
     ));
-    $record['pkk_payload_array'] = $pkkPayload;
-    $record['bpl_payload_array'] = $bplPayload;
 
-    $eligibleEvaluations[(int) $record['id']] = $record;
+    $eligibleEvaluations[$recordId] = $record;
+
+    $employeeUserId = (int) ($record['user_id'] ?? 0);
+
+    if ($employeeUserId <= 0) {
+        continue;
+    }
+
+    if (!isset($eligibleByEmployee[$employeeUserId])) {
+        $eligibleByEmployee[$employeeUserId] = [
+            'user_id' => $employeeUserId,
+            'employee_name' => $record['employee_name'],
+            'division' => $record['division'],
+            'courses' => [],
+        ];
+    }
+
+    $eligibleByEmployee[$employeeUserId]['courses'][] = [
+        'parent_id' => $recordId,
+        'bpl_no' => (string) ($record['application_no'] ?? ''),
+        'pkk_no' => (string) ($record['pkk_application_no'] ?? ''),
+        'training_title' => (string) ($record['training_title'] ?? ''),
+        'training_date' => (string) ($record['training_date'] ?? ''),
+    ];
 }
 $eligibleStmt->close();
+
+$selectedEmployeeId = 0;
 
 if ($parentId > 0) {
     if (!isset($eligibleEvaluations[$parentId])) {
@@ -114,9 +135,10 @@ if ($parentId > 0) {
     }
 
     $parent = $eligibleEvaluations[$parentId];
-    $parentPayload = $parent['bpl_payload_array'];
-    $parentPkkPayload = $parent['pkk_payload_array'];
+    $selectedEmployeeId = (int) ($parent['user_id'] ?? 0);
 }
+
+$eligibleEmployeeGroups = array_values($eligibleByEmployee);
 ?>
 <!DOCTYPE html>
 <html lang="en">
