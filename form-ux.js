@@ -486,22 +486,48 @@
       total.readOnly = true;
       total.classList.add('sts-calculated-field');
 
+      const output = form.querySelector(`[data-competency-output="${row}"]`);
+
+      const setCompetency = value => {
+        level.value = value;
+
+        if (!output) return;
+
+        output.classList.remove('is-auto','is-fail','is-probation','is-pass','is-merit');
+        output.classList.add(value ? 'is-' + value.toLowerCase() : 'is-auto');
+
+        const label = output.querySelector('span');
+        const icon = output.querySelector('i');
+
+        if (label) label.textContent = value || 'Auto';
+
+        if (icon) {
+          icon.className = 'bi ' + ({
+            Fail: 'bi-exclamation-circle',
+            Probation: 'bi-hourglass-split',
+            Pass: 'bi-check2-circle',
+            Merit: 'bi-stars'
+          }[value] || 'bi-stars');
+        }
+      };
+
       const calculate = () => {
         const values = scores.map(score => Number(score.value));
         const complete = values.every(value => Number.isFinite(value) && value >= 1 && value <= 4);
 
         if (!complete) {
           total.value = '';
+          setCompetency('');
           return;
         }
 
         const sum = values.reduce((a,b) => a+b,0);
         total.value = String(sum);
 
-        if (sum <= 7) level.value = 'Fail';
-        else if (sum <= 12) level.value = 'Probation';
-        else if (sum <= 17) level.value = 'Pass';
-        else level.value = 'Merit';
+        if (sum <= 7) setCompetency('Fail');
+        else if (sum <= 12) setCompetency('Probation');
+        else if (sum <= 17) setCompetency('Pass');
+        else setCompetency('Merit');
       };
 
       scores.forEach(score => score.addEventListener('input', calculate));
