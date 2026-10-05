@@ -40,7 +40,7 @@ if ($parentId > 0) {
   <title>Training Effectiveness Assessment: STS</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-  <link rel="stylesheet" href="sedco-saas.css?v=20261005-07">
+  <link rel="stylesheet" href="sedco-saas.css?v=20261005-08">
   <link rel="stylesheet" href="sedco-shell.css?v=20261005-03">
   <script>
     function printForm() { window.print(); }
@@ -157,7 +157,15 @@ if ($parentId > 0) {
             <span class="tea-section-eyebrow">Performance review</span>
             <h2>Assessment criteria</h2>
           </div>
-          <span class="tea-section-number">03</span>
+          <div class="tea-section-heading-meta">
+            <span class="tea-owner-chip"><i class="bi bi-pencil-square"></i> Your section</span>
+            <span class="tea-section-number">03</span>
+          </div>
+        </div>
+
+        <div class="tea-assessment-summary">
+          <div><i class="bi bi-ui-checks-grid"></i><span>Rate each criterion from <strong>1 to 4</strong>.</span></div>
+          <div><i class="bi bi-calculator"></i><span>Total score is calculated automatically.</span></div>
         </div>
 
         <div class="tea-table-scroll">
@@ -221,7 +229,7 @@ if ($parentId > 0) {
 
         <div class="tea-inline-note">
           <i class="bi bi-info-circle"></i>
-          <span>Select the competency ranking that best reflects the employee's performance after training.</span>
+          <span>Complete all five criteria. The competency level will follow the total score guide below.</span>
         </div>
       </section>
 
@@ -235,19 +243,23 @@ if ($parentId > 0) {
         </div>
 
         <div class="tea-ranking-grid">
-          <article>
+          <article class="tea-rank-card rank-fail">
+            <span class="tea-ranking-icon"><i class="bi bi-exclamation-circle"></i></span>
             <span class="tea-ranking-score">0–7</span>
             <div><strong>Fail</strong><p>No significant improvement observed. Additional training is recommended.</p></div>
           </article>
-          <article>
+          <article class="tea-rank-card rank-probation">
+            <span class="tea-ranking-icon"><i class="bi bi-hourglass-split"></i></span>
             <span class="tea-ranking-score">8–12</span>
             <div><strong>Probation</strong><p>Requires supervision for 6 months. A reassessment is required.</p></div>
           </article>
-          <article>
+          <article class="tea-rank-card rank-pass">
+            <span class="tea-ranking-icon"><i class="bi bi-check2-circle"></i></span>
             <span class="tea-ranking-score">13–17</span>
             <div><strong>Pass</strong><p>Can perform tasks with minimal supervision.</p></div>
           </article>
-          <article>
+          <article class="tea-rank-card rank-merit">
+            <span class="tea-ranking-icon"><i class="bi bi-stars"></i></span>
             <span class="tea-ranking-score">18</span>
             <div><strong>Merit</strong><p>Shows excellent competency and can guide others.</p></div>
           </article>
