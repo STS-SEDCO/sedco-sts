@@ -21,12 +21,12 @@
       </div>
       <div class="task-count-chip">
         <span class="task-count-dot"></span>
-        3 forms available
+        <span data-form-count>3</span> forms available
       </div>
     </header>
 
     <section class="task-grid" aria-label="Training forms">
-      <article class="task-form-card">
+      <article class="task-form-card" data-form-card="BPL">
         <div class="task-card-top">
           <span class="task-form-icon"><i class="bi bi-file-earmark-text"></i></span>
           <span class="task-form-code">BPL</span>
@@ -36,12 +36,12 @@
           <p>Submit a training request for review and approval through the STS workflow.</p>
         </div>
         <div class="task-card-footer">
-          <span class="task-card-status"><i class="bi bi-circle-fill"></i> Ready to apply</span>
-          <a href="bpl.html" class="task-apply-btn">Apply now <i class="bi bi-arrow-up-right"></i></a>
+          <span class="task-card-status" data-form-status><i class="bi bi-circle-fill"></i> Ready to apply</span>
+          <a href="bpl.html" class="task-apply-btn" data-form-action>Apply now <i class="bi bi-arrow-up-right"></i></a>
         </div>
       </article>
 
-      <article class="task-form-card">
+      <article class="task-form-card" data-form-card="PKK">
         <div class="task-card-top">
           <span class="task-form-icon"><i class="bi bi-clipboard2-check"></i></span>
           <span class="task-form-code">PKK</span>
@@ -51,12 +51,12 @@
           <p>Complete the course effectiveness evaluation after attending training.</p>
         </div>
         <div class="task-card-footer">
-          <span class="task-card-status"><i class="bi bi-circle-fill"></i> Ready to apply</span>
-          <a href="pkk.html" class="task-apply-btn">Apply now <i class="bi bi-arrow-up-right"></i></a>
+          <span class="task-card-status" data-form-status><i class="bi bi-circle-fill"></i> Ready to apply</span>
+          <a href="pkk.html" class="task-apply-btn" data-form-action>Apply now <i class="bi bi-arrow-up-right"></i></a>
         </div>
       </article>
 
-      <article class="task-form-card task-form-card-locked">
+      <article class="task-form-card task-form-card-locked" data-form-card="TEA">
         <div class="task-card-top">
           <span class="task-form-icon"><i class="bi bi-graph-up-arrow"></i></span>
           <span class="task-form-code">TEA</span>
@@ -66,14 +66,75 @@
           <p>Record post training effectiveness, competency and improvement outcomes.</p>
         </div>
         <div class="task-card-footer">
-          <span class="task-card-status"><i class="bi bi-lock-fill"></i> HoD only</span>
-          <span class="task-apply-btn task-apply-btn-locked"><i class="bi bi-lock-fill"></i> Locked</span>
+          <span class="task-card-status" data-form-status><i class="bi bi-lock-fill"></i> HOD only</span>
+          <span class="task-apply-btn task-apply-btn-locked" data-form-action><i class="bi bi-lock-fill"></i> Locked</span>
         </div>
       </article>
     </section>
   </div>
 </main>
 
-<script src="sedco-shell.js?v=20260930-68"></script>
+<script>
+(() => {
+  let user = {};
+  try {
+    user = JSON.parse(localStorage.getItem('sedcoPreviewUser') || '{}') || {};
+  } catch {}
+
+  const role = String(user.role || 'staff').toLowerCase();
+  document.body.dataset.role = role;
+
+  const applicantRoles = ['staff','head_of_department','general_manager','pengerusi_besar','admin'];
+  const canApplicantForms = applicantRoles.includes(role);
+  const canTea = role === 'head_of_department';
+
+  const rules = {
+    BPL: { allowed: canApplicantForms, href: 'bpl.html', lockedLabel: 'Applicant access' },
+    PKK: { allowed: canApplicantForms, href: 'pkk.html', lockedLabel: 'Applicant access' },
+    TEA: { allowed: canTea, href: 'tea.html', lockedLabel: 'HOD only' }
+  };
+
+  let available = 0;
+
+  document.querySelectorAll('[data-form-card]').forEach(card => {
+    const type = card.dataset.formCard;
+    const rule = rules[type];
+    if (!rule) return;
+
+    const status = card.querySelector('[data-form-status]');
+    const action = card.querySelector('[data-form-action]');
+
+    card.classList.toggle('task-form-card-locked', !rule.allowed);
+
+    if (rule.allowed) {
+      available += 1;
+      if (status) status.innerHTML = '<i class="bi bi-circle-fill"></i> Ready to apply';
+
+      if (action) {
+        const link = document.createElement('a');
+        link.href = rule.href;
+        link.className = 'task-apply-btn';
+        link.dataset.formAction = '';
+        link.innerHTML = 'Apply now <i class="bi bi-arrow-up-right"></i>';
+        action.replaceWith(link);
+      }
+    } else {
+      if (status) status.innerHTML = '<i class="bi bi-lock-fill"></i> ' + rule.lockedLabel;
+
+      if (action) {
+        const locked = document.createElement('span');
+        locked.className = 'task-apply-btn task-apply-btn-locked';
+        locked.dataset.formAction = '';
+        locked.innerHTML = '<i class="bi bi-lock-fill"></i> Locked';
+        action.replaceWith(locked);
+      }
+    }
+  });
+
+  const count = document.querySelector('[data-form-count]');
+  if (count) count.textContent = String(available);
+})();
+</script>
+<script src="sedco-shell.js?v=20261005-03"></script>
 </body>
 </html>
