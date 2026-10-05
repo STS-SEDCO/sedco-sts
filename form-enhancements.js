@@ -6,7 +6,7 @@
   const draftEnabled = mode === 'new';
   const correctionSupport = formType === 'BPL' && mode === 'review' && status === 'correction';
 
-  if (!['BPL','PKK','TEA'].includes(formType) || (!draftEnabled && !correctionSupport)) return;
+  if (!['BPL','PKK'].includes(formType) || (!draftEnabled && !correctionSupport)) return;
 
   const form = document.querySelector('form');
   if (!form) return;
