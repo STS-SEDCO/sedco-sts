@@ -18349,3 +18349,85 @@ body.tea-system-page .tea-system-table tbody tr[data-training-row] textarea{
     print-color-adjust:exact !important;
   }
 }
+
+/* ===== TEA BPL + PKK SOURCE PICKER V20261005 ===== */
+body.tea-system-page .tea-employee-picker{
+  cursor:pointer;
+}
+
+body.tea-system-page .tea-source-hint{
+  display:flex;
+  align-items:flex-start;
+  gap:6px;
+  margin-top:6px;
+  color:#8b8e95;
+  font-size:9.5px;
+  line-height:1.4;
+  font-weight:500;
+}
+
+body.tea-system-page .tea-source-hint i{
+  margin-top:1px;
+  color:#4c8067;
+}
+
+body.tea-system-page .tea-selected-training-meta{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:9px;
+  margin-top:14px;
+  padding:11px;
+  border:1px solid #e5e7ea;
+  border-radius:11px;
+  background:#fafafb;
+}
+
+body.tea-system-page .tea-selected-training-meta[hidden]{
+  display:none !important;
+}
+
+body.tea-system-page .tea-selected-training-meta>div{
+  min-width:0;
+  padding:2px 8px;
+  border-right:1px solid #e8e9ec;
+}
+
+body.tea-system-page .tea-selected-training-meta>div:last-child{
+  border-right:0;
+}
+
+body.tea-system-page .tea-selected-training-meta span{
+  display:block;
+  margin-bottom:3px;
+  color:#989ba2;
+  font-size:8.5px;
+  font-weight:700;
+  text-transform:uppercase;
+  letter-spacing:.04em;
+}
+
+body.tea-system-page .tea-selected-training-meta strong{
+  display:block;
+  overflow:hidden;
+  color:#3d4047;
+  font-size:10.5px;
+  font-weight:740;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+
+@media(max-width:700px){
+  body.tea-system-page .tea-selected-training-meta{
+    grid-template-columns:1fr;
+  }
+
+  body.tea-system-page .tea-selected-training-meta>div{
+    padding:4px 2px;
+    border-right:0;
+    border-bottom:1px solid #e8e9ec;
+  }
+
+  body.tea-system-page .tea-selected-training-meta>div:last-child{
+    border-bottom:0;
+  }
+}
