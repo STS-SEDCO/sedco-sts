@@ -874,11 +874,42 @@ function sts_validate_parent_bpl(
     }
 
     if (strtoupper($followupType) === 'TEA') {
-        if ($role !== 'head_of_department') {
+        if ($role !== 'head_of_department' || !sts_can_view_application($parent, $user)) {
             return null;
         }
 
-        return sts_can_view_application($parent, $user) ? $parent : null;
+        $pkkCheck = db()->prepare(
+            'SELECT id
+             FROM applications
+             WHERE parent_application_id = ?
+               AND form_type = "PKK"
+               AND status = "approved"
+               AND current_stage = "completed"
+             LIMIT 1'
+        );
+        $pkkCheck->bind_param('i', $parentApplicationId);
+        $pkkCheck->execute();
+        $hasCompletedPkk = (bool) $pkkCheck->get_result()->fetch_assoc();
+        $pkkCheck->close();
+
+        if (!$hasCompletedPkk) {
+            return null;
+        }
+
+        $teaCheck = db()->prepare(
+            'SELECT id
+             FROM applications
+             WHERE parent_application_id = ?
+               AND form_type = "TEA"
+               AND status <> "cancelled"
+             LIMIT 1'
+        );
+        $teaCheck->bind_param('i', $parentApplicationId);
+        $teaCheck->execute();
+        $alreadyEvaluated = (bool) $teaCheck->get_result()->fetch_assoc();
+        $teaCheck->close();
+
+        return $alreadyEvaluated ? null : $parent;
     }
 
     return null;
@@ -928,10 +959,18 @@ function sts_ensure_followup_notifications(array $user): void
                        AND (b.department = ? OR b.department IS NULL OR b.department = "")
                      )
                    )
+                   AND EXISTS (
+                     SELECT 1 FROM applications p
+                     WHERE p.parent_application_id = b.id
+                       AND p.form_type = "PKK"
+                       AND p.status = "approved"
+                       AND p.current_stage = "completed"
+                   )
                    AND NOT EXISTS (
                      SELECT 1 FROM applications t
                      WHERE t.parent_application_id = b.id
                        AND t.form_type = "TEA"
+                       AND t.status <> "cancelled"
                    )
                  ORDER BY b.training_end ASC'
             );
