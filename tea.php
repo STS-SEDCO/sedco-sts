@@ -40,7 +40,7 @@ if ($parentId > 0) {
   <title>Training Effectiveness Assessment: STS</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-  <link rel="stylesheet" href="sedco-saas.css?v=20261005-17">
+  <link rel="stylesheet" href="sedco-saas.css?v=20261005-18">
   <link rel="stylesheet" href="sedco-shell.css?v=20261005-03">
   <script>
     function printForm() { window.print(); }
@@ -272,18 +272,29 @@ if ($parentId > 0) {
           </div>
         </div>
 
+        <div class="tea-confirmation-note">
+          <span class="tea-confirmation-note-icon"><i class="bi bi-shield-check"></i></span>
+          <div>
+            <strong>Official HOD confirmation</strong>
+            <span>These details will be recorded together with the completed assessment.</span>
+          </div>
+        </div>
+
         <div class="tea-confirmation-grid">
           <label class="tea-field">
             <span><i class="bi bi-person-badge"></i> Head of Division / Section <b>*</b></span>
             <input type="text" name="head_division" class="input-field tea-auto-field" required readonly value="<?= e($user['fullname']) ?>">
+            <small class="tea-field-hint"><i class="bi bi-check-circle-fill"></i> Auto-filled from your STS profile</small>
           </label>
           <label class="tea-field">
             <span><i class="bi bi-calendar-check"></i> Date of Evaluation <b>*</b></span>
             <input type="date" name="date" class="input-field" required>
+            <small class="tea-field-hint">Select the official evaluation date</small>
           </label>
           <label class="tea-field tea-field-full">
             <span><i class="bi bi-pen"></i> Signature / Confirmation <b>*</b></span>
             <input type="text" name="signature" class="input-field" required placeholder="Type your name as confirmation">
+            <small class="tea-field-hint">Typing your name confirms the assessment on behalf of the HOD</small>
           </label>
         </div>
       </section>
