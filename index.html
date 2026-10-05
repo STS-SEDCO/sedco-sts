@@ -62,6 +62,8 @@
       if (value.includes('training')) return 'training_section';
       if (value.includes('hod') || value.includes('head')) return 'head_of_department';
       if (value.includes('gm') || value.includes('manager')) return 'general_manager';
+      if (value.includes('pengerusi') || value.includes('chairman')) return 'pengerusi_besar';
+      if (value.includes('finance') || value.includes('kewangan')) return 'finance';
       return 'staff';
     };
 
