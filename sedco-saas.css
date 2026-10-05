@@ -17970,3 +17970,159 @@ body.tea-system-page .tea-print-sheet{
     font-style:normal;
   }
 }
+
+/* ===== TEA A4 PORTRAIT PRINT OVERRIDE V20261005 ===== */
+@page{
+  size:A4 portrait;
+  margin:7mm;
+}
+
+@media print{
+  body.tea-system-page .tea-print-sheet{
+    font-size:7.7pt !important;
+    line-height:1.12 !important;
+  }
+
+  body.tea-system-page .tea-print-header{
+    grid-template-columns:62px 1fr 62px !important;
+    gap:7px !important;
+    margin-bottom:6mm !important;
+  }
+
+  body.tea-system-page .tea-print-logo{
+    width:52px !important;
+  }
+
+  body.tea-system-page .tea-print-logo-grid{
+    width:50px !important;
+    height:37px !important;
+  }
+
+  body.tea-system-page .tea-print-logo small{
+    width:50px !important;
+    font-size:3pt !important;
+  }
+
+  body.tea-system-page .tea-print-title strong{
+    font-size:10.7pt !important;
+  }
+
+  body.tea-system-page .tea-print-title span{
+    font-size:8.4pt !important;
+  }
+
+  body.tea-system-page .tea-print-title em{
+    margin-top:4mm !important;
+    font-size:7.8pt !important;
+  }
+
+  body.tea-system-page .tea-print-details{
+    gap:2.6mm !important;
+    margin-bottom:3mm !important;
+  }
+
+  body.tea-system-page .tea-print-details>div{
+    grid-template-columns:82px 9px 1fr !important;
+  }
+
+  body.tea-system-page .tea-print-details>div>span,
+  body.tea-system-page .tea-print-details>div>strong{
+    font-size:7.5pt !important;
+  }
+
+  body.tea-system-page .tea-print-details .tea-print-month-line{
+    grid-template-columns:82px 9px auto auto 1fr !important;
+    gap:5px !important;
+  }
+
+  body.tea-system-page .tea-print-month-line label i{
+    width:24px !important;
+    height:17px !important;
+    font-size:10pt !important;
+  }
+
+  body.tea-system-page .tea-print-month-line>em{
+    font-size:6.5pt !important;
+  }
+
+  body.tea-system-page .tea-print-rating{
+    grid-template-columns:82px minmax(0,1fr) !important;
+    gap:5px !important;
+    margin-bottom:3mm !important;
+  }
+
+  body.tea-system-page .tea-print-rating>strong{
+    font-size:7pt !important;
+  }
+
+  body.tea-system-page .tea-print-rating span{
+    padding:2px 2px !important;
+    font-size:6.7pt !important;
+  }
+
+  body.tea-system-page .tea-print-assessment-table{
+    width:100% !important;
+    table-layout:fixed !important;
+  }
+
+  body.tea-system-page .tea-print-assessment-table th,
+  body.tea-system-page .tea-print-assessment-table td{
+    padding:2px 2px !important;
+    font-size:5.7pt !important;
+    line-height:1.08 !important;
+  }
+
+  body.tea-system-page .tea-print-assessment-table th small{
+    font-size:4.5pt !important;
+  }
+
+  body.tea-system-page .tea-print-assessment-table .tea-print-training-title{
+    width:15% !important;
+  }
+
+  body.tea-system-page .tea-print-assessment-table .tea-print-comments-head{
+    width:18% !important;
+  }
+
+  body.tea-system-page .tea-print-assessment-table.has-extra-columns th,
+  body.tea-system-page .tea-print-assessment-table.has-extra-columns td{
+    padding-left:1px !important;
+    padding-right:1px !important;
+    font-size:5pt !important;
+  }
+
+  body.tea-system-page .tea-print-ranking{
+    margin-top:3mm !important;
+  }
+
+  body.tea-system-page .tea-print-ranking>p{
+    margin-bottom:1mm !important;
+    font-size:6.3pt !important;
+  }
+
+  body.tea-system-page .tea-print-ranking th,
+  body.tea-system-page .tea-print-ranking td{
+    padding:1.5px 3px !important;
+    font-size:5.6pt !important;
+    line-height:1.08 !important;
+  }
+
+  body.tea-system-page .tea-print-evaluated{
+    margin-top:3.5mm !important;
+  }
+
+  body.tea-system-page .tea-print-evaluated>strong{
+    margin-bottom:2.5mm !important;
+    font-size:7pt !important;
+  }
+
+  body.tea-system-page .tea-print-evaluated>div{
+    grid-template-columns:120px 10px 230px !important;
+    margin-bottom:2.5mm !important;
+  }
+
+  body.tea-system-page .tea-print-evaluated>div>span,
+  body.tea-system-page .tea-print-evaluated>div>em{
+    font-size:6.6pt !important;
+  }
+}
