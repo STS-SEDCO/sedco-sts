@@ -17644,3 +17644,329 @@ body.tea-system-page .tea-system-actions .btn{min-height:43px;display:inline-fle
   body.tea-system-page .tea-system-header,body.tea-system-page .tea-system-card{box-shadow:none!important}
   body.tea-system-page .tea-system-linked,body.tea-system-page .tea-system-permission,body.tea-system-page .no-print{display:none!important}
 }
+
+/* ===== TEA OFFICIAL PRINT VIEW V20261005 ===== */
+body.tea-system-page .tea-print-sheet{
+  display:none;
+}
+
+@page{
+  size:A4 landscape;
+  margin:8mm;
+}
+
+@media print{
+  html,body{
+    width:auto !important;
+    min-width:0 !important;
+    margin:0 !important;
+    padding:0 !important;
+    background:#fff !important;
+  }
+
+  body.tea-system-page > *{
+    display:none !important;
+  }
+
+  body.tea-system-page > .tea-print-sheet{
+    display:block !important;
+  }
+
+  body.tea-system-page .tea-print-sheet{
+    width:100% !important;
+    margin:0 !important;
+    padding:0 !important;
+    color:#111 !important;
+    background:#fff !important;
+    font-family:Arial,Helvetica,sans-serif !important;
+    font-size:9pt !important;
+    line-height:1.2 !important;
+    -webkit-print-color-adjust:exact !important;
+    print-color-adjust:exact !important;
+  }
+
+  body.tea-system-page .tea-print-header{
+    display:grid;
+    grid-template-columns:80px 1fr 80px;
+    align-items:start;
+    gap:10px;
+    margin-bottom:10mm;
+  }
+
+  body.tea-system-page .tea-print-logo{
+    width:62px;
+  }
+
+  body.tea-system-page .tea-print-logo-grid{
+    display:grid;
+    grid-template-columns:repeat(5,1fr);
+    width:58px;
+    height:43px;
+    border:2px solid #8f1010;
+    background:#8f1010;
+    overflow:hidden;
+  }
+
+  body.tea-system-page .tea-print-logo-grid span{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    border-right:1px solid rgba(255,255,255,.65);
+    color:#fff;
+    font-size:6pt;
+    font-weight:800;
+  }
+
+  body.tea-system-page .tea-print-logo-grid span:last-child{
+    border-right:0;
+  }
+
+  body.tea-system-page .tea-print-logo small{
+    display:block;
+    width:58px;
+    margin-top:2px;
+    color:#444;
+    font-size:3.5pt;
+    line-height:1.05;
+    text-align:center;
+  }
+
+  body.tea-system-page .tea-print-title{
+    text-align:center;
+  }
+
+  body.tea-system-page .tea-print-title strong{
+    display:block;
+    font-size:14pt;
+    line-height:1.15;
+    font-weight:800;
+  }
+
+  body.tea-system-page .tea-print-title span{
+    display:block;
+    margin-top:2px;
+    font-size:10.5pt;
+  }
+
+  body.tea-system-page .tea-print-title em{
+    display:block;
+    margin-top:7mm;
+    font-size:10pt;
+    font-weight:700;
+  }
+
+  body.tea-system-page .tea-print-details{
+    display:grid;
+    gap:4mm;
+    margin-bottom:4mm;
+  }
+
+  body.tea-system-page .tea-print-details>div{
+    display:grid;
+    grid-template-columns:105px 12px 1fr;
+    align-items:end;
+  }
+
+  body.tea-system-page .tea-print-details>div>span{
+    font-size:9.5pt;
+  }
+
+  body.tea-system-page .tea-print-details>div>strong{
+    min-height:18px;
+    padding:0 5px 2px;
+    border-bottom:1px dotted #222;
+    font-size:9.5pt;
+    font-weight:500;
+  }
+
+  body.tea-system-page .tea-print-details .tea-print-month-line{
+    grid-template-columns:105px 12px auto auto 1fr;
+    align-items:center;
+    gap:8px;
+  }
+
+  body.tea-system-page .tea-print-month-line label{
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    white-space:nowrap;
+  }
+
+  body.tea-system-page .tea-print-month-line label i{
+    width:30px;
+    height:22px;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    border:1px solid #222;
+    font-size:13pt;
+    font-style:normal;
+    line-height:1;
+  }
+
+  body.tea-system-page .tea-print-month-line>em{
+    font-size:8.5pt;
+  }
+
+  body.tea-system-page .tea-print-rating{
+    display:grid;
+    grid-template-columns:105px 570px;
+    align-items:center;
+    gap:8px;
+    margin-bottom:4mm;
+  }
+
+  body.tea-system-page .tea-print-rating>strong{
+    font-size:9pt;
+    font-style:italic;
+  }
+
+  body.tea-system-page .tea-print-rating>div{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    border:1px solid #111;
+  }
+
+  body.tea-system-page .tea-print-rating span{
+    padding:3px 4px;
+    border-right:1px solid #111;
+    font-size:8.5pt;
+    font-style:italic;
+    font-weight:700;
+    text-align:center;
+  }
+
+  body.tea-system-page .tea-print-rating span:last-child{
+    border-right:0;
+  }
+
+  body.tea-system-page .tea-print-assessment-table{
+    width:100%;
+    margin:0;
+    border-collapse:collapse;
+    table-layout:fixed;
+    break-inside:avoid;
+  }
+
+  body.tea-system-page .tea-print-assessment-table th,
+  body.tea-system-page .tea-print-assessment-table td{
+    padding:3px 4px;
+    border:1px solid #111;
+    background:#fff !important;
+    color:#111 !important;
+    font-size:7.4pt;
+    line-height:1.15;
+    text-align:center;
+    vertical-align:middle;
+    overflow-wrap:anywhere;
+  }
+
+  body.tea-system-page .tea-print-assessment-table th{
+    font-weight:700;
+  }
+
+  body.tea-system-page .tea-print-assessment-table th small{
+    display:block;
+    margin-top:1px;
+    font-size:6pt;
+    line-height:1.1;
+    font-style:italic;
+    font-weight:500;
+  }
+
+  body.tea-system-page .tea-print-assessment-table .tea-print-training-title{
+    width:16%;
+    text-align:left;
+    vertical-align:bottom;
+  }
+
+  body.tea-system-page .tea-print-assessment-table .tea-print-comments-head{
+    width:22%;
+  }
+
+  body.tea-system-page .tea-print-assessment-table td{
+    min-height:32px;
+  }
+
+  body.tea-system-page .tea-print-training-cell{
+    text-align:left !important;
+  }
+
+  body.tea-system-page .tea-print-comment-cell{
+    text-align:left !important;
+  }
+
+  body.tea-system-page .tea-print-assessment-table.has-extra-columns th,
+  body.tea-system-page .tea-print-assessment-table.has-extra-columns td{
+    padding-left:2px;
+    padding-right:2px;
+    font-size:6.6pt;
+  }
+
+  body.tea-system-page .tea-print-ranking{
+    margin-top:5mm;
+    break-inside:avoid;
+  }
+
+  body.tea-system-page .tea-print-ranking>p{
+    margin:0 0 1.5mm;
+    font-size:8.2pt;
+    font-style:italic;
+  }
+
+  body.tea-system-page .tea-print-ranking table{
+    width:100%;
+    border-collapse:collapse;
+    table-layout:fixed;
+  }
+
+  body.tea-system-page .tea-print-ranking th,
+  body.tea-system-page .tea-print-ranking td{
+    padding:2px 5px;
+    border:1px solid #111;
+    font-size:7pt;
+    line-height:1.12;
+  }
+
+  body.tea-system-page .tea-print-ranking th{
+    font-style:italic;
+    text-align:center;
+  }
+
+  body.tea-system-page .tea-print-ranking th:first-child,
+  body.tea-system-page .tea-print-ranking td:first-child{
+    width:10%;
+  }
+
+  body.tea-system-page .tea-print-evaluated{
+    margin-top:5mm;
+    break-inside:avoid;
+  }
+
+  body.tea-system-page .tea-print-evaluated>strong{
+    display:block;
+    margin-bottom:4mm;
+    font-size:9pt;
+    text-decoration:underline;
+  }
+
+  body.tea-system-page .tea-print-evaluated>div{
+    display:grid;
+    grid-template-columns:150px 14px 310px;
+    align-items:end;
+    margin-bottom:3.5mm;
+  }
+
+  body.tea-system-page .tea-print-evaluated>div>span{
+    font-size:8.5pt;
+    font-weight:700;
+  }
+
+  body.tea-system-page .tea-print-evaluated>div>em{
+    min-height:16px;
+    padding:0 4px 2px;
+    border-bottom:1px dotted #222;
+    font-size:8.5pt;
+    font-style:normal;
+  }
+}
