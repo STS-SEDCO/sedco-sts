@@ -138,13 +138,35 @@ if ($type === 'PKK') {
 }
 
 if ($type === 'TEA') {
-    foreach ([0, 1] as $row) {
-        $scores = $payload['score_' . $row] ?? [];
+    $teaRows = [];
+
+    foreach ($payload as $key => $value) {
+        if (preg_match('/^score_(\\d+)$/', (string) $key, $match)) {
+            $teaRows[(int) $match[1]] = $value;
+        }
+    }
+
+    if (!$teaRows) {
+        http_response_code(422);
+        exit('Please add at least one training assessment row.');
+    }
+
+    ksort($teaRows);
+
+    foreach ($teaRows as $row => $scores) {
+        $trainingTitle = trim((string) ($payload['training_title_' . $row] ?? ''));
+
+        if ($trainingTitle === '') {
+            http_response_code(422);
+            exit('Please enter the training title for every assessment row.');
+        }
 
         if (!is_array($scores) || count($scores) !== 5) {
             http_response_code(422);
-            exit('Please complete all Training Effectiveness scores.');
+            exit('Please complete the five official Training Effectiveness scores for every row.');
         }
+
+        $total = 0;
 
         foreach ($scores as $score) {
             $numeric = (int) $score;
@@ -153,8 +175,50 @@ if ($type === 'TEA') {
                 http_response_code(422);
                 exit('Training Effectiveness scores must be between 1 and 4.');
             }
+
+            $total += $numeric;
+        }
+
+        $payload['total_score_' . $row] = (string) $total;
+        $payload['competency_level_' . $row] = match (true) {
+            $total <= 7 => 'Fail',
+            $total <= 12 => 'Probation',
+            $total <= 17 => 'Pass',
+            default => 'Merit',
+        };
+
+        $extraScores = $payload['extra_score_' . $row] ?? [];
+
+        if ($extraScores !== [] && !is_array($extraScores)) {
+            http_response_code(422);
+            exit('Invalid additional criterion scores.');
+        }
+
+        foreach ((array) $extraScores as $score) {
+            if ($score === '') {
+                continue;
+            }
+
+            $numeric = (int) $score;
+
+            if ($numeric < 1 || $numeric > 4) {
+                http_response_code(422);
+                exit('Additional criterion scores must be between 1 and 4.');
+            }
         }
     }
+
+    $extraCriteria = $payload['extra_criteria'] ?? [];
+
+    if ($extraCriteria !== [] && !is_array($extraCriteria)) {
+        http_response_code(422);
+        exit('Invalid additional criteria.');
+    }
+
+    $payload['extra_criteria'] = array_values(array_filter(
+        array_map(static fn($value): string => trim((string) $value), (array) $extraCriteria),
+        static fn(string $value): bool => $value !== ''
+    ));
 }
 
 if ($type === 'BPL') {
@@ -186,7 +250,7 @@ if ($type === 'BPL') {
 $title = match ($type) {
     'BPL' => trim((string) ($payload['tajuk'] ?? $payload['kursus'] ?? 'Permohonan Latihan')),
     'PKK' => trim((string) ($payload['tajuk'] ?? 'Penilaian Keberkesanan Kursus')),
-    'TEA' => trim((string) ($payload['training_title'] ?? 'Training Effectiveness Assessment')),
+    'TEA' => trim((string) ($payload['training_title_0'] ?? 'Training Effectiveness Assessment')),
 };
 
 if ($title === '') {
