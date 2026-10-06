@@ -34,6 +34,7 @@ $eligibleStmt = db()->prepare(
         b.payload,
         b.training_end,
         u.fullname,
+        u.department AS user_department,
         p.application_no AS pkk_application_no,
         p.payload AS pkk_payload,
         p.completed_at AS pkk_completed_at
@@ -48,13 +49,9 @@ $eligibleStmt = db()->prepare(
      WHERE b.form_type = "BPL"
        AND b.status = "approved"
        AND b.training_end IS NOT NULL
-       AND (
-         b.assigned_hod_id = ?
-         OR (
-           b.assigned_hod_id IS NULL
-           AND b.department = ?
-         )
-       )
+       AND b.training_end <= CURDATE()
+       AND b.user_id <> ?
+       AND LOWER(TRIM(COALESCE(NULLIF(b.department, ""), NULLIF(u.department, "")))) = LOWER(TRIM(?))
      ORDER BY u.fullname ASC, b.training_end DESC, b.id DESC'
 );
 $eligibleStmt->bind_param('is', $hodId, $hodDepartment);
@@ -199,7 +196,7 @@ $eligibleEmployeeGroups = array_values($eligibleByEmployee);
               </select>
               <small class="tea-source-hint">
                 <i class="bi bi-database-check"></i>
-                Select an employee once. All completed courses that still need TEA will load automatically.
+                Shows employees from your department with completed training records that are ready for TEA.
               </small>
             </label>
             <label class="tea-system-field">
@@ -214,7 +211,7 @@ $eligibleEmployeeGroups = array_values($eligibleByEmployee);
                 value="<?= e((string) ($selectedEmployeeId > 0 ? ($eligibleByEmployee[$selectedEmployeeId]['division'] ?? '') : '')) ?>"
                 placeholder="Auto-filled from BPL / PKK"
               >
-              <small class="tea-source-hint"><i class="bi bi-link-45deg"></i> Auto-filled from the selected employee's BPL / PKK record.</small>
+              <small class="tea-source-hint"><i class="bi bi-link-45deg"></i> Auto-filled from the selected employee's department and training records.</small>
             </label>
           </div>
           <div class="tea-selected-training-meta" data-selected-training-meta <?= $selectedEmployeeId > 0 ? '' : 'hidden' ?>>
