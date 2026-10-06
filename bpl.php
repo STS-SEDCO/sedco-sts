@@ -16,10 +16,6 @@ $payload = [];
 $currentStage = '';
 $applicationStatus = 'pending';
 $applicationNo = trim((string) ($_GET['application'] ?? ''));
-$malaysiaToday = (new DateTimeImmutable(
-    'now',
-    new DateTimeZone('Asia/Kuala_Lumpur')
-))->format('Y-m-d');
 
 if ($applicationNo !== '') {
     $stmt = db()->prepare(
@@ -306,7 +302,7 @@ $canReviewCurrentStage = $mode === 'review'
                     <td>Tarikh</td>
                     <td>
                         <div class="bpl-auto-date-field">
-                            <input type="date" name="tarikh_latihan" required readonly data-auto-review-date value="<?= e((string) ($payload['tarikh_latihan'] ?? $malaysiaToday)) ?>">
+                            <input type="date" name="tarikh_latihan" required readonly data-auto-review-date value="<?= e((string) ($payload['tarikh_latihan'] ?? '')) ?>">
                         </div>
                     </td>
                 </tr>
@@ -326,7 +322,7 @@ $canReviewCurrentStage = $mode === 'review'
                     <td>Tarikh</td>
                     <td>
                         <div class="bpl-auto-date-field">
-                            <input type="date" name="tarikh_bahagian" required readonly data-auto-review-date value="<?= e((string) ($payload['tarikh_bahagian'] ?? $malaysiaToday)) ?>">
+                            <input type="date" name="tarikh_bahagian" required readonly data-auto-review-date value="<?= e((string) ($payload['tarikh_bahagian'] ?? '')) ?>">
                         </div>
                     </td>
                 </tr>
@@ -349,7 +345,7 @@ $canReviewCurrentStage = $mode === 'review'
                     <td>Tarikh</td>
                     <td>
                         <div class="bpl-auto-date-field">
-                            <input type="date" name="tarikh_pgs" required readonly data-auto-review-date value="<?= e((string) ($payload['tarikh_pgs'] ?? $malaysiaToday)) ?>">
+                            <input type="date" name="tarikh_pgs" required readonly data-auto-review-date value="<?= e((string) ($payload['tarikh_pgs'] ?? '')) ?>">
                         </div>
                     </td>
                 </tr>
@@ -372,7 +368,7 @@ $canReviewCurrentStage = $mode === 'review'
                     <td>Tarikh</td>
                     <td>
                         <div class="bpl-auto-date-field">
-                            <input type="date" name="tarikh_sedco" readonly data-auto-review-date value="<?= e((string) ($payload['tarikh_sedco'] ?? $malaysiaToday)) ?>">
+                            <input type="date" name="tarikh_sedco" readonly data-auto-review-date value="<?= e((string) ($payload['tarikh_sedco'] ?? '')) ?>">
                         </div>
                     </td>
                 </tr>
@@ -406,7 +402,7 @@ $canReviewCurrentStage = $mode === 'review'
                             </div>
                             <label class="bpl-registration-date">
                                 <span>Tarikh Didaftarkan</span>
-                                <input type="date" name="tarikh_didaftar" readonly data-registration-date value="<?= e((string) ($payload['tarikh_didaftar'] ?? $malaysiaToday)) ?>">
+                                <input type="date" name="tarikh_didaftar" readonly data-registration-date value="<?= e((string) ($payload['tarikh_didaftar'] ?? '')) ?>">
                             </label>
                         </div>
                     </td>
@@ -458,7 +454,7 @@ window.SEDCO_FORM_CONTEXT = {
   status: <?= json_encode($applicationStatus) ?>
 };
 </script>
-<script src="bpl-workflow.js?v=20261006-04"></script>
+<script src="bpl-workflow.js?v=20261006-05"></script>
 <script src="form-permissions.js?v=20261003-06"></script>
 <script src="form-ux.js?v=20261006-04"></script>
 <script src="form-enhancements.js?v=20260930-59"></script>
