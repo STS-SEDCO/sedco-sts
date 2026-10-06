@@ -18544,3 +18544,19 @@ body.tea-system-page .tea-employee-picker-field select{
     width:100%;
   }
 }
+
+/* TEA fixed assessment table */
+body.tea-system-page .tea-system-table-wrap{overflow-x:auto}
+body.tea-system-page .tea-system-table{min-width:1040px!important}
+body.tea-system-page .tea-assessment-selected{display:flex;align-items:center;gap:12px;margin-bottom:10px;padding:12px 14px;border:1px solid #eadada;border-radius:11px;background:#fffafa}
+body.tea-system-page .tea-assessment-selected[hidden]{display:none!important}
+body.tea-system-page .tea-assessment-selected-icon{width:36px;height:36px;display:grid;place-items:center;flex:0 0 36px;border-radius:10px;background:#fff1f1;color:#991417}
+body.tea-system-page .tea-assessment-selected span{display:block;color:#8a8e96;font-size:9.5px;font-weight:650;text-transform:uppercase;letter-spacing:.04em}
+body.tea-system-page .tea-assessment-selected strong{display:block;margin-top:1px;color:#2f333a;font-size:12px;font-weight:780}
+body.tea-system-page .tea-assessment-selected small{display:block;margin-top:2px;color:#757982;font-size:9.5px}
+body.tea-system-page .tea-score.tea-score-standard{width:68px!important;min-width:68px!important;height:38px!important;min-height:38px!important;padding:0 24px 0 10px!important;border:1px solid #d9dce1!important;border-radius:8px!important;background:#fff!important;color:#30333a!important;text-align:center;font-size:11.5px!important;font-weight:760;cursor:pointer}
+body.tea-system-page .tea-system-table [data-criteria-head]>th{min-width:120px}
+body.tea-system-page .tea-system-table .tea-col-training{min-width:210px}
+body.tea-system-page .tea-system-table .tea-col-total{min-width:90px}
+body.tea-system-page .tea-system-table .tea-col-level{min-width:120px}
+body.tea-system-page .tea-system-table .tea-col-comments{min-width:200px}
