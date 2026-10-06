@@ -81,7 +81,7 @@ $requiredByType = [
         'aspect0_p1', 'aspect1_p1', 'aspect2_p1', 'aspect3_p1', 'aspect4_p1',
         'tandatangan', 'tarikh_penilaian'
     ],
-    'TEA' => ['employee_name', 'division', 'month', 'head_division', 'date', 'signature'],
+    'TEA' => ['employee_name', 'division', 'month', 'evaluated_by', 'head_division', 'date', 'signature'],
 ];
 
 if ($type === 'BPL') {
@@ -150,6 +150,35 @@ if ($type === 'TEA') {
     $payload['month'] = in_array($currentEvaluationMonth, [1, 6], true)
         ? 'June'
         : 'December';
+
+    // Evaluator identity and submission date are authoritative Profile/system values.
+    $payload['evaluated_by'] = trim((string) ($user['fullname'] ?? ''));
+    $payload['head_division'] = trim((string) ($user['department'] ?? ''));
+    $payload['date'] = (new DateTimeImmutable(
+        'now',
+        new DateTimeZone('Asia/Kuala_Lumpur')
+    ))->format('Y-m-d');
+
+    if ($payload['evaluated_by'] === '' || $payload['head_division'] === '') {
+        http_response_code(422);
+        exit('Please complete your Name and Department / Division in Profile before submitting TEA.');
+    }
+
+    $signature = trim((string) ($payload['signature'] ?? ''));
+    if (!preg_match('#^data:image/png;base64,([A-Za-z0-9+/=]+)$#', $signature, $signatureMatch)) {
+        http_response_code(422);
+        exit('Please provide a valid digital signature before submitting TEA.');
+    }
+
+    $signatureBytes = base64_decode($signatureMatch[1], true);
+    if (
+        $signatureBytes === false
+        || strlen($signatureBytes) < 100
+        || strlen($signatureBytes) > 200000
+    ) {
+        http_response_code(422);
+        exit('The digital signature is invalid or too large. Please clear it and sign again.');
+    }
 
     $teaRows = [];
     $evaluatedParentIds = [];
