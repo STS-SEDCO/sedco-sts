@@ -467,7 +467,7 @@ $stmt->close();
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-<script src="digital-signature.js?v=20261006-02"></script>
+<script src="digital-signature.js?v=20261006-03"></script>
 <script>
 window.SEDCO_REVIEWER = <?= json_encode([
     'id' => (int) ($user['id'] ?? 0),
