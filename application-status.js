@@ -250,12 +250,19 @@
     });
 
     $('modalFields').innerHTML = entries.length
-      ? entries.map(([key, value]) => `
-          <div class="detail-field">
-            <span>${escapeHtml(humanizeKey(key))}</span>
-            <strong>${escapeHtml(Array.isArray(value) ? value.join(', ') : value)}</strong>
-          </div>
-        `).join('')
+      ? entries.map(([key, value]) => {
+          const display = Array.isArray(value) ? value.join(', ') : String(value ?? '');
+          const isSignature = /^data:image\/png;base64,/i.test(display);
+
+          return `
+            <div class="detail-field">
+              <span>${escapeHtml(humanizeKey(key))}</span>
+              ${isSignature
+                ? `<strong class="application-signature-preview"><img src="${escapeHtml(display)}" alt="Digital signature"></strong>`
+                : `<strong>${escapeHtml(display)}</strong>`}
+            </div>
+          `;
+        }).join('')
       : '<div class="detail-empty">No additional form details available.</div>';
 
     bootstrap.Modal.getOrCreateInstance($('applicationModal')).show();
