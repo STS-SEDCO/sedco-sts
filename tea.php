@@ -278,28 +278,29 @@ $autoEvaluationPeriod = match ($evaluationMonthNumber) {
       <section class="tea-system-card tea-system-assessment-card">
         <div class="tea-system-section-heading">
           <span class="tea-system-section-number">03</span>
-          <div><strong>Assessment Criteria</strong><small>Rate each training using the five official criteria. Add extra columns when required.</small></div>
+          <div><strong>Assessment Criteria</strong><small>Select an employee above, then rate each completed course from 1 to 4.</small></div>
           <span class="tea-system-owner-chip"><i class="bi bi-pencil-square"></i> Your section</span>
         </div>
         <div class="tea-system-card-body">
-          <div class="tea-system-table-tools tea-system-table-tools-auto no-print">
-            <div class="tea-auto-course-note"><i class="bi bi-lightning-charge"></i><span>Courses load automatically from the selected employee's BPL + PKK records.</span></div>
-            <div class="tea-system-add-column">
-              <input type="text" data-new-criterion placeholder="New column name" <?= !$evaluationOpen ? 'disabled' : '' ?>>
-              <button type="button" class="tea-system-tool-btn" data-add-criterion <?= !$evaluationOpen ? 'disabled' : '' ?>><i class="bi bi-layout-three-columns"></i> Add Column</button>
+          <div class="tea-assessment-selected no-print" data-assessment-selected hidden>
+            <div class="tea-assessment-selected-icon"><i class="bi bi-person-check"></i></div>
+            <div>
+              <span>Employee selected</span>
+              <strong data-assessment-employee>—</strong>
+              <small data-assessment-course-count>0 courses ready for evaluation</small>
             </div>
           </div>
           <div class="tea-system-table-note no-print">
             <i class="bi bi-info-circle"></i>
-            <span>Just enter the scores. Training titles are locked to completed BPL + PKK records. Extra columns remain optional.</span>
+            <span>Each score must be between 1 and 4. Total Score and Competency Level are calculated automatically.</span>
           </div>
           <div class="tea-system-table-wrap">
             <table class="tea-official-table tea-system-table" data-tea-table>
               <thead>
-                <tr data-main-head>
+                <tr>
                   <th rowspan="2" class="tea-col-training">Training Title</th>
                   <th colspan="5" class="tea-criteria-group" data-criteria-group>Criteria</th>
-                  <th rowspan="2" class="tea-col-total" data-total-head>Total Score</th>
+                  <th rowspan="2" class="tea-col-total">Total Score</th>
                   <th rowspan="2" class="tea-col-level">Competency Level</th>
                   <th rowspan="2" class="tea-col-comments">Other Improvements / Comments</th>
                 </tr>
@@ -454,28 +455,19 @@ window.SEDCO_FORM_CONTEXT = { role: <?= json_encode($user['role'] ?? 'staff') ?>
 
   const table = form.querySelector('[data-tea-table]');
   const body = form.querySelector('[data-training-body]');
-  const mainHead = form.querySelector('[data-main-head]');
   const criteriaHead = form.querySelector('[data-criteria-head]');
   const criteriaGroup = form.querySelector('[data-criteria-group]');
-  const totalHead = form.querySelector('[data-total-head]');
-  const addCriterionBtn = form.querySelector('[data-add-criterion]');
-  const criterionNameInput = form.querySelector('[data-new-criterion]');
   const picker = document.getElementById('teaEligibleEmployee');
   const parentInput = document.getElementById('teaParentApplicationId');
   const divisionInput = document.getElementById('teaSelectedDivision');
   const meta = document.querySelector('[data-selected-training-meta]');
   const courseCountOutput = document.querySelector('[data-selected-course-count]');
+  const assessmentSelected = form.querySelector('[data-assessment-selected]');
+  const assessmentEmployee = form.querySelector('[data-assessment-employee]');
+  const assessmentCourseCount = form.querySelector('[data-assessment-course-count]');
   const groups = Array.isArray(window.TEA_ELIGIBLE_GROUPS) ? window.TEA_ELIGIBLE_GROUPS : [];
 
-  let extraCriteria = [];
   let activeScore = null;
-
-  const syncTableWidth = () => {
-    if (!table) return;
-    const baseWidth = 1080;
-    const extraWidth = 130;
-    table.style.minWidth = String(baseWidth + (extraCriteria.length * extraWidth)) + 'px';
-  };
 
   const levelFor = total => {
     if (total <= 7) return 'Fail';
@@ -554,20 +546,19 @@ window.SEDCO_FORM_CONTEXT = { role: <?= json_encode($user['role'] ?? 'staff') ?>
     calculateRow(row);
   };
 
-  const buildExtraScoreCell = rowIndex => {
-    const td = document.createElement('td');
-    td.className = 'tea-extra-score-cell';
-    td.innerHTML = '<input type="number" name="extra_score_'+rowIndex+'[]" min="1" max="4" step="1" inputmode="numeric" class="tea-score tea-score-extra" placeholder="1-4" aria-label="Additional criterion score">';
-    return td;
-  };
-
   const makeTrainingRow = (course, rowIndex) => {
     const tr = document.createElement('tr');
     tr.dataset.trainingRow = String(rowIndex);
     tr.dataset.parentId = String(course.parent_id || '');
 
     const standardScoreCells = Array.from({ length: 5 }, (_, criterionIndex) =>
-      '<td><input type="number" name="score_'+rowIndex+'[]" min="1" max="4" step="1" inputmode="numeric" class="tea-score tea-score-standard" required placeholder="1-4" aria-label="Criteria score '+(criterionIndex+1)+'"></td>'
+      '<td><select name="score_'+rowIndex+'[]" class="tea-score tea-score-standard" required aria-label="Criteria score '+(criterionIndex+1)+'">'+
+        '<option value="">—</option>'+
+        '<option value="1">1</option>'+
+        '<option value="2">2</option>'+
+        '<option value="3">3</option>'+
+        '<option value="4">4</option>'+
+      '</select></td>'
     ).join('');
 
     tr.innerHTML =
@@ -592,11 +583,6 @@ window.SEDCO_FORM_CONTEXT = { role: <?= json_encode($user['role'] ?? 'staff') ?>
         .join(' · ');
     }
 
-    const totalCell = tr.querySelector('.tea-total')?.closest('td');
-    extraCriteria.forEach(() => {
-      if (totalCell) totalCell.before(buildExtraScoreCell(rowIndex));
-    });
-
     bindRow(tr);
     return tr;
   };
@@ -611,7 +597,7 @@ window.SEDCO_FORM_CONTEXT = { role: <?= json_encode($user['role'] ?? 'staff') ?>
       const empty = document.createElement('tr');
       empty.className = 'tea-empty-training-row';
       empty.innerHTML =
-        '<td colspan="'+String(9 + extraCriteria.length)+'">'+
+        '<td colspan="'+'9'+'">'+
           '<div class="tea-empty-training-state">'+
             '<i class="bi bi-person-check"></i>'+
             '<strong>Select an employee above</strong>'+
@@ -624,6 +610,9 @@ window.SEDCO_FORM_CONTEXT = { role: <?= json_encode($user['role'] ?? 'staff') ?>
       if (divisionInput) divisionInput.value = '';
       if (meta) meta.hidden = true;
       if (courseCountOutput) courseCountOutput.textContent = '0';
+      if (assessmentSelected) assessmentSelected.hidden = true;
+      if (assessmentEmployee) assessmentEmployee.textContent = '—';
+      if (assessmentCourseCount) assessmentCourseCount.textContent = '0 courses ready for evaluation';
       return;
     }
 
@@ -635,6 +624,9 @@ window.SEDCO_FORM_CONTEXT = { role: <?= json_encode($user['role'] ?? 'staff') ?>
     if (divisionInput) divisionInput.value = String(group?.division || '');
     if (meta) meta.hidden = false;
     if (courseCountOutput) courseCountOutput.textContent = String(courses.length);
+    if (assessmentSelected) assessmentSelected.hidden = false;
+    if (assessmentEmployee) assessmentEmployee.textContent = String(group?.employee_name || '—');
+    if (assessmentCourseCount) assessmentCourseCount.textContent = String(courses.length) + ' course' + (courses.length === 1 ? '' : 's') + ' ready for evaluation';
   };
 
   const selectedGroup = () => {
@@ -643,95 +635,7 @@ window.SEDCO_FORM_CONTEXT = { role: <?= json_encode($user['role'] ?? 'staff') ?>
     return groups.find(group => Number(group.user_id) === userId) || null;
   };
 
-  const addCriterion = name => {
-    name = String(name || '').trim();
-    if (!name) return;
-
-    extraCriteria.push(name);
-    syncTableWidth();
-
-    const th = document.createElement('th');
-    th.rowSpan = 2;
-    th.className = 'tea-extra-criterion-head tea-extra-main-head';
-    th.innerHTML = '<span></span><button type="button" class="no-print" title="Remove column" aria-label="Remove criterion"><i class="bi bi-x-lg"></i></button>';
-    th.querySelector('span').textContent = name;
-    if (totalHead) totalHead.before(th);
-    else mainHead?.appendChild(th);
-
-    const hidden = document.createElement('input');
-    hidden.type = 'hidden';
-    hidden.name = 'extra_criteria[]';
-    hidden.value = name;
-    hidden.dataset.extraCriterion = name;
-    form.appendChild(hidden);
-
-    body.querySelectorAll('[data-training-row]').forEach(row => {
-      const totalCell = row.querySelector('.tea-total')?.closest('td');
-      if (totalCell) totalCell.before(buildExtraScoreCell(row.dataset.trainingRow || '0'));
-      bindRow(row);
-    });
-
-    // The five official criteria stay grouped under the fixed "Criteria" header.
-    // Extra columns are top-level table columns, so the Criteria colspan stays at 5.
-    criteriaGroup.colSpan = 5;
-
-    // Keep the empty-state row aligned with the full table whenever a
-    // dynamic criterion is added before an employee/course is selected.
-    const emptyCell = body.querySelector('.tea-empty-training-row td');
-    if (emptyCell) emptyCell.colSpan = 9 + extraCriteria.length;
-
-    th.querySelector('button')?.addEventListener('click', () => {
-      const extraIndex = [...mainHead.querySelectorAll('.tea-extra-criterion-head')].indexOf(th);
-      if (extraIndex < 0) return;
-
-      th.remove();
-
-      body.querySelectorAll('[data-training-row]').forEach(row => {
-        row.querySelectorAll('.tea-extra-score-cell')[extraIndex]?.remove();
-      });
-
-      [...form.querySelectorAll('input[name="extra_criteria[]"]')][extraIndex]?.remove();
-      extraCriteria.splice(extraIndex, 1);
-      syncTableWidth();
-      criteriaGroup.colSpan = 5;
-
-      const emptyCell = body.querySelector('.tea-empty-training-row td');
-      if (emptyCell) emptyCell.colSpan = 9 + extraCriteria.length;
-    });
-  };
-
   picker?.addEventListener('change', () => renderCourses(selectedGroup()));
-
-  form.querySelectorAll('[data-tea-rating]').forEach(button => {
-    button.addEventListener('click', () => {
-      if (!activeScore) activeScore = form.querySelector('.tea-score-standard');
-      if (!activeScore) return;
-
-      activeScore.value = String(button.dataset.teaRating || '');
-      activeScore.dispatchEvent(new Event('input', { bubbles:true }));
-
-      form.querySelectorAll('[data-tea-rating]').forEach(other => {
-        other.classList.toggle('is-selected', other === button);
-      });
-
-      activeScore.focus();
-    });
-  });
-
-  addCriterionBtn?.addEventListener('click', () => {
-    addCriterion(criterionNameInput?.value);
-    if (criterionNameInput) {
-      criterionNameInput.value = '';
-      criterionNameInput.focus();
-    }
-  });
-
-  criterionNameInput?.addEventListener('keydown', event => {
-    if (event.key === 'Enter') {
-      event.preventDefault();
-      addCriterionBtn?.click();
-    }
-  });
 
   form.addEventListener('submit', event => {
     const rows = [...body.querySelectorAll('[data-training-row]')];
@@ -767,7 +671,6 @@ window.SEDCO_FORM_CONTEXT = { role: <?= json_encode($user['role'] ?? 'staff') ?>
     if (option) option.selected = true;
   }
 
-  syncTableWidth();
   renderCourses(selectedGroup());
 })();
 </script>
@@ -819,16 +722,8 @@ window.SEDCO_FORM_CONTEXT = { role: <?= json_encode($user['role'] ?? 'staff') ?>
       return clone.textContent.replace(/\s+/g,' ').trim();
     }).filter(Boolean);
 
-    const extraColumnNames = [...form.querySelectorAll('[data-main-head] .tea-extra-criterion-head')].map(th => {
-      const clone = th.cloneNode(true);
-      clone.querySelectorAll('button').forEach(btn => btn.remove());
-      return clone.textContent.replace(/\s+/g,' ').trim();
-    }).filter(Boolean);
-
     const printGroup = sheet.querySelector('[data-print-criteria-group]');
     const printHead = sheet.querySelector('[data-print-criteria-head]');
-    const printMainHead = sheet.querySelector('[data-print-main-head]');
-    const printTotalHead = sheet.querySelector('[data-print-total-head]');
     const printBody = sheet.querySelector('[data-print-training-body]');
     const printTable = sheet.querySelector('[data-print-assessment]');
 
@@ -843,26 +738,13 @@ window.SEDCO_FORM_CONTEXT = { role: <?= json_encode($user['role'] ?? 'staff') ?>
       });
     }
 
-    if (printMainHead) {
-      printMainHead.querySelectorAll('.tea-print-extra-head').forEach(th => th.remove());
-      extraColumnNames.forEach(name => {
-        const th = document.createElement('th');
-        th.rowSpan = 2;
-        th.className = 'tea-print-extra-head';
-        th.textContent = name;
-        if (printTotalHead) printTotalHead.before(th);
-        else printMainHead.appendChild(th);
-      });
-    }
-
     if (printBody) {
       printBody.innerHTML = '';
       [...form.querySelectorAll('[data-training-row]')].forEach(row => {
         const tr = document.createElement('tr');
         const title = row.querySelector('input[name^="training_title_"]')?.value?.trim() || '';
         const standardScores = [...row.querySelectorAll('.tea-score-standard')].map(input => input.value || '');
-        const extraScores = [...row.querySelectorAll('.tea-score-extra')].map(input => input.value || '');
-        const scores = [...standardScores, ...extraScores];
+        const scores = standardScores;
         const total = row.querySelector('.tea-total')?.value || '';
         const level = row.querySelector('input[name^="competency_level_"]')?.value
           || row.querySelector('[data-level-output]')?.textContent?.trim()
@@ -882,9 +764,8 @@ window.SEDCO_FORM_CONTEXT = { role: <?= json_encode($user['role'] ?? 'staff') ?>
     }
 
     if (printTable) {
-      printTable.classList.toggle('has-extra-columns', extraColumnNames.length > 0);
+      printTable.classList.remove('has-extra-columns');
       printTable.dataset.criteriaCount = String(criteriaNames.length);
-      printTable.dataset.extraColumnCount = String(extraColumnNames.length);
     }
   };
 
