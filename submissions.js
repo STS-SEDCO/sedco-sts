@@ -2,6 +2,7 @@
   const STORAGE_KEY = 'sedcoApplications';
   let submissions = [];
   let filter = 'all';
+  const reviewer = window.SEDCO_REVIEWER || {};
 
   const $ = id => document.getElementById(id);
 
@@ -144,7 +145,8 @@
 
     return submissions.filter(item => {
       const status = item.status || 'pending';
-      if (filter !== 'all' && status !== filter) return false;
+      if (filter === 'overdue' && item.overdue !== true) return false;
+      if (!['all','overdue'].includes(filter) && status !== filter) return false;
       if (stage !== 'all' && String(item.currentStage || '') !== stage) return false;
       if (department !== 'all' && String(item.department || '') !== department) return false;
 
@@ -183,10 +185,18 @@
     if (!tbody || !empty) return;
 
     const rows = filteredRows();
+    const resultCount = $('submissionResultCount');
+    if (resultCount) resultCount.textContent = String(rows.length);
 
     if (!rows.length) {
       tbody.innerHTML = '';
       empty.classList.remove('d-none');
+      const heading = empty.querySelector('h3');
+      const copy = empty.querySelector('p');
+      if (heading) heading.textContent = submissions.length ? 'No applications match your filters' : 'No approvals waiting';
+      if (copy) copy.textContent = submissions.length
+        ? 'Try resetting the filters or changing your search.'
+        : 'There are currently no BPL applications waiting for your review.';
       return;
     }
 
@@ -440,9 +450,22 @@
     </div>`;
   }
 
+  function todayMalaysia() {
+    const parts = new Intl.DateTimeFormat('en-CA', {
+      timeZone:'Asia/Kuala_Lumpur',
+      year:'numeric',
+      month:'2-digit',
+      day:'2-digit'
+    }).formatToParts(new Date());
+    const map = Object.fromEntries(parts.map(part => [part.type, part.value]));
+    return map.year + '-' + map.month + '-' + map.day;
+  }
+
   function stageReviewFields(item, decision) {
     const stage = String(item.currentStage || '').toLowerCase();
     const correction = decision === 'correction';
+    const reviewerName = String(reviewer.name || '');
+    const reviewDate = todayMalaysia();
 
     if (stage === 'training') {
       if (correction) {
@@ -459,8 +482,8 @@
           type:'textarea',
           placeholder:'Masukkan ulasan semakan'
         }),
-        textField('tarikh_latihan', 'Tarikh', fieldValue(item,'tarikh_latihan'), { type:'date' }),
-        textField('tt_latihan', 'Tandatangan / Nama Pegawai', fieldValue(item,'tt_latihan'))
+        textField('tarikh_latihan', 'Tarikh', fieldValue(item,'tarikh_latihan') || reviewDate, { type:'date' }),
+        textField('tt_latihan', 'Pengesahan Pegawai', fieldValue(item,'tt_latihan') || reviewerName, { placeholder:'Nama pegawai yang menyemak' })
       ].join('');
     }
 
@@ -479,22 +502,22 @@
           type:'textarea',
           placeholder:'Masukkan ulasan semakan'
         }),
-        textField('tarikh_bahagian', 'Tarikh', fieldValue(item,'tarikh_bahagian'), { type:'date' }),
-        textField('tt_bahagian', 'Tandatangan / Nama HOD', fieldValue(item,'tt_bahagian'))
+        textField('tarikh_bahagian', 'Tarikh', fieldValue(item,'tarikh_bahagian') || reviewDate, { type:'date' }),
+        textField('tt_bahagian', 'Pengesahan HOD', fieldValue(item,'tt_bahagian') || reviewerName, { placeholder:'Nama HOD' })
       ].join('');
     }
 
     if (stage === 'gm') {
       return [
-        textField('tarikh_pgs', 'Tarikh keputusan GM', fieldValue(item,'tarikh_pgs'), { type:'date' }),
-        textField('tt_pgs', 'Tandatangan / Nama GM', fieldValue(item,'tt_pgs'))
+        textField('tarikh_pgs', 'Tarikh keputusan GM', fieldValue(item,'tarikh_pgs') || reviewDate, { type:'date' }),
+        textField('tt_pgs', 'Pengesahan GM', fieldValue(item,'tt_pgs') || reviewerName, { placeholder:'Nama General Manager' })
       ].join('');
     }
 
     if (stage === 'chairman') {
       return [
-        textField('tarikh_sedco', 'Tarikh keputusan Pengerusi', fieldValue(item,'tarikh_sedco'), { type:'date' }),
-        textField('tt_sedco', 'Tandatangan / Nama Pengerusi', fieldValue(item,'tt_sedco'))
+        textField('tarikh_sedco', 'Tarikh keputusan Pengerusi', fieldValue(item,'tarikh_sedco') || reviewDate, { type:'date' }),
+        textField('tt_sedco', 'Pengesahan Pengerusi', fieldValue(item,'tt_sedco') || reviewerName, { placeholder:'Nama Pengerusi' })
       ].join('');
     }
 
@@ -547,6 +570,22 @@
     $('quickReviewStage').textContent = stage.label;
     $('quickReviewFields').innerHTML = stageReviewFields(item, decision);
     $('quickReviewComment').value = '';
+    const commentLabel = document.querySelector('label[for="quickReviewComment"]');
+    if (commentLabel) {
+      if (decision === 'rejected') {
+        commentLabel.innerHTML = 'Reason for rejection <b>*</b>';
+        $('quickReviewComment').required = true;
+        $('quickReviewComment').placeholder = 'Explain clearly why the application is being rejected';
+      } else if (decision === 'correction') {
+        commentLabel.innerHTML = 'Additional note <span>Optional</span>';
+        $('quickReviewComment').required = false;
+        $('quickReviewComment').placeholder = 'Optional note in addition to the correction instructions above';
+      } else {
+        commentLabel.innerHTML = 'Additional review note <span>Optional</span>';
+        $('quickReviewComment').required = false;
+        $('quickReviewComment').placeholder = 'Add a short note for this decision if needed';
+      }
+    }
     $('quickReviewHint').textContent = decisionMeta.hint;
     $('quickReviewDecisionBadge').className = 'quick-review-decision ' + decisionMeta.cls;
     $('quickReviewDecisionBadge').innerHTML = `<i class="bi ${decisionMeta.icon}"></i><span>${decisionMeta.label}</span>`;
@@ -592,6 +631,16 @@
         return;
       }
 
+      const decision = $('quickReviewDecision')?.value || '';
+      const reviewComment = $('quickReviewComment');
+      if (decision === 'rejected' && !String(reviewComment?.value || '').trim()) {
+        event.preventDefault();
+        reviewComment?.focus();
+        reviewComment?.classList.add('is-invalid');
+        return;
+      }
+
+      reviewComment?.classList.remove('is-invalid');
       submit.disabled = true;
       submit.innerHTML = '<span class="spinner-border spinner-border-sm" aria-hidden="true"></span> Saving...';
     });
@@ -618,6 +667,19 @@
     $('submissionStage')?.addEventListener('change', render);
     $('submissionDepartment')?.addEventListener('change', render);
     $('submissionDate')?.addEventListener('change', render);
+
+    $('submissionReset')?.addEventListener('click', () => {
+      filter = 'all';
+      document.querySelectorAll('[data-submission-filter]').forEach(button => {
+        button.classList.toggle('active', button.dataset.submissionFilter === 'all');
+      });
+      if ($('submissionStage')) $('submissionStage').value = 'all';
+      if ($('submissionDepartment')) $('submissionDepartment').value = 'all';
+      if ($('submissionDate')) $('submissionDate').value = '';
+      if ($('submissionSearch')) $('submissionSearch').value = '';
+      render();
+      $('submissionSearch')?.focus();
+    });
 
     document.querySelectorAll('[data-submission-filter]').forEach(button => {
       button.addEventListener('click', () => setFilter(button.dataset.submissionFilter));
