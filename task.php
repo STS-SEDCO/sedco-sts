@@ -16,6 +16,7 @@ $teaEvaluationMonth = (int) (
 )->format('n');
 $teaEvaluationOpen = in_array($teaEvaluationMonth, [1, 6, 7, 12], true);
 $canTea = $role === 'head_of_department' && $teaEvaluationOpen;
+$canPkk = false;
 
 $userId = (int) ($user['id'] ?? 0);
 $department = trim((string) ($user['department'] ?? ''));
@@ -37,6 +38,7 @@ if (in_array($role, $applicantRoles, true)) {
            AND b.form_type = "BPL"
            AND b.status = "approved"
            AND b.training_end IS NOT NULL
+           AND b.training_end <= CURDATE()
          ORDER BY b.training_end DESC'
     );
     $ownStmt->bind_param('i', $userId);
@@ -45,6 +47,7 @@ if (in_array($role, $applicantRoles, true)) {
 
     while ($row = $ownResult->fetch_assoc()) {
         if (!(int) $row['has_followup']) {
+            $canPkk = true;
             $row['follow_type'] = 'PKK';
             $followupItems[] = $row;
         }
@@ -99,8 +102,8 @@ if ($role === 'head_of_department') {
   <title>Smart Training System: Training Forms</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-  <link rel="stylesheet" href="sedco-saas.css?v=20260930-50">
-  <link rel="stylesheet" href="sedco-shell.css?v=20260930-56">
+  <link rel="stylesheet" href="sedco-saas.css?v=20261006-10">
+  <link rel="stylesheet" href="sedco-shell.css?v=20261006-01">
 </head>
 <body class="app-page task-page" data-page="task" data-role="<?= e(normalized_role($user['role'] ?? '')) ?>">
 
@@ -138,19 +141,19 @@ if ($role === 'head_of_department') {
         </div>
       </article>
 
-      <article class="task-form-card<?= $canStaffForms ? '' : ' task-form-card-locked' ?>">
+      <article class="task-form-card<?= $canPkk ? '' : ' task-form-card-locked' ?>">
         <div class="task-card-top">
           <span class="task-form-icon"><i class="bi bi-clipboard2-check"></i></span>
           <span class="task-form-code">PKK</span>
         </div>
         <div class="task-form-copy">
           <h2>Penilaian Keberkesanan Kursus</h2>
-          <p>Complete the course effectiveness evaluation after attending training.</p>
+          <p>Complete PKK only for your approved BPL training after the course has ended.</p>
         </div>
         <div class="task-card-footer">
-          <span class="task-card-status"><?= $canStaffForms ? '<i class="bi bi-circle-fill"></i> Ready to apply' : '<i class="bi bi-lock-fill"></i> Applicant access' ?></span>
-          <?php if ($canStaffForms): ?>
-          <a href="pkk.php" class="task-apply-btn">Apply now <i class="bi bi-arrow-up-right"></i></a>
+          <span class="task-card-status"><?= $canPkk ? '<i class="bi bi-circle-fill"></i> Approved BPL available' : '<i class="bi bi-lock-fill"></i> Requires approved BPL' ?></span>
+          <?php if ($canPkk): ?>
+          <a href="pkk.php" class="task-apply-btn">Fill PKK <i class="bi bi-arrow-up-right"></i></a>
           <?php else: ?>
           <span class="task-apply-btn task-apply-btn-locked"><i class="bi bi-lock-fill"></i> Locked</span>
           <?php endif; ?>
