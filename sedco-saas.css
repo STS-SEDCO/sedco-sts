@@ -18737,3 +18737,96 @@ body.application-detail-page .application-signature-preview img{display:block;ma
 .status-page .application-correction-note span{
   display:-webkit-box;overflow:hidden;-webkit-line-clamp:2;-webkit-box-orient:vertical;
 }
+
+/* ===== BPL AUTO REVIEW / REGISTRATION DATES V11 ===== */
+.bpl-page .bpl-auto-date-field{
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+}
+.bpl-page .bpl-auto-date-field input[type="date"]{
+  width:min(260px,100%);
+  min-height:42px;
+  border:1px solid #dfe1e5;
+  border-radius:10px;
+  background:#f8f9fa;
+  color:#3d4148;
+  font-size:12px;
+  font-weight:680;
+}
+.bpl-page .bpl-auto-date-field small{
+  display:flex;
+  align-items:center;
+  gap:5px;
+  color:#8a8d94;
+  font-size:9.5px;
+  line-height:1.4;
+}
+.bpl-page .bpl-auto-date-field small i{
+  color:#8f1010;
+}
+.bpl-page .bpl-registration-review{
+  display:flex;
+  align-items:flex-end;
+  justify-content:space-between;
+  gap:18px;
+  flex-wrap:wrap;
+}
+.bpl-page .bpl-registration-choice{
+  display:flex;
+  align-items:center;
+  gap:16px;
+  min-height:42px;
+}
+.bpl-page .bpl-registration-date{
+  min-width:230px;
+  flex:0 1 300px;
+  display:flex;
+  flex-direction:column;
+  gap:5px;
+  margin:0;
+}
+.bpl-page .bpl-registration-date>span{
+  color:#555960;
+  font-size:10px;
+  font-weight:760;
+}
+.bpl-page .bpl-registration-date input{
+  width:100%;
+  min-height:42px;
+  border:1px solid #dfe1e5;
+  border-radius:10px;
+  background:#f8f9fa;
+  color:#3d4148;
+  font-size:12px;
+  font-weight:680;
+}
+.bpl-page .bpl-registration-date small{
+  color:#8a8d94;
+  font-size:9px;
+  line-height:1.35;
+}
+.bpl-page input[data-auto-review-date][readonly],
+.bpl-page input[data-registration-date][readonly]{
+  cursor:default;
+}
+.submissions-page .quick-review-field input[readonly]{
+  background:#f7f8fa!important;
+  color:#555861!important;
+  cursor:default;
+}
+@media(max-width:760px){
+  .bpl-page .bpl-registration-review{
+    align-items:stretch;
+    flex-direction:column;
+    gap:10px;
+  }
+  .bpl-page .bpl-registration-date{
+    min-width:0;
+    width:100%;
+    flex-basis:auto;
+  }
+  .bpl-page .bpl-auto-date-field input[type="date"]{
+    width:100%;
+  }
+}
