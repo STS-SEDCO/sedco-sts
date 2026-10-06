@@ -123,7 +123,7 @@ $formAction = $isEditMode ? 'update_pkk.php' : 'submit_application.php?type=PKK'
   <title>Smart Training System: Borang Penilaian</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-  <link rel="stylesheet" href="sedco-saas.css?v=20261003-04">
+  <link rel="stylesheet" href="sedco-saas.css?v=20261006-09">
   <link rel="stylesheet" href="sedco-shell.css?v=20260930-56">
 </head>
 <body class="app-page form-page pkk-page" data-page="task" data-role="<?= e(normalized_role($user['role'] ?? '')) ?>">
@@ -298,11 +298,22 @@ $formAction = $isEditMode ? 'update_pkk.php' : 'submit_application.php?type=PKK'
         <div class="row g-3 pkk-confirmation-grid">
           <div class="col-md-6">
             <label class="form-label fw-semibold"><i class="bi bi-pen"></i> Tandatangan</label>
-            <input type="text" class="form-control" name="tandatangan" required>
+            <div class="sts-digital-signature" data-digital-signature data-signature-required="1">
+              <div class="sts-signature-pad" data-signature-pad tabindex="0" aria-label="Tandatangan digital">
+                <canvas width="900" height="220" data-signature-canvas></canvas>
+                <div class="sts-signature-placeholder" data-signature-placeholder>Tandatangan di sini</div>
+              </div>
+              <input type="hidden" name="tandatangan" data-signature-value>
+              <div class="sts-signature-actions no-print">
+                <span><i class="bi bi-shield-check"></i> Digital signature</span>
+                <button type="button" data-signature-clear><i class="bi bi-eraser"></i> Clear</button>
+              </div>
+              <div class="sts-signature-error" data-signature-error hidden>Sila tandatangan sebelum hantar.</div>
+            </div>
           </div>
           <div class="col-md-6">
             <label class="form-label fw-semibold"><i class="bi bi-calendar-check"></i> Tarikh</label>
-            <input type="date" class="form-control" name="tarikh_penilaian" required>
+            <input type="date" class="form-control pkk-auto-field" name="tarikh_penilaian" required readonly value="<?= e($malaysiaToday) ?>">
           </div>
         </div>
         </section>
@@ -372,8 +383,9 @@ window.SEDCO_PKK_DATA = <?= json_encode(
 window.SEDCO_FORM_CONTEXT = { role: <?= json_encode($user['role'] ?? 'staff') ?>, mode: <?= json_encode($isEditMode ? 'edit' : 'new') ?>, formType: 'PKK' };
 </script>
 <script src="form-permissions.js?v=20261003-06"></script>
-<script src="form-ux.js?v=20261001-09"></script>
+<script src="digital-signature.js?v=20261006-01"></script>
+<script src="form-ux.js?v=20261006-05"></script>
 <script src="form-enhancements.js?v=20260930-59"></script>
-<script src="sedco-shell.js?v=20260930-56"></script>
+<script src="sedco-shell.js?v=20261006-01"></script>
 </body>
 </html>
