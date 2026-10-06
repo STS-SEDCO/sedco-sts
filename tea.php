@@ -633,6 +633,11 @@ window.SEDCO_FORM_CONTEXT = { role: <?= json_encode($user['role'] ?? 'staff') ?>
 
     criteriaGroup.colSpan = 5 + extraCriteria.length;
 
+    // Keep the empty-state row aligned with the full table whenever a
+    // dynamic criterion is added before an employee/course is selected.
+    const emptyCell = body.querySelector('.tea-empty-training-row td');
+    if (emptyCell) emptyCell.colSpan = 9 + extraCriteria.length;
+
     th.querySelector('button')?.addEventListener('click', () => {
       const extraIndex = [...criteriaHead.querySelectorAll('.tea-extra-criterion-head')].indexOf(th);
       if (extraIndex < 0) return;
