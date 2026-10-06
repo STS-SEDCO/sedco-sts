@@ -576,6 +576,21 @@
     $('quickReviewApplicant').textContent = item.applicant || 'Not available';
     $('quickReviewStage').textContent = stage.label;
     $('quickReviewFields').innerHTML = stageReviewFields(item, decision);
+
+    if (String(item.currentStage || '').toLowerCase() === 'finance') {
+      const registrationDate = $('quickReviewFields')?.querySelector('[name="tarikh_didaftar"]');
+      const registrationChoices = [...($('quickReviewFields')?.querySelectorAll('[name="telah_didaftar"]') || [])];
+
+      const syncRegistrationDate = () => {
+        if (!registrationDate) return;
+        const selected = registrationChoices.find(control => control.checked)?.value || '';
+        registrationDate.value = selected === 'Ya' ? todayMalaysia() : '';
+      };
+
+      registrationChoices.forEach(control => control.addEventListener('change', syncRegistrationDate));
+      syncRegistrationDate();
+    }
+
     $('quickReviewComment').value = '';
     const commentLabel = document.querySelector('label[for="quickReviewComment"]');
     if (commentLabel) {
