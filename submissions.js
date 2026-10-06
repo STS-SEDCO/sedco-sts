@@ -304,7 +304,8 @@
     tt_sedco:'Pengesahan Pengerusi',
     bayaran_kursus:'Bayaran Kursus',
     pendahuluan_diterima:'Pendahuluan Diterima',
-    telah_didaftar:'Status Pendaftaran'
+    telah_didaftar:'Status Pendaftaran',
+    tarikh_didaftar:'Tarikh Didaftarkan'
   };
 
   function detailLabel(key) {
@@ -346,7 +347,7 @@
       'ulasan_bahagian','tarikh_bahagian','tt_bahagian',
       'kelulusan_pgs','tarikh_pgs','tt_pgs',
       'kelulusan_sedco','tarikh_sedco','tt_sedco',
-      'bayaran_kursus','pendahuluan_diterima','telah_didaftar'
+      'bayaran_kursus','pendahuluan_diterima','telah_didaftar','tarikh_didaftar'
     ].includes(key);
   }
 
@@ -430,9 +431,10 @@
     const required = options.required !== false;
     const type = options.type || 'text';
     const placeholder = options.placeholder || '';
+    const readonly = options.readonly === true;
     const input = type === 'textarea'
-      ? `<textarea name="${escapeHtml(name)}" rows="4" ${required ? 'required' : ''} placeholder="${escapeHtml(placeholder)}">${escapeHtml(value)}</textarea>`
-      : `<input type="${escapeHtml(type)}" name="${escapeHtml(name)}" value="${escapeHtml(value)}" ${required ? 'required' : ''} placeholder="${escapeHtml(placeholder)}">`;
+      ? `<textarea name="${escapeHtml(name)}" rows="4" ${required ? 'required' : ''} ${readonly ? 'readonly' : ''} placeholder="${escapeHtml(placeholder)}">${escapeHtml(value)}</textarea>`
+      : `<input type="${escapeHtml(type)}" name="${escapeHtml(name)}" value="${escapeHtml(value)}" ${required ? 'required' : ''} ${readonly ? 'readonly' : ''} placeholder="${escapeHtml(placeholder)}">`;
 
     return `<label class="quick-review-field">
       <span>${escapeHtml(label)}${required ? ' <b>*</b>' : ''}</span>
@@ -482,7 +484,7 @@
           type:'textarea',
           placeholder:'Masukkan ulasan semakan'
         }),
-        textField('tarikh_latihan', 'Tarikh', fieldValue(item,'tarikh_latihan') || reviewDate, { type:'date' }),
+        textField('tarikh_latihan', 'Tarikh', reviewDate, { type:'date', readonly:true }),
         textField('tt_latihan', 'Pengesahan Pegawai', fieldValue(item,'tt_latihan') || reviewerName, { placeholder:'Nama pegawai yang menyemak' })
       ].join('');
     }
@@ -502,21 +504,21 @@
           type:'textarea',
           placeholder:'Masukkan ulasan semakan'
         }),
-        textField('tarikh_bahagian', 'Tarikh', fieldValue(item,'tarikh_bahagian') || reviewDate, { type:'date' }),
+        textField('tarikh_bahagian', 'Tarikh', reviewDate, { type:'date', readonly:true }),
         textField('tt_bahagian', 'Pengesahan HOD', fieldValue(item,'tt_bahagian') || reviewerName, { placeholder:'Nama HOD' })
       ].join('');
     }
 
     if (stage === 'gm') {
       return [
-        textField('tarikh_pgs', 'Tarikh keputusan GM', fieldValue(item,'tarikh_pgs') || reviewDate, { type:'date' }),
+        textField('tarikh_pgs', 'Tarikh keputusan GM', reviewDate, { type:'date', readonly:true }),
         textField('tt_pgs', 'Pengesahan GM', fieldValue(item,'tt_pgs') || reviewerName, { placeholder:'Nama General Manager' })
       ].join('');
     }
 
     if (stage === 'chairman') {
       return [
-        textField('tarikh_sedco', 'Tarikh keputusan Pengerusi', fieldValue(item,'tarikh_sedco') || reviewDate, { type:'date' }),
+        textField('tarikh_sedco', 'Tarikh keputusan Pengerusi', reviewDate, { type:'date', readonly:true }),
         textField('tt_sedco', 'Pengesahan Pengerusi', fieldValue(item,'tt_sedco') || reviewerName, { placeholder:'Nama Pengerusi' })
       ].join('');
     }
@@ -527,7 +529,12 @@
           placeholder:'Contoh: 350.00'
         }),
         choiceField('pendahuluan_diterima', 'Permohonan Pendahuluan Diterima', fieldValue(item,'pendahuluan_diterima')),
-        choiceField('telah_didaftar', 'Telah Didaftarkan', fieldValue(item,'telah_didaftar'))
+        choiceField('telah_didaftar', 'Telah Didaftarkan', fieldValue(item,'telah_didaftar')),
+        textField('tarikh_didaftar', 'Tarikh Didaftarkan', reviewDate, {
+          type:'date',
+          required:false,
+          readonly:true
+        })
       ].join('');
     }
 
