@@ -1048,6 +1048,7 @@
               ${row('a) Bayaran Kursus / Yuran (RM)',displayValue('bayaran_kursus'),3)}
               ${row('b) Permohonan Pendahuluan Diterima',displayValue('pendahuluan_diterima'),3)}
               ${row('c) Telah Didaftarkan',displayValue('telah_didaftar'),3)}
+              ${row('Tarikh Didaftarkan',displayValue('tarikh_didaftar'),3)}
             </tbody>
           </table>
         `)}
