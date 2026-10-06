@@ -303,7 +303,6 @@ $canReviewCurrentStage = $mode === 'review'
                     <td>
                         <div class="bpl-auto-date-field">
                             <input type="date" name="tarikh_latihan" required readonly data-auto-review-date>
-                            <small><i class="bi bi-clock-history"></i> Auto ikut tarikh keputusan dihantar.</small>
                         </div>
                     </td>
                 </tr>
@@ -324,7 +323,6 @@ $canReviewCurrentStage = $mode === 'review'
                     <td>
                         <div class="bpl-auto-date-field">
                             <input type="date" name="tarikh_bahagian" required readonly data-auto-review-date>
-                            <small><i class="bi bi-clock-history"></i> Auto ikut tarikh keputusan dihantar.</small>
                         </div>
                     </td>
                 </tr>
@@ -348,7 +346,6 @@ $canReviewCurrentStage = $mode === 'review'
                     <td>
                         <div class="bpl-auto-date-field">
                             <input type="date" name="tarikh_pgs" required readonly data-auto-review-date>
-                            <small><i class="bi bi-clock-history"></i> Auto ikut tarikh keputusan dihantar.</small>
                         </div>
                     </td>
                 </tr>
@@ -372,7 +369,6 @@ $canReviewCurrentStage = $mode === 'review'
                     <td>
                         <div class="bpl-auto-date-field">
                             <input type="date" name="tarikh_sedco" readonly data-auto-review-date>
-                            <small><i class="bi bi-clock-history"></i> Auto ikut tarikh keputusan dihantar.</small>
                         </div>
                     </td>
                 </tr>
@@ -407,7 +403,6 @@ $canReviewCurrentStage = $mode === 'review'
                             <label class="bpl-registration-date">
                                 <span>Tarikh Didaftarkan</span>
                                 <input type="date" name="tarikh_didaftar" readonly data-registration-date>
-                                <small>Auto direkod pada tarikh Finance menghantar keputusan jika pilih Ya.</small>
                             </label>
                         </div>
                     </td>
