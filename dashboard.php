@@ -151,7 +151,7 @@ if ($role === 'staff') {
               assigned_hod_id = ?
               OR (
                 assigned_hod_id IS NULL
-                AND (department = ? OR department IS NULL OR department = "")
+                AND department = ?
               )
             )';
 
