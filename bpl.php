@@ -100,7 +100,7 @@ $canReviewCurrentStage = $mode === 'review'
             window.print();
         }
     </script>
-    <link rel="stylesheet" href="sedco-saas.css?v=20261003-01">
+    <link rel="stylesheet" href="sedco-saas.css?v=20261006-07">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
   <link rel="stylesheet" href="sedco-shell.css?v=20260930-56">
 </head>
@@ -300,7 +300,12 @@ $canReviewCurrentStage = $mode === 'review'
                 </tr>
                 <tr>
                     <td>Tarikh</td>
-                    <td><input type="date" name="tarikh_latihan" required></td>
+                    <td>
+                        <div class="bpl-auto-date-field">
+                            <input type="date" name="tarikh_latihan" required readonly data-auto-review-date>
+                            <small><i class="bi bi-clock-history"></i> Auto ikut tarikh keputusan dihantar.</small>
+                        </div>
+                    </td>
                 </tr>
                 <tr>
                     <td>Tandatangan</td>
@@ -316,7 +321,12 @@ $canReviewCurrentStage = $mode === 'review'
                 </tr>
                 <tr>
                     <td>Tarikh</td>
-                    <td><input type="date" name="tarikh_bahagian" required></td>
+                    <td>
+                        <div class="bpl-auto-date-field">
+                            <input type="date" name="tarikh_bahagian" required readonly data-auto-review-date>
+                            <small><i class="bi bi-clock-history"></i> Auto ikut tarikh keputusan dihantar.</small>
+                        </div>
+                    </td>
                 </tr>
                 <tr>
                     <td>Tandatangan</td>
@@ -335,7 +345,12 @@ $canReviewCurrentStage = $mode === 'review'
                 </tr>
                 <tr>
                     <td>Tarikh</td>
-                    <td><input type="date" name="tarikh_pgs" required></td>
+                    <td>
+                        <div class="bpl-auto-date-field">
+                            <input type="date" name="tarikh_pgs" required readonly data-auto-review-date>
+                            <small><i class="bi bi-clock-history"></i> Auto ikut tarikh keputusan dihantar.</small>
+                        </div>
+                    </td>
                 </tr>
                 <tr>
                     <td>Tandatangan</td>
@@ -354,7 +369,12 @@ $canReviewCurrentStage = $mode === 'review'
                 </tr>
                 <tr>
                     <td>Tarikh</td>
-                    <td><input type="date" name="tarikh_sedco"></td>
+                    <td>
+                        <div class="bpl-auto-date-field">
+                            <input type="date" name="tarikh_sedco" readonly data-auto-review-date>
+                            <small><i class="bi bi-clock-history"></i> Auto ikut tarikh keputusan dihantar.</small>
+                        </div>
+                    </td>
                 </tr>
                 <tr>
                     <td>Tandatangan</td>
@@ -379,8 +399,17 @@ $canReviewCurrentStage = $mode === 'review'
                 <tr>
                     <td>c) Telah Didaftarkan</td>
                     <td>
-                        <label><input type="radio" name="telah_didaftar" value="Ya" required> Ya</label>
-                        <label><input type="radio" name="telah_didaftar" value="Tidak"> Tidak</label>
+                        <div class="bpl-registration-review">
+                            <div class="bpl-registration-choice">
+                                <label><input type="radio" name="telah_didaftar" value="Ya" required> Ya</label>
+                                <label><input type="radio" name="telah_didaftar" value="Tidak"> Tidak</label>
+                            </div>
+                            <label class="bpl-registration-date">
+                                <span>Tarikh Didaftarkan</span>
+                                <input type="date" name="tarikh_didaftar" readonly data-registration-date>
+                                <small>Auto direkod pada tarikh Finance menghantar keputusan jika pilih Ya.</small>
+                            </label>
+                        </div>
                     </td>
                 </tr>
             </table>
@@ -430,10 +459,10 @@ window.SEDCO_FORM_CONTEXT = {
   status: <?= json_encode($applicationStatus) ?>
 };
 </script>
-<script src="bpl-workflow.js?v=20261001-02"></script>
+<script src="bpl-workflow.js?v=20261006-03"></script>
 <script src="form-permissions.js?v=20261003-06"></script>
-<script src="form-ux.js?v=20261003-02"></script>
+<script src="form-ux.js?v=20261006-03"></script>
 <script src="form-enhancements.js?v=20260930-59"></script>
-<script src="sedco-shell.js?v=20261003-02"></script>
+<script src="sedco-shell.js?v=20261006-01"></script>
 </body>
 </html>
