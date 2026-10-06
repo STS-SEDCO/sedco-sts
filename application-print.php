@@ -48,7 +48,7 @@ $reviewsStmt->close();
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Print Application: <?= e($applicationNo) ?></title>
-<link rel="stylesheet" href="sts-print.css?v=20261006-01">
+<link rel="stylesheet" href="sts-print.css?v=20261006-02">
 </head>
 <body>
 <div class="print-actions"><button onclick="window.print()">Print / Save as PDF</button></div>
@@ -67,7 +67,7 @@ $reviewsStmt->close();
 <?php $display=is_array($value)?implode(', ',array_map('strval',$value)):(string)$value; if(trim($display)==='')continue; ?>
 <div class="print-field">
   <span><?= e(ucwords(str_replace('_',' ',(string)$key))) ?></span>
-  <?php if ((string)$key === 'signature' && str_starts_with($display, 'data:image/png;base64,')): ?>
+  <?php if (str_starts_with($display, 'data:image/png;base64,')): ?>
   <strong class="print-digital-signature"><img src="<?= e($display) ?>" alt="Digital signature"></strong>
   <?php else: ?>
   <strong><?= e($display) ?></strong>
