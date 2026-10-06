@@ -98,6 +98,27 @@ if ($type === 'BPL') {
 }
 
 if ($type === 'PKK') {
+    $payload['tarikh_penilaian'] = (new DateTimeImmutable(
+        'now',
+        new DateTimeZone('Asia/Kuala_Lumpur')
+    ))->format('Y-m-d');
+
+    $pkkSignature = trim((string) ($payload['tandatangan'] ?? ''));
+    if (!preg_match('#^data:image/png;base64,([A-Za-z0-9+/=]+)$#', $pkkSignature, $pkkSignatureMatch)) {
+        http_response_code(422);
+        exit('Please provide a valid digital signature before submitting PKK.');
+    }
+
+    $pkkSignatureBytes = base64_decode($pkkSignatureMatch[1], true);
+    if (
+        $pkkSignatureBytes === false
+        || strlen($pkkSignatureBytes) < 100
+        || strlen($pkkSignatureBytes) > 200000
+    ) {
+        http_response_code(422);
+        exit('The PKK digital signature is invalid or too large. Please clear it and sign again.');
+    }
+
     for ($speaker = 1; $speaker <= 5; $speaker++) {
         $speakerName = trim((string) ($payload['p' . $speaker] ?? ''));
         $scoreKeys = [];
