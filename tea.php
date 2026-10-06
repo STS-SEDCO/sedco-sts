@@ -141,7 +141,12 @@ $eligibleEmployeeGroups = array_values($eligibleByEmployee);
 $evaluationMonthNumber = (int) (
     new DateTimeImmutable('now', new DateTimeZone('Asia/Kuala_Lumpur'))
 )->format('n');
-$autoEvaluationPeriod = $evaluationMonthNumber <= 6 ? 'June' : 'December';
+$evaluationOpen = in_array($evaluationMonthNumber, [1, 6, 7, 12], true);
+$autoEvaluationPeriod = match ($evaluationMonthNumber) {
+    1, 6 => 'June',
+    7, 12 => 'December',
+    default => '',
+};
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -163,7 +168,7 @@ $autoEvaluationPeriod = $evaluationMonthNumber <= 6 ? 'June' : 'December';
       <div class="tea-system-header-copy">
         <span class="tea-system-kicker">TRAINING EFFECTIVENESS ASSESSMENT FORM 2025</span>
         <h1>Training Effectiveness Assessment</h1>
-        <p>Improvement after attending training, evaluated in June or December of the training year.</p>
+        <p>Improvement after attending training, evaluated only in January, June, July or December.</p>
       </div>
       <span class="tea-system-owner"><i class="bi bi-person-check"></i> HOD only</span>
     </header>
@@ -176,6 +181,16 @@ $autoEvaluationPeriod = $evaluationMonthNumber <= 6 ? 'June' : 'December';
     <?php endif; ?>
 
     <div class="form-permission-notice tea-system-permission" data-form-permission-notice></div>
+
+    <?php if (!$evaluationOpen): ?>
+    <div class="alert alert-warning d-flex align-items-start gap-2 mb-3 tea-evaluation-window-notice" role="status">
+      <i class="bi bi-calendar-x mt-1"></i>
+      <div>
+        <strong>TEA evaluation is closed this month.</strong>
+        <div>Assessments can only be completed in January, June, July and December.</div>
+      </div>
+    </div>
+    <?php endif; ?>
 
     <form class="tea-official-form tea-system-form" data-form-owner="head_of_department" method="post" action="submit_application.php?type=TEA">
       <?= csrf_field() ?>
@@ -190,7 +205,7 @@ $autoEvaluationPeriod = $evaluationMonthNumber <= 6 ? 'June' : 'December';
           <div class="tea-system-info-grid">
             <label class="tea-system-field tea-employee-picker-field">
               <span><i class="bi bi-person-check"></i> Employee Name <b>*</b></span>
-              <select name="employee_name" id="teaEligibleEmployee" class="form-control tea-employee-picker" required>
+              <select name="employee_name" id="teaEligibleEmployee" class="form-control tea-employee-picker" required <?= !$evaluationOpen ? 'disabled' : '' ?>>
                 <option value="">Select employee pending evaluation</option>
                 <?php foreach ($eligibleByEmployee as $employeeId => $employeeGroup): ?>
                 <option
@@ -230,7 +245,7 @@ $autoEvaluationPeriod = $evaluationMonthNumber <= 6 ? 'June' : 'December';
           </div>
 
           <div class="tea-system-period-row">
-            <div><strong>Month of evaluation</strong><span>Automatically selected based on the current month.</span></div>
+            <div><strong>Month of evaluation</strong><span><?= $evaluationOpen ? 'Automatically selected for the current evaluation month.' : 'Available only in January, June, July and December.' ?></span></div>
             <div class="tea-system-period-options" data-auto-evaluation-period>
               <label>
                 <input type="radio" name="month" value="June" required <?= $autoEvaluationPeriod === 'June' ? 'checked' : 'disabled' ?>>
@@ -270,8 +285,8 @@ $autoEvaluationPeriod = $evaluationMonthNumber <= 6 ? 'June' : 'December';
           <div class="tea-system-table-tools tea-system-table-tools-auto no-print">
             <div class="tea-auto-course-note"><i class="bi bi-lightning-charge"></i><span>Courses load automatically from the selected employee's BPL + PKK records.</span></div>
             <div class="tea-system-add-column">
-              <input type="text" data-new-criterion placeholder="New column name">
-              <button type="button" class="tea-system-tool-btn" data-add-criterion><i class="bi bi-layout-three-columns"></i> Add Column</button>
+              <input type="text" data-new-criterion placeholder="New column name" <?= !$evaluationOpen ? 'disabled' : '' ?>>
+              <button type="button" class="tea-system-tool-btn" data-add-criterion <?= !$evaluationOpen ? 'disabled' : '' ?>><i class="bi bi-layout-three-columns"></i> Add Column</button>
             </div>
           </div>
           <div class="tea-system-table-note no-print">
@@ -343,7 +358,7 @@ $autoEvaluationPeriod = $evaluationMonthNumber <= 6 ? 'June' : 'December';
 
       <div class="tea-system-actions no-print">
         <button type="button" class="btn btn-secondary form-print-button" onclick="printForm()"><i class="bi bi-printer"></i> Print</button>
-        <button type="submit" class="btn btn-primary"><i class="bi bi-send-check"></i> Submit Assessment</button>
+        <button type="submit" class="btn btn-primary" <?= !$evaluationOpen ? 'disabled' : '' ?>><i class="bi <?= $evaluationOpen ? 'bi-send-check' : 'bi-lock' ?>"></i> <?= $evaluationOpen ? 'Submit Assessment' : 'Evaluation unavailable this month' ?></button>
       </div>
     </form>
   </div>
@@ -360,7 +375,7 @@ $autoEvaluationPeriod = $evaluationMonthNumber <= 6 ? 'June' : 'December';
     <div class="tea-print-title">
       <strong>PERBADANAN PEMBANGUNAN EKONOMI SABAH (SEDCO)</strong>
       <span>TRAINING EFFECTIVENESS ASSESSMENT FORM 2025</span>
-      <em>Improvement after attending training (to be evaluated in June or December in year of training)</em>
+      <em>Improvement after attending training (evaluation available in January, June, July or December)</em>
     </div>
     <div class="tea-print-header-spacer"></div>
   </header>
