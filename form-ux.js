@@ -955,20 +955,27 @@
       `;
     };
 
-    const signatureBlock = (dateLabel, dateValue, signLabel, signValue) => `
-      <div class="report-signoff-grid">
-        <div class="report-signoff-item">
-          <span class="report-signoff-label">${escapeHtml(dateLabel)}</span>
-          <strong class="report-signoff-date">${escapeHtml(dateValue || 'Not provided')}</strong>
-        </div>
+    const signatureBlock = (dateLabel, dateValue, signLabel, signValue) => {
+      const isDigital = /^data:image\/png;base64,/i.test(String(signValue || ''));
+      const signature = isDigital
+        ? `<img src="${escapeHtml(signValue)}" alt="Digital signature">`
+        : (signValue && signValue !== 'Not provided' ? escapeHtml(signValue) : '&nbsp;');
 
-        <div class="report-signoff-item report-signature-item">
-          <span class="report-signoff-label">${escapeHtml(signLabel)}</span>
-          <div class="report-signature-space">${signValue && signValue !== 'Not provided' ? escapeHtml(signValue) : '&nbsp;'}</div>
-          <div class="report-signature-line"></div>
+      return `
+        <div class="report-signoff-grid">
+          <div class="report-signoff-item">
+            <span class="report-signoff-label">${escapeHtml(dateLabel)}</span>
+            <strong class="report-signoff-date">${escapeHtml(dateValue || 'Not provided')}</strong>
+          </div>
+
+          <div class="report-signoff-item report-signature-item">
+            <span class="report-signoff-label">${escapeHtml(signLabel)}</span>
+            <div class="report-signature-space">${signature}</div>
+            <div class="report-signature-line"></div>
+          </div>
         </div>
-      </div>
-    `;
+      `;
+    };
 
     const buildBpl = () => {
       return `
