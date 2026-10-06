@@ -181,6 +181,9 @@
               <i class="bi ${status.icon}"></i>${status.label}
             </span>
             ${application.type === 'BPL' ? `<div class="application-stage-text">Stage: ${escapeHtml(stage)}</div>` : ''}
+            ${application.status === 'correction' && application.reviewNote
+              ? `<div class="application-correction-note"><i class="bi bi-info-circle"></i><span>${escapeHtml(application.reviewNote)}</span></div>`
+              : ''}
           </td>
           <td class="text-end">
             ${action}
@@ -353,7 +356,9 @@
       const toast = $('successToast');
       const text = $('successToastText');
 
-      if (params.get('cancelled') === '1' && text) {
+      if (params.get('resubmitted') === '1' && text) {
+        text.textContent = 'Correction submitted successfully. The application has returned to the same reviewer stage.';
+      } else if (params.get('cancelled') === '1' && text) {
         text.textContent = 'Application cancelled successfully. It remains in your history for reference.';
       }
 
