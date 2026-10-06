@@ -261,6 +261,7 @@ $stmt->close();
         </div>
 
         <div class="submissions-advanced-filters">
+          <?php if ($normalizedRole === 'admin'): ?>
           <select id="submissionStage" aria-label="Filter by stage">
             <option value="all">All stages</option>
             <option value="training">Training Department</option>
@@ -268,11 +269,13 @@ $stmt->close();
             <option value="gm">General Manager</option>
             <option value="chairman">Pengerusi</option>
             <option value="finance">Kewangan</option>
-            <option value="completed">Completed</option>
           </select>
+          <?php endif; ?>
+          <?php if ($normalizedRole !== 'head_of_department'): ?>
           <select id="submissionDepartment" aria-label="Filter by department">
             <option value="all">All departments</option>
           </select>
+          <?php endif; ?>
           <input id="submissionDate" type="date" aria-label="Filter by submitted date">
           <button type="button" class="approval-filter-reset" id="submissionReset">
             <i class="bi bi-arrow-counterclockwise"></i> Reset
@@ -390,7 +393,7 @@ $stmt->close();
             <i class="bi bi-check2"></i><span>Approve</span>
           </button>
           <button type="button" class="approval-detail-action is-correction" data-detail-review-decision="correction">
-            <i class="bi bi-arrow-counterclockwise"></i><span>Request Correction</span>
+            <i class="bi bi-arrow-counterclockwise"></i><span>Return for Correction</span>
           </button>
           <button type="button" class="approval-detail-action is-reject" data-detail-review-decision="rejected">
             <i class="bi bi-x-lg"></i><span>Reject</span>
