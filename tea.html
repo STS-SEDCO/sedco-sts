@@ -56,10 +56,10 @@
             <div><span>Status</span><strong>Ready to evaluate</strong></div>
           </div>
           <div class="tea-system-period-row">
-            <div><strong>Month of evaluation</strong><span>Select the applicable evaluation period.</span></div>
-            <div class="tea-system-period-options">
+            <div><strong>Month of evaluation</strong><span>Automatically selected based on the current month.</span></div>
+            <div class="tea-system-period-options" data-auto-evaluation-period>
               <label><input type="radio" name="month" value="June" required><span><i class="bi bi-calendar3"></i> Jan / June</span></label>
-              <label><input type="radio" name="month" value="December" checked><span><i class="bi bi-calendar3"></i> July / Dec</span></label>
+              <label><input type="radio" name="month" value="December" required><span><i class="bi bi-calendar3"></i> July / Dec</span></label>
             </div>
           </div>
         </div>
@@ -243,6 +243,14 @@
   document.body.dataset.role = role;
   if (role !== 'head_of_department') { location.replace('task.html'); return; }
   window.SEDCO_FORM_CONTEXT = { role, mode: 'new', formType: 'TEA' };
+
+  const currentMonth = new Date().getMonth() + 1;
+  const autoEvaluationPeriod = currentMonth <= 6 ? 'June' : 'December';
+  document.querySelectorAll('input[name="month"]').forEach(radio => {
+    const active = radio.value === autoEvaluationPeriod;
+    radio.checked = active;
+    radio.disabled = !active;
+  });
 
   const head = document.querySelector('input[name="head_division"]');
   const division = document.querySelector('select[name="division"]');
