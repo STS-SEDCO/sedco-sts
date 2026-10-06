@@ -11,7 +11,11 @@ $canStaffForms = in_array(
     ['staff', 'head_of_department', 'general_manager', 'pengerusi_besar', 'admin'],
     true
 );
-$canTea = $role === 'head_of_department';
+$teaEvaluationMonth = (int) (
+    new DateTimeImmutable('now', new DateTimeZone('Asia/Kuala_Lumpur'))
+)->format('n');
+$teaEvaluationOpen = in_array($teaEvaluationMonth, [1, 6, 7, 12], true);
+$canTea = $role === 'head_of_department' && $teaEvaluationOpen;
 
 $userId = (int) ($user['id'] ?? 0);
 $department = trim((string) ($user['department'] ?? ''));
@@ -129,7 +133,7 @@ if ($role === 'head_of_department') {
           <?php if ($canStaffForms): ?>
           <a href="bpl.php" class="task-apply-btn">Apply now <i class="bi bi-arrow-up-right"></i></a>
           <?php else: ?>
-          <span class="task-apply-btn task-apply-btn-locked"><i class="bi bi-lock-fill"></i> Locked</span>
+          <span class="task-apply-btn task-apply-btn-locked"><i class="bi bi-lock-fill"></i> <?= $role === 'head_of_department' ? 'Evaluation closed' : 'Locked' ?></span>
           <?php endif; ?>
         </div>
       </article>
@@ -163,7 +167,7 @@ if ($role === 'head_of_department') {
           <p>Record post training effectiveness, competency and improvement outcomes.</p>
         </div>
         <div class="task-card-footer">
-          <span class="task-card-status"><?= $canTea ? '<i class="bi bi-circle-fill"></i> Ready to apply' : '<i class="bi bi-lock-fill"></i> HoD only' ?></span>
+          <span class="task-card-status"><?= $canTea ? '<i class="bi bi-circle-fill"></i> Ready to apply' : ($role === 'head_of_department' ? '<i class="bi bi-calendar-x"></i> Available Jan, Jun, Jul & Dec' : '<i class="bi bi-lock-fill"></i> HoD only') ?></span>
           <?php if ($canTea): ?>
           <a href="tea.php" class="task-apply-btn">Apply now <i class="bi bi-arrow-up-right"></i></a>
           <?php else: ?>
