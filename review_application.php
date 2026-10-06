@@ -132,6 +132,11 @@ try {
 
     $note = trim((string) ($_POST['review_comment'] ?? ''));
 
+    if ($decision === 'rejected' && $note === '') {
+        http_response_code(422);
+        throw new RuntimeException('Please provide a clear reason before rejecting the application.');
+    }
+
     if ($note === '') {
         $note = match ($stage) {
             'training' => trim((string) ($payload['ulasan_latihan'] ?? '')),
