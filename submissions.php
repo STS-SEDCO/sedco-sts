@@ -484,7 +484,7 @@ window.SEDCO_SUBMISSIONS = <?= json_encode(
     | JSON_HEX_QUOT
 ) ?>;
 </script>
-<script src="submissions.js?v=20261006-07"></script>
+<script src="submissions.js?v=20261006-08"></script>
 <script src="sedco-shell.js?v=20261006-01"></script>
 </body>
 </html>
