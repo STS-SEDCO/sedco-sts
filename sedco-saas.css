@@ -18587,3 +18587,143 @@ body.tea-system-page .tea-print-signature-box img{display:block;max-width:180px;
 
 body.application-detail-page .application-signature-preview{min-height:62px;display:flex!important;align-items:center;padding:8px 0!important}
 body.application-detail-page .application-signature-preview img{display:block;max-width:220px;max-height:70px;object-fit:contain}
+
+/* ===== APPROVAL WORKSPACE SYNC + HISTORY UX V10 ===== */
+.submissions-page .approval-feedback-banner{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  margin:0 0 18px;
+  padding:13px 14px;
+  border:1px solid #dfe5e2;
+  border-radius:13px;
+  background:#fff;
+  box-shadow:0 8px 24px rgba(26,27,30,.045);
+}
+.submissions-page .approval-feedback-banner .approval-feedback-icon{
+  width:38px;height:38px;display:grid;place-items:center;flex:0 0 38px;
+  border-radius:10px;font-size:16px;
+}
+.submissions-page .approval-feedback-banner>div{min-width:0;flex:1}
+.submissions-page .approval-feedback-banner strong{
+  display:block;color:#25272c;font-size:12px;font-weight:800;
+}
+.submissions-page .approval-feedback-banner span{
+  display:block;margin-top:2px;color:#73767e;font-size:10.5px;line-height:1.45;
+}
+.submissions-page .approval-feedback-banner>a{
+  display:inline-flex;align-items:center;gap:6px;white-space:nowrap;
+  color:#555861;font-size:10.5px;font-weight:750;text-decoration:none;
+}
+.submissions-page .approval-feedback-banner.is-approved{border-color:#cce8dc;background:#f8fffb}
+.submissions-page .approval-feedback-banner.is-approved .approval-feedback-icon{background:#e9f8f1;color:#168457}
+.submissions-page .approval-feedback-banner.is-correction{border-color:#f1dfb9;background:#fffdf7}
+.submissions-page .approval-feedback-banner.is-correction .approval-feedback-icon{background:#fff5db;color:#b87516}
+.submissions-page .approval-feedback-banner.is-rejected{border-color:#f0ccd2;background:#fffafb}
+.submissions-page .approval-feedback-banner.is-rejected .approval-feedback-icon{background:#fff0f2;color:#b4233c}
+
+.submissions-page .approval-filter-reset{
+  min-height:38px;display:inline-flex;align-items:center;justify-content:center;gap:6px;
+  padding:0 11px;border:1px solid #e0e2e6;border-radius:9px;background:#fff;
+  color:#62656d;font-size:10px;font-weight:720;white-space:nowrap;
+  transition:.16s ease;
+}
+.submissions-page .approval-filter-reset:hover{
+  border-color:#cfd1d6;background:#f8f9fa;color:#25272c;
+}
+.submissions-page .approval-history-resultbar{
+  min-height:44px;display:flex;align-items:center;justify-content:space-between;gap:14px;
+  padding:9px 15px;border-bottom:1px solid #eceef1;background:#fafbfc;
+}
+.submissions-page .approval-history-resultbar>div{
+  display:flex;align-items:baseline;gap:6px;color:#5d6067;font-size:10px;
+}
+.submissions-page .approval-history-resultbar strong{
+  color:#24262b;font-size:13px;font-weight:820;
+}
+.submissions-page .approval-history-resultbar small{
+  color:#9699a1;font-size:9.5px;line-height:1.4;text-align:right;
+}
+
+.approval-history-page .approval-history-stats [data-history-stat]{
+  cursor:pointer;transition:transform .16s ease,box-shadow .16s ease,border-color .16s ease;
+}
+.approval-history-page .approval-history-stats [data-history-stat]:hover{
+  transform:translateY(-2px);
+  border-color:#d9dbe0;
+  box-shadow:0 12px 28px rgba(25,26,30,.07);
+}
+.approval-history-page .approval-history-toolbar{
+  flex-wrap:wrap;
+}
+.approval-history-page .approval-history-advanced{
+  flex:1 1 520px;
+}
+.approval-history-page .approval-history-search{
+  flex:0 1 330px;
+}
+.approval-history-page .approval-history-actions{
+  display:flex;align-items:center;justify-content:flex-end;gap:6px;white-space:nowrap;
+}
+.approval-history-page .view-btn.is-print i{color:#7b4d13}
+.approval-history-page .approval-history-table{
+  min-width:1480px;
+}
+.approval-history-page .approval-history-note-cell{
+  max-width:280px;
+}
+.approval-history-page .submissions-table tr[hidden]{display:none!important}
+.approval-history-page .status-cancelled{
+  background:#f4f4f5;border-color:#dedee2;color:#6a6b70;
+}
+.approval-history-page .status-correction{
+  background:#fff8e8;border-color:#f4dda1;color:#9b670f;
+}
+.approval-history-page .submission-stage-pill{
+  display:inline-flex;align-items:center;gap:5px;min-height:27px;padding:5px 9px;
+  border:1px solid #e2e4e8;border-radius:999px;background:#f8f9fa;color:#555861;
+  font-size:9.5px;font-weight:730;white-space:nowrap;
+}
+.approval-history-page .stage-training{background:#fff7ed;border-color:#fed7aa;color:#9a4c12}
+.approval-history-page .stage-hod{background:#eff6ff;border-color:#cfe1ff;color:#2857a4}
+.approval-history-page .stage-gm{background:#f5f3ff;border-color:#ddd6fe;color:#6d4ab2}
+.approval-history-page .stage-chairman{background:#fffbea;border-color:#f2e1a1;color:#866112}
+.approval-history-page .stage-finance{background:#ecfdf5;border-color:#b9ead4;color:#147655}
+
+.submissions-page .quick-review-note-wrap textarea.is-invalid{
+  border-color:#c53030!important;
+  box-shadow:0 0 0 3px rgba(197,48,48,.08)!important;
+}
+.submissions-page .quick-review-decision.is-correction{
+  border-color:#efd9aa;background:#fffaf0;color:#9a6713;
+}
+.submissions-page .quick-review-decision.is-reject{
+  border-color:#edc8cf;background:#fff7f8;color:#af233a;
+}
+.submissions-page .approval-queue-resultbar{
+  border-top:0;
+}
+
+@media(max-width:1100px){
+  .submissions-page .approval-history-resultbar{
+    align-items:flex-start;flex-direction:column;
+  }
+  .submissions-page .approval-history-resultbar small{text-align:left}
+  .approval-history-page .approval-history-search{flex:1 1 100%;width:100%;max-width:none}
+}
+
+@media(max-width:760px){
+  .submissions-page .approval-feedback-banner{
+    align-items:flex-start;flex-wrap:wrap;
+  }
+  .submissions-page .approval-feedback-banner>a{
+    width:100%;padding-left:50px;
+  }
+  .submissions-page .approval-filter-reset{width:100%}
+  .approval-history-page .approval-history-advanced{
+    display:grid!important;grid-template-columns:1fr;gap:8px!important;width:100%;
+  }
+  .approval-history-page .approval-history-actions{
+    justify-content:flex-start;
+  }
+}
