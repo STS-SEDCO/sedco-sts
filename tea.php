@@ -137,6 +137,11 @@ if ($parentId > 0) {
 }
 
 $eligibleEmployeeGroups = array_values($eligibleByEmployee);
+
+$evaluationMonthNumber = (int) (
+    new DateTimeImmutable('now', new DateTimeZone('Asia/Kuala_Lumpur'))
+)->format('n');
+$autoEvaluationPeriod = $evaluationMonthNumber <= 6 ? 'June' : 'December';
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -225,10 +230,16 @@ $eligibleEmployeeGroups = array_values($eligibleByEmployee);
           </div>
 
           <div class="tea-system-period-row">
-            <div><strong>Month of evaluation</strong><span>Select the applicable evaluation period.</span></div>
-            <div class="tea-system-period-options">
-              <label><input type="radio" name="month" value="June" required><span><i class="bi bi-calendar3"></i> Jan / June</span></label>
-              <label><input type="radio" name="month" value="December" checked><span><i class="bi bi-calendar3"></i> July / Dec</span></label>
+            <div><strong>Month of evaluation</strong><span>Automatically selected based on the current month.</span></div>
+            <div class="tea-system-period-options" data-auto-evaluation-period>
+              <label>
+                <input type="radio" name="month" value="June" required <?= $autoEvaluationPeriod === 'June' ? 'checked' : 'disabled' ?>>
+                <span><i class="bi bi-calendar3"></i> Jan / June</span>
+              </label>
+              <label>
+                <input type="radio" name="month" value="December" required <?= $autoEvaluationPeriod === 'December' ? 'checked' : 'disabled' ?>>
+                <span><i class="bi bi-calendar3"></i> July / Dec</span>
+              </label>
             </div>
           </div>
         </div>
