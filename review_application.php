@@ -68,7 +68,7 @@ try {
         'hod' => ['ulasan_bahagian', 'tarikh_bahagian', 'tt_bahagian'],
         'gm' => ['kelulusan_pgs', 'tarikh_pgs', 'tt_pgs'],
         'chairman' => ['kelulusan_sedco', 'tarikh_sedco', 'tt_sedco'],
-        'finance' => ['bayaran_kursus', 'pendahuluan_diterima', 'telah_didaftar'],
+        'finance' => ['bayaran_kursus', 'pendahuluan_diterima', 'telah_didaftar', 'tarikh_didaftar'],
     ];
 
     $payload = json_decode((string) $application['payload'], true);
@@ -87,12 +87,12 @@ try {
     $requiredReviewFields = match ($stage) {
         'training' => $decision === 'correction'
             ? ['ulasan_latihan']
-            : ['ulasan_latihan', 'tarikh_latihan', 'tt_latihan'],
+            : ['ulasan_latihan', 'tt_latihan'],
         'hod' => $decision === 'correction'
             ? ['ulasan_bahagian']
-            : ['ulasan_bahagian', 'tarikh_bahagian', 'tt_bahagian'],
-        'gm' => ['tarikh_pgs', 'tt_pgs'],
-        'chairman' => ['tarikh_sedco', 'tt_sedco'],
+            : ['ulasan_bahagian', 'tt_bahagian'],
+        'gm' => ['tt_pgs'],
+        'chairman' => ['tt_sedco'],
         'finance' => ['bayaran_kursus', 'pendahuluan_diterima', 'telah_didaftar'],
         default => [],
     };
@@ -112,6 +112,30 @@ try {
         } else {
             $payload[$key] = trim((string) $value);
         }
+    }
+
+    // System-controlled date: always use the actual decision submission date.
+    $decisionDate = (new DateTimeImmutable(
+        'now',
+        new DateTimeZone('Asia/Kuala_Lumpur')
+    ))->format('Y-m-d');
+
+    $reviewDateField = match ($stage) {
+        'training' => 'tarikh_latihan',
+        'hod' => 'tarikh_bahagian',
+        'gm' => 'tarikh_pgs',
+        'chairman' => 'tarikh_sedco',
+        default => null,
+    };
+
+    if ($reviewDateField !== null) {
+        $payload[$reviewDateField] = $decisionDate;
+    }
+
+    if ($stage === 'finance') {
+        $payload['tarikh_didaftar'] = trim((string) ($payload['telah_didaftar'] ?? '')) === 'Ya'
+            ? $decisionDate
+            : '';
     }
 
     if ($stage === 'gm') {
