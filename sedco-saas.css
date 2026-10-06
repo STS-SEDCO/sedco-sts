@@ -5168,7 +5168,12 @@ body{
   display:grid;
   grid-template-columns:minmax(0,1.55fr) minmax(330px,.72fr);
   gap:16px;
-  align-items:start;
+  align-items:stretch;
+}
+
+.dashboard-v4-grid > .dashboard-main-card,
+.dashboard-v4-grid > .dashboard-calendar-card-v4{
+  height:100%;
 }
 
 .dashboard-main-card,
