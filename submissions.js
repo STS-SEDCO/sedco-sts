@@ -452,6 +452,26 @@
     </div>`;
   }
 
+  function signatureField(name, label, value = '') {
+    const stored = /^data:image\/png;base64,/i.test(String(value || '')) ? String(value) : '';
+
+    return `<div class="quick-review-field quick-review-signature-field">
+      <span>${escapeHtml(label)} <b>*</b></span>
+      <div class="sts-digital-signature" data-digital-signature data-signature-required="1">
+        <div class="sts-signature-pad" data-signature-pad tabindex="0" aria-label="${escapeHtml(label)}">
+          <canvas width="900" height="220" data-signature-canvas></canvas>
+          <div class="sts-signature-placeholder" data-signature-placeholder>Tandatangan di sini</div>
+        </div>
+        <input type="hidden" name="${escapeHtml(name)}" value="${escapeHtml(stored)}" data-signature-value>
+        <div class="sts-signature-actions">
+          <span><i class="bi bi-shield-check"></i> Digital signature</span>
+          <button type="button" data-signature-clear><i class="bi bi-eraser"></i> Clear</button>
+        </div>
+        <div class="sts-signature-error" data-signature-error hidden>Sila tandatangan sebelum hantar.</div>
+      </div>
+    </div>`;
+  }
+
   function todayMalaysia() {
     const parts = new Intl.DateTimeFormat('en-CA', {
       timeZone:'Asia/Kuala_Lumpur',
@@ -485,7 +505,7 @@
           placeholder:'Masukkan ulasan semakan'
         }),
         textField('tarikh_latihan', 'Tarikh', reviewDate, { type:'date', readonly:true }),
-        textField('tt_latihan', 'Pengesahan Pegawai', fieldValue(item,'tt_latihan') || reviewerName, { placeholder:'Nama pegawai yang menyemak' })
+        signatureField('tt_latihan', 'Tandatangan Digital Pegawai', fieldValue(item,'tt_latihan'))
       ].join('');
     }
 
@@ -505,21 +525,21 @@
           placeholder:'Masukkan ulasan semakan'
         }),
         textField('tarikh_bahagian', 'Tarikh', reviewDate, { type:'date', readonly:true }),
-        textField('tt_bahagian', 'Pengesahan HOD', fieldValue(item,'tt_bahagian') || reviewerName, { placeholder:'Nama HOD' })
+        signatureField('tt_bahagian', 'Tandatangan Digital HOD', fieldValue(item,'tt_bahagian'))
       ].join('');
     }
 
     if (stage === 'gm') {
       return [
         textField('tarikh_pgs', 'Tarikh keputusan GM', reviewDate, { type:'date', readonly:true }),
-        textField('tt_pgs', 'Pengesahan GM', fieldValue(item,'tt_pgs') || reviewerName, { placeholder:'Nama General Manager' })
+        signatureField('tt_pgs', 'Tandatangan Digital GM', fieldValue(item,'tt_pgs'))
       ].join('');
     }
 
     if (stage === 'chairman') {
       return [
         textField('tarikh_sedco', 'Tarikh keputusan Pengerusi', reviewDate, { type:'date', readonly:true }),
-        textField('tt_sedco', 'Pengesahan Pengerusi', fieldValue(item,'tt_sedco') || reviewerName, { placeholder:'Nama Pengerusi' })
+        signatureField('tt_sedco', 'Tandatangan Digital Pengerusi', fieldValue(item,'tt_sedco'))
       ].join('');
     }
 
@@ -576,6 +596,7 @@
     $('quickReviewApplicant').textContent = item.applicant || 'Not available';
     $('quickReviewStage').textContent = stage.label;
     $('quickReviewFields').innerHTML = stageReviewFields(item, decision);
+    window.SEDCO_SIGNATURES?.init($('quickReviewFields'));
 
     if (String(item.currentStage || '').toLowerCase() === 'finance') {
       const registrationDate = $('quickReviewFields')?.querySelector('[name="tarikh_didaftar"]');
