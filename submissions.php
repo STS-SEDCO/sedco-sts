@@ -34,10 +34,11 @@ $stmt = db()->prepare(
      WHERE a.form_type = "BPL"
      ORDER BY
        CASE
-         WHEN a.form_type = "BPL" AND a.status = "pending" THEN 0
-         WHEN a.form_type = "BPL" AND a.status = "correction" THEN 1
+         WHEN a.status = "pending" AND a.sla_due_at IS NOT NULL AND a.sla_due_at < NOW() THEN 0
+         WHEN a.status = "pending" THEN 1
          ELSE 2
        END,
+       COALESCE(a.sla_due_at, a.submitted_at) ASC,
        a.submitted_at DESC'
 );
 
@@ -95,8 +96,8 @@ $stmt->close();
   <title>Smart Training System: Approval</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-  <link rel="stylesheet" href="sedco-saas.css?v=20261005-01">
-  <link rel="stylesheet" href="sedco-shell.css?v=20260930-56">
+  <link rel="stylesheet" href="sedco-saas.css?v=20261006-06">
+  <link rel="stylesheet" href="sedco-shell.css?v=20261006-01">
 </head>
 <body class="app-page submissions-page" data-page="submissions" data-role="<?= e(normalized_role($user['role'] ?? '')) ?>">
 
@@ -120,6 +121,30 @@ $stmt->close();
         </a>
       </div>
     </header>
+
+    <?php if (isset($_GET['reviewed']) && $_GET['reviewed'] === '1'): ?>
+    <?php
+      $reviewedDecision = strtolower(trim((string) ($_GET['decision'] ?? 'approved')));
+      $reviewedApplication = trim((string) ($_GET['application'] ?? ''));
+      $reviewedMessage = match ($reviewedDecision) {
+          'correction' => 'Correction request sent to the applicant.',
+          'rejected' => 'Application rejected and the approval workflow has ended.',
+          default => 'Application approved and moved to the next required stage.',
+      };
+    ?>
+    <div class="approval-feedback-banner is-<?= e($reviewedDecision) ?>" role="status">
+      <span class="approval-feedback-icon">
+        <i class="bi <?= $reviewedDecision === 'approved' ? 'bi-check2-circle' : ($reviewedDecision === 'correction' ? 'bi-arrow-counterclockwise' : 'bi-x-circle') ?>"></i>
+      </span>
+      <div>
+        <strong><?= e($reviewedApplication ?: 'Review saved') ?></strong>
+        <span><?= e($reviewedMessage) ?></span>
+      </div>
+      <?php if ($reviewedApplication !== ''): ?>
+      <a href="application-detail.php?application=<?= rawurlencode($reviewedApplication) ?>">View record <i class="bi bi-arrow-up-right"></i></a>
+      <?php endif; ?>
+    </div>
+    <?php endif; ?>
 
     <section class="approval-lifecycle" aria-label="BPL approval lifecycle">
       <div class="approval-lifecycle-intro">
@@ -232,6 +257,7 @@ $stmt->close();
         <div class="submissions-filter-group">
           <button class="submission-filter active" type="button" data-submission-filter="all">All</button>
           <button class="submission-filter" type="button" data-submission-filter="pending">Pending</button>
+          <button class="submission-filter" type="button" data-submission-filter="overdue">Overdue</button>
         </div>
 
         <div class="submissions-advanced-filters">
@@ -248,11 +274,22 @@ $stmt->close();
             <option value="all">All departments</option>
           </select>
           <input id="submissionDate" type="date" aria-label="Filter by submitted date">
+          <button type="button" class="approval-filter-reset" id="submissionReset">
+            <i class="bi bi-arrow-counterclockwise"></i> Reset
+          </button>
         </div>
         <div class="submissions-search">
           <i class="bi bi-search"></i>
           <input id="submissionSearch" type="search" placeholder="Search reference, applicant or form...">
         </div>
+      </div>
+
+      <div class="approval-history-resultbar approval-queue-resultbar">
+        <div>
+          <strong id="submissionResultCount"><?= count($submissions) ?></strong>
+          <span>applications shown</span>
+        </div>
+        <small>Overdue applications are prioritised automatically. Correction requests return to the applicant and leave your active queue.</small>
       </div>
 
       <div class="submissions-table-wrap">
@@ -428,6 +465,12 @@ $stmt->close();
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script>
+window.SEDCO_REVIEWER = <?= json_encode([
+    'id' => (int) ($user['id'] ?? 0),
+    'name' => (string) ($user['fullname'] ?? ''),
+    'role' => (string) ($user['role'] ?? ''),
+    'department' => (string) ($user['department'] ?? ''),
+], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_HEX_TAG | JSON_HEX_AMP) ?>;
 window.SEDCO_SUBMISSIONS = <?= json_encode(
     $submissions,
     JSON_UNESCAPED_UNICODE
@@ -438,7 +481,7 @@ window.SEDCO_SUBMISSIONS = <?= json_encode(
     | JSON_HEX_QUOT
 ) ?>;
 </script>
-<script src="submissions.js?v=20261003-05"></script>
-<script src="sedco-shell.js?v=20261003-02"></script>
+<script src="submissions.js?v=20261006-06"></script>
+<script src="sedco-shell.js?v=20261006-01"></script>
 </body>
 </html>
