@@ -17563,12 +17563,9 @@ body.tea-system-page .tea-system-period-options input{position:absolute;opacity:
 body.tea-system-page .tea-system-period-options span{min-height:40px;display:inline-flex;align-items:center;gap:7px;padding:0 13px;border:1px solid #dedfe3;border-radius:10px;background:#fff;color:#666971;font-size:10.5px;font-weight:680;cursor:pointer}
 body.tea-system-page .tea-system-period-options input:checked+span{border-color:#d7a6a8;background:#fff5f5;color:#8f1010;box-shadow:0 0 0 2px rgba(143,16,16,.035)}
 body.tea-system-page .tea-system-rating-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
-body.tea-system-page .tea-system-rating-grid button{min-height:58px;display:flex;align-items:center;gap:10px;padding:10px 12px;border:1px solid #e1e2e6;border-radius:11px;background:#fafafb;color:#5b5e66;text-align:left;transition:.16s ease}
-body.tea-system-page .tea-system-rating-grid button strong{width:31px;height:31px;display:grid;place-items:center;border-radius:8px;background:#fff;color:#8f1010;font-size:12px;box-shadow:0 1px 4px rgba(20,20,24,.06)}
-body.tea-system-page .tea-system-rating-grid button span{font-size:11.5px;font-weight:720}
-body.tea-system-page .tea-system-rating-grid button:hover{border-color:#d8b5b6;background:#fff8f8}
-body.tea-system-page .tea-system-rating-grid button.is-selected{border-color:#a9191c;background:linear-gradient(180deg,#fff4f4,#ffeded);color:#8f1010;box-shadow:0 0 0 2px rgba(143,16,16,.06)}
-body.tea-system-page .tea-system-rating-grid button.is-selected strong{background:#8f1010;color:#fff}
+body.tea-system-page .tea-system-rating-item{min-height:58px;display:flex;align-items:center;gap:10px;padding:10px 12px;border:1px solid #e1e2e6;border-radius:11px;background:#fafafb;color:#5b5e66;text-align:left;cursor:default}
+body.tea-system-page .tea-system-rating-item strong{width:31px;height:31px;display:grid;place-items:center;flex:0 0 31px;border-radius:8px;background:#fff;color:#8f1010;font-size:12px;box-shadow:0 1px 4px rgba(20,20,24,.06)}
+body.tea-system-page .tea-system-rating-item span{font-size:11.5px;font-weight:720}
 body.tea-system-page .tea-system-table-tools{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:10px}
 body.tea-system-page .tea-system-add-column{display:flex;gap:7px}
 body.tea-system-page .tea-system-add-column input{width:190px;min-height:35px;padding:5px 9px;border:1px solid #d9dade;border-radius:8px;background:#fff;font-size:10.5px}
