@@ -911,7 +911,44 @@ function sts_validate_parent_bpl(
     }
 
     if (strtoupper($followupType) === 'TEA') {
-        if ($role !== 'head_of_department' || !sts_can_view_application($parent, $user)) {
+        if ($role !== 'head_of_department') {
+            return null;
+        }
+
+        if ((int) ($parent['user_id'] ?? 0) === (int) ($user['id'] ?? 0)) {
+            return null;
+        }
+
+        $hodDepartment = trim((string) ($user['department'] ?? ''));
+        $applicantDepartment = trim((string) ($parent['department'] ?? ''));
+
+        if ($applicantDepartment === '') {
+            $departmentStmt = db()->prepare(
+                'SELECT department
+                 FROM users
+                 WHERE id = ?
+                 LIMIT 1'
+            );
+            $parentUserId = (int) ($parent['user_id'] ?? 0);
+            $departmentStmt->bind_param('i', $parentUserId);
+            $departmentStmt->execute();
+            $departmentRow = $departmentStmt->get_result()->fetch_assoc();
+            $departmentStmt->close();
+            $applicantDepartment = trim((string) ($departmentRow['department'] ?? ''));
+        }
+
+        if (
+            $hodDepartment === ''
+            || $applicantDepartment === ''
+            || strcasecmp($hodDepartment, $applicantDepartment) !== 0
+        ) {
+            return null;
+        }
+
+        $trainingEnd = trim((string) ($parent['training_end'] ?? ''));
+        $today = (new DateTimeImmutable('today', new DateTimeZone('Asia/Kuala_Lumpur')))->format('Y-m-d');
+
+        if ($trainingEnd === '' || $trainingEnd > $today) {
             return null;
         }
 
@@ -975,16 +1012,13 @@ function sts_ensure_followup_notifications(array $user): void
             $stmt = db()->prepare(
                 'SELECT b.id, b.application_no, b.title, b.training_end
                  FROM applications b
+                 INNER JOIN users u ON u.id = b.user_id
                  WHERE b.form_type = "BPL"
                    AND b.status = "approved"
                    AND b.training_end IS NOT NULL
-                   AND (
-                     b.assigned_hod_id = ?
-                     OR (
-                       b.assigned_hod_id IS NULL
-                       AND (b.department = ? OR b.department IS NULL OR b.department = "")
-                     )
-                   )
+                   AND b.training_end <= CURDATE()
+                   AND b.user_id <> ?
+                   AND LOWER(TRIM(COALESCE(NULLIF(b.department, ""), NULLIF(u.department, "")))) = LOWER(TRIM(?))
                    AND EXISTS (
                      SELECT 1 FROM applications p
                      WHERE p.parent_application_id = b.id
