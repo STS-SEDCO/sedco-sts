@@ -988,6 +988,16 @@ function sts_ensure_followup_notifications(array $user): void
         return;
     }
 
+    if ($role === 'head_of_department') {
+        $evaluationMonth = (int) (
+            new DateTimeImmutable('now', new DateTimeZone('Asia/Kuala_Lumpur'))
+        )->format('n');
+
+        if (!in_array($evaluationMonth, [1, 6, 7, 12], true)) {
+            return;
+        }
+    }
+
     try {
         if ($role === 'staff') {
             $stmt = db()->prepare(
