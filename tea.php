@@ -148,7 +148,7 @@ $eligibleEmployeeGroups = array_values($eligibleByEmployee);
   <title>Training Effectiveness Assessment: STS</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-  <link rel="stylesheet" href="sedco-saas.css?v=20261006-01">
+  <link rel="stylesheet" href="sedco-saas.css?v=20261006-02">
   <link rel="stylesheet" href="sedco-shell.css?v=20261005-03">
   <script>function printForm(){ window.print(); }</script>
 </head>
@@ -425,6 +425,7 @@ window.SEDCO_FORM_CONTEXT = { role: <?= json_encode($user['role'] ?? 'staff') ?>
   const form = document.querySelector('.tea-official-form');
   if (!form) return;
 
+  const table = form.querySelector('[data-tea-table]');
   const body = form.querySelector('[data-training-body]');
   const mainHead = form.querySelector('[data-main-head]');
   const criteriaHead = form.querySelector('[data-criteria-head]');
@@ -441,6 +442,13 @@ window.SEDCO_FORM_CONTEXT = { role: <?= json_encode($user['role'] ?? 'staff') ?>
 
   let extraCriteria = [];
   let activeScore = null;
+
+  const syncTableWidth = () => {
+    if (!table) return;
+    const baseWidth = 1080;
+    const extraWidth = 130;
+    table.style.minWidth = String(baseWidth + (extraCriteria.length * extraWidth)) + 'px';
+  };
 
   const levelFor = total => {
     if (total <= 7) return 'Fail';
@@ -613,6 +621,7 @@ window.SEDCO_FORM_CONTEXT = { role: <?= json_encode($user['role'] ?? 'staff') ?>
     if (!name) return;
 
     extraCriteria.push(name);
+    syncTableWidth();
 
     const th = document.createElement('th');
     th.rowSpan = 2;
@@ -656,6 +665,7 @@ window.SEDCO_FORM_CONTEXT = { role: <?= json_encode($user['role'] ?? 'staff') ?>
 
       [...form.querySelectorAll('input[name="extra_criteria[]"]')][extraIndex]?.remove();
       extraCriteria.splice(extraIndex, 1);
+      syncTableWidth();
       criteriaGroup.colSpan = 5;
 
       const emptyCell = body.querySelector('.tea-empty-training-row td');
@@ -730,6 +740,7 @@ window.SEDCO_FORM_CONTEXT = { role: <?= json_encode($user['role'] ?? 'staff') ?>
     if (option) option.selected = true;
   }
 
+  syncTableWidth();
   renderCourses(selectedGroup());
 })();
 </script>
