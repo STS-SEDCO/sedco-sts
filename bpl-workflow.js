@@ -1,5 +1,6 @@
 (() => {
   const data = window.SEDCO_BPL_DATA || {};
+  const context = window.SEDCO_FORM_CONTEXT || {};
 
   function valuesFor(name) {
     const value = data[name];
@@ -30,6 +31,75 @@
         field.dispatchEvent(new Event('change', { bubbles: true }));
       }
     });
+
+    setupAutomaticReviewDates(form);
+  }
+
+  function malaysiaDate() {
+    const parts = new Intl.DateTimeFormat('en-CA', {
+      timeZone: 'Asia/Kuala_Lumpur',
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit'
+    }).formatToParts(new Date());
+    const map = Object.fromEntries(parts.map(part => [part.type, part.value]));
+    return map.year + '-' + map.month + '-' + map.day;
+  }
+
+  function setupAutomaticReviewDates(form) {
+    const dateByStage = {
+      training: 'tarikh_latihan',
+      hod: 'tarikh_bahagian',
+      gm: 'tarikh_pgs',
+      chairman: 'tarikh_sedco'
+    };
+
+    const activeDateName = dateByStage[String(context.currentStage || '').toLowerCase()];
+    const isActiveReview = context.mode === 'review' && context.status === 'pending';
+
+    if (isActiveReview && activeDateName) {
+      const field = form.querySelector('[name="' + activeDateName + '"]');
+      if (field) {
+        field.readOnly = true;
+        field.value = malaysiaDate();
+      }
+    }
+
+    const registrationDate = form.querySelector('[name="tarikh_didaftar"]');
+    const registrationChoices = [...form.querySelectorAll('[name="telah_didaftar"]')];
+
+    const syncRegistrationDate = () => {
+      if (!registrationDate) return;
+      const selected = registrationChoices.find(field => field.checked)?.value || '';
+
+      if (
+        isActiveReview
+        && String(context.currentStage || '').toLowerCase() === 'finance'
+        && selected === 'Ya'
+      ) {
+        registrationDate.value = malaysiaDate();
+      } else if (
+        isActiveReview
+        && String(context.currentStage || '').toLowerCase() === 'finance'
+        && selected !== 'Ya'
+      ) {
+        registrationDate.value = '';
+      }
+    };
+
+    registrationChoices.forEach(field => field.addEventListener('change', syncRegistrationDate));
+    syncRegistrationDate();
+
+    form.addEventListener('submit', event => {
+      if (event.submitter?.classList.contains('form-print-button')) return;
+
+      if (isActiveReview && activeDateName) {
+        const field = form.querySelector('[name="' + activeDateName + '"]');
+        if (field) field.value = malaysiaDate();
+      }
+
+      syncRegistrationDate();
+    }, true);
   }
 
   document.addEventListener('DOMContentLoaded', hydrate);
