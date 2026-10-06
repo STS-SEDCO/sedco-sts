@@ -80,6 +80,7 @@ while ($record = $eligibleResult->fetch_assoc()) {
     $record['division'] = trim((string) (
         $pkkPayload['bahagian']
         ?? $record['department']
+        ?? $record['user_department']
         ?? $bplPayload['bahagian']
         ?? ''
     ));
@@ -193,6 +194,9 @@ $eligibleEmployeeGroups = array_values($eligibleByEmployee);
                   <?= $selectedEmployeeId === (int) $employeeId ? 'selected' : '' ?>
                 ><?= e((string) $employeeGroup['employee_name']) ?> — <?= e((string) $employeeGroup['division']) ?> (<?= count($employeeGroup['courses']) ?> course<?= count($employeeGroup['courses']) === 1 ? '' : 's' ?>)</option>
                 <?php endforeach; ?>
+                <?php if (!$eligibleByEmployee): ?>
+                <option value="" disabled>No employee pending TEA in your department</option>
+                <?php endif; ?>
               </select>
               <small class="tea-source-hint">
                 <i class="bi bi-database-check"></i>
