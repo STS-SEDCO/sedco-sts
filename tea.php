@@ -251,14 +251,14 @@ $eligibleEmployeeGroups = array_values($eligibleByEmployee);
       <section class="tea-system-card tea-system-assessment-card">
         <div class="tea-system-section-heading">
           <span class="tea-system-section-number">03</span>
-          <div><strong>Assessment Criteria</strong><small>Rate each training using the five official criteria. Add more criteria when required.</small></div>
+          <div><strong>Assessment Criteria</strong><small>Rate each training using the five official criteria. Add extra columns when required.</small></div>
           <span class="tea-system-owner-chip"><i class="bi bi-pencil-square"></i> Your section</span>
         </div>
         <div class="tea-system-card-body">
           <div class="tea-system-table-tools tea-system-table-tools-auto no-print">
             <div class="tea-auto-course-note"><i class="bi bi-lightning-charge"></i><span>Courses load automatically from the selected employee's BPL + PKK records.</span></div>
             <div class="tea-system-add-column">
-              <input type="text" data-new-criterion placeholder="New criterion name">
+              <input type="text" data-new-criterion placeholder="New column name">
               <button type="button" class="tea-system-tool-btn" data-add-criterion><i class="bi bi-layout-three-columns"></i> Add Column</button>
             </div>
           </div>
@@ -269,10 +269,10 @@ $eligibleEmployeeGroups = array_values($eligibleByEmployee);
           <div class="tea-system-table-wrap">
             <table class="tea-official-table tea-system-table" data-tea-table>
               <thead>
-                <tr>
+                <tr data-main-head>
                   <th rowspan="2" class="tea-col-training">Training Title</th>
                   <th colspan="5" class="tea-criteria-group" data-criteria-group>Criteria</th>
-                  <th rowspan="2" class="tea-col-total">Total Score</th>
+                  <th rowspan="2" class="tea-col-total" data-total-head>Total Score</th>
                   <th rowspan="2" class="tea-col-level">Competency Level</th>
                   <th rowspan="2" class="tea-col-comments">Other Improvements / Comments</th>
                 </tr>
@@ -371,10 +371,10 @@ $eligibleEmployeeGroups = array_values($eligibleByEmployee);
 
   <table class="tea-print-assessment-table" data-print-assessment>
     <thead>
-      <tr>
+      <tr data-print-main-head>
         <th rowspan="2" class="tea-print-training-title">Training Title</th>
         <th class="tea-print-criteria-group" data-print-criteria-group>Criteria</th>
-        <th rowspan="2">Total<br>Score</th>
+        <th rowspan="2" data-print-total-head>Total<br>Score</th>
         <th rowspan="2">Competency<br>Level <small>(please refer indicator ** below)</small></th>
         <th rowspan="2" class="tea-print-comments-head">Other improvements or comments <small>(please specify)</small></th>
       </tr>
@@ -426,8 +426,10 @@ window.SEDCO_FORM_CONTEXT = { role: <?= json_encode($user['role'] ?? 'staff') ?>
   if (!form) return;
 
   const body = form.querySelector('[data-training-body]');
+  const mainHead = form.querySelector('[data-main-head]');
   const criteriaHead = form.querySelector('[data-criteria-head]');
   const criteriaGroup = form.querySelector('[data-criteria-group]');
+  const totalHead = form.querySelector('[data-total-head]');
   const addCriterionBtn = form.querySelector('[data-add-criterion]');
   const criterionNameInput = form.querySelector('[data-new-criterion]');
   const picker = document.getElementById('teaEligibleEmployee');
@@ -616,7 +618,8 @@ window.SEDCO_FORM_CONTEXT = { role: <?= json_encode($user['role'] ?? 'staff') ?>
     th.className = 'tea-extra-criterion-head';
     th.innerHTML = '<span></span><button type="button" class="no-print" title="Remove column" aria-label="Remove criterion"><i class="bi bi-x-lg"></i></button>';
     th.querySelector('span').textContent = name;
-    criteriaHead.appendChild(th);
+    if (totalHead) totalHead.before(th);
+    else mainHead?.appendChild(th);
 
     const hidden = document.createElement('input');
     hidden.type = 'hidden';
@@ -631,7 +634,9 @@ window.SEDCO_FORM_CONTEXT = { role: <?= json_encode($user['role'] ?? 'staff') ?>
       bindRow(row);
     });
 
-    criteriaGroup.colSpan = 5 + extraCriteria.length;
+    // The five official criteria stay grouped under the fixed "Criteria" header.
+    // Extra columns are top-level table columns, so the Criteria colspan stays at 5.
+    criteriaGroup.colSpan = 5;
 
     // Keep the empty-state row aligned with the full table whenever a
     // dynamic criterion is added before an employee/course is selected.
@@ -639,7 +644,7 @@ window.SEDCO_FORM_CONTEXT = { role: <?= json_encode($user['role'] ?? 'staff') ?>
     if (emptyCell) emptyCell.colSpan = 9 + extraCriteria.length;
 
     th.querySelector('button')?.addEventListener('click', () => {
-      const extraIndex = [...criteriaHead.querySelectorAll('.tea-extra-criterion-head')].indexOf(th);
+      const extraIndex = [...mainHead.querySelectorAll('.tea-extra-criterion-head')].indexOf(th);
       if (extraIndex < 0) return;
 
       th.remove();
@@ -650,7 +655,7 @@ window.SEDCO_FORM_CONTEXT = { role: <?= json_encode($user['role'] ?? 'staff') ?>
 
       [...form.querySelectorAll('input[name="extra_criteria[]"]')][extraIndex]?.remove();
       extraCriteria.splice(extraIndex, 1);
-      criteriaGroup.colSpan = 5 + extraCriteria.length;
+      criteriaGroup.colSpan = 5;
 
       const emptyCell = body.querySelector('.tea-empty-training-row td');
       if (emptyCell) emptyCell.colSpan = 9 + extraCriteria.length;
@@ -775,12 +780,20 @@ window.SEDCO_FORM_CONTEXT = { role: <?= json_encode($user['role'] ?? 'staff') ?>
       return clone.textContent.replace(/\s+/g,' ').trim();
     }).filter(Boolean);
 
+    const extraColumnNames = [...form.querySelectorAll('[data-main-head] .tea-extra-criterion-head')].map(th => {
+      const clone = th.cloneNode(true);
+      clone.querySelectorAll('button').forEach(btn => btn.remove());
+      return clone.textContent.replace(/\s+/g,' ').trim();
+    }).filter(Boolean);
+
     const printGroup = sheet.querySelector('[data-print-criteria-group]');
     const printHead = sheet.querySelector('[data-print-criteria-head]');
+    const printMainHead = sheet.querySelector('[data-print-main-head]');
+    const printTotalHead = sheet.querySelector('[data-print-total-head]');
     const printBody = sheet.querySelector('[data-print-training-body]');
     const printTable = sheet.querySelector('[data-print-assessment]');
 
-    if (printGroup) printGroup.colSpan = Math.max(1, criteriaNames.length);
+    if (printGroup) printGroup.colSpan = 5;
 
     if (printHead) {
       printHead.innerHTML = '';
@@ -788,6 +801,18 @@ window.SEDCO_FORM_CONTEXT = { role: <?= json_encode($user['role'] ?? 'staff') ?>
         const th = document.createElement('th');
         th.textContent = name;
         printHead.appendChild(th);
+      });
+    }
+
+    if (printMainHead) {
+      printMainHead.querySelectorAll('.tea-print-extra-head').forEach(th => th.remove());
+      extraColumnNames.forEach(name => {
+        const th = document.createElement('th');
+        th.rowSpan = 2;
+        th.className = 'tea-print-extra-head';
+        th.textContent = name;
+        if (printTotalHead) printTotalHead.before(th);
+        else printMainHead.appendChild(th);
       });
     }
 
@@ -818,8 +843,9 @@ window.SEDCO_FORM_CONTEXT = { role: <?= json_encode($user['role'] ?? 'staff') ?>
     }
 
     if (printTable) {
-      printTable.classList.toggle('has-extra-columns', criteriaNames.length > 5);
+      printTable.classList.toggle('has-extra-columns', extraColumnNames.length > 0);
       printTable.dataset.criteriaCount = String(criteriaNames.length);
+      printTable.dataset.extraColumnCount = String(extraColumnNames.length);
     }
   };
 
