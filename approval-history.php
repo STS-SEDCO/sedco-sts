@@ -184,6 +184,7 @@ function approval_status_label(string $status): string
         </div>
 
         <div class="submissions-advanced-filters approval-history-advanced">
+          <?php if ($role === 'admin'): ?>
           <select id="historyStage" aria-label="Filter by approval stage">
             <option value="all">All stages</option>
             <option value="training">Training Department</option>
@@ -192,10 +193,13 @@ function approval_status_label(string $status): string
             <option value="chairman">Pengerusi</option>
             <option value="finance">Kewangan</option>
           </select>
+          <?php endif; ?>
 
+          <?php if ($role !== 'head_of_department'): ?>
           <select id="historyDepartment" aria-label="Filter by department">
             <option value="all">All departments</option>
           </select>
+          <?php endif; ?>
 
           <input id="historyDate" type="date" aria-label="Filter by review date">
 
