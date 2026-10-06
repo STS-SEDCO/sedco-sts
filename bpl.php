@@ -100,7 +100,7 @@ $canReviewCurrentStage = $mode === 'review'
             window.print();
         }
     </script>
-    <link rel="stylesheet" href="sedco-saas.css?v=20261006-07">
+    <link rel="stylesheet" href="sedco-saas.css?v=20261006-08">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
   <link rel="stylesheet" href="sedco-shell.css?v=20260930-56">
 </head>
@@ -461,7 +461,7 @@ window.SEDCO_FORM_CONTEXT = {
 </script>
 <script src="bpl-workflow.js?v=20261006-03"></script>
 <script src="form-permissions.js?v=20261003-06"></script>
-<script src="form-ux.js?v=20261006-03"></script>
+<script src="form-ux.js?v=20261006-04"></script>
 <script src="form-enhancements.js?v=20260930-59"></script>
 <script src="sedco-shell.js?v=20261006-01"></script>
 </body>
