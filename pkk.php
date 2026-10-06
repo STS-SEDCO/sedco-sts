@@ -123,7 +123,7 @@ $formAction = $isEditMode ? 'update_pkk.php' : 'submit_application.php?type=PKK'
   <title>Smart Training System: Borang Penilaian</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-  <link rel="stylesheet" href="sedco-saas.css?v=20261006-09">
+  <link rel="stylesheet" href="sedco-saas.css?v=20261006-10">
   <link rel="stylesheet" href="sedco-shell.css?v=20260930-56">
 </head>
 <body class="app-page form-page pkk-page" data-page="task" data-role="<?= e(normalized_role($user['role'] ?? '')) ?>">
@@ -343,7 +343,7 @@ window.SEDCO_PKK_DATA = <?= json_encode(
   if (!form) return;
 
   Object.entries(data).forEach(([name, value]) => {
-    if (['nama','bahagian','jawatan','tajuk','tarikh','tempat'].includes(name)) return;
+    if (['nama','bahagian','jawatan','tajuk','tarikh','tempat','tarikh_penilaian'].includes(name)) return;
 
     const fields = [...form.querySelectorAll('[name="' + CSS.escape(name) + '"], [name="' + CSS.escape(name) + '[]"]')];
     fields.forEach(field => {
@@ -383,8 +383,8 @@ window.SEDCO_PKK_DATA = <?= json_encode(
 window.SEDCO_FORM_CONTEXT = { role: <?= json_encode($user['role'] ?? 'staff') ?>, mode: <?= json_encode($isEditMode ? 'edit' : 'new') ?>, formType: 'PKK' };
 </script>
 <script src="form-permissions.js?v=20261003-06"></script>
-<script src="digital-signature.js?v=20261006-01"></script>
-<script src="form-ux.js?v=20261006-05"></script>
+<script src="digital-signature.js?v=20261006-02"></script>
+<script src="form-ux.js?v=20261006-06"></script>
 <script src="form-enhancements.js?v=20260930-59"></script>
 <script src="sedco-shell.js?v=20261006-01"></script>
 </body>
