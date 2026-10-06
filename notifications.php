@@ -12,25 +12,33 @@ if (!$user) {
 }
 
 $userId = (int) $user['id'];
-
-$stmt = db()->prepare(
-    'SELECT id, type, title, message, link, is_read, created_at
-     FROM notifications
-     WHERE user_id = ?
-     ORDER BY created_at DESC
-     LIMIT 100'
-);
-$stmt->bind_param('i', $userId);
-$stmt->execute();
-$result = $stmt->get_result();
 $notifications = [];
+$notificationsUnavailable = false;
 
-while ($row = $result->fetch_assoc()) {
-    $notifications[] = $row;
+sts_ensure_followup_notifications($user);
+
+try {
+    $stmt = db()->prepare(
+        'SELECT id, type, title, message, link, is_read, created_at
+         FROM notifications
+         WHERE user_id = ?
+         ORDER BY created_at DESC
+         LIMIT 100'
+    );
+    $stmt->bind_param('i', $userId);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    while ($row = $result->fetch_assoc()) {
+        $notifications[] = $row;
+    }
+
+    $stmt->close();
+} catch (Throwable $error) {
+    $notificationsUnavailable = true;
 }
 
-$stmt->close();
-$unread = sts_unread_notifications($userId);
+$unread = $notificationsUnavailable ? 0 : sts_unread_notifications($userId);
 
 function notification_icon(string $type): string
 {
@@ -51,8 +59,8 @@ function notification_icon(string $type): string
   <title>Smart Training System: Notifications</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-  <link rel="stylesheet" href="sedco-saas.css?v=20260930-40">
-  <link rel="stylesheet" href="sedco-shell.css?v=20260930-56">
+  <link rel="stylesheet" href="sedco-saas.css?v=20261006-12">
+  <link rel="stylesheet" href="sedco-shell.css?v=20261006-01">
 </head>
 <body class="app-page notifications-page" data-page="notifications" data-role="<?= e(normalized_role($user['role'] ?? '')) ?>">
 <main class="sts-page-content">
@@ -84,6 +92,16 @@ function notification_icon(string $type): string
         <strong><?= count($notifications) ?></strong>
       </div>
     </section>
+
+    <?php if ($notificationsUnavailable || isset($_GET['error'])): ?>
+    <div class="notification-system-alert" role="status">
+      <i class="bi bi-exclamation-triangle"></i>
+      <div>
+        <strong>Notifications could not be loaded.</strong>
+        <span>Please refresh the page. Other STS functions can still be used normally.</span>
+      </div>
+    </div>
+    <?php endif; ?>
 
     <section class="notification-panel">
       <?php if (!$notifications): ?>
@@ -138,6 +156,6 @@ function notification_icon(string $type): string
     </section>
   </div>
 </main>
-<script src="sedco-shell.js?v=20260930-56"></script>
+<script src="sedco-shell.js?v=20261006-01"></script>
 </body>
 </html>
