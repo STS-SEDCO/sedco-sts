@@ -41,7 +41,7 @@
               </select>
               <small class="tea-source-hint">
                 <i class="bi bi-database-check"></i>
-                Select an employee once. All completed courses that still need TEA will load automatically.
+                Shows employees from your department with completed training records that are ready for TEA.
               </small>
             </label>
             <label class="tea-system-field">
@@ -269,11 +269,20 @@
   };
 
   const norm = value => String(value || '').trim().toLowerCase();
+  let previewUser = {};
+  try { previewUser = JSON.parse(localStorage.getItem('sedcoPreviewUser') || '{}') || {}; } catch {}
+  const hodDepartment = norm(previewUser.department);
+  const hodEmail = norm(previewUser.email);
   const apps = readApps();
-  const bpls = apps.filter(app =>
-    String(app.type || '').toUpperCase() === 'BPL'
-    && !['rejected','cancelled'].includes(norm(app.status))
-  );
+  const bpls = apps.filter(app => {
+    const appDepartment = norm(app.department || app.data?.bahagian);
+    const ownerEmail = norm(app.ownerEmail);
+    return String(app.type || '').toUpperCase() === 'BPL'
+      && !['rejected','cancelled'].includes(norm(app.status))
+      && hodDepartment !== ''
+      && appDepartment === hodDepartment
+      && (!hodEmail || ownerEmail !== hodEmail);
+  });
   const pkks = apps.filter(app =>
     String(app.type || '').toUpperCase() === 'PKK'
     && !['rejected','cancelled'].includes(norm(app.status))
@@ -370,7 +379,7 @@
     if (!groups.length) {
       const option = document.createElement('option');
       option.disabled = true;
-      option.textContent = 'No employee with BPL + PKK pending TEA in preview';
+      option.textContent = 'No employee pending TEA in your department';
       picker.appendChild(option);
     }
   }
