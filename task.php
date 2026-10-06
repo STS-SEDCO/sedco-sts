@@ -53,22 +53,28 @@ if ($role === 'head_of_department') {
         'SELECT b.id, b.application_no, b.title, b.training_end, b.department,
                 EXISTS(
                   SELECT 1 FROM applications t
-                  WHERE t.parent_application_id = b.id AND t.form_type = "TEA"
+                  WHERE t.parent_application_id = b.id
+                    AND t.form_type = "TEA"
+                    AND t.status <> "cancelled"
                 ) AS has_followup
          FROM applications b
+         INNER JOIN users u ON u.id = b.user_id
          WHERE b.form_type = "BPL"
            AND b.status = "approved"
+           AND b.training_end IS NOT NULL
+           AND b.training_end <= CURDATE()
            AND b.user_id <> ?
-           AND (
-             b.assigned_hod_id = ?
-             OR (
-               b.assigned_hod_id IS NULL
-               AND (b.department = ? OR b.department IS NULL OR b.department = "")
-             )
+           AND LOWER(TRIM(COALESCE(NULLIF(b.department, ""), NULLIF(u.department, "")))) = LOWER(TRIM(?))
+           AND EXISTS (
+             SELECT 1 FROM applications p
+             WHERE p.parent_application_id = b.id
+               AND p.form_type = "PKK"
+               AND p.status = "approved"
+               AND p.current_stage = "completed"
            )
          ORDER BY b.training_end DESC'
     );
-    $followStmt->bind_param('iis', $userId, $userId, $department);
+    $followStmt->bind_param('is', $userId, $department);
     $followStmt->execute();
     $followResult = $followStmt->get_result();
 
