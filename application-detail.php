@@ -158,7 +158,7 @@ function detail_value_label(string $key): string
   <title>Smart Training System: <?= e($applicationNo) ?></title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-  <link rel="stylesheet" href="sedco-saas.css?v=20261006-05">
+  <link rel="stylesheet" href="sedco-saas.css?v=20261006-10">
   <link rel="stylesheet" href="sedco-shell.css?v=20260930-64">
 </head>
 <body class="app-page application-detail-page" data-page="application-status" data-role="<?= e(normalized_role($user['role'] ?? '')) ?>">
@@ -335,7 +335,7 @@ function detail_value_label(string $key): string
           ?>
           <div>
             <span><?= e(detail_value_label((string) $key)) ?></span>
-            <?php if ((string) $key === 'signature' && str_starts_with($display, 'data:image/png;base64,')): ?>
+            <?php if (str_starts_with($display, 'data:image/png;base64,')): ?>
             <strong class="application-signature-preview"><img src="<?= e($display) ?>" alt="Digital signature"></strong>
             <?php else: ?>
             <strong><?= e($display) ?></strong>
