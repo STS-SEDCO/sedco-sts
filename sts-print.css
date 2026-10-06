@@ -60,3 +60,6 @@ body{
   .print-grid{break-inside:auto}
   .print-field{break-inside:avoid}
 }
+
+.print-digital-signature{display:flex!important;align-items:center;min-height:58px}
+.print-digital-signature img{display:block;max-width:190px;max-height:60px;object-fit:contain}
