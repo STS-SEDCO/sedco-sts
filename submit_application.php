@@ -141,7 +141,15 @@ if ($type === 'TEA') {
     $currentEvaluationMonth = (int) (
         new DateTimeImmutable('now', new DateTimeZone('Asia/Kuala_Lumpur'))
     )->format('n');
-    $payload['month'] = $currentEvaluationMonth <= 6 ? 'June' : 'December';
+
+    if (!in_array($currentEvaluationMonth, [1, 6, 7, 12], true)) {
+        http_response_code(403);
+        exit('TEA evaluations can only be completed in January, June, July and December.');
+    }
+
+    $payload['month'] = in_array($currentEvaluationMonth, [1, 6], true)
+        ? 'June'
+        : 'December';
 
     $teaRows = [];
     $evaluatedParentIds = [];
