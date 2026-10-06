@@ -100,7 +100,7 @@ $canReviewCurrentStage = $mode === 'review'
             window.print();
         }
     </script>
-    <link rel="stylesheet" href="sedco-saas.css?v=20261006-08">
+    <link rel="stylesheet" href="sedco-saas.css?v=20261006-09">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
   <link rel="stylesheet" href="sedco-shell.css?v=20260930-56">
 </head>
@@ -308,7 +308,20 @@ $canReviewCurrentStage = $mode === 'review'
                 </tr>
                 <tr>
                     <td>Tandatangan</td>
-                    <td><input type="text" name="tt_latihan" class="input-field" required></td>
+                    <td>
+                        <div class="sts-digital-signature" data-digital-signature data-signature-required="1">
+                            <div class="sts-signature-pad" data-signature-pad tabindex="0" aria-label="Tandatangan">
+                                <canvas width="900" height="220" data-signature-canvas></canvas>
+                                <div class="sts-signature-placeholder" data-signature-placeholder>Tandatangan di sini</div>
+                            </div>
+                            <input type="hidden" name="tt_latihan" data-signature-value>
+                            <div class="sts-signature-actions no-print">
+                                <span><i class="bi bi-shield-check"></i> Digital signature</span>
+                                <button type="button" data-signature-clear><i class="bi bi-eraser"></i> Clear</button>
+                            </div>
+                            <div class="sts-signature-error" data-signature-error hidden>Sila tandatangan sebelum hantar.</div>
+                        </div>
+                    </td>
                 </tr>
             </table>
 
@@ -328,7 +341,20 @@ $canReviewCurrentStage = $mode === 'review'
                 </tr>
                 <tr>
                     <td>Tandatangan</td>
-                    <td><input type="text" name="tt_bahagian" class="input-field" required></td>
+                    <td>
+                        <div class="sts-digital-signature" data-digital-signature data-signature-required="1">
+                            <div class="sts-signature-pad" data-signature-pad tabindex="0" aria-label="Tandatangan">
+                                <canvas width="900" height="220" data-signature-canvas></canvas>
+                                <div class="sts-signature-placeholder" data-signature-placeholder>Tandatangan di sini</div>
+                            </div>
+                            <input type="hidden" name="tt_bahagian" data-signature-value>
+                            <div class="sts-signature-actions no-print">
+                                <span><i class="bi bi-shield-check"></i> Digital signature</span>
+                                <button type="button" data-signature-clear><i class="bi bi-eraser"></i> Clear</button>
+                            </div>
+                            <div class="sts-signature-error" data-signature-error hidden>Sila tandatangan sebelum hantar.</div>
+                        </div>
+                    </td>
                 </tr>
             </table>
 
@@ -351,7 +377,20 @@ $canReviewCurrentStage = $mode === 'review'
                 </tr>
                 <tr>
                     <td>Tandatangan</td>
-                    <td><input type="text" name="tt_pgs" class="input-field" required></td>
+                    <td>
+                        <div class="sts-digital-signature" data-digital-signature data-signature-required="1">
+                            <div class="sts-signature-pad" data-signature-pad tabindex="0" aria-label="Tandatangan">
+                                <canvas width="900" height="220" data-signature-canvas></canvas>
+                                <div class="sts-signature-placeholder" data-signature-placeholder>Tandatangan di sini</div>
+                            </div>
+                            <input type="hidden" name="tt_pgs" data-signature-value>
+                            <div class="sts-signature-actions no-print">
+                                <span><i class="bi bi-shield-check"></i> Digital signature</span>
+                                <button type="button" data-signature-clear><i class="bi bi-eraser"></i> Clear</button>
+                            </div>
+                            <div class="sts-signature-error" data-signature-error hidden>Sila tandatangan sebelum hantar.</div>
+                        </div>
+                    </td>
                 </tr>
             </table>
 
@@ -374,7 +413,20 @@ $canReviewCurrentStage = $mode === 'review'
                 </tr>
                 <tr>
                     <td>Tandatangan</td>
-                    <td><input type="text" name="tt_sedco" class="input-field"></td>
+                    <td>
+                        <div class="sts-digital-signature" data-digital-signature data-signature-required="1">
+                            <div class="sts-signature-pad" data-signature-pad tabindex="0" aria-label="Tandatangan">
+                                <canvas width="900" height="220" data-signature-canvas></canvas>
+                                <div class="sts-signature-placeholder" data-signature-placeholder>Tandatangan di sini</div>
+                            </div>
+                            <input type="hidden" name="tt_sedco" data-signature-value>
+                            <div class="sts-signature-actions no-print">
+                                <span><i class="bi bi-shield-check"></i> Digital signature</span>
+                                <button type="button" data-signature-clear><i class="bi bi-eraser"></i> Clear</button>
+                            </div>
+                            <div class="sts-signature-error" data-signature-error hidden>Sila tandatangan sebelum hantar.</div>
+                        </div>
+                    </td>
                 </tr>
             </table>
 
@@ -456,7 +508,8 @@ window.SEDCO_FORM_CONTEXT = {
 </script>
 <script src="bpl-workflow.js?v=20261006-05"></script>
 <script src="form-permissions.js?v=20261003-06"></script>
-<script src="form-ux.js?v=20261006-04"></script>
+<script src="digital-signature.js?v=20261006-01"></script>
+<script src="form-ux.js?v=20261006-05"></script>
 <script src="form-enhancements.js?v=20260930-59"></script>
 <script src="sedco-shell.js?v=20261006-01"></script>
 </body>
