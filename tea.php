@@ -615,7 +615,8 @@ window.SEDCO_FORM_CONTEXT = { role: <?= json_encode($user['role'] ?? 'staff') ?>
     extraCriteria.push(name);
 
     const th = document.createElement('th');
-    th.className = 'tea-extra-criterion-head';
+    th.rowSpan = 2;
+    th.className = 'tea-extra-criterion-head tea-extra-main-head';
     th.innerHTML = '<span></span><button type="button" class="no-print" title="Remove column" aria-label="Remove criterion"><i class="bi bi-x-lg"></i></button>';
     th.querySelector('span').textContent = name;
     if (totalHead) totalHead.before(th);
