@@ -6,7 +6,11 @@ require_login();
 $user=current_user();
 $role=normalized_role($user['role']??'');
 
-if(!$user || !in_array($role,['admin','training_section','general_manager','head_of_department'],true)){
+if(!$user || !in_array(
+    $role,
+    ['admin','training_section','general_manager','head_of_department','pengerusi_besar','finance'],
+    true
+)){
   http_response_code(403); exit('Report access is not available for this role.');
 }
 
@@ -18,8 +22,15 @@ $dateFrom=trim((string)($_GET['from']??''));
 $dateTo=trim((string)($_GET['to']??''));
 
 if($role==='head_of_department'){
-  $where[]='(a.assigned_hod_id=? OR (a.assigned_hod_id IS NULL AND (a.department=? OR a.department IS NULL OR a.department="")))';
-  $params[]=(int)$user['id'];$types.='i';$params[]=trim((string)($user['department']??''));$types.='s';
+  $where[]='(
+    a.assigned_hod_id=?
+    OR (
+      a.assigned_hod_id IS NULL
+      AND LOWER(TRIM(COALESCE(a.department,""))) = LOWER(TRIM(?))
+    )
+  )';
+  $params[]=(int)$user['id'];$types.='i';
+  $params[]=trim((string)($user['department']??''));$types.='s';
 }
 if(in_array($status,['pending','approved','correction','rejected','cancelled'],true)){$where[]='a.status=?';$params[]=$status;$types.='s';}
 if(in_array($formType,['BPL','PKK','TEA'],true)){$where[]='a.form_type=?';$params[]=$formType;$types.='s';}
@@ -34,10 +45,14 @@ $sql.=' ORDER BY a.submitted_at DESC';
 
 $stmt=db()->prepare($sql);
 if($params){
-    $stmt->execute($params);
-} else {
-    $stmt->execute();
-}$result=$stmt->get_result();
+    $bindArgs = [$types];
+    foreach($params as $index => $value){
+        $bindArgs[] = &$params[$index];
+    }
+    call_user_func_array([$stmt,'bind_param'],$bindArgs);
+}
+$stmt->execute();
+$result=$stmt->get_result();
 
 sts_audit('applications_exported','report','csv',['filters'=>$_GET],(int)$user['id']);
 
