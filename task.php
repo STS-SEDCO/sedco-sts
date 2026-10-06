@@ -133,7 +133,7 @@ if ($role === 'head_of_department') {
           <?php if ($canStaffForms): ?>
           <a href="bpl.php" class="task-apply-btn">Apply now <i class="bi bi-arrow-up-right"></i></a>
           <?php else: ?>
-          <span class="task-apply-btn task-apply-btn-locked"><i class="bi bi-lock-fill"></i> <?= $role === 'head_of_department' ? 'Evaluation closed' : 'Locked' ?></span>
+          <span class="task-apply-btn task-apply-btn-locked"><i class="bi bi-lock-fill"></i> Locked</span>
           <?php endif; ?>
         </div>
       </article>
@@ -171,7 +171,7 @@ if ($role === 'head_of_department') {
           <?php if ($canTea): ?>
           <a href="tea.php" class="task-apply-btn">Apply now <i class="bi bi-arrow-up-right"></i></a>
           <?php else: ?>
-          <span class="task-apply-btn task-apply-btn-locked"><i class="bi bi-lock-fill"></i> Locked</span>
+          <span class="task-apply-btn task-apply-btn-locked"><i class="bi bi-lock-fill"></i> <?= $role === 'head_of_department' ? 'Evaluation closed' : 'Locked' ?></span>
           <?php endif; ?>
         </div>
       </article>
@@ -205,7 +205,11 @@ if ($role === 'head_of_department') {
           <span class="task-followup-due<?= $overdue ? ' overdue' : '' ?>">
             <?= $overdue ? 'Overdue' : 'Due ' . e(date('d M Y', strtotime((string) $due))) ?>
           </span>
+          <?php if ($followType === 'TEA' && !$teaEvaluationOpen): ?>
+          <span class="task-apply-btn task-apply-btn-locked"><i class="bi bi-calendar-x"></i> Available Jan, Jun, Jul & Dec</span>
+          <?php else: ?>
           <a class="task-apply-btn" href="<?= e($followUrl) ?>">Complete <?= e($followType) ?> <i class="bi bi-arrow-up-right"></i></a>
+          <?php endif; ?>
         </article>
         <?php endforeach; ?>
       </div>
