@@ -48,7 +48,7 @@ $reviewsStmt->close();
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Print Application: <?= e($applicationNo) ?></title>
-<link rel="stylesheet" href="sts-print.css?v=20260930-52">
+<link rel="stylesheet" href="sts-print.css?v=20261006-01">
 </head>
 <body>
 <div class="print-actions"><button onclick="window.print()">Print / Save as PDF</button></div>
@@ -65,7 +65,14 @@ $reviewsStmt->close();
 <div class="print-grid">
 <?php foreach ($payload as $key => $value): ?>
 <?php $display=is_array($value)?implode(', ',array_map('strval',$value)):(string)$value; if(trim($display)==='')continue; ?>
-<div class="print-field"><span><?= e(ucwords(str_replace('_',' ',(string)$key))) ?></span><strong><?= e($display) ?></strong></div>
+<div class="print-field">
+  <span><?= e(ucwords(str_replace('_',' ',(string)$key))) ?></span>
+  <?php if ((string)$key === 'signature' && str_starts_with($display, 'data:image/png;base64,')): ?>
+  <strong class="print-digital-signature"><img src="<?= e($display) ?>" alt="Digital signature"></strong>
+  <?php else: ?>
+  <strong><?= e($display) ?></strong>
+  <?php endif; ?>
+</div>
 <?php endforeach; ?>
 </div>
 <h2 class="print-section-title">Approval History</h2>
