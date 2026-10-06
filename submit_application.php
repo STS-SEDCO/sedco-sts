@@ -138,6 +138,11 @@ if ($type === 'PKK') {
 }
 
 if ($type === 'TEA') {
+    $currentEvaluationMonth = (int) (
+        new DateTimeImmutable('now', new DateTimeZone('Asia/Kuala_Lumpur'))
+    )->format('n');
+    $payload['month'] = $currentEvaluationMonth <= 6 ? 'June' : 'December';
+
     $teaRows = [];
     $evaluatedParentIds = [];
     $teaEmployeeUserId = 0;
