@@ -5,7 +5,11 @@ require_once __DIR__ . '/includes/auth.php';
 require_login();
 $user=current_user();
 
-if(!$user || !in_array(normalized_role($user['role']??''),['admin','training_section','general_manager','head_of_department'],true)){
+if(!$user || !in_array(
+    normalized_role($user['role']??''),
+    ['admin','training_section','general_manager','head_of_department','pengerusi_besar','finance'],
+    true
+)){
   http_response_code(403); exit('Report access is not available for this role.');
 }
 
@@ -23,7 +27,13 @@ $params=[];
 $types='';
 
 if($role==='head_of_department'){
-  $where[]='(a.assigned_hod_id = ? OR (a.assigned_hod_id IS NULL AND (a.department = ? OR a.department IS NULL OR a.department = "")))';
+  $where[]='(
+    a.assigned_hod_id = ?
+    OR (
+      a.assigned_hod_id IS NULL
+      AND LOWER(TRIM(COALESCE(a.department, ""))) = LOWER(TRIM(?))
+    )
+  )';
   $params[]=$userId; $types.='i';
   $params[]=$department; $types.='s';
 }
@@ -52,10 +62,13 @@ $sql.=' ORDER BY a.submitted_at DESC';
 
 $stmt=db()->prepare($sql);
 if($params){
-    $stmt->execute($params);
-} else {
-    $stmt->execute();
+    $bindArgs = [$types];
+    foreach($params as $index => $value){
+        $bindArgs[] = &$params[$index];
+    }
+    call_user_func_array([$stmt,'bind_param'],$bindArgs);
 }
+$stmt->execute();
 $result=$stmt->get_result();
 $rows=[];
 
@@ -112,7 +125,7 @@ $query=http_build_query(array_filter([
 <title>Smart Training System: Reports and Analytics</title>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-<link rel="stylesheet" href="sedco-saas.css?v=20260930-64"><link rel="stylesheet" href="sedco-shell.css?v=20260930-56">
+<link rel="stylesheet" href="sedco-saas.css?v=20261006-11"><link rel="stylesheet" href="sedco-shell.css?v=20261006-01">
 </head>
 <body class="app-page reports-page" data-page="reports" data-role="<?= e($role) ?>">
 <main class="sts-page-content"><div class="sts-page-shell">
@@ -175,4 +188,4 @@ $query=http_build_query(array_filter([
 <?php if(!$rows): ?><tr><td colspan="8" class="text-center py-5 text-muted">No records match the selected filters.</td></tr><?php endif; ?>
 </tbody></table></div>
 </section>
-</div></main><script src="sedco-shell.js?v=20260930-56"></script></body></html>
+</div></main><script src="sedco-shell.js?v=20261006-01"></script></body></html>
