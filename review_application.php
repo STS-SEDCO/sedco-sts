@@ -106,6 +106,34 @@ try {
         }
     }
 
+    if ($decision !== 'correction') {
+        $signatureField = match ($stage) {
+            'training' => 'tt_latihan',
+            'hod' => 'tt_bahagian',
+            'gm' => 'tt_pgs',
+            'chairman' => 'tt_sedco',
+            default => null,
+        };
+
+        if ($signatureField !== null) {
+            $digitalSignature = trim((string) ($_POST[$signatureField] ?? ''));
+            if (!preg_match('#^data:image/png;base64,([A-Za-z0-9+/=]+)$#', $digitalSignature, $signatureMatch)) {
+                http_response_code(422);
+                throw new RuntimeException('Please provide your digital signature before submitting this review.');
+            }
+
+            $signatureBytes = base64_decode($signatureMatch[1], true);
+            if (
+                $signatureBytes === false
+                || strlen($signatureBytes) < 100
+                || strlen($signatureBytes) > 200000
+            ) {
+                http_response_code(422);
+                throw new RuntimeException('The digital signature is invalid or too large. Please clear it and sign again.');
+            }
+        }
+    }
+
     foreach ($submittedFields as $key => $value) {
         if (is_array($value)) {
             $payload[$key] = array_values(array_map('strval', $value));
