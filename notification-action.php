@@ -22,28 +22,34 @@ if (!$user) {
 $userId = (int) $user['id'];
 $action = (string) ($_POST['action'] ?? '');
 
-if ($action === 'mark_all') {
-    $stmt = db()->prepare(
-        'UPDATE notifications
-         SET is_read = 1, read_at = NOW()
-         WHERE user_id = ? AND is_read = 0'
-    );
-    $stmt->bind_param('i', $userId);
-    $stmt->execute();
-    $stmt->close();
-
-    sts_audit('notifications_marked_read', 'notification', 'all', [], $userId);
-} elseif ($action === 'mark_one') {
-    $notificationId = max(0, (int) ($_POST['notification_id'] ?? 0));
-
-    $stmt = db()->prepare(
-        'UPDATE notifications
-         SET is_read = 1, read_at = NOW()
-         WHERE id = ? AND user_id = ?'
-    );
-    $stmt->bind_param('ii', $notificationId, $userId);
-    $stmt->execute();
-    $stmt->close();
+try {
+    if ($action === 'mark_all') {
+        $stmt = db()->prepare(
+            'UPDATE notifications
+             SET is_read = 1, read_at = NOW()
+             WHERE user_id = ? AND is_read = 0'
+        );
+        $stmt->bind_param('i', $userId);
+        $stmt->execute();
+        $stmt->close();
+    
+        sts_audit('notifications_marked_read', 'notification', 'all', [], $userId);
+    } elseif ($action === 'mark_one') {
+        $notificationId = max(0, (int) ($_POST['notification_id'] ?? 0));
+    
+        $stmt = db()->prepare(
+            'UPDATE notifications
+             SET is_read = 1, read_at = NOW()
+             WHERE id = ? AND user_id = ?'
+        );
+        $stmt->bind_param('ii', $notificationId, $userId);
+        $stmt->execute();
+        $stmt->close();
+    }
+    
+    } catch (Throwable $error) {
+    header('Location: notifications.php?error=1');
+    exit;
 }
 
 $redirect = trim((string) ($_POST['redirect'] ?? ''));
