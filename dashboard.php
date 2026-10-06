@@ -135,8 +135,12 @@ if ($role === 'staff') {
             'SELECT application_no, form_type, title, status, current_stage,
                     review_note, submitted_at, sla_due_at
              FROM applications
-             WHERE status IN ("pending","correction")
-             ORDER BY COALESCE(sla_due_at, submitted_at) ASC
+             WHERE form_type = "BPL"
+               AND status = "pending"
+               AND current_stage <> "completed"
+             ORDER BY
+               CASE WHEN sla_due_at IS NOT NULL AND sla_due_at < NOW() THEN 0 ELSE 1 END,
+               COALESCE(sla_due_at, submitted_at) ASC
              LIMIT 8'
         );
         while ($row = $queueResult->fetch_assoc()) $queue[] = $row;
