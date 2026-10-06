@@ -329,7 +329,12 @@
   }).formatToParts(new Date()).forEach(part => {
     dateParts[part.type] = part.value;
   });
-  setValue('tarikh', `${dateParts.year}-${dateParts.month}-${dateParts.day}`);
+  const todayValue = `${dateParts.year}-${dateParts.month}-${dateParts.day}`;
+  setValue('tarikh', todayValue);
+  ['tarikh_latihan','tarikh_bahagian','tarikh_pgs','tarikh_sedco','tarikh_didaftar'].forEach(name => {
+    const field = form.querySelector(`[name="${name}"]`);
+    if (field && !field.value) field.value = todayValue;
+  });
 
   const note = document.querySelector('[data-preview-profile-note]');
   const complete = Boolean(previewUser.fullname && previewUser.department && previewUser.job_title);
