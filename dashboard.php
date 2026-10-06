@@ -144,7 +144,7 @@ if ($role === 'staff') {
         $sqlBase = 'FROM applications
                     WHERE form_type = "BPL"
                       AND current_stage = ?
-                      AND status IN ("pending","correction")';
+                      AND status = "pending"';
 
         if ($role === 'head_of_department') {
             $sqlBase .= ' AND (
@@ -310,8 +310,8 @@ $unreadNotifications = sts_unread_notifications($userId);
   <title>Smart Training System: Dashboard</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-  <link rel="stylesheet" href="sedco-saas.css?v=20260930-70">
-  <link rel="stylesheet" href="sedco-shell.css?v=20260930-56">
+  <link rel="stylesheet" href="sedco-saas.css?v=20261006-06">
+  <link rel="stylesheet" href="sedco-shell.css?v=20261006-01">
 </head>
 <body class="app-page dashboard-page dashboard-v4" data-page="dashboard" data-role="<?= e($role) ?>">
 <main class="content">
@@ -334,6 +334,12 @@ $unreadNotifications = sts_unread_notifications($userId);
             <i class="bi <?= $role === 'staff' ? 'bi-clipboard-check' : 'bi-bar-chart-line' ?>"></i>
             <?= $role === 'staff' ? 'Track application' : 'View reports' ?>
           </a>
+          <?php if ($role !== 'staff'): ?>
+          <a href="approval-history.php" class="dashboard-secondary-action">
+            <i class="bi bi-clock-history"></i>
+            Approval history
+          </a>
+          <?php endif; ?>
           <?php if ($unreadNotifications > 0): ?>
           <a href="notifications.php" class="dashboard-alert-chip">
             <i class="bi bi-bell-fill"></i>
@@ -399,8 +405,8 @@ $unreadNotifications = sts_unread_notifications($userId);
             $overdue = !empty($item['sla_due_at'])
                 && strtotime((string) $item['sla_due_at']) < time()
                 && $item['status'] === 'pending';
-            $href = $item['form_type'] === 'BPL'
-                ? 'application-detail.php?application=' . rawurlencode((string) $item['application_no'])
+            $href = $role !== 'staff' && $item['form_type'] === 'BPL'
+                ? 'bpl.php?application=' . rawurlencode((string) $item['application_no'])
                 : 'application-detail.php?application=' . rawurlencode((string) $item['application_no']);
           ?>
           <a class="dashboard-queue-item<?= $overdue ? ' is-overdue' : '' ?>" href="<?= e($href) ?>">
@@ -478,7 +484,7 @@ window.STS_CALENDAR_EVENTS = <?= json_encode(
     JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_HEX_TAG | JSON_HEX_AMP
 ) ?>;
 </script>
-<script src="dashboard.js?v=20260930-70"></script>
-<script src="sedco-shell.js?v=20260930-70"></script>
+<script src="dashboard.js?v=20261006-01"></script>
+<script src="sedco-shell.js?v=20261006-01"></script>
 </body>
 </html>
