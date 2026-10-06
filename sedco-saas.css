@@ -18727,3 +18727,13 @@ body.application-detail-page .application-signature-preview img{display:block;ma
     justify-content:flex-start;
   }
 }
+
+.status-page .application-correction-note{
+  max-width:310px;display:flex;align-items:flex-start;gap:6px;margin-top:7px;padding:7px 9px;
+  border:1px solid #f0d9aa;border-radius:8px;background:#fffaf0;color:#8b6217;
+  font-size:9.5px;line-height:1.45;text-align:left;
+}
+.status-page .application-correction-note i{margin-top:1px;flex:0 0 auto}
+.status-page .application-correction-note span{
+  display:-webkit-box;overflow:hidden;-webkit-line-clamp:2;-webkit-box-orient:vertical;
+}
