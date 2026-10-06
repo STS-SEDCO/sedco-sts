@@ -142,7 +142,7 @@
 
     return {
       validate() {
-        if (input.disabled || host.dataset.signatureRequired !== '1') return true;
+        if (locked() || host.dataset.signatureRequired !== '1') return true;
 
         const valid = DATA_IMAGE.test(String(input.value || ''));
         if (!valid) {
@@ -170,7 +170,11 @@
       const pad = host.querySelector('[data-signature-pad]');
       const error = host.querySelector('[data-signature-error]');
 
-      if (!input || input.disabled || host.dataset.signatureRequired !== '1') return;
+      const hostLocked =
+        host.closest('[inert]') !== null
+        || host.closest('[aria-disabled="true"]') !== null;
+
+      if (!input || input.disabled || hostLocked || host.dataset.signatureRequired !== '1') return;
 
       const ok = DATA_IMAGE.test(String(input.value || ''));
       if (!ok) {
