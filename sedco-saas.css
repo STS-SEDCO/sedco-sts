@@ -18560,3 +18560,27 @@ body.tea-system-page .tea-system-table .tea-col-training{min-width:210px}
 body.tea-system-page .tea-system-table .tea-col-total{min-width:90px}
 body.tea-system-page .tea-system-table .tea-col-level{min-width:120px}
 body.tea-system-page .tea-system-table .tea-col-comments{min-width:200px}
+
+/* TEA digital evaluator confirmation */
+body.tea-system-page .tea-signature-field>span{display:flex;align-items:center;gap:6px;margin-bottom:7px;color:#444850;font-size:10.5px;font-weight:720}
+body.tea-system-page .tea-signature-field>span b{color:#b42326}
+body.tea-system-page .tea-signature-pad{position:relative;width:100%;height:150px;overflow:hidden;border:1px dashed #cfd3d9;border-radius:12px;background:#fff;box-shadow:inset 0 -1px 0 #eceef1;cursor:crosshair;outline:none;transition:.16s ease}
+body.tea-system-page .tea-signature-pad:focus{border-color:#b95f62;box-shadow:0 0 0 3px rgba(143,16,16,.07)}
+body.tea-system-page .tea-signature-pad.is-invalid{border-color:#c53030;background:#fffafa;box-shadow:0 0 0 3px rgba(197,48,48,.08)}
+body.tea-system-page .tea-signature-pad canvas{display:block;width:100%;height:100%;touch-action:none}
+body.tea-system-page .tea-signature-placeholder{position:absolute;inset:0;display:grid;place-items:center;pointer-events:none;color:#a4a8b0;font-size:11px;font-weight:600}
+body.tea-system-page .tea-signature-placeholder[hidden]{display:none!important}
+body.tea-system-page .tea-signature-actions{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:8px}
+body.tea-system-page .tea-signature-actions small{color:#7b7f87;font-size:9.5px}
+body.tea-system-page .tea-signature-clear{min-height:32px;display:inline-flex;align-items:center;gap:6px;padding:0 10px;border:1px solid #dadce1;border-radius:8px;background:#fff;color:#555a62;font-size:9.5px;font-weight:720}
+body.tea-system-page .tea-signature-clear:hover{border-color:#caa3a4;background:#fff8f8;color:#8f1010}
+body.tea-system-page .tea-signature-error{margin-top:7px;color:#b42326;font-size:9.5px;font-weight:680}
+body.tea-system-page .tea-print-signature-box{display:inline-flex;align-items:center;min-height:34px}
+body.tea-system-page .tea-print-signature-box img{display:block;max-width:180px;max-height:55px;object-fit:contain}
+@media (max-width:700px){
+  body.tea-system-page .tea-signature-actions{align-items:flex-start;flex-direction:column}
+  body.tea-system-page .tea-signature-clear{width:100%;justify-content:center}
+}
+@media print{
+  body.tea-system-page .tea-print-signature-box img{max-width:150px;max-height:45px}
+}
