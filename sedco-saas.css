@@ -18584,3 +18584,6 @@ body.tea-system-page .tea-print-signature-box img{display:block;max-width:180px;
 @media print{
   body.tea-system-page .tea-print-signature-box img{max-width:150px;max-height:45px}
 }
+
+body.application-detail-page .application-signature-preview{min-height:62px;display:flex!important;align-items:center;padding:8px 0!important}
+body.application-detail-page .application-signature-preview img{display:block;max-width:220px;max-height:70px;object-fit:contain}
