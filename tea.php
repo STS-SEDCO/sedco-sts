@@ -147,6 +147,10 @@ $autoEvaluationPeriod = match ($evaluationMonthNumber) {
     7, 12 => 'December',
     default => '',
 };
+$submissionDatePreview = (new DateTimeImmutable(
+    'now',
+    new DateTimeZone('Asia/Kuala_Lumpur')
+))->format('Y-m-d');
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -156,7 +160,7 @@ $autoEvaluationPeriod = match ($evaluationMonthNumber) {
   <title>Training Effectiveness Assessment: STS</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-  <link rel="stylesheet" href="sedco-saas.css?v=20261006-04">
+  <link rel="stylesheet" href="sedco-saas.css?v=20261006-05">
   <link rel="stylesheet" href="sedco-shell.css?v=20261005-03">
   <script>function printForm(){ window.print(); }</script>
 </head>
@@ -342,17 +346,45 @@ $autoEvaluationPeriod = match ($evaluationMonthNumber) {
       <section class="tea-system-card">
         <div class="tea-system-section-heading">
           <span class="tea-system-section-number">05</span>
-          <div><strong>Evaluator Confirmation</strong><small>Complete the official HOD evaluation details before submission</small></div>
+          <div><strong>Evaluator Confirmation</strong><small>Evaluator details come from your Profile. Submission date is recorded automatically.</small></div>
         </div>
         <div class="tea-system-card-body">
           <div class="tea-system-confirmation-note">
             <i class="bi bi-shield-check"></i>
-            <div><strong>Evaluated by</strong><span>HOD details are recorded together with this assessment.</span></div>
+            <div>
+              <strong>Evaluated by</strong>
+              <span><?= e((string) ($user['fullname'] ?? '')) ?></span>
+            </div>
           </div>
           <div class="tea-system-confirmation-grid">
-            <label class="tea-system-field"><span><i class="bi bi-person-badge"></i> Head of Division / Section <b>*</b></span><input type="text" name="head_division" class="form-control tea-auto-field" required readonly value="<?= e($user['fullname']) ?>"></label>
-            <label class="tea-system-field"><span><i class="bi bi-calendar-check"></i> Date <b>*</b></span><input type="date" name="date" class="form-control" required></label>
-            <label class="tea-system-field tea-system-field-full"><span><i class="bi bi-pen"></i> Signature / Confirmation <b>*</b></span><input type="text" name="signature" class="form-control" required placeholder="Type your name as confirmation"></label>
+            <label class="tea-system-field">
+              <span><i class="bi bi-person-check"></i> Evaluator Name <b>*</b></span>
+              <input type="text" name="evaluated_by" class="form-control tea-auto-field" required readonly value="<?= e((string) ($user['fullname'] ?? '')) ?>">
+              <small class="tea-source-hint"><i class="bi bi-person-vcard"></i> Auto-filled from Profile.</small>
+            </label>
+            <label class="tea-system-field">
+              <span><i class="bi bi-building-check"></i> Head of Division / Section <b>*</b></span>
+              <input type="text" name="head_division" class="form-control tea-auto-field" required readonly value="<?= e((string) ($user['department'] ?? '')) ?>">
+              <small class="tea-source-hint"><i class="bi bi-person-vcard"></i> Auto-filled from Profile.</small>
+            </label>
+            <label class="tea-system-field tea-system-date-field">
+              <span><i class="bi bi-calendar-check"></i> Submission Date <b>*</b></span>
+              <input type="date" name="date" class="form-control tea-auto-field" required readonly value="<?= e($submissionDatePreview) ?>" data-tea-submit-date>
+              <small class="tea-source-hint"><i class="bi bi-clock-history"></i> Final date is set automatically when you submit.</small>
+            </label>
+            <div class="tea-system-field tea-system-field-full tea-signature-field">
+              <span><i class="bi bi-pen"></i> Digital Signature <b>*</b></span>
+              <div class="tea-signature-pad" data-signature-pad tabindex="0" aria-label="Digital signature pad">
+                <canvas width="900" height="220" data-signature-canvas></canvas>
+                <div class="tea-signature-placeholder" data-signature-placeholder>Sign here using your mouse, stylus or finger</div>
+              </div>
+              <input type="hidden" name="signature" value="" data-signature-value>
+              <div class="tea-signature-actions">
+                <small><i class="bi bi-shield-check"></i> Your signature will be stored together with this assessment.</small>
+                <button type="button" class="tea-signature-clear" data-signature-clear><i class="bi bi-eraser"></i> Clear signature</button>
+              </div>
+              <div class="tea-signature-error" data-signature-error hidden>Please provide your digital signature before submitting.</div>
+            </div>
           </div>
         </div>
       </section>
@@ -426,9 +458,10 @@ $autoEvaluationPeriod = match ($evaluationMonthNumber) {
 
   <div class="tea-print-evaluated">
     <strong>Evaluated by</strong>
+    <div><span>Evaluator Name</span><b>:</b><em data-print-evaluator></em></div>
     <div><span>Head of Division/Section</span><b>:</b><em data-print-head></em></div>
     <div><span>Date</span><b>:</b><em data-print-date></em></div>
-    <div><span>Signature</span><b>:</b><em data-print-signature></em></div>
+    <div class="tea-print-signature-row"><span>Signature</span><b>:</b><span class="tea-print-signature-box"><img data-print-signature alt="Digital signature"></span></div>
   </div>
 </section>
 <script>
@@ -678,6 +711,119 @@ window.SEDCO_FORM_CONTEXT = { role: <?= json_encode($user['role'] ?? 'staff') ?>
 <script>
 (() => {
   const form = document.querySelector('.tea-official-form');
+  const canvas = form?.querySelector('[data-signature-canvas]');
+  const pad = form?.querySelector('[data-signature-pad]');
+  const signatureInput = form?.querySelector('[data-signature-value]');
+  const clearButton = form?.querySelector('[data-signature-clear]');
+  const placeholder = form?.querySelector('[data-signature-placeholder]');
+  const error = form?.querySelector('[data-signature-error]');
+  const dateInput = form?.querySelector('[data-tea-submit-date]');
+
+  if (!form || !canvas || !signatureInput) return;
+
+  const ctx = canvas.getContext('2d');
+  if (!ctx) return;
+
+  ctx.lineCap = 'round';
+  ctx.lineJoin = 'round';
+  ctx.strokeStyle = '#1f2937';
+  ctx.lineWidth = 4;
+
+  let drawing = false;
+  let signed = false;
+
+  const malaysiaDate = () => {
+    const parts = new Intl.DateTimeFormat('en-CA', {
+      timeZone: 'Asia/Kuala_Lumpur',
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit'
+    }).formatToParts(new Date());
+    const values = Object.fromEntries(parts.map(part => [part.type, part.value]));
+    return values.year + '-' + values.month + '-' + values.day;
+  };
+
+  const syncDate = () => {
+    if (dateInput) dateInput.value = malaysiaDate();
+  };
+
+  const pointFor = event => {
+    const rect = canvas.getBoundingClientRect();
+    return {
+      x: (event.clientX - rect.left) * (canvas.width / rect.width),
+      y: (event.clientY - rect.top) * (canvas.height / rect.height)
+    };
+  };
+
+  const start = event => {
+    if (event.button !== undefined && event.button !== 0) return;
+    event.preventDefault();
+    const point = pointFor(event);
+    drawing = true;
+    canvas.setPointerCapture?.(event.pointerId);
+    ctx.beginPath();
+    ctx.moveTo(point.x, point.y);
+  };
+
+  const move = event => {
+    if (!drawing) return;
+    event.preventDefault();
+    const point = pointFor(event);
+    ctx.lineTo(point.x, point.y);
+    ctx.stroke();
+    signed = true;
+    signatureInput.value = canvas.toDataURL('image/png');
+    if (placeholder) placeholder.hidden = true;
+    if (error) error.hidden = true;
+    pad?.classList.add('has-signature');
+  };
+
+  const stop = event => {
+    if (!drawing) return;
+    drawing = false;
+    canvas.releasePointerCapture?.(event.pointerId);
+    if (signed) signatureInput.value = canvas.toDataURL('image/png');
+  };
+
+  canvas.addEventListener('pointerdown', start);
+  canvas.addEventListener('pointermove', move);
+  canvas.addEventListener('pointerup', stop);
+  canvas.addEventListener('pointercancel', stop);
+  canvas.addEventListener('pointerleave', event => {
+    if (event.buttons === 0) stop(event);
+  });
+
+  clearButton?.addEventListener('click', () => {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    signed = false;
+    signatureInput.value = '';
+    if (placeholder) placeholder.hidden = false;
+    if (error) error.hidden = true;
+    pad?.classList.remove('has-signature', 'is-invalid');
+  });
+
+  form.addEventListener('submit', event => {
+    syncDate();
+
+    if (!signatureInput.value || !signed) {
+      event.preventDefault();
+      if (error) error.hidden = false;
+      pad?.classList.add('is-invalid');
+      pad?.scrollIntoView({ behavior:'smooth', block:'center' });
+      pad?.focus({ preventScroll:true });
+    }
+  });
+
+  syncDate();
+  document.addEventListener('visibilitychange', () => {
+    if (!document.hidden) syncDate();
+  });
+})();
+</script>
+
+<script>
+(() => {
+  const form = document.querySelector('.tea-official-form');
   const sheet = document.querySelector('.tea-print-sheet');
   if (!form || !sheet) return;
 
@@ -705,9 +851,21 @@ window.SEDCO_FORM_CONTEXT = { role: <?= json_encode($user['role'] ?? 'staff') ?>
   const buildPrintSheet = () => {
     setText('[data-print-employee]', valueOf('employee_name'));
     setText('[data-print-division]', valueOf('division'));
+    setText('[data-print-evaluator]', valueOf('evaluated_by'));
     setText('[data-print-head]', valueOf('head_division'));
     setText('[data-print-date]', formatDate(valueOf('date')));
-    setText('[data-print-signature]', valueOf('signature'));
+
+    const signatureValue = valueOf('signature');
+    const signatureImage = sheet.querySelector('[data-print-signature]');
+    if (signatureImage) {
+      if (/^data:image\/png;base64,/i.test(signatureValue)) {
+        signatureImage.src = signatureValue;
+        signatureImage.hidden = false;
+      } else {
+        signatureImage.removeAttribute('src');
+        signatureImage.hidden = true;
+      }
+    }
 
     const month = form.querySelector('input[name="month"]:checked')?.value || '';
     const juneBox = sheet.querySelector('[data-print-month-june]');
