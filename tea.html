@@ -18,12 +18,19 @@
       <div class="tea-system-header-copy">
         <span class="tea-system-kicker">TRAINING EFFECTIVENESS ASSESSMENT FORM 2025</span>
         <h1>Training Effectiveness Assessment</h1>
-        <p>Improvement after attending training, evaluated in June or December of the training year.</p>
+        <p>Improvement after attending training, evaluated only in January, June, July or December.</p>
       </div>
       <span class="tea-system-owner"><i class="bi bi-person-check"></i> HOD only</span>
     </header>
 
     <div class="form-permission-notice tea-system-permission" data-form-permission-notice></div>
+    <div class="alert alert-warning d-flex align-items-start gap-2 mb-3 tea-evaluation-window-notice" data-evaluation-closed hidden role="status">
+      <i class="bi bi-calendar-x mt-1"></i>
+      <div>
+        <strong>TEA evaluation is closed this month.</strong>
+        <div>Assessments can only be completed in January, June, July and December.</div>
+      </div>
+    </div>
 
     <form class="tea-official-form tea-system-form" data-form-owner="head_of_department" method="post" action="#">
       <input type="hidden" name="parent_application_id" id="teaParentApplicationId" value="">
@@ -56,7 +63,7 @@
             <div><span>Status</span><strong>Ready to evaluate</strong></div>
           </div>
           <div class="tea-system-period-row">
-            <div><strong>Month of evaluation</strong><span>Automatically selected based on the current month.</span></div>
+            <div><strong>Month of evaluation</strong><span data-evaluation-period-copy>Automatically selected for the current evaluation month.</span></div>
             <div class="tea-system-period-options" data-auto-evaluation-period>
               <label><input type="radio" name="month" value="June" required><span><i class="bi bi-calendar3"></i> Jan / June</span></label>
               <label><input type="radio" name="month" value="December" required><span><i class="bi bi-calendar3"></i> July / Dec</span></label>
@@ -180,7 +187,7 @@
     <div class="tea-print-title">
       <strong>PERBADANAN PEMBANGUNAN EKONOMI SABAH (SEDCO)</strong>
       <span>TRAINING EFFECTIVENESS ASSESSMENT FORM 2025</span>
-      <em>Improvement after attending training (to be evaluated in June or December in year of training)</em>
+      <em>Improvement after attending training (evaluation available in January, June, July or December)</em>
     </div>
     <div class="tea-print-header-spacer"></div>
   </header>
@@ -245,12 +252,39 @@
   window.SEDCO_FORM_CONTEXT = { role, mode: 'new', formType: 'TEA' };
 
   const currentMonth = new Date().getMonth() + 1;
-  const autoEvaluationPeriod = currentMonth <= 6 ? 'June' : 'December';
+  const evaluationOpen = [1, 6, 7, 12].includes(currentMonth);
+  const autoEvaluationPeriod = [1, 6].includes(currentMonth)
+    ? 'June'
+    : ([7, 12].includes(currentMonth) ? 'December' : '');
+
   document.querySelectorAll('input[name="month"]').forEach(radio => {
-    const active = radio.value === autoEvaluationPeriod;
+    const active = evaluationOpen && radio.value === autoEvaluationPeriod;
     radio.checked = active;
     radio.disabled = !active;
   });
+
+  const closedNotice = document.querySelector('[data-evaluation-closed]');
+  if (closedNotice) closedNotice.hidden = evaluationOpen;
+
+  const periodCopy = document.querySelector('[data-evaluation-period-copy]');
+  if (periodCopy && !evaluationOpen) {
+    periodCopy.textContent = 'Available only in January, June, July and December.';
+  }
+
+  if (!evaluationOpen) {
+    const employeePicker = document.getElementById('teaEligibleEmployee');
+    const addColumnInput = document.querySelector('[data-new-criterion]');
+    const addColumnButton = document.querySelector('[data-add-criterion]');
+    const submitButton = document.querySelector('.tea-system-actions button[type="submit"]');
+
+    if (employeePicker) employeePicker.disabled = true;
+    if (addColumnInput) addColumnInput.disabled = true;
+    if (addColumnButton) addColumnButton.disabled = true;
+    if (submitButton) {
+      submitButton.disabled = true;
+      submitButton.innerHTML = '<i class="bi bi-lock"></i> Evaluation unavailable this month';
+    }
+  }
 
   const head = document.querySelector('input[name="head_division"]');
   const division = document.querySelector('select[name="division"]');
