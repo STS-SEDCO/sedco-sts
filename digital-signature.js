@@ -199,6 +199,7 @@
     document.querySelectorAll('form').forEach(form => {
       form.addEventListener('submit', event => {
         if (event.submitter?.classList.contains('form-print-button')) return;
+        if (String(event.submitter?.value || '').toLowerCase() === 'correction') return;
 
         if (!validateForm(form)) {
           event.preventDefault();
