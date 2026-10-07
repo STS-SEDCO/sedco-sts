@@ -58,7 +58,15 @@
             const badge = document.createElement('span');
             badge.className = 'sts-correction-field-badge';
             badge.innerHTML = '<i class="bi bi-pencil-square"></i> Please correct this field';
-            container.appendChild(badge);
+
+            const badgeHost = container.tagName === 'TR'
+              ? (container.querySelector('td:last-child') || container.querySelector('td'))
+              : container;
+
+            if (badgeHost) {
+              badgeHost.classList.add('sts-correction-badge-host');
+              badgeHost.appendChild(badge);
+            }
           }
 
           if (!first && !field.disabled && field.type !== 'hidden') first = field;
