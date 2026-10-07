@@ -19,6 +19,10 @@ $userId = (int) $user['id'];
 sts_repair_pending_bpl_stages();
 $role = normalized_role($user['role'] ?? '');
 $department = trim((string) ($user['department'] ?? ''));
+$teaEvaluationMonth = (int) (
+    new DateTimeImmutable('now', new DateTimeZone('Asia/Kuala_Lumpur'))
+)->format('n');
+$teaEvaluationOpen = in_array($teaEvaluationMonth, [1, 6, 7, 12], true);
 
 $stats = [
     ['label' => 'Total', 'value' => 0, 'icon' => 'bi-files', 'tone' => 'neutral'],
@@ -78,6 +82,7 @@ if ($role === 'staff') {
            AND b.form_type = "BPL"
            AND b.status = "approved"
            AND b.training_end IS NOT NULL
+           AND b.training_end <= CURDATE()
          ORDER BY b.training_end DESC
          LIMIT 8'
     );
@@ -228,22 +233,29 @@ if ($role === 'staff') {
         while ($row = $queueResult->fetch_assoc()) $queue[] = $row;
         $queueStmt->close();
 
-        if ($role === 'head_of_department') {
+        if ($role === 'head_of_department' && $teaEvaluationOpen) {
             $followStmt = $db->prepare(
                 'SELECT b.id, b.application_no, b.title, b.training_end, b.department,
                         EXISTS(
                           SELECT 1 FROM applications t
-                          WHERE t.parent_application_id = b.id AND t.form_type = "TEA"
+                          WHERE t.parent_application_id = b.id
+                            AND t.form_type = "TEA"
+                            AND t.status <> "cancelled"
                         ) AS has_tea
                  FROM applications b
+                 INNER JOIN users u ON u.id = b.user_id
                  WHERE b.form_type = "BPL"
                    AND b.status = "approved"
-                   AND (
-                     b.assigned_hod_id = ?
-                     OR (
-                       b.assigned_hod_id IS NULL
-                       AND (b.department = ? OR b.department IS NULL OR b.department = "")
-                     )
+                   AND b.training_end IS NOT NULL
+                   AND b.training_end <= CURDATE()
+                   AND b.user_id <> ?
+                   AND LOWER(TRIM(COALESCE(NULLIF(b.department, ""), NULLIF(u.department, "")))) = LOWER(TRIM(?))
+                   AND EXISTS (
+                     SELECT 1 FROM applications p
+                     WHERE p.parent_application_id = b.id
+                       AND p.form_type = "PKK"
+                       AND p.status = "approved"
+                       AND p.current_stage = "completed"
                    )
                  ORDER BY b.training_end DESC
                  LIMIT 10'
@@ -261,17 +273,43 @@ if ($role === 'staff') {
     }
 }
 
-$calendarStmt = $db->prepare(
-    'SELECT application_no, title, training_start, training_end
-     FROM applications
-     WHERE form_type = "BPL"
-       AND status = "approved"
-       AND training_start IS NOT NULL
-       AND (? = "admin" OR user_id = ? OR ? <> "staff")
-     ORDER BY training_start ASC
-     LIMIT 100'
-);
-$calendarStmt->bind_param('sis', $role, $userId, $role);
+if ($role === 'staff') {
+    $calendarStmt = $db->prepare(
+        'SELECT application_no, title, training_start, training_end
+         FROM applications
+         WHERE form_type = "BPL"
+           AND status = "approved"
+           AND training_start IS NOT NULL
+           AND user_id = ?
+         ORDER BY training_start ASC
+         LIMIT 100'
+    );
+    $calendarStmt->bind_param('i', $userId);
+} elseif ($role === 'head_of_department') {
+    $calendarStmt = $db->prepare(
+        'SELECT a.application_no, a.title, a.training_start, a.training_end
+         FROM applications a
+         INNER JOIN users u ON u.id = a.user_id
+         WHERE a.form_type = "BPL"
+           AND a.status = "approved"
+           AND a.training_start IS NOT NULL
+           AND LOWER(TRIM(COALESCE(NULLIF(a.department, ""), NULLIF(u.department, "")))) = LOWER(TRIM(?))
+         ORDER BY a.training_start ASC
+         LIMIT 100'
+    );
+    $calendarStmt->bind_param('s', $department);
+} else {
+    $calendarStmt = $db->prepare(
+        'SELECT application_no, title, training_start, training_end
+         FROM applications
+         WHERE form_type = "BPL"
+           AND status = "approved"
+           AND training_start IS NOT NULL
+         ORDER BY training_start ASC
+         LIMIT 100'
+    );
+}
+
 $calendarStmt->execute();
 $calendarResult = $calendarStmt->get_result();
 
