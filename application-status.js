@@ -71,6 +71,75 @@
     }
   }
 
+  function workflowStepMeta(application, stage) {
+    const history = Array.isArray(application.workflow) ? application.workflow : [];
+    const matches = history.filter(item => String(item.stage || '').toLowerCase() === stage);
+    const latest = matches[matches.length - 1] || null;
+    const current = String(application.currentStage || '').toLowerCase();
+    const status = String(application.status || '').toLowerCase();
+
+    if (latest?.decision === 'approved') {
+      return {
+        cls:'done',
+        icon:'bi-check',
+        label:stageLabel(stage),
+        detail:(latest.reviewer || 'Approved') + (latest.reviewedAt ? ' · ' + formatDate(latest.reviewedAt) : '')
+      };
+    }
+
+    if (latest?.decision === 'correction') {
+      return {
+        cls:'correction',
+        icon:'bi-arrow-counterclockwise',
+        label:stageLabel(stage),
+        detail:'Correction requested' + (latest.reviewer ? ' by ' + latest.reviewer : '')
+      };
+    }
+
+    if (latest?.decision === 'rejected') {
+      return {
+        cls:'rejected',
+        icon:'bi-x',
+        label:stageLabel(stage),
+        detail:'Rejected' + (latest.reviewer ? ' by ' + latest.reviewer : '')
+      };
+    }
+
+    if (status === 'pending' && current === stage) {
+      return { cls:'active', icon:'bi-clock', label:stageLabel(stage), detail:'Waiting for review' };
+    }
+
+    if (status === 'correction' && current === stage) {
+      return { cls:'correction', icon:'bi-arrow-counterclockwise', label:stageLabel(stage), detail:'Waiting for correction' };
+    }
+
+    return { cls:'upcoming', icon:'bi-circle', label:stageLabel(stage), detail:'Upcoming' };
+  }
+
+  function workflowTracker(application) {
+    if (String(application.type || '').toUpperCase() !== 'BPL') return '';
+
+    const required = Array.isArray(application.requiredStages) && application.requiredStages.length
+      ? application.requiredStages
+      : ['training','hod','gm','chairman','finance'];
+
+    const steps = required.map(stage => workflowStepMeta(application, stage));
+    const completed = String(application.status || '').toLowerCase() === 'approved';
+
+    return `
+      <div class="application-progress-tracker" aria-label="Approval progress">
+        ${steps.map((step,index) => `
+          <div class="application-progress-step is-${step.cls}" title="${escapeHtml(step.detail)}">
+            <span><i class="bi ${step.icon}"></i></span>
+            <small>${escapeHtml(step.label)}</small>
+          </div>
+          ${index < steps.length - 1 ? '<i class="application-progress-line"></i>' : ''}
+        `).join('')}
+        ${completed ? '<div class="application-progress-complete"><i class="bi bi-check2-all"></i> Completed</div>' : ''}
+      </div>
+    `;
+  }
+
   function formatDate(value, includeTime = false) {
     if (!value) return 'Not available';
 
@@ -181,6 +250,7 @@
               <i class="bi ${status.icon}"></i>${status.label}
             </span>
             ${application.type === 'BPL' ? `<div class="application-stage-text">Stage: ${escapeHtml(stage)}</div>` : ''}
+            ${workflowTracker(application)}
             ${application.status === 'correction' && application.reviewNote
               ? `<div class="application-correction-note"><i class="bi bi-info-circle"></i><span>${escapeHtml(application.reviewNote)}</span></div>`
               : ''}
