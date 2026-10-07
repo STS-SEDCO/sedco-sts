@@ -42,4 +42,4 @@ $logs=[]; while($row=$result->fetch_assoc())$logs[]=$row;
 <?php if(!$logs): ?><tr><td colspan="6" class="text-center py-5 text-muted">No audit records yet.</td></tr><?php endif; ?>
 </tbody></table></div>
 </section>
-</div></main><script src="sedco-shell.js?v=20261007-03"></script></body></html>
+</div></main><script src="sedco-shell.js?v=20261007-04"></script></body></html>
