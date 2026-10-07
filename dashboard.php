@@ -442,7 +442,7 @@ $unreadNotifications = sts_unread_notifications($userId);
   <title>Smart Training System: Dashboard</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-  <link rel="stylesheet" href="sedco-saas.css?v=20261007-05">
+  <link rel="stylesheet" href="sedco-saas.css?v=20261007-06">
   <link rel="stylesheet" href="sedco-shell.css?v=20261007-02">
 </head>
 <body class="app-page dashboard-page dashboard-v4" data-page="dashboard" data-role="<?= e($role) ?>">
