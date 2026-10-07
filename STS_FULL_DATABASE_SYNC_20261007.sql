@@ -537,24 +537,25 @@ ORDER BY FIELD(
 
 -- ============================================================
 -- 17. TABLE CHECKLIST
+--    Uses SHOW TABLES instead of information_schema so it also
+--    works on restricted local/phpMyAdmin accounts.
 -- ============================================================
 
-SELECT table_name
-FROM information_schema.tables
-WHERE table_schema = DATABASE()
-  AND table_name IN (
-    'users',
-    'applications',
-    'application_reviews',
-    'departments',
-    'application_drafts',
-    'application_versions',
-    'application_attachments',
-    'notifications',
-    'audit_logs',
-    'system_settings',
-    'calendar_events',
-    'email_queue',
-    'tasks'
-  )
-ORDER BY table_name;
+SHOW TABLES;
+
+-- Quick feature verification without information_schema access.
+SELECT 'notifications' AS feature, COUNT(*) AS records FROM notifications
+UNION ALL
+SELECT 'application_reviews', COUNT(*) FROM application_reviews
+UNION ALL
+SELECT 'application_versions', COUNT(*) FROM application_versions
+UNION ALL
+SELECT 'application_drafts', COUNT(*) FROM application_drafts
+UNION ALL
+SELECT 'departments', COUNT(*) FROM departments
+UNION ALL
+SELECT 'audit_logs', COUNT(*) FROM audit_logs
+UNION ALL
+SELECT 'calendar_events', COUNT(*) FROM calendar_events
+UNION ALL
+SELECT 'email_queue', COUNT(*) FROM email_queue;
