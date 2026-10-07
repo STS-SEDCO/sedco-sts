@@ -1021,6 +1021,153 @@ function sts_can_review_application(array $application, array $user): bool
         && $stage !== 'completed';
 }
 
+function sts_calendar_feed(
+    array $user,
+    ?string $startDate = null,
+    ?string $endDate = null,
+    string $filterDepartment = '',
+    string $search = ''
+): array {
+    $db = db();
+    $role = normalized_role($user['role'] ?? '');
+    $userId = (int) ($user['id'] ?? 0);
+    $userDepartment = trim((string) ($user['department'] ?? ''));
+
+    $where = [
+        'a.form_type = "BPL"',
+        'a.status = "approved"',
+        'a.training_start IS NOT NULL',
+    ];
+    $params = [];
+    $types = '';
+
+    if ($startDate !== null && $endDate !== null) {
+        $where[] = 'a.training_start < ?';
+        $where[] = 'COALESCE(a.training_end, a.training_start) >= ?';
+        $params[] = $endDate;
+        $params[] = $startDate;
+        $types .= 'ss';
+    }
+
+    if ($role === 'staff') {
+        $where[] = 'a.user_id = ?';
+        $params[] = $userId;
+        $types .= 'i';
+    } elseif ($role === 'head_of_department') {
+        $where[] = 'LOWER(TRIM(COALESCE(NULLIF(a.department,""),NULLIF(u.department,"")))) = LOWER(TRIM(?))';
+        $params[] = $userDepartment;
+        $types .= 's';
+    } elseif ($filterDepartment !== '') {
+        $where[] = 'COALESCE(NULLIF(a.department,""),NULLIF(u.department,"")) = ?';
+        $params[] = $filterDepartment;
+        $types .= 's';
+    }
+
+    if ($search !== '') {
+        $like = '%' . $search . '%';
+        $where[] = '(a.title LIKE ? OR u.fullname LIKE ? OR a.application_no LIKE ?)';
+        $params[] = $like;
+        $params[] = $like;
+        $params[] = $like;
+        $types .= 'sss';
+    }
+
+    $sql =
+        'SELECT a.id,a.application_no,a.title,a.department,a.training_start,a.training_end,
+                a.user_id,u.fullname,
+                COALESCE(NULLIF(a.department,""),NULLIF(u.department,"")) AS resolved_department
+         FROM applications a
+         INNER JOIN users u ON u.id = a.user_id
+         WHERE ' . implode(' AND ', $where) . '
+         ORDER BY a.training_start ASC,u.fullname ASC';
+
+    $stmt = $db->prepare($sql);
+
+    if ($params) {
+        $bind = [$types];
+        foreach ($params as $index => $value) {
+            $bind[] = &$params[$index];
+        }
+        call_user_func_array([$stmt, 'bind_param'], $bind);
+    }
+
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    $trainings = [];
+    $events = [];
+
+    while ($row = $result->fetch_assoc()) {
+        $row['department'] = (string) ($row['resolved_department'] ?? $row['department'] ?? '');
+        $row['training_end'] = (string) ($row['training_end'] ?: $row['training_start']);
+        $trainings[] = $row;
+
+        $events[] = [
+            'date' => (string) $row['training_start'],
+            'endDate' => (string) $row['training_end'],
+            'title' => (string) $row['title'],
+            'ref' => (string) $row['application_no'],
+            'type' => 'training',
+            'kind' => 'training',
+            'applicant' => (string) $row['fullname'],
+            'department' => (string) ($row['department'] ?: 'Unassigned'),
+            'url' => 'application-detail.php?application=' . rawurlencode((string) $row['application_no']),
+        ];
+    }
+    $stmt->close();
+
+    $eventWhere = [];
+    $eventParams = [];
+    $eventTypes = '';
+
+    if ($startDate !== null && $endDate !== null) {
+        $eventWhere[] = 'event_date >= ?';
+        $eventWhere[] = 'event_date < ?';
+        $eventParams[] = $startDate;
+        $eventParams[] = $endDate;
+        $eventTypes = 'ss';
+    }
+
+    $eventSql =
+        'SELECT id,title,event_date,event_type,description
+         FROM calendar_events'
+        . ($eventWhere ? ' WHERE ' . implode(' AND ', $eventWhere) : '')
+        . ' ORDER BY event_date ASC,title ASC';
+
+    $eventStmt = $db->prepare($eventSql);
+
+    if ($eventParams) {
+        $eventStmt->bind_param($eventTypes, ...$eventParams);
+    }
+
+    $eventStmt->execute();
+    $eventResult = $eventStmt->get_result();
+    $companyEvents = [];
+
+    while ($row = $eventResult->fetch_assoc()) {
+        $companyEvents[] = $row;
+        $events[] = [
+            'date' => (string) $row['event_date'],
+            'endDate' => (string) $row['event_date'],
+            'title' => (string) $row['title'],
+            'ref' => '',
+            'type' => (string) ($row['event_type'] ?: 'company'),
+            'kind' => 'company',
+            'applicant' => 'Company event',
+            'department' => 'SEDCO',
+            'url' => '#',
+        ];
+    }
+    $eventStmt->close();
+
+    return [
+        'trainings' => $trainings,
+        'company_events' => $companyEvents,
+        'events' => $events,
+    ];
+}
+
+
 function sts_unread_notifications(int $userId): int
 {
     try {
