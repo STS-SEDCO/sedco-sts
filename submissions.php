@@ -29,7 +29,7 @@ sts_ensure_sla_escalations();
 $stmt = db()->prepare(
     'SELECT a.id, a.application_no, a.user_id, a.form_type, a.title, a.payload, a.status,
             a.department, a.assigned_hod_id, a.current_stage, a.review_note,
-            a.sla_due_at, a.submitted_at, a.updated_at, u.fullname
+            a.sla_due_at, a.submitted_at, a.updated_at, u.fullname, u.role AS applicant_role
      FROM applications a
      INNER JOIN users u ON u.id = a.user_id
      WHERE a.form_type = "BPL"
@@ -54,6 +54,63 @@ while ($row = $result->fetch_assoc()) {
 
     $payload = json_decode((string) $row['payload'], true);
     $payload = is_array($payload) ? $payload : [];
+
+    $applicationId = (int) $row['id'];
+
+    $attachmentStmt = db()->prepare(
+        'SELECT COUNT(*) AS total
+         FROM application_attachments
+         WHERE application_id = ?'
+    );
+    $attachmentStmt->bind_param('i', $applicationId);
+    $attachmentStmt->execute();
+    $attachmentCount = (int) ($attachmentStmt->get_result()->fetch_assoc()['total'] ?? 0);
+    $attachmentStmt->close();
+
+    $reviewHistory = [];
+    $historyStmt = db()->prepare(
+        'SELECT r.review_stage,r.decision,r.reviewed_at,reviewer.fullname AS reviewer_name
+         FROM application_reviews r
+         INNER JOIN users reviewer ON reviewer.id = r.reviewer_id
+         WHERE r.application_id = ?
+         ORDER BY r.reviewed_at ASC,r.id ASC'
+    );
+    $historyStmt->bind_param('i', $applicationId);
+    $historyStmt->execute();
+    $historyResult = $historyStmt->get_result();
+
+    while ($history = $historyResult->fetch_assoc()) {
+        $reviewHistory[] = [
+            'stage'=>(string)$history['review_stage'],
+            'decision'=>(string)$history['decision'],
+            'reviewer'=>(string)$history['reviewer_name'],
+            'reviewedAt'=>(string)$history['reviewed_at'],
+        ];
+    }
+    $historyStmt->close();
+
+    $qualityFlags = [];
+    $start = trim((string) ($payload['tarikh_mula'] ?? ''));
+    $end = trim((string) ($payload['tarikh_tamat'] ?? ''));
+    $feeRaw = trim((string) ($payload['yuran'] ?? ''));
+
+    if ($start !== '' && $end !== '' && strtotime($end) < strtotime($start)) {
+        $qualityFlags[] = 'Training end date is earlier than the start date.';
+    }
+
+    $cleanFee = preg_replace('/[^0-9.]/','',$feeRaw) ?? '';
+    if ($feeRaw !== '' && ($cleanFee === '' || !is_numeric($cleanFee))) {
+        $qualityFlags[] = 'Course fee is not a valid number.';
+    }
+
+    if (
+        normalized_role((string) ($row['applicant_role'] ?? '')) === 'staff'
+        && empty($row['assigned_hod_id'])
+        && trim((string) ($row['department'] ?? '')) !== ''
+        && sts_department_hod((string) $row['department']) === null
+    ) {
+        $qualityFlags[] = 'No HOD is assigned to the applicant department.';
+    }
 
     $submissions[] = [
         'id' => $row['application_no'],
@@ -83,6 +140,9 @@ while ($row = $result->fetch_assoc()) {
             : null,
         'submittedAt' => $row['submitted_at'],
         'updatedAt' => $row['updated_at'],
+        'attachmentCount' => $attachmentCount,
+        'reviewHistory' => $reviewHistory,
+        'qualityFlags' => $qualityFlags,
         'data' => $payload,
     ];
 }
@@ -97,7 +157,7 @@ $stmt->close();
   <title>Smart Training System: Approval</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-  <link rel="stylesheet" href="sedco-saas.css?v=20261007-10">
+  <link rel="stylesheet" href="sedco-saas.css?v=20261007-12">
   <link rel="stylesheet" href="sedco-shell.css?v=20261007-03">
 </head>
 <body class="app-page submissions-page" data-page="submissions" data-role="<?= e(normalized_role($user['role'] ?? '')) ?>">
@@ -486,7 +546,7 @@ window.SEDCO_SUBMISSIONS = <?= json_encode(
     | JSON_HEX_QUOT
 ) ?>;
 </script>
-<script src="submissions.js?v=20261007-02"></script>
+<script src="submissions.js?v=20261007-03"></script>
 <script src="sedco-shell.js?v=20261007-03"></script>
 </body>
 </html>
