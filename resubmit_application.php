@@ -103,6 +103,12 @@ try {
         throw new RuntimeException('Please specify the other vehicle.');
     }
 
+    unset(
+        $payload['_correction_fields'],
+        $payload['_correction_stage'],
+        $payload['_correction_requested_at']
+    );
+
     $payloadJson = json_encode(
         $payload,
         JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR
