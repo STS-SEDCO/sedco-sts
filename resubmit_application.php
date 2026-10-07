@@ -93,6 +93,15 @@ try {
         }
     }
 
+    if (
+        normalized_role((string) ($user['role'] ?? '')) === 'staff'
+        && sts_department_hod((string) ($payload['bahagian'] ?? '')) === null
+    ) {
+        throw new RuntimeException(
+            'Your department does not have an assigned HOD yet. Please ask the STS administrator to configure the HOD before resubmitting BPL.'
+        );
+    }
+
     $start = trim((string) ($payload['tarikh_mula'] ?? ''));
     $end = trim((string) ($payload['tarikh_tamat'] ?? ''));
     $feeRaw = trim((string) ($payload['yuran'] ?? ''));
