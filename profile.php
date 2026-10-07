@@ -793,7 +793,7 @@ try {
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-<script src="sedco-shell.js?v=20261007-03"></script>
+<script src="sedco-shell.js?v=20261007-04"></script>
 <script>
 (() => {
   const input = document.getElementById('profilePhotoInput');
