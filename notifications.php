@@ -16,6 +16,7 @@ $notifications = [];
 $notificationsUnavailable = false;
 
 sts_ensure_followup_notifications($user);
+sts_ensure_sla_escalations();
 
 try {
     $stmt = db()->prepare(
