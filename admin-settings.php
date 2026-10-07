@@ -150,7 +150,7 @@ $emailCounts = db()->query(
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 <link rel="stylesheet" href="sedco-saas.css?v=20261007-06">
-<link rel="stylesheet" href="sedco-shell.css?v=20261007-14">
+<link rel="stylesheet" href="sedco-shell.css?v=20261007-15">
 </head>
 <body class="app-page admin-page" data-page="admin-settings" data-role="admin">
 <main class="sts-page-content"><div class="sts-page-shell">
