@@ -61,7 +61,7 @@ function notification_icon(string $type): string
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
   <link rel="stylesheet" href="sedco-saas.css?v=20261006-12">
-  <link rel="stylesheet" href="sedco-shell.css?v=20261007-03">
+  <link rel="stylesheet" href="sedco-shell.css?v=20261007-05">
 </head>
 <body class="app-page notifications-page" data-page="notifications" data-role="<?= e(normalized_role($user['role'] ?? '')) ?>">
 <main class="sts-page-content">
