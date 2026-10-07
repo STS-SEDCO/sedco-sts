@@ -437,6 +437,6 @@ if ($employee && training_history_can_view($viewer, $employee)) {
     <?php endif; ?>
   </div>
 </main>
-<script src="sedco-shell.js?v=20261007-03"></script>
+<script src="sedco-shell.js?v=20261007-04"></script>
 </body>
 </html>
