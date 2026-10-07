@@ -114,7 +114,7 @@ $canReviewCurrentStage = $mode === 'review'
     </script>
     <link rel="stylesheet" href="sedco-saas.css?v=20261006-10">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-  <link rel="stylesheet" href="sedco-shell.css?v=20261007-02">
+  <link rel="stylesheet" href="sedco-shell.css?v=20261007-03">
 </head>
 <body class="app-page form-page bpl-page" data-page="task" data-role="<?= e(normalized_role($user['role'] ?? '')) ?>">
 
@@ -523,6 +523,6 @@ window.SEDCO_FORM_CONTEXT = {
 <script src="digital-signature.js?v=20261006-03"></script>
 <script src="form-ux.js?v=20261006-06"></script>
 <script src="form-enhancements.js?v=20260930-59"></script>
-<script src="sedco-shell.js?v=20261007-02"></script>
+<script src="sedco-shell.js?v=20261007-03"></script>
 </body>
 </html>
