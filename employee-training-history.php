@@ -318,7 +318,7 @@ if ($employee && training_history_can_view($viewer, $employee)) {
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
   <link rel="stylesheet" href="sedco-saas.css?v=20261007-10">
-  <link rel="stylesheet" href="sedco-shell.css?v=20261007-05">
+  <link rel="stylesheet" href="sedco-shell.css?v=20261007-14">
 </head>
 <body class="app-page employee-history-page" data-page="reports" data-role="<?= e($viewerRole) ?>">
 <main class="sts-page-content">
@@ -437,6 +437,6 @@ if ($employee && training_history_can_view($viewer, $employee)) {
     <?php endif; ?>
   </div>
 </main>
-<script src="sedco-shell.js?v=20261007-04"></script>
+<script src="sedco-shell.js?v=20261007-05"></script>
 </body>
 </html>

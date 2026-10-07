@@ -198,7 +198,7 @@ $query=http_build_query(array_filter([
 <title>Smart Training System: Reports and Analytics</title>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-<link rel="stylesheet" href="sedco-saas.css?v=20261007-17"><link rel="stylesheet" href="sedco-shell.css?v=20261007-11">
+<link rel="stylesheet" href="sedco-saas.css?v=20261007-17"><link rel="stylesheet" href="sedco-shell.css?v=20261007-14">
 </head>
 <body class="app-page reports-page" data-page="reports" data-role="<?= e($role) ?>">
 <main class="sts-page-content"><div class="sts-page-shell">
@@ -317,4 +317,4 @@ window.STS_REPORT_SERVER_ANALYTICS = <?= json_encode([
 ], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_HEX_TAG | JSON_HEX_AMP) ?>;
 </script>
 <script src="reports.js?v=20261007-04"></script>
-<script src="sedco-shell.js?v=20261007-04"></script></body></html>
+<script src="sedco-shell.js?v=20261007-05"></script></body></html>

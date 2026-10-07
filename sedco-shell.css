@@ -4974,3 +4974,62 @@ body.app-page > .sedco-navbar .sedco-top-notification-badge{
     }
   }
 }
+/* ===== SMOOTH SHELL FIRST PAINT 2026-10-07 ===== */
+@media screen {
+  html{background:#f7f8fa}
+  body.app-page{background-color:#f7f8fa !important}
+
+  body.app-page:not(.sedco-shell-ready) > .sedco-navbar,
+  body.app-page:not(.sedco-shell-ready) > .sedco-sidebar,
+  body.app-page:not(.sedco-shell-ready) > .sedco-sidebar-backdrop,
+  body.app-page:not(.sedco-shell-ready) > main,
+  body.app-page:not(.sedco-shell-ready) > .content,
+  body.app-page:not(.sedco-shell-ready) > .main-content,
+  body.app-page:not(.sedco-shell-ready) > .form-container,
+  body.app-page:not(.sedco-shell-ready) > .card-container,
+  body.app-page:not(.sedco-shell-ready) > .profile-content,
+  body.app-page:not(.sedco-shell-ready) > .status-content{
+    opacity:0 !important;
+    visibility:hidden !important;
+  }
+
+  body.app-page.sedco-shell-ready > .sedco-navbar,
+  body.app-page.sedco-shell-ready > .sedco-sidebar,
+  body.app-page.sedco-shell-ready > main,
+  body.app-page.sedco-shell-ready > .content,
+  body.app-page.sedco-shell-ready > .main-content,
+  body.app-page.sedco-shell-ready > .form-container,
+  body.app-page.sedco-shell-ready > .card-container,
+  body.app-page.sedco-shell-ready > .profile-content,
+  body.app-page.sedco-shell-ready > .status-content{
+    opacity:1;
+    visibility:visible;
+  }
+
+  body.app-page.sedco-shell-ready > main,
+  body.app-page.sedco-shell-ready > .content,
+  body.app-page.sedco-shell-ready > .main-content,
+  body.app-page.sedco-shell-ready > .form-container,
+  body.app-page.sedco-shell-ready > .card-container,
+  body.app-page.sedco-shell-ready > .profile-content,
+  body.app-page.sedco-shell-ready > .status-content{
+    animation:sedcoShellReveal .14s ease-out both;
+  }
+
+  @keyframes sedcoShellReveal{
+    from{opacity:0}
+    to{opacity:1}
+  }
+
+  @media(prefers-reduced-motion:reduce){
+    body.app-page.sedco-shell-ready > main,
+    body.app-page.sedco-shell-ready > .content,
+    body.app-page.sedco-shell-ready > .main-content,
+    body.app-page.sedco-shell-ready > .form-container,
+    body.app-page.sedco-shell-ready > .card-container,
+    body.app-page.sedco-shell-ready > .profile-content,
+    body.app-page.sedco-shell-ready > .status-content{
+      animation:none !important;
+    }
+  }
+}

@@ -42,6 +42,14 @@
     body.dataset.role || (!isPhp ? previewUser?.role : '') || ''
   ).toLowerCase();
 
+  // Resolve the stored sidebar state before the shell is inserted so the
+  // first painted layout already has the correct content width.
+  try {
+    if (window.innerWidth > 900 && localStorage.getItem('sedcoSidebarCollapsed') === '1') {
+      body.classList.add('sedco-sidebar-collapsed');
+    }
+  } catch {}
+
   const items = [
     ['dashboard', 'Dashboard', 'bi-grid-1x2-fill', pageUrl('dashboard')],
     ['task', 'Training Forms', 'bi-file-earmark-text', pageUrl('task')],
@@ -175,12 +183,6 @@
     toggle?.setAttribute('aria-expanded', String(expanded));
   };
 
-  try {
-    if (window.innerWidth > 900 && localStorage.getItem('sedcoSidebarCollapsed') === '1') {
-      body.classList.add('sedco-sidebar-collapsed');
-    }
-  } catch {}
-
   toggle?.addEventListener('click', () => {
     if (window.innerWidth <= 760) {
       body.classList.toggle('sedco-menu-open');
@@ -220,6 +222,11 @@
   });
 
   syncToggleState();
+
+  // Reveal the shell and page together after layout state is ready.
+  requestAnimationFrame(() => {
+    body.classList.add('sedco-shell-ready');
+  });
 
   const updateNotificationBadge = countValue => {
     const badge = document.querySelector('[data-notification-badge]');

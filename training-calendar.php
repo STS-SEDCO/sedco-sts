@@ -126,7 +126,7 @@ foreach ($companyEvents as $event) {
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
   <link rel="stylesheet" href="sedco-saas.css?v=20261007-16">
-  <link rel="stylesheet" href="sedco-shell.css?v=20261007-09">
+  <link rel="stylesheet" href="sedco-shell.css?v=20261007-14">
 </head>
 <body class="app-page training-calendar-page" data-page="training-calendar" data-role="<?= e($role) ?>" data-calendar-static="0" data-calendar-month="<?= e($month) ?>">
 <main class="sts-page-content">
@@ -230,6 +230,6 @@ window.STS_TRAINING_CALENDAR_ITEMS = <?= json_encode(
 ) ?>;
 </script>
 <script src="training-calendar.js?v=20261007-02"></script>
-<script src="sedco-shell.js?v=20261007-04"></script>
+<script src="sedco-shell.js?v=20261007-05"></script>
 </body>
 </html>

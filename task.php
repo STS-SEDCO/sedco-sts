@@ -105,7 +105,7 @@ if ($role === 'head_of_department') {
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
   <link rel="stylesheet" href="sedco-saas.css?v=20261007-04">
-  <link rel="stylesheet" href="sedco-shell.css?v=20261007-05">
+  <link rel="stylesheet" href="sedco-shell.css?v=20261007-14">
 </head>
 <body class="app-page task-page" data-page="task" data-role="<?= e(normalized_role($user['role'] ?? '')) ?>">
 
@@ -252,6 +252,6 @@ if ($role === 'head_of_department') {
   </div>
 </main>
 
-<script src="sedco-shell.js?v=20261007-04"></script>
+<script src="sedco-shell.js?v=20261007-05"></script>
 </body>
 </html>
