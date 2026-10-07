@@ -33,6 +33,61 @@
     });
 
     setupAutomaticReviewDates(form);
+    setupCorrectionGuidance(form);
+  }
+
+  function setupCorrectionGuidance(form) {
+    const targeted = Array.isArray(data._correction_fields)
+      ? data._correction_fields.map(String)
+      : [];
+
+    if (context.status === 'correction' && targeted.length) {
+      let first = null;
+
+      targeted.forEach(name => {
+        const fields = [...form.querySelectorAll('[name="' + CSS.escape(name) + '"],[name="' + CSS.escape(name + '[]') + '"]')];
+
+        fields.forEach(field => {
+          const container = field.closest('tr, .bpl-applicant-field, .sts-other-field') || field.parentElement;
+          if (!container) return;
+
+          container.classList.add('sts-correction-field-target');
+          container.dataset.correctionTarget = '1';
+
+          if (!container.querySelector('.sts-correction-field-badge')) {
+            const badge = document.createElement('span');
+            badge.className = 'sts-correction-field-badge';
+            badge.innerHTML = '<i class="bi bi-pencil-square"></i> Please correct this field';
+            container.appendChild(badge);
+          }
+
+          if (!first && !field.disabled && field.type !== 'hidden') first = field;
+        });
+      });
+
+      window.setTimeout(() => {
+        if (!first) return;
+        first.scrollIntoView({ behavior:'smooth', block:'center' });
+        window.setTimeout(() => first.focus({ preventScroll:true }), 350);
+      }, 420);
+    }
+
+    form.addEventListener('submit', event => {
+      if (String(event.submitter?.value || '').toLowerCase() !== 'correction') return;
+
+      const checked = [...form.querySelectorAll('input[name="correction_fields[]"]:checked')];
+      const error = form.querySelector('[data-correction-target-error]');
+
+      if (checked.length) {
+        if (error) error.hidden = true;
+        return;
+      }
+
+      event.preventDefault();
+      if (error) error.hidden = false;
+      const panel = form.querySelector('[data-correction-target-panel]');
+      panel?.scrollIntoView({ behavior:'smooth', block:'center' });
+    }, true);
   }
 
   function malaysiaDate() {
