@@ -19,6 +19,8 @@ $canTea = $role === 'head_of_department' && $teaEvaluationOpen;
 $canPkk = false;
 
 $userId = (int) ($user['id'] ?? 0);
+$pendingPkkRequirement = sts_pending_pkk_requirement($userId);
+$canNewBpl = $canStaffForms && $pendingPkkRequirement === null;
 $department = trim((string) ($user['department'] ?? ''));
 $followupItems = [];
 
@@ -102,7 +104,7 @@ if ($role === 'head_of_department') {
   <title>Smart Training System: Training Forms</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-  <link rel="stylesheet" href="sedco-saas.css?v=20261006-10">
+  <link rel="stylesheet" href="sedco-saas.css?v=20261007-03">
   <link rel="stylesheet" href="sedco-shell.css?v=20261007-02">
 </head>
 <body class="app-page task-page" data-page="task" data-role="<?= e(normalized_role($user['role'] ?? '')) ?>">
@@ -121,8 +123,27 @@ if ($role === 'head_of_department') {
       </div>
     </header>
 
+    <?php if ($pendingPkkRequirement): ?>
+    <div class="task-pkk-gate<?= !empty($pendingPkkRequirement['is_overdue']) ? ' is-overdue' : '' ?>">
+      <span class="task-pkk-gate-icon"><i class="bi bi-clipboard2-check"></i></span>
+      <div>
+        <strong>Complete PKK before submitting a new BPL</strong>
+        <p>
+          <?= e((string) $pendingPkkRequirement['application_no']) ?> ·
+          <?= e((string) $pendingPkkRequirement['title']) ?>
+          <?php if (!empty($pendingPkkRequirement['pkk_due_at'])): ?>
+          · PKK due <?= e(date('d M Y', strtotime((string) $pendingPkkRequirement['pkk_due_at']))) ?>
+          <?php endif; ?>
+        </p>
+      </div>
+      <a href="pkk.php?parent=<?= (int) $pendingPkkRequirement['id'] ?>">
+        Fill PKK <i class="bi bi-arrow-up-right"></i>
+      </a>
+    </div>
+    <?php endif; ?>
+
     <section class="task-grid" aria-label="Training forms">
-      <article class="task-form-card<?= $canStaffForms ? '' : ' task-form-card-locked' ?>">
+      <article class="task-form-card<?= $canNewBpl ? '' : ' task-form-card-locked' ?>">
         <div class="task-card-top">
           <span class="task-form-icon"><i class="bi bi-file-earmark-text"></i></span>
           <span class="task-form-code">BPL</span>
@@ -132,9 +153,19 @@ if ($role === 'head_of_department') {
           <p>Submit a training request for review and approval through the STS workflow.</p>
         </div>
         <div class="task-card-footer">
-          <span class="task-card-status"><?= $canStaffForms ? '<i class="bi bi-circle-fill"></i> Ready to apply' : '<i class="bi bi-lock-fill"></i> Applicant access' ?></span>
-          <?php if ($canStaffForms): ?>
+          <span class="task-card-status">
+            <?= $canNewBpl
+              ? '<i class="bi bi-circle-fill"></i> Ready to apply'
+              : ($pendingPkkRequirement
+                  ? '<i class="bi bi-lock-fill"></i> Complete PKK first'
+                  : '<i class="bi bi-lock-fill"></i> Applicant access') ?>
+          </span>
+          <?php if ($canNewBpl): ?>
           <a href="bpl.php" class="task-apply-btn">Apply now <i class="bi bi-arrow-up-right"></i></a>
+          <?php elseif ($pendingPkkRequirement): ?>
+          <a href="pkk.php?parent=<?= (int) $pendingPkkRequirement['id'] ?>" class="task-apply-btn">
+            Fill PKK <i class="bi bi-arrow-up-right"></i>
+          </a>
           <?php else: ?>
           <span class="task-apply-btn task-apply-btn-locked"><i class="bi bi-lock-fill"></i> Locked</span>
           <?php endif; ?>
