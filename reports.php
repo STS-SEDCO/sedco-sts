@@ -297,4 +297,4 @@ $query=http_build_query(array_filter([
 <?php if(!$rows): ?><tr><td colspan="8" class="text-center py-5 text-muted">No records match the selected filters.</td></tr><?php endif; ?>
 </tbody></table></div>
 </section>
-</div></main><script src="sedco-shell.js?v=20261007-03"></script></body></html>
+</div></main><script src="sedco-shell.js?v=20261007-04"></script></body></html>
