@@ -674,3 +674,110 @@ body.app-page > .sedco-navbar .sedco-top-profile:focus-visible{
     border-radius:11px !important;
   }
 }
+
+/* ===== TOP NOTIFICATION BELL V1 ===== */
+body.app-page > .sedco-navbar .sedco-top-notification{
+  position:relative !important;
+  width:38px !important;
+  height:38px !important;
+  flex:0 0 38px !important;
+  display:inline-flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  margin-left:4px !important;
+  padding:0 !important;
+  border:1px solid rgba(255,255,255,.17) !important;
+  border-radius:12px !important;
+  background:rgba(255,255,255,.09) !important;
+  color:#fff !important;
+  text-decoration:none !important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.06) !important;
+  transition:background .18s ease,border-color .18s ease,transform .18s ease,box-shadow .18s ease !important;
+}
+
+body.app-page > .sedco-navbar .sedco-top-notification i{
+  font-size:15px !important;
+  line-height:1 !important;
+}
+
+body.app-page > .sedco-navbar .sedco-top-notification:hover,
+body.app-page > .sedco-navbar .sedco-top-notification.active{
+  transform:translateY(-1px);
+  border-color:rgba(255,255,255,.32) !important;
+  background:rgba(255,255,255,.17) !important;
+  box-shadow:0 6px 15px rgba(54,4,4,.14),inset 0 1px 0 rgba(255,255,255,.08) !important;
+}
+
+body.app-page > .sedco-navbar .sedco-top-notification.active{
+  background:#fff !important;
+  color:#8f1010 !important;
+}
+
+body.app-page > .sedco-navbar .sedco-top-notification.has-notification i{
+  animation:sedcoBellPulse 2.4s ease-in-out infinite;
+}
+
+body.app-page > .sedco-navbar .sedco-top-notification-badge{
+  position:absolute;
+  top:-5px;
+  right:-5px;
+  min-width:19px;
+  height:19px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  padding:0 5px;
+  border:2px solid #7b1010;
+  border-radius:999px;
+  background:#e11d2e;
+  color:#fff;
+  font-size:9px;
+  line-height:1;
+  font-weight:800;
+  letter-spacing:-.02em;
+  box-shadow:0 3px 8px rgba(119,10,20,.28);
+  z-index:2;
+}
+
+body.app-page > .sedco-navbar .sedco-top-notification-badge[hidden]{
+  display:none !important;
+}
+
+body.app-page > .sedco-navbar .sedco-top-notification:focus-visible{
+  outline:3px solid rgba(255,255,255,.2) !important;
+  outline-offset:2px !important;
+}
+
+@keyframes sedcoBellPulse{
+  0%,86%,100%{transform:rotate(0deg)}
+  89%{transform:rotate(9deg)}
+  92%{transform:rotate(-8deg)}
+  95%{transform:rotate(5deg)}
+  98%{transform:rotate(-3deg)}
+}
+
+@media(max-width:760px){
+  body.app-page > .sedco-navbar .sedco-top-notification,
+  body.app-page > .sedco-navbar .sedco-top-profile{
+    width:36px !important;
+    height:36px !important;
+    flex-basis:36px !important;
+    border-radius:11px !important;
+  }
+
+  body.app-page > .sedco-navbar .sedco-top-notification{
+    margin-left:auto !important;
+  }
+
+  body.app-page > .sedco-navbar .sedco-top-profile{
+    margin-left:4px !important;
+  }
+
+  body.app-page > .sedco-navbar .sedco-top-notification-badge{
+    top:-4px;
+    right:-4px;
+    min-width:18px;
+    height:18px;
+    font-size:8px;
+  }
+}
