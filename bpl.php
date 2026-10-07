@@ -502,7 +502,7 @@ $canReviewCurrentStage = $mode === 'review'
             </table>
 
             <?php if ($canReviewCurrentStage && in_array($currentStage, ['training', 'hod'], true)): ?>
-            <section class="sts-correction-target-panel no-print" data-correction-target-panel>
+            <section class="sts-correction-target-panel no-print" data-correction-target-panel hidden>
               <div class="sts-correction-target-heading">
                 <span><i class="bi bi-bullseye"></i></span>
                 <div>
