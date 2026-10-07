@@ -22,7 +22,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($action === 'save_settings') {
         $values = [
             'review_sla_days' => (string) max(1, min(30, (int) ($_POST['review_sla_days'] ?? 3))),
-            'pkk_due_days' => (string) max(1, min(60, (int) ($_POST['pkk_due_days'] ?? 7))),
+            'pkk_due_days' => '7',
             'tea_due_days' => (string) max(1, min(180, (int) ($_POST['tea_due_days'] ?? 30))),
             'email_notifications' => isset($_POST['email_notifications']) ? '1' : '0',
             'mail_from' => trim((string) ($_POST['mail_from'] ?? 'noreply@sts.local')),
@@ -149,7 +149,7 @@ $emailCounts = db()->query(
 <title>Smart Training System: System Settings</title>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-<link rel="stylesheet" href="sedco-saas.css?v=20260930-42">
+<link rel="stylesheet" href="sedco-saas.css?v=20261007-04">
 <link rel="stylesheet" href="sedco-shell.css?v=20261007-02">
 </head>
 <body class="app-page admin-page" data-page="admin-settings" data-role="admin">
@@ -167,7 +167,7 @@ $emailCounts = db()->query(
 <form method="post" class="settings-form">
 <?= csrf_field() ?><input type="hidden" name="action" value="save_settings">
 <label><span>Reviewer SLA</span><div class="settings-number"><input type="number" name="review_sla_days" min="1" max="30" value="<?= e($settings['review_sla_days']) ?>"><em>days</em></div><small>Time allowed for each approval stage before it is marked overdue.</small></label>
-<label><span>PKK follow up</span><div class="settings-number"><input type="number" name="pkk_due_days" min="1" max="60" value="<?= e($settings['pkk_due_days']) ?>"><em>days</em></div><small>Target after training ends for Staff to submit PKK.</small></label>
+<label><span>PKK follow up</span><div class="settings-number"><input type="number" value="7" readonly><em>days</em></div><small>Fixed policy: PKK must be completed within 1 week after training ends before a new BPL can be submitted.</small></label>
 <label><span>TEA follow up</span><div class="settings-number"><input type="number" name="tea_due_days" min="1" max="180" value="<?= e($settings['tea_due_days']) ?>"><em>days</em></div><small>Target after training ends for HoD to complete TEA.</small></label>
 <label><span>Email sender</span><input type="email" name="mail_from" value="<?= e($settings['mail_from']) ?>"><small>Requires PHP mail / SMTP configuration on the hosting server.</small></label>
 <label class="settings-switch"><input type="checkbox" name="email_notifications" value="1" <?= $settings['email_notifications']==='1'?'checked':'' ?>><span><strong>Email notifications</strong><small>System notifications always remain enabled.</small></span></label>
