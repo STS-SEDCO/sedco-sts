@@ -67,7 +67,7 @@ function sts_followup_due(?string $trainingEnd, string $type): ?string
     }
 
     $days = strtoupper($type) === 'PKK'
-        ? max(1, (int) sts_setting('pkk_due_days', '7'))
+        ? 7
         : max(1, (int) sts_setting('tea_due_days', '30'));
 
     return date('Y-m-d H:i:s', $timestamp + ($days * 86400));
@@ -113,14 +113,10 @@ function sts_pending_pkk_requirement(int $userId): ?array
             return null;
         }
 
-        $due = trim((string) ($row['followup_due_at'] ?? ''));
-
-        if ($due === '') {
-            $due = (string) (sts_followup_due(
-                (string) ($row['training_end'] ?? ''),
-                'PKK'
-            ) ?? '');
-        }
+        $due = (string) (sts_followup_due(
+            (string) ($row['training_end'] ?? ''),
+            'PKK'
+        ) ?? '');
 
         $row['pkk_due_at'] = $due;
         $row['is_overdue'] = $due !== '' && strtotime($due) < time();
@@ -1119,12 +1115,23 @@ function sts_ensure_followup_notifications(array $user): void
 
             $due = sts_followup_due((string) $row['training_end'], $type);
 
-            if (!$due || strtotime($due) > time()) {
+            if (!$due) {
+                continue;
+            }
+
+            if ($type === 'PKK' && strtotime((string) $row['training_end'] . ' 23:59:59') > time()) {
+                continue;
+            }
+
+            if ($type === 'TEA' && strtotime($due) > time()) {
                 continue;
             }
 
             $link = strtolower($type) . '.php?parent=' . (int) $row['id'];
-            $title = $type . ' follow up due';
+            $overdue = strtotime($due) < time();
+            $title = $type === 'PKK'
+                ? ($overdue ? 'PKK overdue' : 'PKK required')
+                : $type . ' follow up due';
 
             $check = db()->prepare(
                 'SELECT id
@@ -1141,11 +1148,22 @@ function sts_ensure_followup_notifications(array $user): void
                 continue;
             }
 
+            $message = $row['application_no'] . ' · ' . $row['title'];
+
+            if ($type === 'PKK') {
+                $message .= $overdue
+                    ? ' has an overdue PKK. Complete it before submitting a new BPL.'
+                    : ' has completed training. Submit PKK by '
+                        . date('d M Y', strtotime($due))
+                        . ' before applying for a new BPL.';
+            } else {
+                $message .= ' is ready for ' . $type . ' follow up.';
+            }
+
             sts_notify(
                 $userId,
                 $title,
-                $row['application_no'] . ' · ' . $row['title']
-                    . ' is ready for ' . $type . ' follow up.',
+                $message,
                 $link,
                 'warning'
             );
