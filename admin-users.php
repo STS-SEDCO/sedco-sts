@@ -110,7 +110,7 @@ while ($row = $departmentResult->fetch_assoc()) $departments[] = $row['name'];
 <title>Smart Training System: User Management</title>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-<link rel="stylesheet" href="sedco-saas.css?v=20260930-42">
+<link rel="stylesheet" href="sedco-saas.css?v=20261007-09">
 <link rel="stylesheet" href="sedco-shell.css?v=20261007-03">
 </head>
 <body class="app-page admin-page" data-page="admin-users" data-role="admin">
@@ -145,6 +145,7 @@ while ($row = $departmentResult->fetch_assoc()) $departments[] = $row['name'];
         <span><i class="bi bi-person-badge"></i><?= e(role_label((string) $account['role'])) ?></span>
         <span><i class="bi bi-building"></i><?= e($account['department'] ?: 'No department') ?></span>
         <span><i class="bi bi-hash"></i><?= e($account['staff_id'] ?: 'No Staff ID') ?></span>
+        <a class="admin-user-history-link" href="employee-training-history.php?employee=<?= (int)$account['id'] ?>"><i class="bi bi-mortarboard"></i> Training history</a>
       </div>
     </div>
   </div>
