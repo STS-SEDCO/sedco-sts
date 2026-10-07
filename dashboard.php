@@ -344,6 +344,55 @@ while ($row = $manualEvents->fetch_assoc()) {
 
 $myActions = [];
 
+// Resume autosaved forms directly from Dashboard.
+// Drafts already exist in application_drafts, so no new DB structure is required.
+$draftStmt = $db->prepare(
+    'SELECT form_type, parent_application_id, payload, updated_at
+     FROM application_drafts
+     WHERE user_id = ?
+       AND form_type IN ("BPL","PKK")
+     ORDER BY updated_at DESC'
+);
+$draftStmt->bind_param('i', $userId);
+$draftStmt->execute();
+$draftResult = $draftStmt->get_result();
+
+while ($draft = $draftResult->fetch_assoc()) {
+    $draftType = strtoupper((string) ($draft['form_type'] ?? ''));
+    $draftPayload = json_decode((string) ($draft['payload'] ?? ''), true);
+    $draftPayload = is_array($draftPayload) ? $draftPayload : [];
+    $draftTitle = trim((string) (
+        $draftPayload['tajuk']
+        ?? $draftPayload['kursus']
+        ?? ($draftType === 'PKK' ? 'PKK draft' : 'BPL draft')
+    ));
+
+    if ($draftType === 'BPL') {
+        // A pending PKK blocks any new BPL, including resuming an old BPL draft.
+        if (sts_pending_pkk_requirement($userId)) {
+            continue;
+        }
+
+        $draftUrl = 'bpl.php';
+    } else {
+        $parentId = (int) ($draft['parent_application_id'] ?? 0);
+        $draftUrl = $parentId > 0
+            ? 'pkk.php?parent=' . $parentId
+            : 'pkk.php';
+    }
+
+    $myActions[] = [
+        'tone' => 'brand',
+        'icon' => 'bi-cloud-arrow-down',
+        'title' => 'Continue ' . $draftType . ' draft',
+        'copy' => ($draftTitle !== '' ? $draftTitle : $draftType . ' draft')
+            . ' · Saved ' . date('d M Y, g:i A', strtotime((string) $draft['updated_at'])),
+        'url' => $draftUrl,
+        'action' => 'Continue',
+    ];
+}
+$draftStmt->close();
+
 if ($role === 'staff') {
     $pendingPkkRequirement = sts_pending_pkk_requirement($userId);
 
@@ -431,6 +480,8 @@ if ($role === 'staff') {
         ];
     }
 }
+
+$myActions = array_slice($myActions, 0, 6);
 
 $unreadNotifications = sts_unread_notifications($userId);
 ?>
