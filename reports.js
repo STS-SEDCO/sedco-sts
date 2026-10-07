@@ -283,7 +283,7 @@
 
     $('reportTotal').textContent = String(total);
     $('reportApprovalRate').textContent = approvalRate + '%';
-    $('reportAvgProcessing').textContent = avg === null ? 'Not available' : avg + ' d';
+    $('reportAvgProcessing').textContent = avg === null ? 'No data yet' : avg + ' d';
     $('reportFees').textContent = 'RM ' + fees.toLocaleString('en-MY',{minimumFractionDigits:2,maximumFractionDigits:2});
     $('reportRecordCount').textContent = total + (total === 1 ? ' result' : ' results');
 
