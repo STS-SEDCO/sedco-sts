@@ -432,6 +432,21 @@ $stmt->close();
           </div>
         </div>
 
+        <section class="reviewer-summary-card">
+          <div class="reviewer-summary-heading">
+            <div><span>At a glance</span><h3>Reviewer summary</h3></div>
+            <span class="reviewer-summary-quality" id="submissionSummaryQuality"><i class="bi bi-shield-check"></i> Data check</span>
+          </div>
+          <div class="reviewer-summary-grid">
+            <div><span>Course</span><strong id="submissionSummaryCourse">Not available</strong></div>
+            <div><span>Training date</span><strong id="submissionSummaryDates">Not available</strong></div>
+            <div><span>Fee</span><strong id="submissionSummaryFee">Not available</strong></div>
+            <div><span>Attachments</span><strong id="submissionSummaryAttachments">0 files</strong></div>
+          </div>
+          <div class="reviewer-summary-history" id="submissionSummaryHistory"></div>
+          <div class="reviewer-summary-flags" id="submissionSummaryFlags" hidden></div>
+        </section>
+
         <div class="approval-detail-section-heading">
           <div>
             <span>Application details</span>
@@ -491,6 +506,13 @@ $stmt->close();
               <span>Current stage</span>
               <strong id="quickReviewStage">Not available</strong>
             </div>
+          </div>
+
+          <div class="quick-review-summary" id="quickReviewSummary">
+            <div><span>Course</span><strong id="quickReviewSummaryCourse">Not available</strong></div>
+            <div><span>Date</span><strong id="quickReviewSummaryDates">Not available</strong></div>
+            <div><span>Fee</span><strong id="quickReviewSummaryFee">Not available</strong></div>
+            <div><span>Previous approvals</span><strong id="quickReviewSummaryHistory">None</strong></div>
           </div>
 
           <div class="quick-review-decision" id="quickReviewDecisionBadge"></div>
