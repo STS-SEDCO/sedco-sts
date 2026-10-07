@@ -18986,3 +18986,39 @@ body.application-detail-page .application-signature-preview img{display:block;ma
   font-size:10px;
   line-height:1.45;
 }
+
+/* ===== DASHBOARD MAIN + CALENDAR HEIGHT ALIGN V1 ===== */
+.dashboard-v4-grid{
+  align-items:stretch!important;
+}
+
+.dashboard-v4-grid > .dashboard-main-card,
+.dashboard-v4-grid > .dashboard-calendar-card-v4{
+  align-self:stretch!important;
+  height:auto!important;
+  min-height:100%;
+}
+
+.dashboard-v4-grid > .dashboard-main-card{
+  display:flex;
+  flex-direction:column;
+}
+
+.dashboard-v4-grid > .dashboard-main-card .dashboard-queue,
+.dashboard-v4-grid > .dashboard-main-card .dashboard-empty-v3{
+  flex:1 1 auto;
+}
+
+.dashboard-v4-grid > .dashboard-main-card .dashboard-empty-v3{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  flex-direction:column;
+}
+
+@media(max-width:1120px){
+  .dashboard-v4-grid > .dashboard-main-card,
+  .dashboard-v4-grid > .dashboard-calendar-card-v4{
+    min-height:auto;
+  }
+}
