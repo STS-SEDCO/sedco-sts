@@ -198,7 +198,7 @@ $query=http_build_query(array_filter([
 <title>Smart Training System: Reports and Analytics</title>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-<link rel="stylesheet" href="sedco-saas.css?v=20261007-17"><link rel="stylesheet" href="sedco-shell.css?v=20261007-05">
+<link rel="stylesheet" href="sedco-saas.css?v=20261007-17"><link rel="stylesheet" href="sedco-shell.css?v=20261007-10">
 </head>
 <body class="app-page reports-page" data-page="reports" data-role="<?= e($role) ?>">
 <main class="sts-page-content"><div class="sts-page-shell">
@@ -256,7 +256,7 @@ $query=http_build_query(array_filter([
 <section class="report-kpis">
 <article><span><i class="bi bi-files"></i></span><div><strong><?= count($rows) ?></strong><small>Total records</small></div></article>
 <article><span><i class="bi bi-check2-circle"></i></span><div><strong><?= e((string)$approvalRate) ?>%</strong><small>Approval rate</small></div></article>
-<article><span><i class="bi bi-clock-history"></i></span><div><strong><?= $avgProcessingDays===null?'Not available':e((string)$avgProcessingDays).' d' ?></strong><small>Avg. processing</small></div></article>
+<article><span><i class="bi bi-clock-history"></i></span><div><strong><?= $avgProcessingDays===null?'No data yet':e((string)$avgProcessingDays).' d' ?></strong><small>Avg. processing</small></div></article>
 <article><span><i class="bi bi-cash-stack"></i></span><div><strong>RM <?= e(number_format($totalFees,2)) ?></strong><small>Submitted BPL fees</small></div></article>
 </section>
 
