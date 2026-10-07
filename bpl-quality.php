@@ -29,7 +29,7 @@ if (
     && $department !== ''
     && sts_department_hod($department) === null
 ) {
-    $warnings[] = 'No HOD is currently assigned to your department. Admin should review the department routing.';
+    $errors[] = 'No HOD is currently assigned to your department. Ask the STS administrator to configure the HOD before submitting BPL.';
 }
 
 $validDate = static function (string $value): bool {
