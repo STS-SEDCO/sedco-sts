@@ -20379,7 +20379,7 @@ body.application-detail-page .application-signature-preview img{display:block;ma
   display:flex;align-items:flex-start;gap:5px;padding:6px 7px;border-radius:7px;background:#fff1dc;color:#8f5e0c;font-size:8px;
 }
 .submissions-page .quick-review-summary{
-  display:grid;grid-template-columns:2fr 1.25fr 1fr 1.4fr;gap:6px;margin-bottom:10px;
+  display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;margin-bottom:10px;
 }
 .submissions-page .quick-review-summary>div{
   min-width:0;padding:7px 8px;border:1px solid #e9ebee;border-radius:8px;background:#fafbfb;
@@ -20519,3 +20519,5 @@ body.application-detail-page .application-signature-preview img{display:block;ma
   .bpl-page .bpl-conflict-item{grid-template-columns:34px minmax(0,1fr)}
   .bpl-page .bpl-conflict-item em{grid-column:2;justify-self:start}
 }
+
+.submissions-page .quick-review-summary strong.is-warning{color:#a3690e}
