@@ -93,6 +93,34 @@ try {
         }
     }
 
+    $start = trim((string) ($payload['tarikh_mula'] ?? ''));
+    $end = trim((string) ($payload['tarikh_tamat'] ?? ''));
+    $feeRaw = trim((string) ($payload['yuran'] ?? ''));
+
+    $validDate = static function (string $value): bool {
+        if (!preg_match('/^\\d{4}-\\d{2}-\\d{2}$/', $value)) return false;
+        $date = DateTimeImmutable::createFromFormat('!Y-m-d', $value);
+        return $date !== false && $date->format('Y-m-d') === $value;
+    };
+
+    if (!$validDate($start) || !$validDate($end)) {
+        throw new RuntimeException('Please enter valid training start and end dates.');
+    }
+
+    if (strtotime($end) < strtotime($start)) {
+        throw new RuntimeException('Training end date cannot be earlier than the start date.');
+    }
+
+    $cleanFee = preg_replace('/[^0-9.]/', '', $feeRaw) ?? '';
+    if ($cleanFee === '' || !is_numeric($cleanFee)) {
+        throw new RuntimeException('Course fee must be a valid number.');
+    }
+
+    $fee = (float) $cleanFee;
+    if ($fee < 0 || $fee > 1000000) {
+        throw new RuntimeException('Course fee is outside the allowed range.');
+    }
+
     $vehicles = $payload['kenderaan'] ?? [];
     $vehicles = is_array($vehicles) ? array_map('strval', $vehicles) : [];
 
