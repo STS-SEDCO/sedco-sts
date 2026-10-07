@@ -2977,3 +2977,334 @@ body.app-page > .sedco-navbar .sedco-top-notification-badge{
     }
   }
 }
+/* ===== SEDCO RED WHITE CALENDAR THEME 2026-10-07 ===== */
+@media screen {
+  /* Shared SEDCO calendar palette */
+  .dashboard-calendar-reference,
+  .training-calendar-reference-shell{
+    border-color:#eadada !important;
+    background:#fff !important;
+    color:#2f3034 !important;
+    box-shadow:0 14px 34px rgba(92,16,16,.08) !important;
+  }
+
+  .dashboard-calendar-reference-head,
+  .training-calendar-reference-head{
+    border-bottom-color:#eadada !important;
+    background:
+      radial-gradient(circle at 85% 0%,rgba(143,16,16,.07),transparent 30%),
+      linear-gradient(180deg,#fff 0%,#fffafa 100%) !important;
+  }
+
+  .dashboard-calendar-reference-head .dashboard-card-kicker,
+  .training-calendar-reference-head>div>span{
+    color:#8f1010 !important;
+  }
+
+  .dashboard-calendar-reference-head h2,
+  .training-calendar-reference-head h2{
+    color:#2d2d31 !important;
+  }
+
+  .dashboard-calendar-reference-head p,
+  .training-calendar-reference-head p{
+    color:#85858b !important;
+  }
+
+  .dashboard-calendar-reference .dashboard-calendar-open,
+  .training-calendar-reference-action{
+    border-color:#8f1010 !important;
+    background:#8f1010 !important;
+    color:#fff !important;
+    box-shadow:0 8px 18px rgba(143,16,16,.14) !important;
+  }
+
+  .dashboard-calendar-reference .dashboard-calendar-open:hover,
+  .training-calendar-reference-action:hover{
+    background:#761010 !important;
+    color:#fff !important;
+  }
+
+  .dashboard-month-view,
+  .dashboard-selected-day,
+  .training-calendar-reference-month,
+  .training-selected-day{
+    border-color:#eadfe0 !important;
+    background:#fff !important;
+  }
+
+  .dashboard-calendar-overline,
+  .training-calendar-reference-overline{
+    color:#8f1010 !important;
+  }
+
+  .dashboard-month-toolbar h3,
+  .training-calendar-reference-month-head h3{
+    color:#2d2d31 !important;
+  }
+
+  .dashboard-month-toolbar h3 span,
+  .training-calendar-reference-month-head h3 em{
+    color:#8b8b91 !important;
+  }
+
+  .dashboard-month-toolbar p,
+  .training-calendar-reference-month-head p{
+    color:#929298 !important;
+  }
+
+  .dashboard-calendar-reference .calendar-header,
+  .training-calendar-reference-nav{
+    border-color:#eadfe0 !important;
+    background:#fff7f7 !important;
+  }
+
+  .dashboard-calendar-reference .calendar-header button,
+  .training-calendar-reference-nav a,
+  .training-calendar-reference-nav button{
+    color:#6f1010 !important;
+    background:transparent !important;
+  }
+
+  .dashboard-calendar-reference .calendar-header button:hover,
+  .training-calendar-reference-nav a:hover,
+  .training-calendar-reference-nav button:hover{
+    background:#f5e9e9 !important;
+    color:#8f1010 !important;
+  }
+
+  .dashboard-calendar-reference .calendar-header .dashboard-calendar-today,
+  .training-calendar-reference-nav .is-today{
+    background:#fff !important;
+    box-shadow:inset 0 0 0 1px #e6cfcf;
+  }
+
+  .dashboard-calendar-legend,
+  .training-calendar-reference-legend{
+    border-bottom-color:#efe3e3 !important;
+  }
+
+  .dashboard-calendar-legend>span,
+  .training-calendar-reference-legend span{
+    border-color:#eadede !important;
+    background:#fff8f8 !important;
+    color:#6f6669 !important;
+  }
+
+  .dashboard-calendar-legend .tone-training,
+  .training-calendar-reference-legend .tone-training{
+    background:#8f1010 !important;
+  }
+
+  .dashboard-calendar-legend .tone-company,
+  .training-calendar-reference-legend .tone-company{
+    background:#c25b5b !important;
+  }
+
+  .dashboard-calendar-legend .tone-other{
+    background:#7b7b83 !important;
+  }
+
+  .dashboard-calendar-weekdays span,
+  .training-calendar-reference-weekdays span{
+    color:#7f7f85 !important;
+  }
+
+  .dashboard-calendar-day,
+  .training-calendar-reference-day{
+    border-top-color:#f0e7e7 !important;
+    border-left-color:#f0e7e7 !important;
+    background:#fff !important;
+    color:#37373b !important;
+  }
+
+  .dashboard-calendar-day:nth-child(7n),
+  .training-calendar-reference-day:nth-child(7n){
+    border-right-color:#f0e7e7 !important;
+  }
+
+  .dashboard-calendar-day:nth-last-child(-n+7),
+  .training-calendar-reference-day:nth-last-child(-n+7){
+    border-bottom-color:#f0e7e7 !important;
+  }
+
+  .dashboard-calendar-day:hover,
+  .training-calendar-reference-day:hover{
+    background:#fff8f8 !important;
+  }
+
+  .dashboard-calendar-day.is-outside,
+  .training-calendar-reference-day.is-outside{
+    background:#fbfbfb !important;
+    color:#c2c2c7 !important;
+  }
+
+  .dashboard-calendar-day.is-selected,
+  .training-calendar-reference-day.is-selected{
+    background:#fff2f2 !important;
+    box-shadow:inset 0 0 0 2px #8f1010 !important;
+  }
+
+  .dashboard-calendar-day.is-today .dashboard-calendar-day-number,
+  .training-calendar-reference-day.is-today .training-calendar-reference-day-number{
+    background:#8f1010 !important;
+    color:#fff !important;
+  }
+
+  .dashboard-calendar-event.tone-training,
+  .training-calendar-reference-event.tone-training{
+    background:#fbeaea !important;
+    color:#8f1010 !important;
+  }
+
+  .dashboard-calendar-event.tone-company,
+  .training-calendar-reference-event.tone-company{
+    background:#f7eeee !important;
+    color:#9f4a4a !important;
+  }
+
+  .dashboard-calendar-event.tone-other{
+    background:#f1f1f3 !important;
+    color:#66666c !important;
+  }
+
+  .dashboard-calendar-day-events small,
+  .training-calendar-reference-day-events small{
+    color:#99999f !important;
+  }
+
+  .dashboard-selected-day,
+  .training-selected-day{
+    background:
+      radial-gradient(circle at 85% 0%,rgba(143,16,16,.035),transparent 28%),
+      #fff !important;
+  }
+
+  .dashboard-selected-day-head,
+  .training-selected-day-head{
+    border-bottom-color:#efe3e3 !important;
+  }
+
+  .dashboard-selected-day-icon,
+  .training-selected-day-icon{
+    background:#fff0f0 !important;
+    color:#8f1010 !important;
+  }
+
+  .dashboard-selected-day-head small,
+  .training-selected-day-head small{
+    color:#8f1010 !important;
+  }
+
+  .dashboard-selected-day-head strong,
+  .training-selected-day-head strong{
+    color:#303034 !important;
+  }
+
+  .dashboard-selected-day-head p,
+  .training-selected-day-head p{
+    color:#8e8e94 !important;
+  }
+
+  .dashboard-selected-day-head em,
+  .training-selected-day-head em{
+    background:#f7eeee !important;
+    color:#8f1010 !important;
+  }
+
+  .dashboard-selected-day-action{
+    border-color:#e3caca !important;
+    background:#fffafa !important;
+    color:#8f1010 !important;
+  }
+
+  .dashboard-selected-day-action:hover{
+    background:#fff0f0 !important;
+  }
+
+  .dashboard-selected-empty,
+  .training-selected-empty{
+    border-color:#e7cccc !important;
+    background:#fffafa !important;
+  }
+
+  .dashboard-selected-empty>span,
+  .training-selected-empty>span{
+    background:#fff0f0 !important;
+    color:#8f1010 !important;
+  }
+
+  .dashboard-selected-empty strong,
+  .training-selected-empty strong{
+    color:#333338 !important;
+  }
+
+  .dashboard-selected-empty p,
+  .training-selected-empty p{
+    color:#8d8d93 !important;
+  }
+
+  .dashboard-selected-event,
+  .training-selected-event{
+    border-color:#eadede !important;
+    background:#fffafa !important;
+  }
+
+  .dashboard-selected-event:hover,
+  .training-selected-event:hover{
+    background:#fff2f2 !important;
+  }
+
+  .dashboard-selected-event-icon.tone-training,
+  .training-selected-event-icon.tone-training{
+    background:#fbeaea !important;
+    color:#8f1010 !important;
+  }
+
+  .dashboard-selected-event-icon.tone-company,
+  .training-selected-event-icon.tone-company{
+    background:#f7eeee !important;
+    color:#9f4a4a !important;
+  }
+
+  .dashboard-selected-event-icon.tone-other{
+    background:#f1f1f3 !important;
+    color:#66666c !important;
+  }
+
+  .dashboard-selected-event strong,
+  .training-selected-event strong{
+    color:#353539 !important;
+  }
+
+  .dashboard-selected-event p,
+  .training-selected-event p{
+    color:#929298 !important;
+  }
+
+  .dashboard-selected-event>i,
+  .training-selected-event>i{
+    color:#8f1010 !important;
+  }
+
+  .training-calendar-reference-toolbar{
+    border-color:#eadede !important;
+    background:#fff !important;
+    box-shadow:0 5px 18px rgba(92,16,16,.035) !important;
+  }
+
+  .training-calendar-reference-toolbar label>span{
+    color:#7e7779 !important;
+  }
+
+  .training-calendar-reference-toolbar select,
+  .training-calendar-reference-toolbar input{
+    border-color:#e4d9d9 !important;
+    background:#fffafa !important;
+    color:#343438 !important;
+  }
+
+  .training-calendar-reference-toolbar .is-search i{
+    color:#9c9294 !important;
+  }
+}
