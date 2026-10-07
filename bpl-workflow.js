@@ -116,7 +116,6 @@
 
     let timer = null;
     let controller = null;
-    let lastErrors = [];
 
     const escapeHtml = value => String(value ?? '')
       .replaceAll('&','&amp;')
@@ -157,8 +156,6 @@
       const errors = Array.isArray(result.errors) ? result.errors : [];
       const warnings = Array.isArray(result.warnings) ? result.warnings : [];
       const conflicts = Array.isArray(result.conflicts) ? result.conflicts : [];
-      lastErrors = errors;
-
       const hasAnything = errors.length || warnings.length || conflicts.length;
       panel.hidden = !hasAnything;
 
@@ -290,10 +287,10 @@
 
     form.addEventListener('submit', event => {
       const local = localCheck();
-      if (!local.errors.length && !lastErrors.length) return;
+      if (!local.errors.length) return;
 
       event.preventDefault();
-      render({errors:[...new Set([...local.errors,...lastErrors])],warnings:[],conflicts:[]});
+      render({errors:local.errors,warnings:[],conflicts:[]});
 
       const firstInvalid = local.errors.some(message => message.toLowerCase().includes('end date'))
         ? endField
