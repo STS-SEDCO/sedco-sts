@@ -252,6 +252,6 @@ if ($role === 'head_of_department') {
   </div>
 </main>
 
-<script src="sedco-shell.js?v=20261007-03"></script>
+<script src="sedco-shell.js?v=20261007-04"></script>
 </body>
 </html>
