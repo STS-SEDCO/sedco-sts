@@ -112,6 +112,30 @@ while ($row = $result->fetch_assoc()) {
         $qualityFlags[] = 'No HOD is assigned to the applicant department.';
     }
 
+    if ($start !== '' && $end !== '') {
+        $conflictStmt = db()->prepare(
+            'SELECT COUNT(*) AS total
+             FROM applications other
+             WHERE other.user_id = ?
+               AND other.id <> ?
+               AND other.form_type = "BPL"
+               AND other.status NOT IN ("rejected","cancelled")
+               AND other.training_start IS NOT NULL
+               AND other.training_end IS NOT NULL
+               AND other.training_start <= ?
+               AND other.training_end >= ?'
+        );
+        $applicantId = (int) $row['user_id'];
+        $conflictStmt->bind_param('iiss', $applicantId, $applicationId, $end, $start);
+        $conflictStmt->execute();
+        $overlapCount = (int) ($conflictStmt->get_result()->fetch_assoc()['total'] ?? 0);
+        $conflictStmt->close();
+
+        if ($overlapCount > 0) {
+            $qualityFlags[] = 'This training overlaps another active BPL for the same applicant.';
+        }
+    }
+
     $submissions[] = [
         'id' => $row['application_no'],
         'type' => $row['form_type'],
