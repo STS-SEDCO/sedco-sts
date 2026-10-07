@@ -5092,3 +5092,252 @@ body.app-page > .sedco-navbar .sedco-top-notification-badge{
     font-size:18px !important;
   }
 }
+
+/* ===== LIGHT DARK THEME TOGGLE 2026-10-07 ===== */
+@media screen {
+  body.app-page > .sedco-navbar .sedco-theme-toggle{
+    position:relative !important;
+    width:38px !important;
+    height:38px !important;
+    flex:0 0 38px !important;
+    display:inline-flex !important;
+    align-items:center !important;
+    justify-content:center !important;
+    margin-left:4px !important;
+    padding:0 !important;
+    border:1px solid rgba(255,255,255,.17) !important;
+    border-radius:12px !important;
+    background:rgba(255,255,255,.09) !important;
+    color:#fff !important;
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.06) !important;
+    cursor:pointer !important;
+    transition:background .18s ease,border-color .18s ease,transform .18s ease,box-shadow .18s ease !important;
+  }
+  body.app-page > .sedco-navbar .sedco-theme-toggle i{font-size:14px !important;line-height:1 !important}
+  body.app-page > .sedco-navbar .sedco-theme-toggle:hover{
+    transform:translateY(-1px);
+    border-color:rgba(255,255,255,.32) !important;
+    background:rgba(255,255,255,.17) !important;
+    box-shadow:0 6px 15px rgba(54,4,4,.14),inset 0 1px 0 rgba(255,255,255,.08) !important;
+  }
+  body.app-page > .sedco-navbar .sedco-theme-toggle:focus-visible{
+    outline:3px solid rgba(255,255,255,.2) !important;
+    outline-offset:2px !important;
+  }
+
+  body.app-page.sedco-dark-mode{
+    color-scheme:dark;
+    background:#151518 !important;
+    color:#ececf0 !important;
+  }
+
+  body.app-page.sedco-dark-mode.dashboard-v4,
+  body.app-page.sedco-dark-mode.dashboard-page,
+  body.app-page.sedco-dark-mode.reports-page,
+  body.app-page.sedco-dark-mode.training-calendar-page,
+  body.app-page.sedco-dark-mode.status-page,
+  body.app-page.sedco-dark-mode.submissions-page,
+  body.app-page.sedco-dark-mode.profile-page,
+  body.app-page.sedco-dark-mode.form-page,
+  body.app-page.sedco-dark-mode.task-page,
+  body.app-page.sedco-dark-mode .sts-page-content,
+  body.app-page.sedco-dark-mode .content,
+  body.app-page.sedco-dark-mode .main-content,
+  body.app-page.sedco-dark-mode .form-container,
+  body.app-page.sedco-dark-mode .card-container,
+  body.app-page.sedco-dark-mode .profile-content,
+  body.app-page.sedco-dark-mode .status-content{
+    background-color:#151518 !important;
+    color:#ececf0 !important;
+  }
+
+  body.app-page.sedco-dark-mode > .sedco-navbar{
+    background:linear-gradient(135deg,#4e0909 0%,#671010 55%,#591010 100%) !important;
+    border-bottom-color:rgba(255,255,255,.08) !important;
+    box-shadow:0 8px 28px rgba(0,0,0,.28) !important;
+  }
+  body.app-page.sedco-dark-mode > .sedco-sidebar{
+    background:linear-gradient(180deg,#591010 0%,#420909 100%) !important;
+    box-shadow:8px 0 26px rgba(0,0,0,.17) !important;
+  }
+
+  body.app-page.sedco-dark-mode .sts-card,
+  body.app-page.sedco-dark-mode .dashboard-action-center,
+  body.app-page.sedco-dark-mode .dashboard-main-card,
+  body.app-page.sedco-dark-mode .dashboard-stat-v4,
+  body.app-page.sedco-dark-mode .dashboard-followup-panel,
+  body.app-page.sedco-dark-mode .dashboard-followup-card,
+  body.app-page.sedco-dark-mode .dashboard-bottom-strip,
+  body.app-page.sedco-dark-mode .management-snapshot,
+  body.app-page.sedco-dark-mode .report-kpis article,
+  body.app-page.sedco-dark-mode .report-chart-card,
+  body.app-page.sedco-dark-mode .report-filter-bar,
+  body.app-page.sedco-dark-mode .training-calendar-reference-toolbar,
+  body.app-page.sedco-dark-mode .training-calendar-reference-shell,
+  body.app-page.sedco-dark-mode .dashboard-calendar-reference,
+  body.app-page.sedco-dark-mode .task-followup-section{
+    border-color:#303036 !important;
+    background:#202024 !important;
+    color:#ececf0 !important;
+    box-shadow:0 10px 28px rgba(0,0,0,.18) !important;
+  }
+
+  body.app-page.sedco-dark-mode .dashboard-hero-v4{
+    border-color:#392d2f !important;
+    background:
+      radial-gradient(circle at 82% 16%,rgba(143,16,16,.16),transparent 29%),
+      linear-gradient(120deg,#202024 0%,#1d1d21 56%,#271b1d 100%) !important;
+    box-shadow:0 18px 46px rgba(0,0,0,.22) !important;
+  }
+
+  body.app-page.sedco-dark-mode .dashboard-hero-v4 h1,
+  body.app-page.sedco-dark-mode .dashboard-action-heading h2,
+  body.app-page.sedco-dark-mode .dashboard-card-heading-v4 h2,
+  body.app-page.sedco-dark-mode .dashboard-stat-v4 strong,
+  body.app-page.sedco-dark-mode .dashboard-queue-copy strong,
+  body.app-page.sedco-dark-mode .dashboard-followup-card strong,
+  body.app-page.sedco-dark-mode .dashboard-bottom-copy strong,
+  body.app-page.sedco-dark-mode .management-snapshot-heading h2,
+  body.app-page.sedco-dark-mode .management-snapshot-grid article strong,
+  body.app-page.sedco-dark-mode .report-kpis strong,
+  body.app-page.sedco-dark-mode .report-chart-heading h2,
+  body.app-page.sedco-dark-mode .sts-card-heading h2,
+  body.app-page.sedco-dark-mode .sts-page-heading h1{
+    color:#f5f5f7 !important;
+  }
+
+  body.app-page.sedco-dark-mode .dashboard-hero-v4 p,
+  body.app-page.sedco-dark-mode .dashboard-action-heading p,
+  body.app-page.sedco-dark-mode .dashboard-card-heading-v4 p,
+  body.app-page.sedco-dark-mode .dashboard-stat-v4 small,
+  body.app-page.sedco-dark-mode .dashboard-queue-copy p,
+  body.app-page.sedco-dark-mode .dashboard-followup-card p,
+  body.app-page.sedco-dark-mode .dashboard-bottom-copy p,
+  body.app-page.sedco-dark-mode .management-snapshot-heading p,
+  body.app-page.sedco-dark-mode .management-snapshot-grid article small,
+  body.app-page.sedco-dark-mode .report-kpis small,
+  body.app-page.sedco-dark-mode .report-chart-heading p,
+  body.app-page.sedco-dark-mode .sts-muted-copy,
+  body.app-page.sedco-dark-mode .sts-page-heading p{
+    color:#a7a7af !important;
+  }
+
+  body.app-page.sedco-dark-mode .dashboard-action-item,
+  body.app-page.sedco-dark-mode .dashboard-queue-item,
+  body.app-page.sedco-dark-mode .report-kpis article,
+  body.app-page.sedco-dark-mode .management-snapshot-grid article,
+  body.app-page.sedco-dark-mode .training-calendar-reference-month,
+  body.app-page.sedco-dark-mode .training-selected-day,
+  body.app-page.sedco-dark-mode .dashboard-month-view,
+  body.app-page.sedco-dark-mode .dashboard-selected-day{
+    border-color:#303036 !important;
+    background:#252529 !important;
+    color:#ececf0 !important;
+  }
+
+  body.app-page.sedco-dark-mode .dashboard-action-item:hover,
+  body.app-page.sedco-dark-mode .dashboard-queue-item:hover{
+    border-color:#4a3336 !important;
+    background:#2a2325 !important;
+  }
+
+  body.app-page.sedco-dark-mode .dashboard-role-chip,
+  body.app-page.sedco-dark-mode .dashboard-secondary-action,
+  body.app-page.sedco-dark-mode .dashboard-alert-chip,
+  body.app-page.sedco-dark-mode .dashboard-card-heading-v4>a,
+  body.app-page.sedco-dark-mode .dashboard-bottom-strip>a,
+  body.app-page.sedco-dark-mode .management-snapshot-heading>strong{
+    border-color:#3b3436 !important;
+    background:#29292e !important;
+    color:#e8c5c7 !important;
+    box-shadow:none !important;
+  }
+
+  body.app-page.sedco-dark-mode input,
+  body.app-page.sedco-dark-mode select,
+  body.app-page.sedco-dark-mode textarea,
+  body.app-page.sedco-dark-mode .form-control,
+  body.app-page.sedco-dark-mode .form-select{
+    border-color:#3b3b42 !important;
+    background:#242428 !important;
+    color:#eeeef2 !important;
+  }
+  body.app-page.sedco-dark-mode input::placeholder,
+  body.app-page.sedco-dark-mode textarea::placeholder{color:#7f7f88 !important}
+  body.app-page.sedco-dark-mode input:focus,
+  body.app-page.sedco-dark-mode select:focus,
+  body.app-page.sedco-dark-mode textarea:focus,
+  body.app-page.sedco-dark-mode .form-control:focus,
+  body.app-page.sedco-dark-mode .form-select:focus{
+    border-color:#8f3b3f !important;
+    background:#28282d !important;
+    color:#fff !important;
+    box-shadow:0 0 0 3px rgba(143,16,16,.13) !important;
+  }
+
+  body.app-page.sedco-dark-mode table,
+  body.app-page.sedco-dark-mode .report-table,
+  body.app-page.sedco-dark-mode .submissions-table,
+  body.app-page.sedco-dark-mode .audit-table{color:#e6e6ea !important}
+  body.app-page.sedco-dark-mode table th,
+  body.app-page.sedco-dark-mode .report-table th,
+  body.app-page.sedco-dark-mode .submissions-table th,
+  body.app-page.sedco-dark-mode .audit-table th{
+    border-color:#34343a !important;
+    background:#242428 !important;
+    color:#aaaab2 !important;
+  }
+  body.app-page.sedco-dark-mode table td,
+  body.app-page.sedco-dark-mode .report-table td,
+  body.app-page.sedco-dark-mode .submissions-table td,
+  body.app-page.sedco-dark-mode .audit-table td{
+    border-color:#303036 !important;
+    background:#202024 !important;
+    color:#d9d9de !important;
+  }
+
+  body.app-page.sedco-dark-mode .dashboard-calendar-reference-head,
+  body.app-page.sedco-dark-mode .training-calendar-reference-head{
+    border-bottom-color:#352d2f !important;
+    background:linear-gradient(135deg,#242428,#211d1f) !important;
+  }
+  body.app-page.sedco-dark-mode .dashboard-calendar-reference-head h2,
+  body.app-page.sedco-dark-mode .training-calendar-reference-head h2,
+  body.app-page.sedco-dark-mode .dashboard-month-toolbar h3,
+  body.app-page.sedco-dark-mode .training-calendar-reference-month-head h3{color:#f2f2f5 !important}
+  body.app-page.sedco-dark-mode .dashboard-calendar-day,
+  body.app-page.sedco-dark-mode .training-calendar-reference-day{
+    border-color:#34343a !important;
+    background:#252529 !important;
+    color:#e7e7eb !important;
+  }
+  body.app-page.sedco-dark-mode .dashboard-calendar-day:hover,
+  body.app-page.sedco-dark-mode .training-calendar-reference-day:hover{background:#2d2729 !important}
+  body.app-page.sedco-dark-mode .dashboard-calendar-day.is-outside,
+  body.app-page.sedco-dark-mode .training-calendar-reference-day.is-outside{
+    background:#1c1c20 !important;
+    color:#6d6d75 !important;
+  }
+  body.app-page.sedco-dark-mode .dashboard-calendar-day.is-selected,
+  body.app-page.sedco-dark-mode .training-calendar-reference-day.is-selected{
+    background:#352427 !important;
+    box-shadow:inset 0 0 0 2px #9b2529 !important;
+  }
+  body.app-page.sedco-dark-mode .dashboard-calendar-reference .calendar-header,
+  body.app-page.sedco-dark-mode .training-calendar-reference-nav,
+  body.app-page.sedco-dark-mode .dashboard-calendar-legend>span,
+  body.app-page.sedco-dark-mode .training-calendar-reference-legend span{
+    border-color:#3a3436 !important;
+    background:#29292e !important;
+    color:#c4c4ca !important;
+  }
+
+  @media(max-width:760px){
+    body.app-page > .sedco-navbar .sedco-theme-toggle{
+      width:36px !important;
+      height:36px !important;
+      flex-basis:36px !important;
+      border-radius:11px !important;
+    }
+  }
+}
