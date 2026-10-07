@@ -14,7 +14,8 @@ $stmt = db()->prepare(
     'SELECT a.id, a.application_no, a.user_id, a.parent_application_id,
             a.form_type, a.title, a.payload, a.status,
             a.current_stage, a.review_note, a.cancelled_at,
-            a.cancellation_reason, a.submitted_at, a.updated_at, u.fullname
+            a.cancellation_reason, a.submitted_at, a.updated_at,
+            u.fullname, u.role AS applicant_role
      FROM applications a
      INNER JOIN users u ON u.id = a.user_id
      WHERE a.user_id = ?
@@ -40,6 +41,42 @@ while ($row = $result->fetch_assoc()) {
     $canEditPkk = sts_can_edit_pkk($row, $user);
     $canCancelPkk = sts_can_cancel_pkk($row, $user);
 
+    $workflow = [];
+    $requiredStages = [];
+
+    if ((string) $row['form_type'] === 'BPL') {
+        $requiredStages = sts_bpl_required_stages([
+            'id' => (int) $row['id'],
+            'user_id' => (int) $row['user_id'],
+            'applicant_role' => (string) ($row['applicant_role'] ?? ''),
+        ]);
+
+        $reviewStmt = db()->prepare(
+            'SELECT r.review_stage, r.decision, r.note, r.reviewed_at,
+                    reviewer.fullname AS reviewer_name
+             FROM application_reviews r
+             INNER JOIN users reviewer ON reviewer.id = r.reviewer_id
+             WHERE r.application_id = ?
+             ORDER BY r.reviewed_at ASC, r.id ASC'
+        );
+        $applicationDbId = (int) $row['id'];
+        $reviewStmt->bind_param('i', $applicationDbId);
+        $reviewStmt->execute();
+        $reviewResult = $reviewStmt->get_result();
+
+        while ($review = $reviewResult->fetch_assoc()) {
+            $workflow[] = [
+                'stage' => (string) $review['review_stage'],
+                'decision' => (string) $review['decision'],
+                'reviewer' => (string) $review['reviewer_name'],
+                'reviewedAt' => (string) $review['reviewed_at'],
+                'note' => (string) ($review['note'] ?? ''),
+            ];
+        }
+
+        $reviewStmt->close();
+    }
+
     $applications[] = [
         'id' => $row['application_no'],
         'type' => $row['form_type'],
@@ -55,6 +92,8 @@ while ($row = $result->fetch_assoc()) {
         'currentStage' => $row['current_stage'],
         'stageLabel' => stage_label($row['current_stage']),
         'reviewNote' => $row['review_note'],
+        'workflow' => $workflow,
+        'requiredStages' => $requiredStages,
         'cancelledAt' => $row['cancelled_at'],
         'cancellationReason' => $row['cancellation_reason'],
         'canCancel' => (
@@ -85,7 +124,7 @@ $stmt->close();
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-  <link rel="stylesheet" href="sedco-saas.css?v=20261006-10">
+  <link rel="stylesheet" href="sedco-saas.css?v=20261007-05">
   <link rel="stylesheet" href="sedco-shell.css?v=20261007-02">
 </head>
 <body class="app-page status-page" data-page="application-status" data-role="<?= e(normalized_role($user['role'] ?? '')) ?>">
@@ -282,7 +321,7 @@ window.SEDCO_APPLICATIONS = <?= json_encode(
     | JSON_HEX_QUOT
 ) ?>;
 </script>
-<script src="application-status.js?v=20261006-03"></script>
+<script src="application-status.js?v=20261007-01"></script>
 <script src="sedco-shell.js?v=20261007-02"></script>
 </body>
 </html>
