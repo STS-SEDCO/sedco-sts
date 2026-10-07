@@ -19639,6 +19639,9 @@ body.application-detail-page .application-signature-preview img{display:block;ma
   border-color:#d69b37 !important;
   background:#fffdf7 !important;
 }
+.bpl-page .sts-correction-badge-host{
+  position:relative;
+}
 .bpl-page .sts-correction-field-badge{
   position:absolute;
   right:8px;
