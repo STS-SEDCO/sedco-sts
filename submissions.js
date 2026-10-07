@@ -351,6 +351,60 @@
     ].includes(key);
   }
 
+  function reviewerSummary(item) {
+    const data = item?.data || {};
+    const course = data.tajuk || data.kursus || item?.title || 'Not available';
+    const start = data.tarikh_mula || '';
+    const end = data.tarikh_tamat || '';
+    const dates = start && end
+      ? (formatDate(start) + (end !== start ? ' → ' + formatDate(end) : ''))
+      : (start ? formatDate(start) : 'Not available');
+
+    const rawFee = String(data.yuran || '').replace(/[^0-9.]/g,'');
+    const feeNumber = Number(rawFee);
+    const fee = rawFee && Number.isFinite(feeNumber)
+      ? new Intl.NumberFormat('en-MY',{
+          style:'currency',
+          currency:'MYR',
+          minimumFractionDigits:2
+        }).format(feeNumber)
+      : 'Not available';
+
+    const history = Array.isArray(item?.reviewHistory) ? item.reviewHistory : [];
+    const approved = history.filter(entry => String(entry.decision || '').toLowerCase() === 'approved');
+    const flags = Array.isArray(item?.qualityFlags) ? item.qualityFlags : [];
+
+    return {
+      course,
+      dates,
+      fee,
+      attachments:Number(item?.attachmentCount || 0),
+      history,
+      approved,
+      flags
+    };
+  }
+
+  function renderReviewerHistory(summary) {
+    if (!summary.history.length) {
+      return '<span class="reviewer-summary-history-empty"><i class="bi bi-clock-history"></i> No previous approval recorded yet.</span>';
+    }
+
+    return summary.history.map(entry => {
+      const decision = String(entry.decision || '').toLowerCase();
+      const icon = decision === 'approved'
+        ? 'bi-check2'
+        : (decision === 'correction' ? 'bi-arrow-counterclockwise' : 'bi-x');
+      return `
+        <span class="reviewer-history-chip is-${escapeHtml(decision || 'pending')}">
+          <i class="bi ${icon}"></i>
+          ${escapeHtml(stageMeta(entry.stage).label)}
+          <small>${escapeHtml(entry.reviewer || '')}${entry.reviewedAt ? ' · ' + escapeHtml(formatDate(entry.reviewedAt)) : ''}</small>
+        </span>
+      `;
+    }).join('');
+  }
+
   function openDetails(id) {
     const item = submissions.find(x => String(x.id) === String(id));
     if (!item) return;
@@ -371,6 +425,29 @@
     $('submissionModalType').textContent = item.formName || item.type || 'Not available';
     $('submissionModalDate').textContent = formatDate(item.submittedAt, true);
     $('submissionModalDepartment').textContent = item.department || 'Not assigned';
+
+    const summary = reviewerSummary(item);
+    $('submissionSummaryCourse').textContent = summary.course;
+    $('submissionSummaryDates').textContent = summary.dates;
+    $('submissionSummaryFee').textContent = summary.fee;
+    $('submissionSummaryAttachments').textContent = summary.attachments + (summary.attachments === 1 ? ' file' : ' files');
+
+    const summaryHistory = $('submissionSummaryHistory');
+    if (summaryHistory) summaryHistory.innerHTML = renderReviewerHistory(summary);
+
+    const qualityNode = $('submissionSummaryQuality');
+    const flagsNode = $('submissionSummaryFlags');
+    if (qualityNode) {
+      qualityNode.className = 'reviewer-summary-quality' + (summary.flags.length ? ' is-warning' : ' is-good');
+      qualityNode.innerHTML = summary.flags.length
+        ? '<i class="bi bi-exclamation-triangle"></i> ' + summary.flags.length + ' check' + (summary.flags.length === 1 ? '' : 's')
+        : '<i class="bi bi-shield-check"></i> Data check passed';
+    }
+    if (flagsNode) {
+      flagsNode.hidden = summary.flags.length === 0;
+      flagsNode.innerHTML = summary.flags.map(flag => '<span><i class="bi bi-exclamation-circle"></i>' + escapeHtml(flag) + '</span>').join('');
+    }
+
     const isStaticPreview = location.pathname.toLowerCase().endsWith('.html');
     const fallbackForm = String(item.type || '').toUpperCase() === 'BPL'
       ? (isStaticPreview ? 'bpl.html' : 'bpl.php')
@@ -636,6 +713,17 @@
     $('quickReviewTitle').textContent = item.title || 'Review application';
     $('quickReviewApplicant').textContent = item.applicant || 'Not available';
     $('quickReviewStage').textContent = stage.label;
+
+    const summary = reviewerSummary(item);
+    if ($('quickReviewSummaryCourse')) $('quickReviewSummaryCourse').textContent = summary.course;
+    if ($('quickReviewSummaryDates')) $('quickReviewSummaryDates').textContent = summary.dates;
+    if ($('quickReviewSummaryFee')) $('quickReviewSummaryFee').textContent = summary.fee;
+    if ($('quickReviewSummaryHistory')) {
+      $('quickReviewSummaryHistory').textContent = summary.approved.length
+        ? summary.approved.map(entry => stageMeta(entry.stage).label).join(' → ')
+        : 'None yet';
+    }
+
     $('quickReviewFields').innerHTML = stageReviewFields(item, decision);
     window.SEDCO_SIGNATURES?.init($('quickReviewFields'));
 
