@@ -415,6 +415,6 @@ function approval_status_label(string $status): string
   apply();
 })();
 </script>
-<script src="sedco-shell.js?v=20261007-03"></script>
+<script src="sedco-shell.js?v=20261007-04"></script>
 </body>
 </html>
