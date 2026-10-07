@@ -112,7 +112,7 @@ $canReviewCurrentStage = $mode === 'review'
             window.print();
         }
     </script>
-    <link rel="stylesheet" href="sedco-saas.css?v=20261006-10">
+    <link rel="stylesheet" href="sedco-saas.css?v=20261007-08">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
   <link rel="stylesheet" href="sedco-shell.css?v=20261007-03">
 </head>
@@ -141,11 +141,39 @@ $canReviewCurrentStage = $mode === 'review'
 
         <div class="form-permission-notice" data-form-permission-notice></div>
         <?php if ($canResubmitCorrection && !empty($application['review_note'])): ?>
-        <div class="sts-correction-note">
+        <?php
+          $correctionFieldLabels = [
+              'kursus' => 'Kursus / Seminar',
+              'tajuk' => 'Tajuk Kursus',
+              'penganjur' => 'Penganjur',
+              'tarikh_mula' => 'Tarikh Mula',
+              'tarikh_tamat' => 'Tarikh Tamat',
+              'tempat' => 'Tempat Kursus',
+              'yuran' => 'Yuran',
+              'kandungan' => 'Kandungan Kursus',
+              'tempat_tugas' => 'Tempat Bertugas',
+              'kenderaan' => 'Kenderaan',
+              'kenderaan_other' => 'Kenderaan Lain',
+              'masa_bertolak' => 'Masa Bertolak',
+              'masa_kembali' => 'Masa Kembali',
+              'pendahuluan' => 'Pendahuluan',
+          ];
+          $correctionFields = $payload['_correction_fields'] ?? [];
+          $correctionFields = is_array($correctionFields) ? $correctionFields : [];
+        ?>
+        <div class="sts-correction-note sts-correction-target-note">
           <i class="bi bi-chat-left-text"></i>
           <div>
             <strong>Correction requested by <?= e(stage_label($currentStage)) ?></strong>
             <p><?= e((string) $application['review_note']) ?></p>
+            <?php if ($correctionFields): ?>
+            <div class="sts-correction-target-tags">
+              <?php foreach ($correctionFields as $fieldName): ?>
+              <span><i class="bi bi-pencil-square"></i><?= e($correctionFieldLabels[(string) $fieldName] ?? (string) $fieldName) ?></span>
+              <?php endforeach; ?>
+            </div>
+            <small>Fields marked below are highlighted. Start from the first highlighted field.</small>
+            <?php endif; ?>
           </div>
         </div>
         <?php endif; ?>
@@ -473,6 +501,43 @@ $canReviewCurrentStage = $mode === 'review'
                 </tr>
             </table>
 
+            <?php if ($canReviewCurrentStage && in_array($currentStage, ['training', 'hod'], true)): ?>
+            <section class="sts-correction-target-panel no-print" data-correction-target-panel>
+              <div class="sts-correction-target-heading">
+                <span><i class="bi bi-bullseye"></i></span>
+                <div>
+                  <strong>Correction field targeting</strong>
+                  <p>If you return this BPL for correction, select exactly which applicant fields need changes.</p>
+                </div>
+              </div>
+              <div class="sts-correction-target-grid">
+                <?php foreach ([
+                  'kursus' => 'Kursus / Seminar',
+                  'tajuk' => 'Tajuk Kursus',
+                  'penganjur' => 'Penganjur',
+                  'tarikh_mula' => 'Tarikh Mula',
+                  'tarikh_tamat' => 'Tarikh Tamat',
+                  'tempat' => 'Tempat Kursus',
+                  'yuran' => 'Yuran',
+                  'kandungan' => 'Kandungan Kursus',
+                  'tempat_tugas' => 'Tempat Bertugas',
+                  'kenderaan' => 'Kenderaan',
+                  'masa_bertolak' => 'Masa Bertolak',
+                  'masa_kembali' => 'Masa Kembali',
+                  'pendahuluan' => 'Pendahuluan',
+                ] as $fieldName => $fieldLabel): ?>
+                <label>
+                  <input type="checkbox" name="correction_fields[]" value="<?= e($fieldName) ?>">
+                  <span><?= e($fieldLabel) ?></span>
+                </label>
+                <?php endforeach; ?>
+              </div>
+              <div class="sts-correction-target-error" data-correction-target-error hidden>
+                Select at least one field before requesting correction.
+              </div>
+            </section>
+            <?php endif; ?>
+
             <div class="form-actions">
                 <?php if ($mode === 'new'): ?>
                 <input type="submit" name="submit" value="Submit Application" class="btn-maroon">
@@ -518,7 +583,7 @@ window.SEDCO_FORM_CONTEXT = {
   status: <?= json_encode($applicationStatus) ?>
 };
 </script>
-<script src="bpl-workflow.js?v=20261006-05"></script>
+<script src="bpl-workflow.js?v=20261007-01"></script>
 <script src="form-permissions.js?v=20261003-06"></script>
 <script src="digital-signature.js?v=20261006-03"></script>
 <script src="form-ux.js?v=20261006-06"></script>
