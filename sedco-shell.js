@@ -42,6 +42,14 @@
     body.dataset.role || (!isPhp ? previewUser?.role : '') || ''
   ).toLowerCase();
 
+  // Resolve the saved theme before the page is revealed to avoid a light/dark flash.
+  let sedcoTheme = 'light';
+  try {
+    sedcoTheme = localStorage.getItem('sedcoTheme') === 'dark' ? 'dark' : 'light';
+  } catch {}
+  body.dataset.sedcoTheme = sedcoTheme;
+  body.classList.toggle('sedco-dark-mode', sedcoTheme === 'dark');
+
   // Resolve the stored sidebar state before the shell is inserted so the
   // first painted layout already has the correct content width.
   try {
@@ -105,6 +113,15 @@
           <a class="nav-link" href="${logoutUrl}">
             <i class="bi bi-box-arrow-right me-1"></i>Log out
           </a>
+          <button
+            class="sedco-theme-toggle"
+            id="sedcoThemeToggle"
+            type="button"
+            aria-label="Switch to dark mode"
+            title="Dark mode"
+          >
+            <i class="bi bi-moon-stars-fill" aria-hidden="true"></i>
+          </button>
           <a
             class="sedco-top-search${activePage === 'global-search' ? ' active' : ''}"
             href="${pageUrl('global-search')}"
@@ -161,6 +178,32 @@
 
   const toggle = document.getElementById('sedcoMobileToggle');
   const backdrop = document.getElementById('sedcoSidebarBackdrop');
+  const themeToggle = document.getElementById('sedcoThemeToggle');
+
+  const syncThemeToggle = () => {
+    if (!themeToggle) return;
+    const dark = body.classList.contains('sedco-dark-mode');
+    themeToggle.innerHTML = dark
+      ? '<i class="bi bi-sun-fill" aria-hidden="true"></i>'
+      : '<i class="bi bi-moon-stars-fill" aria-hidden="true"></i>';
+    themeToggle.setAttribute('aria-label', dark ? 'Switch to light mode' : 'Switch to dark mode');
+    themeToggle.setAttribute('title', dark ? 'Light mode' : 'Dark mode');
+    themeToggle.setAttribute('aria-pressed', String(dark));
+  };
+
+  themeToggle?.addEventListener('click', () => {
+    const dark = !body.classList.contains('sedco-dark-mode');
+    body.classList.toggle('sedco-dark-mode', dark);
+    body.dataset.sedcoTheme = dark ? 'dark' : 'light';
+
+    try {
+      localStorage.setItem('sedcoTheme', dark ? 'dark' : 'light');
+    } catch {}
+
+    syncThemeToggle();
+  });
+
+  syncThemeToggle();
 
   if (!isPhp) {
     body.dataset.role = userRole || 'staff';
