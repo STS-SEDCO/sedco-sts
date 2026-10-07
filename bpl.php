@@ -583,7 +583,7 @@ window.SEDCO_FORM_CONTEXT = {
   status: <?= json_encode($applicationStatus) ?>
 };
 </script>
-<script src="bpl-workflow.js?v=20261007-01"></script>
+<script src="bpl-workflow.js?v=20261007-02"></script>
 <script src="form-permissions.js?v=20261003-06"></script>
 <script src="digital-signature.js?v=20261006-03"></script>
 <script src="form-ux.js?v=20261006-06"></script>
