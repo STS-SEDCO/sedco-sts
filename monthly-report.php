@@ -260,7 +260,7 @@ $generatedAt = new DateTimeImmutable('now',new DateTimeZone('Asia/Kuala_Lumpur')
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
   <link rel="stylesheet" href="sedco-saas.css?v=20261007-10">
-  <link rel="stylesheet" href="sedco-shell.css?v=20261007-15">
+  <link rel="stylesheet" href="sedco-shell.css?v=20261007-16">
 </head>
 <body class="app-page monthly-report-page" data-page="reports" data-role="<?= e($role) ?>">
 <main class="sts-page-content">
@@ -412,6 +412,6 @@ $generatedAt = new DateTimeImmutable('now',new DateTimeZone('Asia/Kuala_Lumpur')
     </article>
   </div>
 </main>
-<script src="sedco-shell.js?v=20261007-05"></script>
+<script src="sedco-shell.js?v=20261007-06"></script>
 </body>
 </html>
