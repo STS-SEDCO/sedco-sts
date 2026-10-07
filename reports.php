@@ -125,7 +125,7 @@ $query=http_build_query(array_filter([
 <title>Smart Training System: Reports and Analytics</title>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-<link rel="stylesheet" href="sedco-saas.css?v=20261006-11"><link rel="stylesheet" href="sedco-shell.css?v=20261006-01">
+<link rel="stylesheet" href="sedco-saas.css?v=20261006-11"><link rel="stylesheet" href="sedco-shell.css?v=20261007-02">
 </head>
 <body class="app-page reports-page" data-page="reports" data-role="<?= e($role) ?>">
 <main class="sts-page-content"><div class="sts-page-shell">
@@ -188,4 +188,4 @@ $query=http_build_query(array_filter([
 <?php if(!$rows): ?><tr><td colspan="8" class="text-center py-5 text-muted">No records match the selected filters.</td></tr><?php endif; ?>
 </tbody></table></div>
 </section>
-</div></main><script src="sedco-shell.js?v=20261006-01"></script></body></html>
+</div></main><script src="sedco-shell.js?v=20261007-02"></script></body></html>
