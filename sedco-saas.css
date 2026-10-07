@@ -20262,3 +20262,260 @@ body.application-detail-page .application-signature-preview img{display:block;ma
     margin:12mm;
   }
 }
+
+/* ===== DATA QUALITY + REVIEWER SUMMARY + TRAINING CALENDAR V1 ===== */
+
+/* BPL quality guard */
+.bpl-page .bpl-quality-panel{
+  margin:14px 0;
+  padding:13px 14px;
+  border:1px solid #eadfbf;
+  border-radius:13px;
+  background:#fffdf7;
+}
+.bpl-page .bpl-quality-panel.is-error{
+  border-color:#edc6cd;
+  background:#fff8f9;
+}
+.bpl-page .bpl-quality-panel-head{
+  display:flex;
+  align-items:flex-start;
+  gap:10px;
+}
+.bpl-page .bpl-quality-icon{
+  width:36px;height:36px;display:grid;place-items:center;flex:0 0 36px;
+  border-radius:10px;background:#fff0ca;color:#9c680d;
+}
+.bpl-page .bpl-quality-panel.is-error .bpl-quality-icon{
+  background:#ffecef;color:#b4243d;
+}
+.bpl-page .bpl-quality-panel-head strong{
+  display:block;color:#35373c;font-size:10.8px;font-weight:820;
+}
+.bpl-page .bpl-quality-panel-head p{
+  margin:2px 0 0;color:#81858d;font-size:9px;line-height:1.4;
+}
+.bpl-page .bpl-quality-messages{
+  display:grid;
+  gap:6px;
+  margin-top:10px;
+}
+.bpl-page .bpl-quality-message{
+  display:flex;align-items:flex-start;gap:7px;
+  padding:7px 8px;border-radius:8px;font-size:9px;line-height:1.4;
+}
+.bpl-page .bpl-quality-message.is-warning{background:#fff4d9;color:#8e600d}
+.bpl-page .bpl-quality-message.is-error{background:#ffedf0;color:#ab263e}
+.bpl-page .bpl-conflict-list{
+  display:grid;gap:7px;margin-top:9px;
+}
+.bpl-page .bpl-conflict-item{
+  display:grid;grid-template-columns:34px minmax(0,1fr) auto;
+  align-items:center;gap:9px;padding:8px 9px;border:1px solid #ece2c9;border-radius:9px;background:#fff;
+}
+.bpl-page .bpl-conflict-icon{
+  width:34px;height:34px;display:grid;place-items:center;border-radius:8px;background:#fff4dc;color:#9c6911;
+}
+.bpl-page .bpl-conflict-item strong{
+  display:block;color:#3b3e44;font-size:9.5px;font-weight:790;
+}
+.bpl-page .bpl-conflict-item p{
+  margin:2px 0 0;color:#858991;font-size:8.3px;
+}
+.bpl-page .bpl-conflict-item em{
+  padding:4px 6px;border-radius:999px;background:#f6f1e5;color:#8b6b2e;
+  font-size:7.5px;font-style:normal;font-weight:760;white-space:nowrap;
+}
+
+/* Reviewer summary */
+.submissions-page .reviewer-summary-card{
+  margin:12px 0 14px;padding:12px;border:1px solid #e6e8eb;border-radius:12px;background:#fbfcfc;
+}
+.submissions-page .reviewer-summary-heading{
+  display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:9px;
+}
+.submissions-page .reviewer-summary-heading>div>span{
+  display:block;color:#976669;font-size:8px;font-weight:800;text-transform:uppercase;letter-spacing:.05em;
+}
+.submissions-page .reviewer-summary-heading h3{
+  margin:2px 0 0;color:#31343a;font-size:11.5px;font-weight:820;
+}
+.submissions-page .reviewer-summary-quality{
+  display:inline-flex;align-items:center;gap:5px;padding:5px 7px;border-radius:999px;
+  background:#eef8f3;color:#1c7b59;font-size:8px;font-weight:760;white-space:nowrap;
+}
+.submissions-page .reviewer-summary-quality.is-warning{background:#fff2d6;color:#91610e}
+.submissions-page .reviewer-summary-grid{
+  display:grid;grid-template-columns:2fr 1.4fr 1fr 1fr;gap:7px;
+}
+.submissions-page .reviewer-summary-grid>div{
+  min-width:0;padding:8px 9px;border:1px solid #eceef0;border-radius:8px;background:#fff;
+}
+.submissions-page .reviewer-summary-grid span,
+.submissions-page .quick-review-summary span{
+  display:block;color:#91959d;font-size:7.6px;font-weight:720;text-transform:uppercase;letter-spacing:.03em;
+}
+.submissions-page .reviewer-summary-grid strong,
+.submissions-page .quick-review-summary strong{
+  display:block;margin-top:2px;color:#383b41;font-size:9px;font-weight:780;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+}
+.submissions-page .reviewer-summary-history{
+  display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-top:9px;
+}
+.submissions-page .reviewer-history-chip,
+.submissions-page .reviewer-summary-history-empty{
+  display:inline-flex;align-items:center;gap:4px;padding:5px 7px;border-radius:8px;
+  background:#f2f4f5;color:#646971;font-size:7.8px;font-weight:730;
+}
+.submissions-page .reviewer-history-chip small{color:#8c9097;font-size:7px;font-weight:600}
+.submissions-page .reviewer-history-chip.is-approved{background:#ebf8f2;color:#1a7a57}
+.submissions-page .reviewer-history-chip.is-correction{background:#fff3dc;color:#92610e}
+.submissions-page .reviewer-history-chip.is-rejected{background:#ffedf0;color:#aa273e}
+.submissions-page .reviewer-summary-flags{
+  display:grid;gap:5px;margin-top:8px;
+}
+.submissions-page .reviewer-summary-flags span{
+  display:flex;align-items:flex-start;gap:5px;padding:6px 7px;border-radius:7px;background:#fff1dc;color:#8f5e0c;font-size:8px;
+}
+.submissions-page .quick-review-summary{
+  display:grid;grid-template-columns:2fr 1.25fr 1fr 1.4fr;gap:6px;margin-bottom:10px;
+}
+.submissions-page .quick-review-summary>div{
+  min-width:0;padding:7px 8px;border:1px solid #e9ebee;border-radius:8px;background:#fafbfb;
+}
+
+/* Dashboard calendar open */
+.dashboard-page .dashboard-calendar-open{
+  display:inline-flex;align-items:center;gap:5px;padding:6px 8px;border:1px solid #e3e5e8;
+  border-radius:9px;background:#fff;color:#6a6e76;font-size:8.5px;font-weight:760;text-decoration:none;
+}
+.dashboard-page .dashboard-calendar-open:hover{color:#8f1519;border-color:#ddc6c8}
+
+/* Full Training Calendar */
+.training-calendar-page .training-calendar-toolbar{
+  display:grid;grid-template-columns:auto 220px minmax(220px,1fr) auto auto;
+  gap:9px;align-items:end;margin-bottom:14px;padding:11px;border:1px solid #e6e8eb;border-radius:13px;background:#fff;
+}
+.training-calendar-page .training-calendar-nav{
+  display:flex;align-items:end;gap:6px;
+}
+.training-calendar-page .training-calendar-nav>a,
+.training-calendar-page .training-calendar-nav>button{
+  width:38px;height:38px;display:grid;place-items:center;border:1px solid #dfe2e6;border-radius:9px;background:#fff;color:#5f636b;text-decoration:none;
+}
+.training-calendar-page .training-calendar-toolbar label>span{
+  display:block;margin-bottom:4px;color:#7d8189;font-size:8px;font-weight:760;
+}
+.training-calendar-page .training-calendar-toolbar input,
+.training-calendar-page .training-calendar-toolbar select{
+  width:100%;min-height:38px;padding:0 9px;border:1px solid #dfe2e6;border-radius:9px;background:#fff;color:#40444a;font-size:9.5px;
+}
+.training-calendar-page .training-calendar-search>div{
+  display:flex;align-items:center;gap:6px;min-height:38px;padding:0 9px;border:1px solid #dfe2e6;border-radius:9px;background:#fff;
+}
+.training-calendar-page .training-calendar-search>div input{border:0;outline:0;min-height:auto;padding:0}
+.training-calendar-page .training-calendar-search>div i{color:#969aa1;font-size:11px}
+.training-calendar-page .training-calendar-summary{
+  display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px;margin-bottom:14px;
+}
+.training-calendar-page .training-calendar-summary article{
+  display:flex;align-items:center;gap:10px;min-height:72px;padding:11px;border:1px solid #e8e9ec;border-radius:11px;background:#fff;
+}
+.training-calendar-page .training-calendar-summary article>span{
+  width:36px;height:36px;display:grid;place-items:center;flex:0 0 36px;border-radius:9px;background:#f1f4f3;color:#56766b;
+}
+.training-calendar-page .training-calendar-summary strong{display:block;color:#2f3237;font-size:14px;line-height:1;font-weight:850}
+.training-calendar-page .training-calendar-summary small{display:block;margin-top:4px;color:#8c9097;font-size:8.3px}
+.training-calendar-page .training-calendar-board{
+  margin-bottom:14px;padding:13px;border:1px solid #e4e6e9;border-radius:14px;background:#fff;
+}
+.training-calendar-page .training-calendar-heading{
+  display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:10px;
+}
+.training-calendar-page .training-calendar-heading>div:first-child>span{
+  display:block;color:#9b6a6d;font-size:8px;font-weight:800;letter-spacing:.06em;
+}
+.training-calendar-page .training-calendar-heading h2{margin:1px 0 0;color:#2d3035;font-size:16px;font-weight:850}
+.training-calendar-page .training-calendar-legend{display:flex;align-items:center;gap:10px}
+.training-calendar-page .training-calendar-legend span{
+  display:inline-flex;align-items:center;gap:5px;color:#7e828a;font-size:8px;
+}
+.training-calendar-page .training-calendar-legend i{width:8px;height:8px;border-radius:50%}
+.training-calendar-page .training-calendar-legend i.is-training{background:#8f1519}
+.training-calendar-page .training-calendar-legend i.is-company{background:#5b769f}
+.training-calendar-page .training-calendar-weekdays,
+.training-calendar-page .training-calendar-grid{
+  display:grid;grid-template-columns:repeat(7,minmax(0,1fr));
+}
+.training-calendar-page .training-calendar-weekdays span{
+  padding:7px 5px;color:#858991;font-size:8px;font-weight:800;text-align:center;text-transform:uppercase;
+}
+.training-calendar-page .training-calendar-day{
+  min-height:125px;padding:7px;border-top:1px solid #eceef0;border-left:1px solid #eceef0;background:#fff;
+}
+.training-calendar-page .training-calendar-day:nth-child(7n){border-right:1px solid #eceef0}
+.training-calendar-page .training-calendar-day:nth-last-child(-n+7){border-bottom:1px solid #eceef0}
+.training-calendar-page .training-calendar-day.is-outside{background:#fafafa;color:#b5b8bd}
+.training-calendar-page .training-calendar-day.is-today{background:#fff9f9;box-shadow:inset 0 0 0 2px rgba(143,21,25,.22)}
+.training-calendar-page .training-calendar-day-head{
+  display:flex;align-items:center;justify-content:space-between;margin-bottom:5px;
+}
+.training-calendar-page .training-calendar-day-head>span{color:#4a4e55;font-size:9px;font-weight:800}
+.training-calendar-page .training-calendar-day-head em{
+  padding:2px 5px;border-radius:999px;background:#8f1519;color:#fff;font-size:6.5px;font-style:normal;font-weight:800;
+}
+.training-calendar-page .training-calendar-day-events{display:grid;gap:4px}
+.training-calendar-page .training-calendar-event{
+  display:block;min-width:0;padding:5px 6px;border-radius:7px;text-decoration:none;
+}
+.training-calendar-page .training-calendar-event.is-training{background:#f8ecec;color:#7d171b}
+.training-calendar-page .training-calendar-event.is-company{background:#edf3fa;color:#3f5e86}
+.training-calendar-page .training-calendar-event strong{
+  display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:7.7px;font-weight:800;
+}
+.training-calendar-page .training-calendar-event small{
+  display:block;margin-top:1px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:6.9px;color:inherit;opacity:.72;
+}
+.training-calendar-page .training-calendar-more{color:#8a8e95;font-size:7px;font-weight:700}
+.training-calendar-page .training-calendar-list-body{display:grid;gap:6px}
+.training-calendar-page .training-calendar-list-body>a{
+  display:grid;grid-template-columns:45px minmax(0,1fr) auto 18px;align-items:center;gap:9px;padding:8px 9px;border:1px solid #eceef0;border-radius:9px;color:inherit;text-decoration:none;
+}
+.training-calendar-page .training-calendar-list-date{
+  width:42px;height:42px;display:flex;align-items:center;justify-content:center;flex-direction:column;border-radius:8px;background:#f7ecec;color:#8f1519;
+}
+.training-calendar-page .training-calendar-list-date strong{font-size:13px;line-height:1}
+.training-calendar-page .training-calendar-list-date small{font-size:7px;font-weight:750}
+.training-calendar-page .training-calendar-list-body>a>div>strong{display:block;color:#35383d;font-size:9.5px}
+.training-calendar-page .training-calendar-list-body>a>div>p{margin:2px 0 0;color:#858991;font-size:8px}
+.training-calendar-page .training-calendar-list-body>a>em{color:#757982;font-size:8px;font-style:normal;white-space:nowrap}
+.training-calendar-page .training-calendar-list-body>a>i{color:#a5a8ae}
+.training-calendar-page .training-calendar-empty{
+  min-height:160px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;color:#858991;
+}
+.training-calendar-page .training-calendar-empty>i{font-size:22px;color:#8f1519}
+.training-calendar-page .training-calendar-empty strong{margin-top:7px;color:#3a3d42;font-size:10.5px}
+.training-calendar-page .training-calendar-empty span{margin-top:2px;font-size:8.5px}
+
+@media(max-width:1050px){
+  .training-calendar-page .training-calendar-toolbar{grid-template-columns:1fr 1fr}
+  .training-calendar-page .training-calendar-search{grid-column:1/-1}
+  .training-calendar-page .training-calendar-summary{grid-template-columns:1fr 1fr}
+  .submissions-page .reviewer-summary-grid,
+  .submissions-page .quick-review-summary{grid-template-columns:1fr 1fr}
+}
+@media(max-width:700px){
+  .training-calendar-page .training-calendar-toolbar{grid-template-columns:1fr}
+  .training-calendar-page .training-calendar-search{grid-column:auto}
+  .training-calendar-page .training-calendar-summary{grid-template-columns:1fr}
+  .training-calendar-page .training-calendar-board{overflow-x:auto}
+  .training-calendar-page .training-calendar-weekdays,
+  .training-calendar-page .training-calendar-grid{min-width:760px}
+  .training-calendar-page .training-calendar-list-body>a{grid-template-columns:42px minmax(0,1fr) 16px}
+  .training-calendar-page .training-calendar-list-body>a>em{grid-column:2}
+  .submissions-page .reviewer-summary-grid,
+  .submissions-page .quick-review-summary{grid-template-columns:1fr}
+  .bpl-page .bpl-conflict-item{grid-template-columns:34px minmax(0,1fr)}
+  .bpl-page .bpl-conflict-item em{grid-column:2;justify-self:start}
+}
