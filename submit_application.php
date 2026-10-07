@@ -45,6 +45,15 @@ unset(
 // The form date is always the actual submission date in Malaysia,
 // never the date a draft was first started or autosaved.
 if ($type === 'BPL') {
+    $pendingPkkRequirement = sts_pending_pkk_requirement((int) ($user['id'] ?? 0));
+
+    if ($pendingPkkRequirement) {
+        header(
+            'Location: task.php?pkk_required=1&parent='
+            . (int) $pendingPkkRequirement['id']
+        );
+        exit;
+    }
     $payload['nama'] = trim((string) ($user['fullname'] ?? ''));
     $payload['bahagian'] = trim((string) ($user['department'] ?? ''));
     $payload['jawatan'] = trim((string) ($user['job_title'] ?? ''));
