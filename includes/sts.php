@@ -73,6 +73,64 @@ function sts_followup_due(?string $trainingEnd, string $type): ?string
     return date('Y-m-d H:i:s', $timestamp + ($days * 86400));
 }
 
+function sts_pending_pkk_requirement(int $userId): ?array
+{
+    if ($userId <= 0) {
+        return null;
+    }
+
+    try {
+        $stmt = db()->prepare(
+            'SELECT
+                b.id,
+                b.application_no,
+                b.title,
+                b.training_end,
+                b.followup_due_at
+             FROM applications b
+             WHERE b.user_id = ?
+               AND b.form_type = "BPL"
+               AND b.status = "approved"
+               AND b.current_stage = "completed"
+               AND b.training_end IS NOT NULL
+               AND b.training_end <= CURDATE()
+               AND NOT EXISTS (
+                 SELECT 1
+                 FROM applications p
+                 WHERE p.parent_application_id = b.id
+                   AND p.form_type = "PKK"
+                   AND p.status <> "cancelled"
+               )
+             ORDER BY b.training_end ASC, b.id ASC
+             LIMIT 1'
+        );
+        $stmt->bind_param('i', $userId);
+        $stmt->execute();
+        $row = $stmt->get_result()->fetch_assoc();
+        $stmt->close();
+
+        if (!$row) {
+            return null;
+        }
+
+        $due = trim((string) ($row['followup_due_at'] ?? ''));
+
+        if ($due === '') {
+            $due = (string) (sts_followup_due(
+                (string) ($row['training_end'] ?? ''),
+                'PKK'
+            ) ?? '');
+        }
+
+        $row['pkk_due_at'] = $due;
+        $row['is_overdue'] = $due !== '' && strtotime($due) < time();
+
+        return $row;
+    } catch (Throwable) {
+        return null;
+    }
+}
+
 function sts_department_hod(?string $department): ?int
 {
     $department = trim((string) $department);
