@@ -29,82 +29,15 @@ $gridEnd = $monthEnd->modify('+' . (7 - (int)$monthEnd->modify('-1 day')->format
 $filterDepartment = trim((string) ($_GET['department'] ?? ''));
 $search = trim((string) ($_GET['q'] ?? ''));
 
-$where = [
-    'a.form_type = "BPL"',
-    'a.status = "approved"',
-    'a.training_start IS NOT NULL',
-    'a.training_end IS NOT NULL',
-    'a.training_start < ?',
-    'a.training_end >= ?',
-];
-$params = [$monthEnd->format('Y-m-d'),$monthStart->format('Y-m-d')];
-$types = 'ss';
-
-if ($role === 'staff') {
-    $where[] = 'a.user_id = ?';
-    $params[] = $userId;
-    $types .= 'i';
-} elseif ($role === 'head_of_department') {
-    $where[] = 'LOWER(TRIM(COALESCE(NULLIF(a.department,""),NULLIF(u.department,"")))) = LOWER(TRIM(?))';
-    $params[] = $userDepartment;
-    $types .= 's';
-} elseif ($filterDepartment !== '') {
-    $where[] = 'COALESCE(NULLIF(a.department,""),NULLIF(u.department,"")) = ?';
-    $params[] = $filterDepartment;
-    $types .= 's';
-}
-
-if ($search !== '') {
-    $like = '%' . $search . '%';
-    $where[] = '(a.title LIKE ? OR u.fullname LIKE ? OR a.application_no LIKE ?)';
-    $params[] = $like;
-    $params[] = $like;
-    $params[] = $like;
-    $types .= 'sss';
-}
-
-$sql =
-    'SELECT a.id,a.application_no,a.title,a.department,a.training_start,a.training_end,
-            a.user_id,u.fullname,
-            COALESCE(NULLIF(a.department,""),NULLIF(u.department,"")) AS resolved_department
-     FROM applications a
-     INNER JOIN users u ON u.id = a.user_id
-     WHERE ' . implode(' AND ',$where) . '
-     ORDER BY a.training_start ASC,u.fullname ASC';
-
-$stmt = $db->prepare($sql);
-$bind = [$types];
-foreach ($params as $index => $value) {
-    $bind[] = &$params[$index];
-}
-call_user_func_array([$stmt,'bind_param'],$bind);
-$stmt->execute();
-$result = $stmt->get_result();
-
-$trainings = [];
-while ($row = $result->fetch_assoc()) {
-    $row['department'] = (string) ($row['resolved_department'] ?? $row['department'] ?? '');
-    $trainings[] = $row;
-}
-$stmt->close();
-
-$companyEvents = [];
-$eventStmt = $db->prepare(
-    'SELECT id,title,event_date,event_type,description
-     FROM calendar_events
-     WHERE event_date >= ?
-       AND event_date < ?
-     ORDER BY event_date ASC,title ASC'
+$calendarFeed = sts_calendar_feed(
+    $user,
+    $monthStart->format('Y-m-d'),
+    $monthEnd->format('Y-m-d'),
+    $filterDepartment,
+    $search
 );
-$startValue = $monthStart->format('Y-m-d');
-$endValue = $monthEnd->format('Y-m-d');
-$eventStmt->bind_param('ss',$startValue,$endValue);
-$eventStmt->execute();
-$eventResult = $eventStmt->get_result();
-while ($row = $eventResult->fetch_assoc()) {
-    $companyEvents[] = $row;
-}
-$eventStmt->close();
+$trainings = $calendarFeed['trainings'];
+$companyEvents = $calendarFeed['company_events'];
 
 $departments = [];
 if (!in_array($role,['staff','head_of_department'],true)) {
