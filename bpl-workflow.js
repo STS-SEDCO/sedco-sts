@@ -102,6 +102,8 @@
   }
 
   function setupBplQualityGuard(form) {
+    if (context.mode === 'review' && context.isOwner !== true) return;
+
     const panel = form.querySelector('[data-bpl-quality-panel]');
     const titleNode = form.querySelector('[data-bpl-quality-title]');
     const copyNode = form.querySelector('[data-bpl-quality-copy]');
