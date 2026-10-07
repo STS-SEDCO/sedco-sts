@@ -715,9 +715,19 @@
     $('quickReviewStage').textContent = stage.label;
 
     const summary = reviewerSummary(item);
+    if ($('quickReviewSummaryDepartment')) $('quickReviewSummaryDepartment').textContent = item.department || 'Not available';
     if ($('quickReviewSummaryCourse')) $('quickReviewSummaryCourse').textContent = summary.course;
     if ($('quickReviewSummaryDates')) $('quickReviewSummaryDates').textContent = summary.dates;
     if ($('quickReviewSummaryFee')) $('quickReviewSummaryFee').textContent = summary.fee;
+    if ($('quickReviewSummaryAttachments')) {
+      $('quickReviewSummaryAttachments').textContent = summary.attachments + (summary.attachments === 1 ? ' file' : ' files');
+    }
+    if ($('quickReviewSummaryQuality')) {
+      $('quickReviewSummaryQuality').textContent = summary.flags.length
+        ? summary.flags.length + ' warning' + (summary.flags.length === 1 ? '' : 's')
+        : 'Passed';
+      $('quickReviewSummaryQuality').classList.toggle('is-warning', summary.flags.length > 0);
+    }
     if ($('quickReviewSummaryHistory')) {
       $('quickReviewSummaryHistory').textContent = summary.approved.length
         ? summary.approved.map(entry => stageMeta(entry.stage).label).join(' → ')
