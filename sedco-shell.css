@@ -5033,3 +5033,62 @@ body.app-page > .sedco-navbar .sedco-top-notification-badge{
     }
   }
 }
+/* ===== SIDEBAR NORMAL SIZE RESTORE 2026-10-07 ===== */
+@media screen and (min-width:901px){
+  body.app-page{
+    --sedco-sidebar-width:264px;
+  }
+
+  body.app-page.sedco-sidebar-collapsed{
+    --sedco-sidebar-width:86px;
+  }
+
+  body.app-page > .sedco-sidebar{
+    padding:24px 14px 16px !important;
+  }
+
+  body.app-page > .sedco-sidebar .sedco-sidebar-label{
+    padding:0 12px 13px !important;
+    font-size:10.5px !important;
+    letter-spacing:.13em !important;
+  }
+
+  body.app-page > .sedco-sidebar .sedco-nav-item{
+    min-height:50px !important;
+    gap:12px !important;
+    padding:12px 13px !important;
+    margin-bottom:6px !important;
+    border-radius:12px !important;
+    font-size:13.5px !important;
+    font-weight:590 !important;
+  }
+
+  body.app-page > .sedco-sidebar .sedco-nav-item i{
+    width:20px !important;
+    flex:0 0 20px !important;
+    font-size:17px !important;
+  }
+
+  body.app-page > .sedco-sidebar .sedco-nav-item.active::before{
+    top:13px !important;
+    bottom:13px !important;
+  }
+
+  body.app-page > .sedco-sidebar .sedco-sidebar-footer{
+    padding-top:16px !important;
+  }
+
+  body.app-page.sedco-sidebar-collapsed > .sedco-sidebar{
+    padding-left:11px !important;
+    padding-right:11px !important;
+  }
+
+  body.app-page.sedco-sidebar-collapsed > .sedco-sidebar .sedco-nav-item{
+    min-height:50px !important;
+    padding:12px !important;
+  }
+
+  body.app-page.sedco-sidebar-collapsed > .sedco-sidebar .sedco-nav-item i{
+    font-size:18px !important;
+  }
+}
