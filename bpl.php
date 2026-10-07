@@ -17,6 +17,18 @@ $currentStage = '';
 $applicationStatus = 'pending';
 $applicationNo = trim((string) ($_GET['application'] ?? ''));
 
+if ($applicationNo === '') {
+    $pendingPkkRequirement = sts_pending_pkk_requirement((int) ($user['id'] ?? 0));
+
+    if ($pendingPkkRequirement) {
+        header(
+            'Location: task.php?pkk_required=1&parent='
+            . (int) $pendingPkkRequirement['id']
+        );
+        exit;
+    }
+}
+
 if ($applicationNo !== '') {
     $stmt = db()->prepare(
         'SELECT a.id, a.application_no, a.user_id, a.form_type, a.title, a.payload,
