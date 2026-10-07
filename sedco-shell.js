@@ -45,6 +45,7 @@
   const items = [
     ['dashboard', 'Dashboard', 'bi-grid-1x2-fill', pageUrl('dashboard')],
     ['task', 'Training Forms', 'bi-file-earmark-text', pageUrl('task')],
+    ['training-calendar', 'Training Calendar', 'bi-calendar3', pageUrl('training-calendar')],
     ['application-status', 'Application status', 'bi-clipboard-check', pageUrl('application-status')],
     ['submissions', 'Approval', 'bi-check2-square', pageUrl('submissions')],
     ['approval-history', 'Approval History', 'bi-clock-history', pageUrl('approval-history')],
