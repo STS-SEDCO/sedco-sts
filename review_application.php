@@ -184,6 +184,48 @@ try {
 
     $note = trim((string) ($_POST['review_comment'] ?? ''));
 
+    $correctionFieldLabels = [
+        'kursus' => 'Kursus / Seminar',
+        'tajuk' => 'Tajuk Kursus',
+        'penganjur' => 'Penganjur',
+        'tarikh_mula' => 'Tarikh Mula',
+        'tarikh_tamat' => 'Tarikh Tamat',
+        'tempat' => 'Tempat Kursus',
+        'yuran' => 'Yuran',
+        'kandungan' => 'Kandungan Kursus',
+        'tempat_tugas' => 'Tempat Bertugas',
+        'kenderaan' => 'Kenderaan',
+        'kenderaan_other' => 'Kenderaan Lain',
+        'masa_bertolak' => 'Masa Bertolak',
+        'masa_kembali' => 'Masa Kembali',
+        'pendahuluan' => 'Pendahuluan',
+    ];
+
+    if ($decision === 'correction') {
+        $requestedCorrectionFields = $_POST['correction_fields'] ?? [];
+
+        if (!is_array($requestedCorrectionFields)) {
+            $requestedCorrectionFields = [$requestedCorrectionFields];
+        }
+
+        $correctionFields = array_values(array_unique(array_filter(
+            array_map('strval', $requestedCorrectionFields),
+            static fn (string $field): bool => array_key_exists($field, $correctionFieldLabels)
+        )));
+
+        if (!$correctionFields) {
+            http_response_code(422);
+            throw new RuntimeException('Please select at least one field that the applicant needs to correct.');
+        }
+
+        $payload['_correction_fields'] = $correctionFields;
+        $payload['_correction_stage'] = $stage;
+        $payload['_correction_requested_at'] = (new DateTimeImmutable(
+            'now',
+            new DateTimeZone('Asia/Kuala_Lumpur')
+        ))->format(DateTimeInterface::ATOM);
+    }
+
     if ($decision === 'rejected' && $note === '') {
         http_response_code(422);
         throw new RuntimeException('Please provide a clear reason before rejecting the application.');
@@ -290,10 +332,16 @@ try {
     $applicantLink = 'application-detail.php?application=' . rawurlencode($applicationNo);
 
     if ($decision === 'correction') {
+        $targetLabels = array_map(
+            static fn (string $field): string => $correctionFieldLabels[$field] ?? $field,
+            $correctionFields ?? []
+        );
+
         sts_notify(
             $applicantId,
             'Correction requested',
             $applicationNo . ' needs correction at ' . stage_label($stage) . ' stage.'
+                . ($targetLabels ? ' Fields: ' . implode(', ', $targetLabels) . '.' : '')
                 . ($note !== '' ? ' Note: ' . $note : ''),
             $applicantLink,
             'warning'
