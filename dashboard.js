@@ -148,6 +148,55 @@
     }
   }
 
+  function renderPreviewActions(applications) {
+    const list = document.getElementById('dashboardPreviewActions');
+    const empty = document.getElementById('dashboardPreviewActionEmpty');
+    const count = document.getElementById('dashboardPreviewActionCount');
+    if (!list || !empty || !count) return;
+
+    const actions = [];
+
+    applications
+      .filter(item => String(item.status || '').toLowerCase() === 'correction')
+      .slice(0,3)
+      .forEach(item => {
+        actions.push({
+          tone:'danger',
+          icon:'bi-arrow-counterclockwise',
+          title:'Correction required',
+          copy:(item.id || '') + ' · ' + (item.title || item.formName || 'Application'),
+          url:'application-status.html',
+          action:'Fix & Resubmit'
+        });
+      });
+
+    applications
+      .filter(item => String(item.status || '').toLowerCase() === 'pending')
+      .slice(0,2)
+      .forEach(item => {
+        actions.push({
+          tone:'warning',
+          icon:'bi-clock-history',
+          title:'Approval in progress',
+          copy:(item.id || '') + ' · Waiting at ' + previewStageLabel(item.currentStage),
+          url:'application-status.html',
+          action:'Track'
+        });
+      });
+
+    count.textContent = actions.length + (actions.length === 1 ? ' action' : ' actions');
+    empty.hidden = actions.length > 0;
+    list.hidden = actions.length === 0;
+
+    list.innerHTML = actions.map(item => `
+      <a class="dashboard-action-item tone-${item.tone}" href="${item.url}">
+        <span class="dashboard-action-icon"><i class="bi ${item.icon}"></i></span>
+        <div><strong>${escapeHtml(item.title)}</strong><p>${escapeHtml(item.copy)}</p></div>
+        <em>${escapeHtml(item.action)} <i class="bi bi-arrow-up-right"></i></em>
+      </a>
+    `).join('');
+  }
+
   function renderPreviewDashboard() {
     if (window.STS_DASHBOARD_STATIC !== true) return;
 
@@ -166,6 +215,7 @@
     setText('dashboardStatPending', pending);
     setText('dashboardStatApproved', approved);
     setText('dashboardStatAttention', attention);
+    renderPreviewActions(applications);
 
     const queue = document.getElementById('dashboardPreviewQueue');
     const empty = document.getElementById('dashboardPreviewEmpty');
