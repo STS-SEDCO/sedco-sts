@@ -156,7 +156,10 @@ $emailCounts = db()->query(
 <main class="sts-page-content"><div class="sts-page-shell">
 <header class="sts-page-heading">
 <div><div class="sts-eyebrow">Administration</div><h1>System Settings</h1><p>Configure approval timing, department routing, notifications and calendar events.</p></div>
-<a class="sts-secondary-btn" href="admin-users.php"><i class="bi bi-people"></i> User management</a>
+<div class="sts-heading-actions">
+  <a class="sts-secondary-btn" href="admin-system-health.php"><i class="bi bi-heart-pulse"></i> System health</a>
+  <a class="sts-secondary-btn" href="admin-users.php"><i class="bi bi-people"></i> User management</a>
+</div>
 </header>
 <?php if ($message): ?><div class="sts-alert success"><i class="bi bi-check-circle"></i><?= e($message) ?></div><?php endif; ?>
 <?php if ($error): ?><div class="sts-alert danger"><i class="bi bi-exclamation-circle"></i><?= e($error) ?></div><?php endif; ?>
