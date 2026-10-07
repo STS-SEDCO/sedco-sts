@@ -83,6 +83,9 @@
     form.addEventListener('submit', event => {
       if (String(event.submitter?.value || '').toLowerCase() !== 'correction') return;
 
+      const panel = form.querySelector('[data-correction-target-panel]');
+      if (panel) panel.hidden = false;
+
       const checked = [...form.querySelectorAll('input[name="correction_fields[]"]:checked')];
       const error = form.querySelector('[data-correction-target-error]');
 
@@ -93,7 +96,6 @@
 
       event.preventDefault();
       if (error) error.hidden = false;
-      const panel = form.querySelector('[data-correction-target-panel]');
       panel?.scrollIntoView({ behavior:'smooth', block:'center' });
     }, true);
   }
