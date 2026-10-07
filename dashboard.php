@@ -274,74 +274,8 @@ if ($role === 'staff') {
     }
 }
 
-if ($role === 'staff') {
-    $calendarStmt = $db->prepare(
-        'SELECT application_no, title, training_start, training_end
-         FROM applications
-         WHERE form_type = "BPL"
-           AND status = "approved"
-           AND training_start IS NOT NULL
-           AND user_id = ?
-         ORDER BY training_start ASC
-         LIMIT 100'
-    );
-    $calendarStmt->bind_param('i', $userId);
-} elseif ($role === 'head_of_department') {
-    $calendarStmt = $db->prepare(
-        'SELECT a.application_no, a.title, a.training_start, a.training_end
-         FROM applications a
-         INNER JOIN users u ON u.id = a.user_id
-         WHERE a.form_type = "BPL"
-           AND a.status = "approved"
-           AND a.training_start IS NOT NULL
-           AND LOWER(TRIM(COALESCE(NULLIF(a.department, ""), NULLIF(u.department, "")))) = LOWER(TRIM(?))
-         ORDER BY a.training_start ASC
-         LIMIT 100'
-    );
-    $calendarStmt->bind_param('s', $department);
-} else {
-    $calendarStmt = $db->prepare(
-        'SELECT application_no, title, training_start, training_end
-         FROM applications
-         WHERE form_type = "BPL"
-           AND status = "approved"
-           AND training_start IS NOT NULL
-         ORDER BY training_start ASC
-         LIMIT 100'
-    );
-}
-
-$calendarStmt->execute();
-$calendarResult = $calendarStmt->get_result();
-
-while ($row = $calendarResult->fetch_assoc()) {
-    $calendarEvents[] = [
-        'date' => $row['training_start'],
-        'endDate' => $row['training_end'],
-        'title' => $row['title'],
-        'ref' => $row['application_no'],
-        'type' => 'training',
-    ];
-}
-$calendarStmt->close();
-
-$manualEvents = $db->query(
-    'SELECT title, event_date, event_type
-     FROM calendar_events
-     WHERE event_date >= DATE_SUB(CURRENT_DATE, INTERVAL 60 DAY)
-       AND event_date <= DATE_ADD(CURRENT_DATE, INTERVAL 365 DAY)
-     ORDER BY event_date ASC'
-);
-
-while ($row = $manualEvents->fetch_assoc()) {
-    $calendarEvents[] = [
-        'date' => $row['event_date'],
-        'endDate' => $row['event_date'],
-        'title' => $row['title'],
-        'ref' => '',
-        'type' => $row['event_type'],
-    ];
-}
+$calendarFeed = sts_calendar_feed($user);
+$calendarEvents = $calendarFeed['events'];
 
 $myActions = [];
 
@@ -720,7 +654,7 @@ window.STS_CALENDAR_EVENTS = <?= json_encode(
     JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_HEX_TAG | JSON_HEX_AMP
 ) ?>;
 </script>
-<script src="dashboard.js?v=20261006-01"></script>
+<script src="dashboard.js?v=20261007-01"></script>
 <script src="sedco-shell.js?v=20261007-04"></script>
 </body>
 </html>
