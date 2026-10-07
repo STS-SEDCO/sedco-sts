@@ -75,6 +75,14 @@ if ($type === 'BPL') {
         http_response_code(422);
         exit('Please select an official SEDCO Department / Division in Profile before submitting the BPL form.');
     }
+
+    if (
+        normalized_role((string) ($user['role'] ?? '')) === 'staff'
+        && sts_department_hod($payload['bahagian']) === null
+    ) {
+        http_response_code(422);
+        exit('Your department does not have an assigned HOD yet. Please ask the STS administrator to configure the HOD before submitting BPL.');
+    }
 }
 
 $requiredByType = [
