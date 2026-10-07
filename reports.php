@@ -163,7 +163,7 @@ while($row=$result->fetch_assoc()){
   $dept=(string)($row['department']?:'Unassigned');
   $deptCounts[$dept]=($deptCounts[$dept]??0)+1;
 
-  $month=date('M Y',strtotime((string)$row['submitted_at']));
+  $month=date('Y-m',strtotime((string)$row['submitted_at']));
   $monthCounts[$month]=($monthCounts[$month]??0)+1;
 
   if($row['form_type']==='BPL'){
@@ -198,7 +198,7 @@ $query=http_build_query(array_filter([
 <title>Smart Training System: Reports and Analytics</title>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-<link rel="stylesheet" href="sedco-saas.css?v=20261007-17"><link rel="stylesheet" href="sedco-shell.css?v=20261007-10">
+<link rel="stylesheet" href="sedco-saas.css?v=20261007-17"><link rel="stylesheet" href="sedco-shell.css?v=20261007-11">
 </head>
 <body class="app-page reports-page" data-page="reports" data-role="<?= e($role) ?>">
 <main class="sts-page-content"><div class="sts-page-shell">
@@ -260,31 +260,40 @@ $query=http_build_query(array_filter([
 <article><span><i class="bi bi-cash-stack"></i></span><div><strong>RM <?= e(number_format($totalFees,2)) ?></strong><small>Submitted BPL fees</small></div></article>
 </section>
 
-<div class="reports-grid">
-<section class="sts-card">
-<div class="sts-card-heading"><div><span>Outcome</span><h2>Status distribution</h2></div><i class="bi bi-pie-chart"></i></div>
-<div class="report-bars">
-<?php $max=max(1,max($statusCounts)); foreach($statusCounts as $label=>$value): ?>
-<div><div><strong><?= e(ucfirst($label)) ?></strong><span><?= (int)$value ?></span></div><i><b style="width:<?= e((string)round(($value/$max)*100,1)) ?>%"></b></i></div>
-<?php endforeach; ?>
-</div>
+
+<section class="report-graphic-grid" aria-label="Visual analytics">
+  <article class="sts-card report-chart-card report-status-chart-card">
+    <div class="report-chart-heading">
+      <div><span>Outcome</span><h2>Status distribution</h2><p>Application outcome at a glance.</p></div>
+      <i class="bi bi-pie-chart"></i>
+    </div>
+    <div class="report-chart-body" id="reportStatusDonut"></div>
+  </article>
+
+  <article class="sts-card report-chart-card report-forms-chart-card">
+    <div class="report-chart-heading">
+      <div><span>Demand</span><h2>Forms submitted</h2><p>Volume by BPL, PKK and TEA.</p></div>
+      <i class="bi bi-bar-chart"></i>
+    </div>
+    <div class="report-chart-body" id="reportFormsChart"></div>
+  </article>
+
+  <article class="sts-card report-chart-card report-trend-chart-card">
+    <div class="report-chart-heading">
+      <div><span>Trend</span><h2>Monthly submission trend</h2><p>Application activity across the latest six months.</p></div>
+      <i class="bi bi-graph-up-arrow"></i>
+    </div>
+    <div class="report-chart-body report-trend-body" id="reportMonthlyTrend"></div>
+  </article>
+
+  <article class="sts-card report-chart-card report-department-chart-card">
+    <div class="report-chart-heading">
+      <div><span>Department</span><h2>Top training demand</h2><p>Departments generating the most applications.</p></div>
+      <i class="bi bi-building"></i>
+    </div>
+    <div class="report-chart-body" id="reportDepartmentChart"></div>
+  </article>
 </section>
-<section class="sts-card">
-<div class="sts-card-heading"><div><span>Demand</span><h2>Forms submitted</h2></div><i class="bi bi-bar-chart"></i></div>
-<div class="report-bars compact">
-<?php $maxType=max(1,max($typeCounts)); foreach($typeCounts as $label=>$value): ?>
-<div><div><strong><?= e($label) ?></strong><span><?= (int)$value ?></span></div><i><b style="width:<?= e((string)round(($value/$maxType)*100,1)) ?>%"></b></i></div>
-<?php endforeach; ?>
-</div>
-</section>
-<section class="sts-card">
-<div class="sts-card-heading"><div><span>Department</span><h2>Top training demand</h2></div><i class="bi bi-building"></i></div>
-<div class="report-ranking">
-<?php foreach(array_slice($deptCounts,0,8,true) as $dept=>$value): ?><div><span><?= e($dept) ?></span><strong><?= (int)$value ?></strong></div><?php endforeach; ?>
-<?php if(!$deptCounts): ?><p class="sts-muted-copy">No department data available.</p><?php endif; ?>
-</div>
-</section>
-</div>
 
 <section class="sts-card report-table-card">
 <div class="sts-card-heading"><div><span>Records</span><h2>Application register</h2></div><span class="report-record-count"><?= count($rows) ?> results</span></div>
@@ -297,4 +306,15 @@ $query=http_build_query(array_filter([
 <?php if(!$rows): ?><tr><td colspan="8" class="text-center py-5 text-muted">No records match the selected filters.</td></tr><?php endif; ?>
 </tbody></table></div>
 </section>
-</div></main><script src="sedco-shell.js?v=20261007-04"></script></body></html>
+</div></main>
+<script>
+window.STS_REPORT_SERVER_ANALYTICS = <?= json_encode([
+  'statusCounts' => $statusCounts,
+  'typeCounts' => $typeCounts,
+  'deptCounts' => $deptCounts,
+  'monthCounts' => $monthCounts,
+  'total' => count($rows),
+], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_HEX_TAG | JSON_HEX_AMP) ?>;
+</script>
+<script src="reports.js?v=20261007-04"></script>
+<script src="sedco-shell.js?v=20261007-04"></script></body></html>
