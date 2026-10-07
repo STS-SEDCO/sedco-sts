@@ -181,7 +181,77 @@
     `).join('');
   }
 
+  function renderSnapshot() {
+    const now = new Date();
+    const monthKey = now.toISOString().slice(0,7);
+    const scoped = allRows;
+
+    const bpl = scoped.filter(row => typeOf(row) === 'BPL');
+    const bplThisMonth = bpl.filter(row => dateOnly(submittedOf(row)).slice(0,7) === monthKey).length;
+    const followupsThisMonth = scoped.filter(row =>
+      ['PKK','TEA'].includes(typeOf(row))
+      && dateOnly(submittedOf(row)).slice(0,7) === monthKey
+    ).length;
+
+    const overdue = scoped.filter(row => {
+      const status = statusOf(row);
+      const due = row.slaDueAt || row.sla_due_at || '';
+      if (status !== 'pending' || !due) return false;
+      const ts = new Date(due).getTime();
+      return Number.isFinite(ts) && ts < Date.now();
+    }).length;
+
+    const eligible = bpl.filter(row => {
+      const end = row.trainingEnd || row.training_end || row.data?.tarikh_tamat || '';
+      const endTs = new Date(String(end) + 'T23:59:59').getTime();
+      return statusOf(row) === 'approved' && Number.isFinite(endTs) && endTs <= Date.now();
+    });
+
+    let onTime = 0;
+    eligible.forEach(parent => {
+      const parentId = String(parent.id || parent.application_no || '');
+      const end = parent.trainingEnd || parent.training_end || parent.data?.tarikh_tamat || '';
+      const dueTs = new Date(String(end) + 'T23:59:59').getTime() + (7 * 86400000);
+
+      const match = scoped.find(row => {
+        if (typeOf(row) !== 'PKK') return false;
+        const linked = String(
+          row.parentApplicationId
+          || row.parent_application_id
+          || row.data?.parent_application_id
+          || ''
+        );
+        if (!linked || linked !== parentId) return false;
+        const submittedTs = new Date(submittedOf(row)).getTime();
+        return statusOf(row) === 'approved'
+          && Number.isFinite(submittedTs)
+          && submittedTs <= dueTs;
+      });
+
+      if (match) onTime++;
+    });
+
+    const compliance = eligible.length ? Math.round((onTime / eligible.length) * 1000) / 10 : 0;
+    const monthLabel = now.toLocaleString('en-MY',{month:'long',year:'numeric'});
+
+    const setText = (id,value) => {
+      const node = $(id);
+      if (node) node.textContent = String(value);
+    };
+
+    setText('reportSnapshotMonth', monthLabel);
+    setText('reportMonthBpl', bplThisMonth);
+    setText('reportPkkCompliance', compliance + '%');
+    setText('reportPkkComplianceNote', 'PKK within 7 days · ' + onTime + '/' + eligible.length);
+    setText('reportOverdue', overdue);
+    setText('reportMonthFollowups', followupsThisMonth);
+
+    $('reportPkkComplianceCard')?.classList.toggle('is-warning', eligible.length > 0 && compliance < 80);
+    $('reportOverdueCard')?.classList.toggle('is-danger', overdue > 0);
+  }
+
   function render() {
+    renderSnapshot();
     const total = filteredRows.length;
     const statusCounts = { pending:0, approved:0, correction:0, rejected:0, cancelled:0 };
     const typeCounts = { BPL:0, PKK:0, TEA:0 };
