@@ -47,7 +47,6 @@
     ['application-status', 'Application status', 'bi-clipboard-check', pageUrl('application-status')],
     ['submissions', 'Approval', 'bi-check2-square', pageUrl('submissions')],
     ['approval-history', 'Approval History', 'bi-clock-history', pageUrl('approval-history')],
-    ['notifications', 'Notifications', 'bi-bell', pageUrl('notifications')],
     ['reports', 'Reports & Analytics', 'bi-bar-chart-line', pageUrl('reports')],
     ['admin-users', 'User Management', 'bi-people', pageUrl('admin-users')],
     ['admin-settings', 'System Settings', 'bi-sliders', pageUrl('admin-settings')],
@@ -67,7 +66,6 @@
     <a class="sedco-nav-item${key === activePage ? ' active' : ''}" href="${href}" data-nav-key="${key}">
       <i class="bi ${icon}"></i>
       <span>${label}</span>
-      ${key === 'notifications' ? '<b class="sedco-nav-badge" data-notification-badge hidden>0</b>' : ''}
       ${key === 'submissions' ? '<b class="sedco-nav-badge" data-approval-badge hidden>0</b>' : ''}
     </a>
   `).join('');
@@ -96,6 +94,15 @@
           <span class="nav-link is-disabled" aria-disabled="true">Contact Us</span>
           <a class="nav-link" href="${logoutUrl}">
             <i class="bi bi-box-arrow-right me-1"></i>Log out
+          </a>
+          <a
+            class="sedco-top-notification${activePage === 'notifications' ? ' active' : ''}"
+            href="${pageUrl('notifications')}"
+            aria-label="Open notifications"
+            title="Notifications"
+          >
+            <i class="bi bi-bell-fill"></i>
+            <b class="sedco-top-notification-badge" data-notification-badge hidden>0</b>
           </a>
           <a
             class="sedco-top-profile${activePage === 'profile' ? ' active' : ''}"
@@ -204,17 +211,21 @@
 
   syncToggleState();
 
+  const updateNotificationBadge = countValue => {
+    const badge = document.querySelector('[data-notification-badge]');
+    if (!badge) return;
+
+    const count = Math.max(0, Number(countValue || 0));
+    badge.hidden = count <= 0;
+    badge.textContent = count > 99 ? '99+' : String(count);
+    badge.closest('.sedco-top-notification')?.classList.toggle('has-notification', count > 0);
+  };
+
   if (isPhp) {
-    fetch('notification-count.php', { credentials: 'same-origin' })
+    fetch('notification-count.php', { credentials: 'same-origin', cache: 'no-store' })
       .then(response => response.ok ? response.json() : null)
-      .then(data => {
-        const badge = document.querySelector('[data-notification-badge]');
-        const count = Number(data?.count || 0);
-        if (!badge || count <= 0) return;
-        badge.textContent = count > 99 ? '99+' : String(count);
-        badge.hidden = false;
-      })
-      .catch(() => {});
+      .then(data => updateNotificationBadge(data?.count || 0))
+      .catch(() => updateNotificationBadge(0));
 
     if (['admin','training_section','general_manager','head_of_department','pengerusi_besar','finance'].includes(userRole)) {
       fetch('approval-count.php', { credentials: 'same-origin' })
@@ -227,6 +238,16 @@
           badge.hidden = false;
         })
         .catch(() => {});
+    }
+  } else {
+    try {
+      const previewNotifications = JSON.parse(localStorage.getItem('sedcoNotifications') || '[]');
+      const unread = Array.isArray(previewNotifications)
+        ? previewNotifications.filter(item => item && item.isRead !== true && item.is_read !== 1).length
+        : 0;
+      updateNotificationBadge(unread);
+    } catch {
+      updateNotificationBadge(0);
     }
   }
 })();
