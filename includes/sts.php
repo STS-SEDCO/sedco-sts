@@ -285,6 +285,219 @@ function sts_notify(
     }
 }
 
+function sts_notify_once(
+    int $userId,
+    string $title,
+    string $message,
+    ?string $link = null,
+    string $type = 'info'
+): void {
+    if ($userId <= 0) {
+        return;
+    }
+
+    try {
+        $check = db()->prepare(
+            'SELECT id
+             FROM notifications
+             WHERE user_id = ?
+               AND title = ?
+               AND COALESCE(link,"") = COALESCE(?,"")
+             LIMIT 1'
+        );
+        $check->bind_param('iss',$userId,$title,$link);
+        $check->execute();
+        $exists = $check->get_result()->fetch_assoc();
+        $check->close();
+
+        if ($exists) {
+            return;
+        }
+
+        sts_notify($userId,$title,$message,$link,$type);
+    } catch (Throwable) {
+        // Escalation notifications must not block the workflow.
+    }
+}
+
+function sts_stage_reviewer_ids(
+    string $stage,
+    ?string $department = null,
+    ?int $assignedHodId = null
+): array {
+    try {
+        if ($stage === 'hod' && $assignedHodId !== null && $assignedHodId > 0) {
+            return [$assignedHodId];
+        }
+
+        $roles = match ($stage) {
+            'training' => ['training_section'],
+            'hod' => ['head_of_department','head_of_division'],
+            'gm' => ['general_manager'],
+            'chairman' => ['pengerusi_besar'],
+            'finance' => ['finance'],
+            default => [],
+        };
+
+        if (!$roles) {
+            return [];
+        }
+
+        $placeholders = implode(',',array_fill(0,count($roles),'?'));
+        $sql =
+            'SELECT id,department
+             FROM users
+             WHERE is_active = 1
+               AND role IN (' . $placeholders . ')';
+
+        $stmt = db()->prepare($sql);
+        $types = str_repeat('s',count($roles));
+        $args = [$types];
+
+        foreach ($roles as $index => $value) {
+            $args[] = &$roles[$index];
+        }
+
+        call_user_func_array([$stmt,'bind_param'],$args);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $ids = [];
+
+        while ($row = $result->fetch_assoc()) {
+            if ($stage === 'hod' && trim((string) $department) !== '') {
+                $recipientDepartment = trim((string) ($row['department'] ?? ''));
+                if (
+                    $recipientDepartment !== ''
+                    && strcasecmp($recipientDepartment,(string) $department) !== 0
+                ) {
+                    continue;
+                }
+            }
+
+            $ids[] = (int) $row['id'];
+        }
+
+        $stmt->close();
+        return array_values(array_unique(array_filter($ids)));
+    } catch (Throwable) {
+        return [];
+    }
+}
+
+function sts_ensure_sla_escalations(): void
+{
+    static $ran = false;
+
+    if ($ran) {
+        return;
+    }
+    $ran = true;
+
+    try {
+        $result = db()->query(
+            'SELECT id,application_no,title,department,assigned_hod_id,current_stage,sla_due_at
+             FROM applications
+             WHERE form_type = "BPL"
+               AND status = "pending"
+               AND current_stage <> "completed"
+               AND sla_due_at IS NOT NULL
+               AND sla_due_at <= DATE_ADD(NOW(),INTERVAL 1 DAY)
+             ORDER BY sla_due_at ASC
+             LIMIT 250'
+        );
+
+        $now = time();
+
+        while ($application = $result->fetch_assoc()) {
+            $dueAt = strtotime((string) ($application['sla_due_at'] ?? ''));
+            if (!$dueAt) {
+                continue;
+            }
+
+            $applicationNo = (string) $application['application_no'];
+            $stage = (string) $application['current_stage'];
+            $link = 'bpl.php?application=' . rawurlencode($applicationNo);
+            $seconds = $dueAt - $now;
+            $overdue = $seconds < 0;
+            $overdueSeconds = $overdue ? abs($seconds) : 0;
+
+            $reviewerIds = sts_stage_reviewer_ids(
+                $stage,
+                $application['department'] ?? null,
+                !empty($application['assigned_hod_id'])
+                    ? (int) $application['assigned_hod_id']
+                    : null
+            );
+
+            foreach ($reviewerIds as $reviewerId) {
+                if ($overdue) {
+                    $days = max(1,(int) ceil($overdueSeconds / 86400));
+                    sts_notify_once(
+                        $reviewerId,
+                        'Approval overdue · ' . $applicationNo,
+                        $applicationNo . ' · ' . $application['title']
+                            . ' is overdue at ' . stage_label($stage)
+                            . ' by ' . $days . ' day' . ($days === 1 ? '' : 's')
+                            . '. Please review it as soon as possible.',
+                        $link,
+                        'danger'
+                    );
+                } else {
+                    $hours = max(1,(int) ceil($seconds / 3600));
+                    sts_notify_once(
+                        $reviewerId,
+                        'Approval due soon · ' . $applicationNo,
+                        $applicationNo . ' · ' . $application['title']
+                            . ' is due at ' . stage_label($stage)
+                            . ' within ' . $hours . ' hour' . ($hours === 1 ? '' : 's') . '.',
+                        $link,
+                        'warning'
+                    );
+                }
+            }
+
+            if ($overdueSeconds >= 86400) {
+                $escalationDays = max(1,(int) floor($overdueSeconds / 86400));
+                $oversightRoles = ['admin','training_section'];
+                $placeholders = implode(',',array_fill(0,count($oversightRoles),'?'));
+                $stmt = db()->prepare(
+                    'SELECT id
+                     FROM users
+                     WHERE is_active = 1
+                       AND role IN (' . $placeholders . ')'
+                );
+                $types = str_repeat('s',count($oversightRoles));
+                $args = [$types];
+
+                foreach ($oversightRoles as $index => $roleValue) {
+                    $args[] = &$oversightRoles[$index];
+                }
+
+                call_user_func_array([$stmt,'bind_param'],$args);
+                $stmt->execute();
+                $oversightResult = $stmt->get_result();
+
+                while ($recipient = $oversightResult->fetch_assoc()) {
+                    sts_notify_once(
+                        (int) $recipient['id'],
+                        'SLA escalation · ' . $applicationNo,
+                        $applicationNo . ' · ' . $application['title']
+                            . ' has been overdue for ' . $escalationDays
+                            . ' day' . ($escalationDays === 1 ? '' : 's')
+                            . ' at ' . stage_label($stage) . '.',
+                        $link,
+                        'danger'
+                    );
+                }
+
+                $stmt->close();
+            }
+        }
+    } catch (Throwable) {
+        // SLA monitoring is supportive and must not block the application workflow.
+    }
+}
+
 function sts_notify_role(
     array $roles,
     string $title,
