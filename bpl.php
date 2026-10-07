@@ -112,7 +112,7 @@ $canReviewCurrentStage = $mode === 'review'
             window.print();
         }
     </script>
-    <link rel="stylesheet" href="sedco-saas.css?v=20261007-10">
+    <link rel="stylesheet" href="sedco-saas.css?v=20261007-11">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
   <link rel="stylesheet" href="sedco-shell.css?v=20261007-03">
 </head>
@@ -254,6 +254,18 @@ $canReviewCurrentStage = $mode === 'review'
                     <span>Nama, Bahagian dan Jawatan diambil daripada Profile. Tarikh akan disahkan semula semasa borang dihantar.</span>
                 </div>
             </section>
+
+            <div class="bpl-quality-panel no-print" data-bpl-quality-panel hidden>
+                <div class="bpl-quality-panel-head">
+                    <span class="bpl-quality-icon"><i class="bi bi-shield-check"></i></span>
+                    <div>
+                        <strong data-bpl-quality-title>Data quality check</strong>
+                        <p data-bpl-quality-copy>Checking training dates and possible schedule conflicts.</p>
+                    </div>
+                </div>
+                <div class="bpl-quality-messages" data-bpl-quality-messages></div>
+                <div class="bpl-conflict-list" data-bpl-conflict-list></div>
+            </div>
 
             <!-- B. MAKLUMAT KURSUS/SEMINAR -->
             <table class="bpl-section-card bpl-section-course" data-form-owner="staff">
@@ -583,7 +595,7 @@ window.SEDCO_FORM_CONTEXT = {
   status: <?= json_encode($applicationStatus) ?>
 };
 </script>
-<script src="bpl-workflow.js?v=20261007-03"></script>
+<script src="bpl-workflow.js?v=20261007-04"></script>
 <script src="form-permissions.js?v=20261003-06"></script>
 <script src="digital-signature.js?v=20261006-03"></script>
 <script src="form-ux.js?v=20261006-06"></script>
