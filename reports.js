@@ -181,6 +181,212 @@
     `).join('');
   }
 
+  function normalizeAnalytics(data) {
+    return {
+      statusCounts:{
+        pending:Number(data?.statusCounts?.pending || 0),
+        approved:Number(data?.statusCounts?.approved || 0),
+        correction:Number(data?.statusCounts?.correction || 0),
+        rejected:Number(data?.statusCounts?.rejected || 0),
+        cancelled:Number(data?.statusCounts?.cancelled || 0)
+      },
+      typeCounts:{
+        BPL:Number(data?.typeCounts?.BPL || 0),
+        PKK:Number(data?.typeCounts?.PKK || 0),
+        TEA:Number(data?.typeCounts?.TEA || 0)
+      },
+      deptCounts:data?.deptCounts && typeof data.deptCounts === 'object' ? data.deptCounts : {},
+      monthCounts:data?.monthCounts && typeof data.monthCounts === 'object' ? data.monthCounts : {}
+    };
+  }
+
+  function renderStatusDonut(counts) {
+    const target = $('reportStatusDonut');
+    if (!target) return;
+
+    const items = [
+      ['Pending',Number(counts.pending || 0),'#c58a2c'],
+      ['Approved',Number(counts.approved || 0),'#8f1010'],
+      ['Correction',Number(counts.correction || 0),'#d56868'],
+      ['Rejected',Number(counts.rejected || 0),'#52545a'],
+      ['Cancelled',Number(counts.cancelled || 0),'#b7b8bd']
+    ];
+    const total = items.reduce((sum,item)=>sum+item[1],0);
+    const radius = 42;
+    const circumference = 2 * Math.PI * radius;
+    let offset = 0;
+
+    const segments = items.map(([label,value,color]) => {
+      const length = total ? (value / total) * circumference : 0;
+      const circle = value > 0
+        ? `<circle cx="60" cy="60" r="${radius}" fill="none" stroke="${color}" stroke-width="14" stroke-linecap="butt" stroke-dasharray="${length.toFixed(2)} ${(circumference-length).toFixed(2)}" stroke-dashoffset="${(-offset).toFixed(2)}" transform="rotate(-90 60 60)"></circle>`
+        : '';
+      offset += length;
+      return circle;
+    }).join('');
+
+    const legend = items.map(([label,value,color]) => `
+      <div class="report-donut-legend-row">
+        <span><i style="background:${color}"></i>${escapeHtml(label)}</span>
+        <strong>${value}</strong>
+      </div>
+    `).join('');
+
+    target.innerHTML = `
+      <div class="report-donut-layout">
+        <div class="report-donut-visual">
+          <svg viewBox="0 0 120 120" role="img" aria-label="Status distribution">
+            <circle cx="60" cy="60" r="${radius}" fill="none" stroke="#f0eaea" stroke-width="14"></circle>
+            ${segments}
+          </svg>
+          <div class="report-donut-center"><strong>${total}</strong><span>Total</span></div>
+        </div>
+        <div class="report-donut-legend">${legend}</div>
+      </div>
+    `;
+  }
+
+  function renderFormsChart(counts) {
+    const target = $('reportFormsChart');
+    if (!target) return;
+
+    const items = [
+      ['BPL',Number(counts.BPL || 0)],
+      ['PKK',Number(counts.PKK || 0)],
+      ['TEA',Number(counts.TEA || 0)]
+    ];
+    const max = Math.max(1,...items.map(item=>item[1]));
+
+    target.innerHTML = `
+      <div class="report-form-chart">
+        ${items.map(([label,value]) => {
+          const height = Math.max(value ? 14 : 3, Math.round((value/max)*100));
+          return `
+            <div class="report-form-column">
+              <strong>${value}</strong>
+              <div class="report-form-bar-track"><i style="height:${height}%"></i></div>
+              <span>${label}</span>
+            </div>
+          `;
+        }).join('')}
+      </div>
+      <div class="report-chart-caption">
+        <i class="bi bi-info-circle"></i>
+        <span>Higher bars indicate stronger submission demand.</span>
+      </div>
+    `;
+  }
+
+  function latestSixMonthSeries(monthCounts) {
+    const clean = Object.fromEntries(
+      Object.entries(monthCounts || {})
+        .filter(([key]) => /^\d{4}-\d{2}$/.test(key))
+        .map(([key,value]) => [key,Number(value || 0)])
+    );
+    const keys = Object.keys(clean).sort();
+    const anchor = keys.length
+      ? new Date(Number(keys[keys.length-1].slice(0,4)),Number(keys[keys.length-1].slice(5,7))-1,1)
+      : new Date(new Date().getFullYear(),new Date().getMonth(),1);
+
+    const series=[];
+    for(let index=5; index>=0; index--){
+      const date=new Date(anchor.getFullYear(),anchor.getMonth()-index,1);
+      const key=date.getFullYear()+'-'+String(date.getMonth()+1).padStart(2,'0');
+      series.push({
+        key,
+        label:date.toLocaleString('en-MY',{month:'short'}),
+        value:Number(clean[key] || 0)
+      });
+    }
+    return series;
+  }
+
+  function renderMonthlyTrend(monthCounts) {
+    const target = $('reportMonthlyTrend');
+    if (!target) return;
+
+    const series = latestSixMonthSeries(monthCounts);
+    const width=720;
+    const height=230;
+    const left=38;
+    const right=18;
+    const top=20;
+    const bottom=42;
+    const plotWidth=width-left-right;
+    const plotHeight=height-top-bottom;
+    const max=Math.max(1,...series.map(item=>item.value));
+    const baseline=top+plotHeight;
+
+    const points=series.map((item,index)=>{
+      const x=left+(plotWidth*(index/(series.length-1)));
+      const y=top+plotHeight-(item.value/max)*plotHeight;
+      return {...item,x,y};
+    });
+
+    const polyline=points.map(point=>point.x.toFixed(1)+','+point.y.toFixed(1)).join(' ');
+    const area=left+','+baseline+' '+polyline+' '+(left+plotWidth)+','+baseline;
+    const grid=[0,.25,.5,.75,1].map(ratio=>{
+      const y=top+plotHeight-(plotHeight*ratio);
+      return `<line x1="${left}" y1="${y}" x2="${width-right}" y2="${y}" class="report-trend-gridline"></line>`;
+    }).join('');
+
+    const labels=points.map(point=>`
+      <text x="${point.x}" y="${height-13}" text-anchor="middle" class="report-trend-label">${escapeHtml(point.label)}</text>
+    `).join('');
+
+    const dots=points.map(point=>`
+      <circle cx="${point.x}" cy="${point.y}" r="4.5" class="report-trend-dot"></circle>
+      <text x="${point.x}" y="${Math.max(12,point.y-10)}" text-anchor="middle" class="report-trend-value">${point.value}</text>
+    `).join('');
+
+    target.innerHTML = `
+      <svg class="report-trend-svg" viewBox="0 0 ${width} ${height}" role="img" aria-label="Monthly submission trend">
+        <defs>
+          <linearGradient id="reportTrendArea" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#8f1010" stop-opacity=".22"></stop>
+            <stop offset="100%" stop-color="#8f1010" stop-opacity=".02"></stop>
+          </linearGradient>
+        </defs>
+        ${grid}
+        <polygon points="${area}" fill="url(#reportTrendArea)"></polygon>
+        <polyline points="${polyline}" class="report-trend-line"></polyline>
+        ${dots}
+        ${labels}
+      </svg>
+    `;
+  }
+
+  function renderDepartmentChart(counts) {
+    const target = $('reportDepartmentChart');
+    if (!target) return;
+
+    const items = Object.entries(counts || {})
+      .map(([label,value]) => [label,Number(value || 0)])
+      .sort((a,b)=>b[1]-a[1])
+      .slice(0,6);
+    const max=Math.max(1,...items.map(item=>item[1]));
+
+    target.innerHTML = items.length
+      ? `<div class="report-department-bars">${items.map(([label,value],index)=>{
+          const width=Math.max(4,Math.round((value/max)*100));
+          return `
+            <div class="report-department-row">
+              <div><span>${escapeHtml(label)}</span><strong>${value}</strong></div>
+              <i><b style="width:${width}%"></b></i>
+            </div>
+          `;
+        }).join('')}</div>`
+      : '<div class="report-chart-empty"><i class="bi bi-bar-chart"></i><strong>No department data yet</strong><span>Department demand will appear here once applications are submitted.</span></div>';
+  }
+
+  function renderGraphicAnalytics(data) {
+    const analytics=normalizeAnalytics(data);
+    renderStatusDonut(analytics.statusCounts);
+    renderFormsChart(analytics.typeCounts);
+    renderMonthlyTrend(analytics.monthCounts);
+    renderDepartmentChart(analytics.deptCounts);
+  }
+
   function renderSnapshot() {
     const now = new Date();
     const monthKey = now.toISOString().slice(0,7);
@@ -256,6 +462,7 @@
     const statusCounts = { pending:0, approved:0, correction:0, rejected:0, cancelled:0 };
     const typeCounts = { BPL:0, PKK:0, TEA:0 };
     const deptCounts = {};
+    const monthCounts = {};
     const processing = [];
     let fees = 0;
 
@@ -267,6 +474,8 @@
 
       const dept = departmentOf(row);
       deptCounts[dept] = (deptCounts[dept] || 0) + 1;
+      const monthKey = dateOnly(submittedOf(row)).slice(0,7);
+      if (/^\\d{4}-\\d{2}$/.test(monthKey)) monthCounts[monthKey] = (monthCounts[monthKey] || 0) + 1;
       fees += feeOf(row);
 
       const start = new Date(submittedOf(row));
@@ -287,22 +496,12 @@
     $('reportFees').textContent = 'RM ' + fees.toLocaleString('en-MY',{minimumFractionDigits:2,maximumFractionDigits:2});
     $('reportRecordCount').textContent = total + (total === 1 ? ' result' : ' results');
 
-    renderBars('reportStatusBars', {
-      Pending:statusCounts.pending,
-      Approved:statusCounts.approved,
-      Correction:statusCounts.correction,
-      Rejected:statusCounts.rejected,
-      Cancelled:statusCounts.cancelled
+    renderGraphicAnalytics({
+      statusCounts,
+      typeCounts,
+      deptCounts,
+      monthCounts
     });
-    renderBars('reportTypeBars', typeCounts);
-
-    const ranking = $('reportDepartmentRanking');
-    if (ranking) {
-      const sorted = Object.entries(deptCounts).sort((a,b)=>b[1]-a[1]).slice(0,8);
-      ranking.innerHTML = sorted.length
-        ? sorted.map(([dept,value]) => `<div><span>${escapeHtml(dept)}</span><strong>${value}</strong></div>`).join('')
-        : '<p class="sts-muted-copy">No department data available.</p>';
-    }
 
     const tbody = $('reportRows');
     if (!tbody) return;
@@ -356,6 +555,11 @@
   }
 
   document.addEventListener('DOMContentLoaded', () => {
+    if (window.STS_REPORT_SERVER_ANALYTICS) {
+      renderGraphicAnalytics(window.STS_REPORT_SERVER_ANALYTICS);
+      return;
+    }
+
     previewUser = readPreviewUser();
 
     const allowed = ['admin','training_section','general_manager','head_of_department','head_of_division','pengerusi_besar','finance'];
