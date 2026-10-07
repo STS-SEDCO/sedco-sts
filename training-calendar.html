@@ -7,53 +7,70 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
   <link rel="stylesheet" href="sedco-saas.css?v=20261007-16">
-  <link rel="stylesheet" href="sedco-shell.css?v=20261007-06">
+  <link rel="stylesheet" href="sedco-shell.css?v=20261007-08">
 </head>
-<body class="app-page training-calendar-page" data-page="training-calendar">
+<body class="app-page training-calendar-page" data-page="training-calendar" data-calendar-static="1">
 <main class="sts-page-content">
   <div class="sts-page-shell">
-    <header class="sts-page-heading">
+    <header class="sts-page-heading training-calendar-page-heading">
       <div>
         <div class="sts-eyebrow">Organisation schedule</div>
         <h1>Training Calendar</h1>
-        <p>See approved training schedules and staff attendance in one monthly view.</p>
+        <p>Approved training and company events in one clear monthly view.</p>
       </div>
       <a class="sts-secondary-btn" href="dashboard.html"><i class="bi bi-grid-1x2"></i> Dashboard</a>
     </header>
 
-    <div class="training-calendar-toolbar">
-      <div class="training-calendar-nav">
-        <button type="button" id="calendarPrev"><i class="bi bi-chevron-left"></i></button>
-        <label><span>Month</span><input type="month" id="calendarMonth"></label>
-        <button type="button" id="calendarNext"><i class="bi bi-chevron-right"></i></button>
-      </div>
+    <div class="training-calendar-reference-toolbar">
       <label class="training-calendar-filter">
         <span>Department</span>
         <select id="calendarDepartment"><option value="">All departments</option></select>
       </label>
-      <label class="training-calendar-search">
+      <label class="is-search">
         <span>Search</span>
         <div><i class="bi bi-search"></i><input type="search" id="calendarSearch" placeholder="Staff, course or reference..."></div>
       </label>
       <button class="sts-secondary-btn" type="button" id="calendarReset">Reset</button>
     </div>
 
-    <section class="training-calendar-summary">
-      <article><span><i class="bi bi-mortarboard"></i></span><div><strong id="calendarTrainingCount">0</strong><small>Approved training records</small></div></article>
-      <article><span><i class="bi bi-people"></i></span><div><strong id="calendarEmployeeCount">0</strong><small>Employees in training</small></div></article>
-      <article><span><i class="bi bi-building"></i></span><div><strong id="calendarDepartmentCount">0</strong><small>Departments represented</small></div></article>
-      <article><span><i class="bi bi-calendar-event"></i></span><div><strong>0</strong><small>Company events</small></div></article>
-    </section>
+    <section class="training-calendar-reference-shell">
+      <div class="training-calendar-reference-head">
+        <div>
+          <span>Calendar</span>
+          <h2>Monthly training schedule</h2>
+          <p>Approved training and company events in one place.</p>
+        </div>
+        <a href="admin-settings.html" class="training-calendar-reference-action"><i class="bi bi-plus-lg"></i> New event</a>
+      </div>
 
-    <section class="training-calendar-board">
-      <div class="training-calendar-heading">
-        <div><span id="calendarYear"></span><h2 id="calendarTitle"></h2></div>
-        <div class="training-calendar-legend"><span><i class="is-training"></i> Training</span></div>
+      <div class="training-calendar-reference-layout">
+        <section class="training-calendar-reference-month">
+          <div class="training-calendar-reference-month-head">
+            <div>
+              <span class="training-calendar-reference-overline">Month view</span>
+              <h3 id="calendarTitle">Calendar</h3>
+              <p id="calendarMonthCount">0 scheduled items this month</p>
+            </div>
+            <div class="training-calendar-reference-nav">
+              <button type="button" id="calendarPrev" aria-label="Previous month"><i class="bi bi-chevron-left"></i></button>
+              <button type="button" class="is-today" id="calendarToday">Today</button>
+              <button type="button" id="calendarNext" aria-label="Next month"><i class="bi bi-chevron-right"></i></button>
+            </div>
+          </div>
+
+          <div class="training-calendar-reference-legend">
+            <span><i class="tone-training"></i>Training</span>
+            <span><i class="tone-company"></i>Company event</span>
+          </div>
+
+          <div class="training-calendar-reference-weekdays" aria-hidden="true">
+            <span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span>
+          </div>
+          <div class="training-calendar-reference-grid" id="calendarGrid"></div>
+        </section>
+
+        <aside class="training-selected-day" id="calendarSelectedDay" aria-live="polite"></aside>
       </div>
-      <div class="training-calendar-weekdays">
-        <span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span>
-      </div>
-      <div class="training-calendar-grid" id="calendarGrid"></div>
     </section>
 
     <section class="sts-card training-calendar-list">
@@ -68,7 +85,7 @@
     </section>
   </div>
 </main>
-<script src="training-calendar.js?v=20261007-01"></script>
+<script src="training-calendar.js?v=20261007-02"></script>
 <script src="sedco-shell.js?v=20261007-04"></script>
 </body>
 </html>
