@@ -157,6 +157,6 @@ function notification_icon(string $type): string
     </section>
   </div>
 </main>
-<script src="sedco-shell.js?v=20261007-03"></script>
+<script src="sedco-shell.js?v=20261007-04"></script>
 </body>
 </html>
