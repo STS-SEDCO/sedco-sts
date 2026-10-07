@@ -934,6 +934,6 @@ window.SEDCO_FORM_CONTEXT = { role: <?= json_encode($user['role'] ?? 'staff') ?>
 })();
 </script>
 <script src="form-enhancements.js?v=20261005-01"></script>
-<script src="sedco-shell.js?v=20261007-03"></script>
+<script src="sedco-shell.js?v=20261007-04"></script>
 </body>
 </html>
