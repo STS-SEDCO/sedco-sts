@@ -703,13 +703,20 @@
         const item = submissions.find(entry => String(entry.id) === String(id));
 
         if (item) {
-          item.status = decision === 'approved'
-            ? 'approved'
-            : (decision === 'correction' ? 'correction' : 'rejected');
-
           if (decision === 'correction') {
             const targets = [...document.querySelectorAll('#quickReviewFields input[name="correction_fields[]"]:checked')]
               .map(field => field.value);
+
+            if (!targets.length) {
+              const targetError = document.querySelector('[data-quick-correction-error]');
+              if (targetError) targetError.hidden = false;
+              document.querySelector('[data-quick-correction-targets]')?.scrollIntoView({
+                behavior:'smooth',
+                block:'center'
+              });
+              return;
+            }
+
             item.data = {
               ...(item.data || {}),
               _correction_fields: targets
@@ -717,6 +724,10 @@
             item.reviewNote = String($('quickReviewComment')?.value || '').trim()
               || 'Correction requested. Please update the highlighted fields.';
           }
+
+          item.status = decision === 'approved'
+            ? 'approved'
+            : (decision === 'correction' ? 'correction' : 'rejected');
           try {
             localStorage.setItem(STORAGE_KEY, JSON.stringify(submissions));
           } catch {}
