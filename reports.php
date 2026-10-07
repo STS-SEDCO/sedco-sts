@@ -15,6 +15,8 @@ if(!$user || !in_array(
 
 $role=normalized_role($user['role']??'');
 $userId=(int)$user['id'];
+
+sts_repair_pending_bpl_stages();
 $department=trim((string)($user['department']??''));
 $status=trim((string)($_GET['status']??''));
 $formType=strtoupper(trim((string)($_GET['type']??'')));
