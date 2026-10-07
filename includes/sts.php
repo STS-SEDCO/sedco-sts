@@ -367,8 +367,8 @@ function sts_stage_reviewer_ids(
             if ($stage === 'hod' && trim((string) $department) !== '') {
                 $recipientDepartment = trim((string) ($row['department'] ?? ''));
                 if (
-                    $recipientDepartment !== ''
-                    && strcasecmp($recipientDepartment,(string) $department) !== 0
+                    $recipientDepartment === ''
+                    || strcasecmp($recipientDepartment,(string) $department) !== 0
                 ) {
                     continue;
                 }
