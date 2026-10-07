@@ -1,5 +1,6 @@
 (() => {
   let currentDate = new Date();
+  let selectedKey = null;
   const events = Array.isArray(window.STS_CALENDAR_EVENTS) ? window.STS_CALENDAR_EVENTS : [];
 
   function dateKey(year, month, day) {
@@ -8,6 +9,33 @@
       String(month + 1).padStart(2,'0'),
       String(day).padStart(2,'0')
     ].join('-');
+  }
+
+  function keyForDate(date) {
+    return dateKey(date.getFullYear(), date.getMonth(), date.getDate());
+  }
+
+  function dateFromKey(key) {
+    const [year, month, day] = String(key || '').split('-').map(Number);
+    return new Date(year, (month || 1) - 1, day || 1);
+  }
+
+  function eventTone(event) {
+    const type = String(event?.type || '').toLowerCase();
+    const kind = String(event?.kind || '').toLowerCase();
+
+    if (type === 'training' || kind === 'training') return 'training';
+    if (type.includes('holiday')) return 'other';
+    if (type.includes('birthday')) return 'other';
+    if (kind === 'company' || type === 'company' || type === 'event') return 'company';
+    return 'other';
+  }
+
+  function eventIcon(event) {
+    const tone = eventTone(event);
+    if (tone === 'training') return 'bi-mortarboard';
+    if (tone === 'company') return 'bi-building';
+    return 'bi-calendar-event';
   }
 
   function eventsForDate(key) {
@@ -20,83 +48,171 @@
     });
   }
 
-  function generateCalendar() {
-    const header = document.getElementById('calendar-header');
-    const table = document.getElementById('calendar');
-    if (!header || !table) return;
+  function monthEvents(year, month) {
+    const monthStart = new Date(year, month, 1);
+    const monthEnd = new Date(year, month + 1, 0, 23, 59, 59);
 
-    const month = currentDate.toLocaleString('en-MY',{month:'long'});
-    const year = currentDate.getFullYear();
-    const today = new Date();
-    const firstDay = new Date(year,currentDate.getMonth(),1).getDay();
-    const lastDate = new Date(year,currentDate.getMonth()+1,0).getDate();
-
-    header.innerHTML = `
-      <button type="button" data-cal-prev aria-label="Previous month"><i class="bi bi-chevron-left"></i></button>
-      <span>${month} ${year}</span>
-      <button type="button" data-cal-next aria-label="Next month"><i class="bi bi-chevron-right"></i></button>
-    `;
-
-    let html = '<tr>' + ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'].map(day => `<th>${day}</th>`).join('') + '</tr><tr>';
-
-    for (let i=0;i<firstDay;i++) html += '<td></td>';
-
-    for (let day=1;day<=lastDate;day++) {
-      if ((firstDay + day - 1) % 7 === 0 && day !== 1) html += '</tr><tr>';
-
-      const key = dateKey(year,currentDate.getMonth(),day);
-      const isToday =
-        day === today.getDate() &&
-        currentDate.getMonth() === today.getMonth() &&
-        year === today.getFullYear();
-      const dayEvents = eventsForDate(key);
-      const classes = [
-        isToday ? 'today' : '',
-        dayEvents.length ? 'has-event' : ''
-      ].filter(Boolean).join(' ');
-
-      html += `<td class="${classes}" data-calendar-date="${key}">
-        <span>${day}</span>
-        ${dayEvents.length ? '<i></i>' : ''}
-      </td>`;
-    }
-
-    html += '</tr>';
-    table.innerHTML = html;
-
-    header.querySelector('[data-cal-prev]')?.addEventListener('click',() => {
-      currentDate.setMonth(currentDate.getMonth()-1);
-      generateCalendar();
-    });
-    header.querySelector('[data-cal-next]')?.addEventListener('click',() => {
-      currentDate.setMonth(currentDate.getMonth()+1);
-      generateCalendar();
-    });
-
-    table.querySelectorAll('[data-calendar-date]').forEach(cell => {
-      cell.addEventListener('click',() => selectDate(cell));
+    return events.filter(event => {
+      const start = new Date(String(event.date) + 'T00:00:00');
+      const end = new Date(String(event.endDate || event.date) + 'T23:59:59');
+      return start <= monthEnd && end >= monthStart;
     });
   }
 
-  function selectDate(cell) {
-    document.querySelectorAll('[data-calendar-date]').forEach(item => item.classList.remove('selected-date'));
-    cell.classList.add('selected-date');
-
+  function renderSelectedDay(key) {
     const target = document.getElementById('selected-date');
-    const key = cell.dataset.calendarDate;
-    const dayEvents = eventsForDate(key);
+    if (!target) return;
 
-    if (!dayEvents.length) {
-      target.innerHTML = '<span>No training or event scheduled for this date.</span>';
-      return;
+    const date = dateFromKey(key);
+    const dayEvents = eventsForDate(key);
+    const dayName = date.toLocaleDateString('en-MY',{weekday:'long'});
+    const fullDate = date.toLocaleDateString('en-MY',{day:'numeric',month:'long',year:'numeric'});
+    const countLabel = dayEvents.length;
+
+    const list = dayEvents.length
+      ? `<div class="dashboard-selected-events">${dayEvents.map(event => {
+          const tone = eventTone(event);
+          const url = event.url && event.url !== '#' ? String(event.url) : '';
+          const inner = `
+            <span class="dashboard-selected-event-icon tone-${tone}"><i class="bi ${eventIcon(event)}"></i></span>
+            <div>
+              <strong>${escapeHtml(event.title)}</strong>
+              <p>${event.ref ? escapeHtml(event.ref) + ' · ' : ''}${escapeHtml(event.department || (tone === 'training' ? 'Training' : 'SEDCO'))}</p>
+            </div>
+            ${url ? '<i class="bi bi-arrow-up-right"></i>' : ''}
+          `;
+          return url
+            ? `<a class="dashboard-selected-event tone-${tone}" href="${escapeHtml(url)}">${inner}</a>`
+            : `<div class="dashboard-selected-event tone-${tone}">${inner}</div>`;
+        }).join('')}</div>`
+      : `<div class="dashboard-selected-empty">
+          <span><i class="bi bi-calendar2"></i></span>
+          <strong>Nothing scheduled</strong>
+          <p>This day is clear. Training and company events will appear here automatically.</p>
+        </div>`;
+
+    target.innerHTML = `
+      <div class="dashboard-selected-day-head">
+        <span class="dashboard-selected-day-icon"><i class="bi bi-calendar3"></i></span>
+        <div>
+          <small>Selected day</small>
+          <strong>${escapeHtml(dayName)}</strong>
+          <p>${escapeHtml(fullDate)}</p>
+        </div>
+        <em>${countLabel}</em>
+      </div>
+      <a class="dashboard-selected-day-action" href="${document.body.classList.contains('dashboard-v4') && location.pathname.endsWith('.html') ? 'training-calendar.html' : 'training-calendar.php'}">
+        <i class="bi bi-calendar3"></i> Open full calendar
+      </a>
+      <div class="dashboard-selected-day-body">${list}</div>
+    `;
+  }
+
+  function generateCalendar() {
+    const header = document.getElementById('calendar-header');
+    const grid = document.getElementById('calendar');
+    const monthLabel = document.getElementById('calendar-month-label');
+    const monthCount = document.getElementById('calendar-month-count');
+    if (!header || !grid || !monthLabel || !monthCount) return;
+
+    const year = currentDate.getFullYear();
+    const monthIndex = currentDate.getMonth();
+    const today = new Date();
+    const todayKey = keyForDate(today);
+    const monthName = currentDate.toLocaleString('en-MY',{month:'long'});
+    const items = monthEvents(year, monthIndex);
+
+    monthLabel.innerHTML = `${escapeHtml(monthName)} <span>${year}</span>`;
+    monthCount.textContent = `${items.length} scheduled item${items.length === 1 ? '' : 's'} this month`;
+
+    header.innerHTML = `
+      <button type="button" data-cal-prev aria-label="Previous month"><i class="bi bi-chevron-left"></i></button>
+      <button type="button" class="dashboard-calendar-today" data-cal-today>Today</button>
+      <button type="button" data-cal-next aria-label="Next month"><i class="bi bi-chevron-right"></i></button>
+    `;
+
+    const firstOfMonth = new Date(year, monthIndex, 1);
+    const mondayOffset = (firstOfMonth.getDay() + 6) % 7;
+    const gridStart = new Date(year, monthIndex, 1 - mondayOffset);
+    const selectedDate = selectedKey ? dateFromKey(selectedKey) : today;
+
+    if (
+      !selectedKey ||
+      selectedDate.getFullYear() !== year ||
+      selectedDate.getMonth() !== monthIndex
+    ) {
+      selectedKey = year === today.getFullYear() && monthIndex === today.getMonth()
+        ? todayKey
+        : dateKey(year, monthIndex, 1);
     }
 
-    target.innerHTML = dayEvents.map(event => `
-      <div class="calendar-event-row">
-        <i class="bi ${event.type === 'training' ? 'bi-mortarboard' : 'bi-calendar-event'}"></i>
-        <span><strong>${escapeHtml(event.title)}</strong>${event.ref ? '<small>'+escapeHtml(event.ref)+'</small>' : ''}</span>
-      </div>
-    `).join('');
+    const cells = [];
+
+    for (let index = 0; index < 42; index++) {
+      const cellDate = new Date(gridStart);
+      cellDate.setDate(gridStart.getDate() + index);
+
+      const key = keyForDate(cellDate);
+      const inMonth = cellDate.getMonth() === monthIndex;
+      const isToday = key === todayKey;
+      const isSelected = key === selectedKey;
+      const dayEvents = inMonth ? eventsForDate(key) : [];
+      const visibleEvents = dayEvents.slice(0,2);
+      const extraCount = Math.max(0, dayEvents.length - visibleEvents.length);
+
+      const eventMarkup = visibleEvents.map(event => {
+        const tone = eventTone(event);
+        return `<span class="dashboard-calendar-event tone-${tone}" title="${escapeHtml(event.title)}">
+          <i></i><b>${escapeHtml(event.title)}</b>
+        </span>`;
+      }).join('');
+
+      cells.push(`
+        <button type="button"
+          class="dashboard-calendar-day${inMonth ? '' : ' is-outside'}${isToday ? ' is-today' : ''}${isSelected ? ' is-selected' : ''}${dayEvents.length ? ' has-event' : ''}"
+          data-calendar-date="${key}"
+          aria-label="${escapeHtml(cellDate.toLocaleDateString('en-MY',{day:'numeric',month:'long',year:'numeric'}))}">
+          <span class="dashboard-calendar-day-number">${cellDate.getDate()}</span>
+          <span class="dashboard-calendar-day-events">${eventMarkup}${extraCount ? `<small>+${extraCount} more</small>` : ''}</span>
+        </button>
+      `);
+    }
+
+    grid.innerHTML = cells.join('');
+
+    header.querySelector('[data-cal-prev]')?.addEventListener('click',() => {
+      currentDate = new Date(year, monthIndex - 1, 1);
+      selectedKey = dateKey(currentDate.getFullYear(), currentDate.getMonth(), 1);
+      generateCalendar();
+    });
+
+    header.querySelector('[data-cal-next]')?.addEventListener('click',() => {
+      currentDate = new Date(year, monthIndex + 1, 1);
+      selectedKey = dateKey(currentDate.getFullYear(), currentDate.getMonth(), 1);
+      generateCalendar();
+    });
+
+    header.querySelector('[data-cal-today]')?.addEventListener('click',() => {
+      currentDate = new Date(today.getFullYear(), today.getMonth(), 1);
+      selectedKey = todayKey;
+      generateCalendar();
+    });
+
+    grid.querySelectorAll('[data-calendar-date]').forEach(cell => {
+      cell.addEventListener('click',() => {
+        const key = cell.dataset.calendarDate;
+        const clickedDate = dateFromKey(key);
+
+        if (clickedDate.getMonth() !== currentDate.getMonth() || clickedDate.getFullYear() !== currentDate.getFullYear()) {
+          currentDate = new Date(clickedDate.getFullYear(), clickedDate.getMonth(), 1);
+        }
+
+        selectedKey = key;
+        generateCalendar();
+      });
+    });
+
+    renderSelectedDay(selectedKey);
   }
 
   function loadPreviewApplications() {
