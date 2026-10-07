@@ -322,6 +322,6 @@ window.SEDCO_APPLICATIONS = <?= json_encode(
 ) ?>;
 </script>
 <script src="application-status.js?v=20261007-01"></script>
-<script src="sedco-shell.js?v=20261007-03"></script>
+<script src="sedco-shell.js?v=20261007-04"></script>
 </body>
 </html>
