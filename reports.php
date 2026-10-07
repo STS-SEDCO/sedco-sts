@@ -24,6 +24,77 @@ $filterDepartment=trim((string)($_GET['department']??''));
 $dateFrom=trim((string)($_GET['from']??''));
 $dateTo=trim((string)($_GET['to']??''));
 
+// Management snapshot is always based on the viewer's allowed scope.
+// It stays independent from date/status filters so the current month remains comparable.
+$snapshotWhere = [];
+$snapshotParams = [];
+$snapshotTypes = '';
+
+if ($role === 'head_of_department') {
+  $snapshotWhere[] = '(
+    a.assigned_hod_id = ?
+    OR (
+      a.assigned_hod_id IS NULL
+      AND LOWER(TRIM(COALESCE(a.department, ""))) = LOWER(TRIM(?))
+    )
+  )';
+  $snapshotParams[] = $userId; $snapshotTypes .= 'i';
+  $snapshotParams[] = $department; $snapshotTypes .= 's';
+} elseif ($filterDepartment !== '') {
+  $snapshotWhere[] = 'a.department = ?';
+  $snapshotParams[] = $filterDepartment; $snapshotTypes .= 's';
+}
+
+$snapshotSql = 'SELECT
+  SUM(a.form_type = "BPL" AND a.submitted_at >= DATE_FORMAT(CURRENT_DATE, "%Y-%m-01")) AS bpl_this_month,
+  SUM(a.form_type = "BPL"
+      AND a.status = "pending"
+      AND a.sla_due_at IS NOT NULL
+      AND a.sla_due_at < NOW()) AS overdue_approvals,
+  SUM(a.form_type = "BPL"
+      AND a.status = "approved"
+      AND a.current_stage = "completed"
+      AND a.training_end IS NOT NULL
+      AND a.training_end <= CURRENT_DATE) AS pkk_eligible,
+  SUM(a.form_type = "BPL"
+      AND a.status = "approved"
+      AND a.current_stage = "completed"
+      AND a.training_end IS NOT NULL
+      AND a.training_end <= CURRENT_DATE
+      AND EXISTS (
+        SELECT 1
+        FROM applications p
+        WHERE p.parent_application_id = a.id
+          AND p.form_type = "PKK"
+          AND p.status = "approved"
+          AND p.current_stage = "completed"
+          AND p.submitted_at <= DATE_ADD(CONCAT(a.training_end, " 23:59:59"), INTERVAL 7 DAY)
+      )) AS pkk_on_time,
+  SUM(a.form_type = "PKK" AND a.submitted_at >= DATE_FORMAT(CURRENT_DATE, "%Y-%m-01")) AS pkk_this_month,
+  SUM(a.form_type = "TEA" AND a.submitted_at >= DATE_FORMAT(CURRENT_DATE, "%Y-%m-01")) AS tea_this_month
+FROM applications a';
+
+if ($snapshotWhere) {
+  $snapshotSql .= ' WHERE ' . implode(' AND ', $snapshotWhere);
+}
+
+$snapshotStmt = db()->prepare($snapshotSql);
+if ($snapshotParams) {
+  $snapshotBind = [$snapshotTypes];
+  foreach ($snapshotParams as $snapshotIndex => $snapshotValue) {
+    $snapshotBind[] = &$snapshotParams[$snapshotIndex];
+  }
+  call_user_func_array([$snapshotStmt, 'bind_param'], $snapshotBind);
+}
+$snapshotStmt->execute();
+$snapshot = $snapshotStmt->get_result()->fetch_assoc() ?: [];
+$snapshotStmt->close();
+
+$pkkEligible = (int) ($snapshot['pkk_eligible'] ?? 0);
+$pkkOnTime = (int) ($snapshot['pkk_on_time'] ?? 0);
+$pkkCompliance = $pkkEligible > 0 ? round(($pkkOnTime / $pkkEligible) * 100, 1) : 0;
+$followupsThisMonth = (int) ($snapshot['pkk_this_month'] ?? 0) + (int) ($snapshot['tea_this_month'] ?? 0);
+
 $where=[];
 $params=[];
 $types='';
@@ -127,7 +198,7 @@ $query=http_build_query(array_filter([
 <title>Smart Training System: Reports and Analytics</title>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-<link rel="stylesheet" href="sedco-saas.css?v=20261006-11"><link rel="stylesheet" href="sedco-shell.css?v=20261007-02">
+<link rel="stylesheet" href="sedco-saas.css?v=20261007-07"><link rel="stylesheet" href="sedco-shell.css?v=20261007-03">
 </head>
 <body class="app-page reports-page" data-page="reports" data-role="<?= e($role) ?>">
 <main class="sts-page-content"><div class="sts-page-shell">
@@ -145,6 +216,38 @@ $query=http_build_query(array_filter([
 <button class="sts-primary-btn" type="submit"><i class="bi bi-funnel"></i> Apply</button>
 <a class="sts-secondary-btn" href="reports.php">Reset</a>
 </form>
+
+<section class="management-snapshot">
+  <div class="management-snapshot-heading">
+    <div>
+      <span>Current month</span>
+      <h2>Management snapshot</h2>
+      <p>Fast indicators for demand, compliance and approval workload.</p>
+    </div>
+    <strong><?= e(date('F Y')) ?></strong>
+  </div>
+  <div class="management-snapshot-grid">
+    <article>
+      <span><i class="bi bi-file-earmark-plus"></i></span>
+      <div><strong><?= (int) ($snapshot['bpl_this_month'] ?? 0) ?></strong><small>BPL submitted this month</small></div>
+    </article>
+    <article class="<?= $pkkCompliance < 80 && $pkkEligible > 0 ? 'is-warning' : '' ?>">
+      <span><i class="bi bi-clipboard2-check"></i></span>
+      <div>
+        <strong><?= e((string) $pkkCompliance) ?>%</strong>
+        <small>PKK within 7 days · <?= $pkkOnTime ?>/<?= $pkkEligible ?></small>
+      </div>
+    </article>
+    <article class="<?= (int) ($snapshot['overdue_approvals'] ?? 0) > 0 ? 'is-danger' : '' ?>">
+      <span><i class="bi bi-alarm"></i></span>
+      <div><strong><?= (int) ($snapshot['overdue_approvals'] ?? 0) ?></strong><small>Overdue approvals now</small></div>
+    </article>
+    <article>
+      <span><i class="bi bi-arrow-repeat"></i></span>
+      <div><strong><?= $followupsThisMonth ?></strong><small>PKK + TEA submitted this month</small></div>
+    </article>
+  </div>
+</section>
 
 <section class="report-kpis">
 <article><span><i class="bi bi-files"></i></span><div><strong><?= count($rows) ?></strong><small>Total records</small></div></article>
@@ -190,4 +293,4 @@ $query=http_build_query(array_filter([
 <?php if(!$rows): ?><tr><td colspan="8" class="text-center py-5 text-muted">No records match the selected filters.</td></tr><?php endif; ?>
 </tbody></table></div>
 </section>
-</div></main><script src="sedco-shell.js?v=20261007-02"></script></body></html>
+</div></main><script src="sedco-shell.js?v=20261007-03"></script></body></html>
