@@ -483,6 +483,47 @@
     return map.year + '-' + map.month + '-' + map.day;
   }
 
+  function correctionTargetFields() {
+    const fields = [
+      ['kursus','Kursus / Seminar'],
+      ['tajuk','Tajuk Kursus'],
+      ['penganjur','Penganjur'],
+      ['tarikh_mula','Tarikh Mula'],
+      ['tarikh_tamat','Tarikh Tamat'],
+      ['tempat','Tempat Kursus'],
+      ['yuran','Yuran'],
+      ['kandungan','Kandungan Kursus'],
+      ['tempat_tugas','Tempat Bertugas'],
+      ['kenderaan','Kenderaan'],
+      ['masa_bertolak','Masa Bertolak'],
+      ['masa_kembali','Masa Kembali'],
+      ['pendahuluan','Pendahuluan']
+    ];
+
+    return `
+      <div class="quick-review-correction-targets" data-quick-correction-targets>
+        <div class="quick-review-correction-target-heading">
+          <span><i class="bi bi-bullseye"></i></span>
+          <div>
+            <strong>Select fields to correct <b>*</b></strong>
+            <small>The applicant will see these fields highlighted when the form reopens.</small>
+          </div>
+        </div>
+        <div class="quick-review-correction-target-grid">
+          ${fields.map(([name,label]) => `
+            <label>
+              <input type="checkbox" name="correction_fields[]" value="${escapeHtml(name)}">
+              <span>${escapeHtml(label)}</span>
+            </label>
+          `).join('')}
+        </div>
+        <div class="quick-review-target-error" data-quick-correction-error hidden>
+          Select at least one field that needs correction.
+        </div>
+      </div>
+    `;
+  }
+
   function stageReviewFields(item, decision) {
     const stage = String(item.currentStage || '').toLowerCase();
     const correction = decision === 'correction';
@@ -491,7 +532,7 @@
 
     if (stage === 'training') {
       if (correction) {
-        return textField(
+        return correctionTargetFields() + textField(
           'ulasan_latihan',
           'Arahan pembetulan Seksyen Training',
           fieldValue(item, 'ulasan_latihan'),
@@ -511,7 +552,7 @@
 
     if (stage === 'hod') {
       if (correction) {
-        return textField(
+        return correctionTargetFields() + textField(
           'ulasan_bahagian',
           'Arahan pembetulan HOD',
           fieldValue(item, 'ulasan_bahagian'),
@@ -665,6 +706,17 @@
           item.status = decision === 'approved'
             ? 'approved'
             : (decision === 'correction' ? 'correction' : 'rejected');
+
+          if (decision === 'correction') {
+            const targets = [...document.querySelectorAll('#quickReviewFields input[name="correction_fields[]"]:checked')]
+              .map(field => field.value);
+            item.data = {
+              ...(item.data || {}),
+              _correction_fields: targets
+            };
+            item.reviewNote = String($('quickReviewComment')?.value || '').trim()
+              || 'Correction requested. Please update the highlighted fields.';
+          }
           try {
             localStorage.setItem(STORAGE_KEY, JSON.stringify(submissions));
           } catch {}
@@ -676,6 +728,24 @@
 
       const decision = $('quickReviewDecision')?.value || '';
       const reviewComment = $('quickReviewComment');
+
+      if (decision === 'correction') {
+        const selectedTargets = [...document.querySelectorAll('#quickReviewFields input[name="correction_fields[]"]:checked')];
+
+        if (!selectedTargets.length) {
+          event.preventDefault();
+          const targetError = document.querySelector('[data-quick-correction-error]');
+          if (targetError) targetError.hidden = false;
+          document.querySelector('[data-quick-correction-targets]')?.scrollIntoView({
+            behavior:'smooth',
+            block:'center'
+          });
+          return;
+        }
+
+        const targetError = document.querySelector('[data-quick-correction-error]');
+        if (targetError) targetError.hidden = true;
+      }
       if (decision === 'rejected' && !String(reviewComment?.value || '').trim()) {
         event.preventDefault();
         reviewComment?.focus();
