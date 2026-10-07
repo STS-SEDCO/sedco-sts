@@ -20521,3 +20521,261 @@ body.application-detail-page .application-signature-preview img{display:block;ma
 }
 
 .submissions-page .quick-review-summary strong.is-warning{color:#a3690e}
+/* ===== SCREEN TYPOGRAPHY NORMALIZATION 2026-10-07 ===== */
+@media screen {
+  body.app-page{
+    font-size:14px;
+  }
+
+  body.app-page .sts-card-heading > div > span{
+    font-size:10.5px !important;
+    line-height:1.35;
+  }
+  body.app-page .sts-card-heading h2{
+    font-size:17px !important;
+    line-height:1.25;
+  }
+  body.app-page .sts-muted-copy{
+    font-size:12.5px !important;
+  }
+
+  body.app-page .audit-table,
+  body.app-page .report-table{
+    font-size:12.5px !important;
+    line-height:1.5;
+  }
+  body.app-page .audit-table th,
+  body.app-page .report-table th{
+    padding:11px 12px !important;
+    font-size:10.5px !important;
+    line-height:1.35;
+  }
+  body.app-page .audit-table td,
+  body.app-page .report-table td{
+    padding:12px !important;
+    font-size:12.5px !important;
+    line-height:1.5;
+  }
+  body.app-page .audit-table code{
+    font-size:11px !important;
+  }
+
+  body.app-page .settings-list strong{font-size:12.5px !important}
+  body.app-page .settings-list small{font-size:11.5px !important;line-height:1.45}
+
+  body.reports-page .report-filter-bar label span{font-size:10.5px !important}
+  body.reports-page .report-filter-bar select,
+  body.reports-page .report-filter-bar input{font-size:12.5px !important}
+  body.reports-page .report-kpis small{font-size:11.5px !important}
+  body.reports-page .report-bars strong{font-size:12px !important}
+  body.reports-page .report-bars span{font-size:11px !important}
+  body.reports-page .report-ranking span{font-size:11.5px !important}
+  body.reports-page .report-ranking strong{font-size:12px !important}
+  body.reports-page .report-record-count,
+  body.app-page .report-record-count{font-size:11.5px !important}
+  body.reports-page .management-snapshot-heading span{font-size:10.5px !important}
+  body.reports-page .management-snapshot-heading p{font-size:12px !important}
+  body.reports-page .management-snapshot-heading>strong{font-size:11px !important}
+  body.reports-page .management-snapshot-grid article small{font-size:11px !important}
+
+  body.app-page .form-linked-training > span{font-size:10.5px !important}
+  body.app-page .form-linked-training > strong{font-size:12px !important}
+  body.app-page .form-linked-training > a{font-size:11.5px !important}
+  body.app-page .sts-form-support-head > div > span{font-size:10.5px !important}
+  body.app-page .sts-form-support-head > div > strong{font-size:12.5px !important}
+  body.app-page .sts-draft-state{font-size:11px !important}
+  body.app-page .sts-upload-box strong,
+  body.app-page .sts-autosave-box strong{font-size:12px !important}
+  body.app-page .sts-upload-box small,
+  body.app-page .sts-autosave-box small{font-size:11px !important}
+
+  body.app-page .task-followup-heading > div > span{font-size:10.5px !important}
+  body.app-page .task-followup-heading h2{font-size:17px !important}
+  body.app-page .task-followup-heading p{font-size:12px !important}
+  body.app-page .task-followup-copy strong{font-size:12px !important}
+  body.app-page .task-followup-copy > div > span{font-size:10.5px !important}
+  body.app-page .task-followup-copy p,
+  body.app-page .task-followup-due{font-size:11px !important}
+  body.app-page .submission-sla-overdue{font-size:10.5px !important}
+
+  body.submissions-page .submission-stat-caption{font-size:11px !important}
+  body.submissions-page .submissions-table th{font-size:10.5px !important}
+  body.submissions-page .submission-subtext{font-size:11.5px !important}
+  body.submissions-page .type-pill,
+  body.submissions-page .status-pill,
+  body.submissions-page .submission-stage-pill{font-size:11px !important}
+  body.submissions-page .submission-action-view,
+  body.submissions-page .submission-action-btn{font-size:11px !important}
+  body.submissions-page .submissions-section-note,
+  body.submissions-page .submission-filter,
+  body.submissions-page .submissions-advanced-filters select,
+  body.submissions-page .submissions-advanced-filters input,
+  body.submissions-page .submissions-search input{font-size:12px !important}
+  body.submissions-page .submissions-sync-chip,
+  body.submissions-page .quick-review-context span,
+  body.submissions-page .quick-review-hint{font-size:11px !important}
+  body.submissions-page .approval-lifecycle-intro>span,
+  body.submissions-page .approval-lifecycle-intro>small{font-size:11px !important}
+  body.submissions-page .approval-flow-step small{font-size:10px !important}
+  body.submissions-page .approval-flow-step strong{font-size:11.5px !important}
+  body.submissions-page .approval-lifecycle-scope span{font-size:10px !important}
+  body.submissions-page .approval-lifecycle-scope strong{font-size:11.5px !important}
+  body.submissions-page .approval-detail-heading .submission-modal-kicker,
+  body.submissions-page .approval-detail-sync{font-size:10.5px !important}
+  body.submissions-page .approval-detail-heading p{font-size:12px !important}
+  body.submissions-page .approval-detail-summary span,
+  body.submissions-page .approval-detail-grid .submission-detail-field span{font-size:10.5px !important}
+  body.submissions-page .approval-detail-summary strong,
+  body.submissions-page .approval-detail-grid .submission-detail-field strong{font-size:12px !important}
+  body.submissions-page .approval-detail-section-heading span{font-size:10px !important}
+  body.submissions-page .approval-detail-section-heading small{font-size:11px !important}
+  body.submissions-page .approval-detail-open-form,
+  body.submissions-page .approval-detail-action{font-size:11px !important}
+
+  body.approval-history-page .submissions-table td>small,
+  body.approval-history-page .view-btn,
+  body.approval-history-page .submission-stage-pill{font-size:11px !important}
+
+  body.status-page .application-correction-note{font-size:11.5px !important}
+  body.status-page .application-progress-step>span{font-size:11px !important}
+  body.status-page .application-progress-step small,
+  body.status-page .application-progress-complete{font-size:10px !important}
+  body.status-page .type-pill,
+  body.status-page .status-pill{font-size:11px !important}
+  body.status-page .view-btn{font-size:11.5px !important}
+
+  body.dashboard-page .dashboard-calendar-open{font-size:11.5px !important}
+  body.dashboard-page .dashboard-action-heading p{font-size:12px !important}
+  body.dashboard-page .dashboard-action-count,
+  body.dashboard-page .dashboard-action-item p,
+  body.dashboard-page .dashboard-action-item em,
+  body.dashboard-page .dashboard-action-empty p{font-size:11.5px !important}
+
+  body.training-calendar-page .training-calendar-toolbar label>span{font-size:10.5px !important}
+  body.training-calendar-page .training-calendar-toolbar input,
+  body.training-calendar-page .training-calendar-toolbar select{font-size:12px !important}
+  body.training-calendar-page .training-calendar-summary small{font-size:11px !important}
+  body.training-calendar-page .training-calendar-heading>div:first-child>span{font-size:10.5px !important}
+  body.training-calendar-page .training-calendar-legend span{font-size:10.5px !important}
+  body.training-calendar-page .training-calendar-weekdays span{font-size:10.5px !important}
+  body.training-calendar-page .training-calendar-day-head>span{font-size:11px !important}
+  body.training-calendar-page .training-calendar-day-head em{font-size:9px !important}
+  body.training-calendar-page .training-calendar-event strong{font-size:10.5px !important}
+  body.training-calendar-page .training-calendar-event small{font-size:9.5px !important}
+  body.training-calendar-page .training-calendar-more{font-size:9.5px !important}
+  body.training-calendar-page .training-calendar-list-date small{font-size:9.5px !important}
+  body.training-calendar-page .training-calendar-list-body>a>div>strong{font-size:12.5px !important}
+  body.training-calendar-page .training-calendar-list-body>a>div>p,
+  body.training-calendar-page .training-calendar-list-body>a>em{font-size:11px !important}
+  body.training-calendar-page .training-calendar-empty strong{font-size:13px !important}
+  body.training-calendar-page .training-calendar-empty span{font-size:11.5px !important}
+
+  body.system-health-page .health-overview small,
+  body.system-health-page .health-card>div>span,
+  body.system-health-page .health-card>em{font-size:10.5px !important}
+  body.system-health-page .health-overview p,
+  body.system-health-page .health-card p,
+  body.system-health-page .health-guide-grid p{font-size:11.5px !important}
+  body.system-health-page .health-overview>em,
+  body.system-health-page .health-guide-grid strong{font-size:11.5px !important}
+
+  body.global-search-page .global-search-form select{font-size:12px !important}
+  body.global-search-page .global-search-empty p,
+  body.global-search-page .global-search-no-results p,
+  body.global-search-page .global-search-meta{font-size:11.5px !important}
+  body.global-search-page .global-search-empty em,
+  body.global-search-page .global-search-result-copy>div>span{font-size:10.5px !important}
+  body.global-search-page .global-search-result-copy strong{font-size:12.5px !important}
+  body.global-search-page .global-search-result-copy p{font-size:11.5px !important}
+  body.global-search-page .global-search-result-meta small,
+  body.global-search-page .global-search-result-meta time{font-size:10px !important}
+
+  body.employee-history-page .employee-history-picker span{font-size:10.5px !important}
+  body.employee-history-page .employee-history-picker select{font-size:12px !important}
+  body.employee-history-page .employee-history-identity>span{font-size:10px !important}
+  body.employee-history-page .employee-history-identity p{font-size:12px !important}
+  body.employee-history-page .employee-history-meta span{font-size:11px !important}
+  body.employee-history-page .employee-history-stats small{font-size:10.5px !important}
+  body.employee-history-page .employee-course-date span,
+  body.employee-history-page .employee-course-title-row>div>span,
+  body.employee-history-page .employee-course-title-row em{font-size:10.5px !important}
+  body.employee-history-page .employee-course-copy>p{font-size:11.5px !important}
+  body.employee-history-page .employee-course-flow span,
+  body.employee-history-page .employee-course-footer span,
+  body.employee-history-page .employee-course-footer a{font-size:10.5px !important}
+  body.employee-history-page .employee-history-empty p{font-size:11.5px !important}
+
+  body.monthly-report-page .monthly-report-toolbar label span{font-size:10.5px !important}
+  body.monthly-report-page .monthly-report-toolbar input{font-size:12px !important}
+  body.monthly-report-page .monthly-report-brand small,
+  body.monthly-report-page .monthly-report-title>span,
+  body.monthly-report-page .monthly-report-generated span,
+  body.monthly-report-page .monthly-report-generated small,
+  body.monthly-report-page .monthly-report-intro span,
+  body.monthly-report-page .monthly-report-kpis article>span,
+  body.monthly-report-page .monthly-report-kpis article>small,
+  body.monthly-report-page .monthly-report-section-heading>span,
+  body.monthly-report-page .monthly-report-section-heading small,
+  body.monthly-report-page .monthly-report-followups small,
+  body.monthly-report-page .monthly-report-footer span{font-size:10px !important}
+  body.monthly-report-page .monthly-report-brand strong,
+  body.monthly-report-page .monthly-report-title p,
+  body.monthly-report-page .monthly-report-generated strong,
+  body.monthly-report-page .monthly-report-intro strong,
+  body.monthly-report-page .monthly-report-intro p,
+  body.monthly-report-page .monthly-report-section-heading strong{font-size:12px !important}
+  body.monthly-report-page .monthly-report-status-list span,
+  body.monthly-report-page .monthly-report-competency span,
+  body.monthly-report-page .monthly-report-department-table>div>span,
+  body.monthly-report-page .monthly-report-ranking>div>span{font-size:10.5px !important}
+  body.monthly-report-page .monthly-report-status-list strong,
+  body.monthly-report-page .monthly-report-competency strong,
+  body.monthly-report-page .monthly-report-department-table strong,
+  body.monthly-report-page .monthly-report-ranking strong{font-size:11.5px !important}
+  body.monthly-report-page .monthly-report-department-table em,
+  body.monthly-report-page .monthly-report-ranking em{font-size:10.5px !important}
+  body.monthly-report-page .monthly-report-register th{font-size:10px !important}
+  body.monthly-report-page .monthly-report-register td{font-size:11px !important}
+  body.monthly-report-page .monthly-report-footer strong{font-size:11.5px !important}
+
+  body.tea-premium-page .tea-premium-kicker,
+  body.tea-premium-page .tea-field>span,
+  body.tea-premium-page .tea-period-option span,
+  body.tea-premium-page .tea-rating-grid span,
+  body.tea-system-page .tea-system-owner,
+  body.tea-system-page .tea-system-section-heading small,
+  body.tea-system-page .tea-system-period-options span,
+  body.tea-system-page .tea-system-add-column input,
+  body.tea-system-page .tea-system-tool-btn,
+  body.tea-system-page .tea-system-table td,
+  body.tea-official-page .tea-tool-btn,
+  body.tea-official-page .tea-evaluated-grid label,
+  body.tea-official-page .tea-evaluated-grid input{font-size:11.5px !important}
+
+  body.tea-premium-page .tea-section-eyebrow,
+  body.tea-premium-page .tea-section-number,
+  body.tea-premium-page .form-edit-badge,
+  body.tea-premium-page .tea-inline-note,
+  body.tea-premium-page .tea-ranking-score,
+  body.tea-system-page .tea-system-kicker,
+  body.tea-system-page .tea-system-section-number,
+  body.tea-system-page .tea-system-owner-chip,
+  body.tea-system-page .tea-system-table-note,
+  body.tea-system-page .tea-system-table th,
+  body.tea-system-page .tea-level,
+  body.tea-official-page .tea-official-mark small,
+  body.tea-official-page .tea-table-note,
+  body.tea-official-page .tea-official-table th,
+  body.tea-official-page .tea-official-table td,
+  body.tea-official-page .tea-level{font-size:10.5px !important}
+
+  body.tea-premium-page .tea-assessment-table th,
+  body.tea-premium-page .tea-assessment-table td,
+  body.tea-premium-page .tea-total-input,
+  body.tea-premium-page .tea-comment-input,
+  body.tea-premium-page .tea-competency-select,
+  body.tea-system-page .tea-training-cell input,
+  body.tea-system-page .tea-system-table textarea,
+  body.tea-official-page .tea-training-cell input,
+  body.tea-official-page .tea-official-table textarea{font-size:11.5px !important}
+}
