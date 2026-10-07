@@ -127,7 +127,7 @@ if($dateTo!==''){
 }
 
 $sql='SELECT a.application_no,a.form_type,a.title,a.department,a.status,a.current_stage,
-             a.payload,a.submitted_at,a.completed_at,u.fullname
+             a.payload,a.submitted_at,a.completed_at,u.id AS employee_id,u.fullname
       FROM applications a
       INNER JOIN users u ON u.id=a.user_id';
 if($where)$sql.=' WHERE '.implode(' AND ',$where);
@@ -198,13 +198,17 @@ $query=http_build_query(array_filter([
 <title>Smart Training System: Reports and Analytics</title>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-<link rel="stylesheet" href="sedco-saas.css?v=20261007-07"><link rel="stylesheet" href="sedco-shell.css?v=20261007-03">
+<link rel="stylesheet" href="sedco-saas.css?v=20261007-09"><link rel="stylesheet" href="sedco-shell.css?v=20261007-03">
 </head>
 <body class="app-page reports-page" data-page="reports" data-role="<?= e($role) ?>">
 <main class="sts-page-content"><div class="sts-page-shell">
 <header class="sts-page-heading">
 <div><div class="sts-eyebrow">Insights</div><h1>Reports & Analytics</h1><p>Monitor training demand, approval outcomes, processing time and estimated course fees.</p></div>
-<a class="sts-primary-btn" href="export_applications.php<?= $query?'?'.e($query):'' ?>"><i class="bi bi-file-earmark-spreadsheet"></i> Export CSV</a>
+<div class="sts-heading-actions">
+  <a class="sts-secondary-btn" href="employee-training-history.php"><i class="bi bi-person-lines-fill"></i> Training history</a>
+  <a class="sts-secondary-btn" href="monthly-report.php"><i class="bi bi-file-earmark-bar-graph"></i> Monthly report</a>
+  <a class="sts-primary-btn" href="export_applications.php<?= $query?'?'.e($query):'' ?>"><i class="bi bi-file-earmark-spreadsheet"></i> Export CSV</a>
+</div>
 </header>
 
 <form class="report-filter-bar" method="get">
@@ -286,7 +290,7 @@ $query=http_build_query(array_filter([
 <div class="sts-card-heading"><div><span>Records</span><h2>Application register</h2></div><span class="report-record-count"><?= count($rows) ?> results</span></div>
 <div class="report-table-wrap"><table class="report-table"><thead><tr><th>Reference</th><th>Applicant</th><th>Department</th><th>Form</th><th>Status</th><th>Stage</th><th>Submitted</th><th></th></tr></thead><tbody>
 <?php foreach($rows as $row): ?><tr>
-<td><strong><?= e($row['application_no']) ?></strong></td><td><?= e($row['fullname']) ?></td><td><?= e($row['department']?:'Not available') ?></td><td><?= e($row['form_type']) ?></td>
+<td><strong><?= e($row['application_no']) ?></strong></td><td><a class="report-employee-link" href="employee-training-history.php?employee=<?= (int)$row['employee_id'] ?>"><?= e($row['fullname']) ?></a></td><td><?= e($row['department']?:'Not available') ?></td><td><?= e($row['form_type']) ?></td>
 <td><span class="status-pill status-<?= e($row['status']) ?>"><?= e(ucfirst((string)$row['status'])) ?></span></td><td><?= e(stage_label((string)$row['current_stage'])) ?></td>
 <td><?= e(date('d M Y',strtotime((string)$row['submitted_at']))) ?></td><td><a href="application-detail.php?application=<?= rawurlencode((string)$row['application_no']) ?>">View <i class="bi bi-arrow-up-right"></i></a></td>
 </tr><?php endforeach; ?>
