@@ -148,19 +148,21 @@ try {
     $update = $db->prepare(
         'UPDATE applications
          SET payload = ?, status = "pending", review_note = NULL,
-             sla_due_at = ?, training_start = ?, training_end = ?
+             sla_due_at = ?, training_start = ?, training_end = ?, followup_due_at = ?
          WHERE id = ?'
     );
 
     $trainingStart = trim((string) ($payload['tarikh_mula'] ?? '')) ?: null;
     $trainingEnd = trim((string) ($payload['tarikh_tamat'] ?? '')) ?: null;
+    $followupDueAt = sts_followup_due($trainingEnd, 'PKK');
 
     $update->bind_param(
-        'ssssi',
+        'sssssi',
         $payloadJson,
         $slaDueAt,
         $trainingStart,
         $trainingEnd,
+        $followupDueAt,
         $applicationId
     );
     $update->execute();
