@@ -342,6 +342,96 @@ while ($row = $manualEvents->fetch_assoc()) {
     ];
 }
 
+$myActions = [];
+
+if ($role === 'staff') {
+    $pendingPkkRequirement = sts_pending_pkk_requirement($userId);
+
+    if ($pendingPkkRequirement) {
+        $due = (string) ($pendingPkkRequirement['pkk_due_at'] ?? '');
+        $myActions[] = [
+            'tone' => !empty($pendingPkkRequirement['is_overdue']) ? 'danger' : 'warning',
+            'icon' => 'bi-clipboard2-check',
+            'title' => !empty($pendingPkkRequirement['is_overdue']) ? 'PKK overdue' : 'PKK required',
+            'copy' => (string) $pendingPkkRequirement['title']
+                . ($due !== '' ? ' · Due ' . date('d M Y', strtotime($due)) : ''),
+            'url' => 'pkk.php?parent=' . (int) $pendingPkkRequirement['id'],
+            'action' => 'Complete PKK',
+        ];
+    }
+
+    $correctionStmt = $db->prepare(
+        'SELECT application_no, title, review_note, current_stage
+         FROM applications
+         WHERE user_id = ?
+           AND form_type = "BPL"
+           AND status = "correction"
+         ORDER BY updated_at DESC
+         LIMIT 3'
+    );
+    $correctionStmt->bind_param('i', $userId);
+    $correctionStmt->execute();
+    $correctionResult = $correctionStmt->get_result();
+
+    while ($row = $correctionResult->fetch_assoc()) {
+        $myActions[] = [
+            'tone' => 'danger',
+            'icon' => 'bi-arrow-counterclockwise',
+            'title' => 'Correction required',
+            'copy' => $row['application_no'] . ' · ' . $row['title'],
+            'url' => 'bpl.php?application=' . rawurlencode((string) $row['application_no']),
+            'action' => 'Fix & Resubmit',
+        ];
+    }
+
+    $correctionStmt->close();
+} else {
+    foreach (array_slice($queue, 0, 3) as $item) {
+        $isOverdue = !empty($item['sla_due_at'])
+            && strtotime((string) $item['sla_due_at']) < time();
+
+        $dueText = '';
+        if (!empty($item['sla_due_at'])) {
+            $dueText = ($isOverdue ? ' · Overdue since ' : ' · Due ')
+                . date('d M Y', strtotime((string) $item['sla_due_at']));
+        }
+
+        $myActions[] = [
+            'tone' => $isOverdue ? 'danger' : 'warning',
+            'icon' => 'bi-inbox',
+            'title' => $isOverdue ? 'Overdue approval' : 'Approval required',
+            'copy' => $item['application_no'] . ' · ' . $item['title'] . $dueText,
+            'url' => 'bpl.php?application=' . rawurlencode((string) $item['application_no']),
+            'action' => 'Review',
+        ];
+    }
+
+    if ($role === 'head_of_department') {
+        foreach (array_slice($followups, 0, 2) as $item) {
+            $due = sts_followup_due((string) $item['training_end'], (string) $item['follow_type']);
+            $myActions[] = [
+                'tone' => $due && strtotime($due) < time() ? 'danger' : 'brand',
+                'icon' => 'bi-clipboard-data',
+                'title' => 'TEA evaluation',
+                'copy' => $item['application_no'] . ' · ' . $item['title'],
+                'url' => 'tea.php?parent=' . (int) $item['id'],
+                'action' => 'Evaluate',
+            ];
+        }
+    }
+
+    if ($role === 'admin') {
+        $myActions[] = [
+            'tone' => 'neutral',
+            'icon' => 'bi-heart-pulse',
+            'title' => 'System health',
+            'copy' => 'Check routing, overdue items, follow ups and data integrity.',
+            'url' => 'admin-system-health.php',
+            'action' => 'Run check',
+        ];
+    }
+}
+
 $unreadNotifications = sts_unread_notifications($userId);
 ?>
 <!DOCTYPE html>
@@ -352,7 +442,7 @@ $unreadNotifications = sts_unread_notifications($userId);
   <title>Smart Training System: Dashboard</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-  <link rel="stylesheet" href="sedco-saas.css?v=20261007-01">
+  <link rel="stylesheet" href="sedco-saas.css?v=20261007-05">
   <link rel="stylesheet" href="sedco-shell.css?v=20261007-02">
 </head>
 <body class="app-page dashboard-page dashboard-v4" data-page="dashboard" data-role="<?= e($role) ?>">
@@ -398,6 +488,37 @@ $unreadNotifications = sts_unread_notifications($userId);
         <span class="dashboard-floating-chip chip-one"><i class="bi bi-check2-circle"></i> Approval</span>
         <span class="dashboard-floating-chip chip-two"><i class="bi bi-file-earmark-text"></i> Training</span>
       </div>
+    </section>
+
+    <section class="dashboard-action-center">
+      <div class="dashboard-action-heading">
+        <div>
+          <span class="dashboard-card-kicker">My action</span>
+          <h2>What needs your attention</h2>
+          <p>Open the next required task directly without searching around the system.</p>
+        </div>
+        <span class="dashboard-action-count"><?= count($myActions) ?> action<?= count($myActions) === 1 ? '' : 's' ?></span>
+      </div>
+
+      <?php if (!$myActions): ?>
+      <div class="dashboard-action-empty">
+        <span><i class="bi bi-check2-circle"></i></span>
+        <div><strong>All caught up</strong><p>There is no action waiting for you right now.</p></div>
+      </div>
+      <?php else: ?>
+      <div class="dashboard-action-list">
+        <?php foreach ($myActions as $action): ?>
+        <a class="dashboard-action-item tone-<?= e($action['tone']) ?>" href="<?= e($action['url']) ?>">
+          <span class="dashboard-action-icon"><i class="bi <?= e($action['icon']) ?>"></i></span>
+          <div>
+            <strong><?= e($action['title']) ?></strong>
+            <p><?= e($action['copy']) ?></p>
+          </div>
+          <em><?= e($action['action']) ?> <i class="bi bi-arrow-up-right"></i></em>
+        </a>
+        <?php endforeach; ?>
+      </div>
+      <?php endif; ?>
     </section>
 
     <section class="dashboard-stats-v4">
@@ -465,7 +586,18 @@ $unreadNotifications = sts_unread_notifications($userId);
               </p>
             </div>
             <span class="dashboard-queue-meta">
-              <?php if ($overdue): ?><em>Overdue</em><?php endif; ?>
+              <?php if (!empty($item['sla_due_at'])): ?>
+              <?php
+                $dueTs = strtotime((string) $item['sla_due_at']);
+                $todayStart = strtotime(date('Y-m-d 00:00:00'));
+                $daysAway = (int) floor(($dueTs - $todayStart) / 86400);
+              ?>
+              <em>
+                <?= $overdue
+                  ? 'Overdue'
+                  : ($daysAway <= 0 ? 'Due today' : ($daysAway === 1 ? 'Due tomorrow' : 'Due in ' . $daysAway . ' days')) ?>
+              </em>
+              <?php endif; ?>
               <i class="bi bi-chevron-right"></i>
             </span>
           </a>
