@@ -23,6 +23,15 @@ $errors = [];
 $warnings = [];
 $conflicts = [];
 
+$department = trim((string) ($user['department'] ?? ''));
+if (
+    normalized_role((string) ($user['role'] ?? '')) === 'staff'
+    && $department !== ''
+    && sts_department_hod($department) === null
+) {
+    $warnings[] = 'No HOD is currently assigned to your department. Admin should review the department routing.';
+}
+
 $validDate = static function (string $value): bool {
     if (!preg_match('/^\d{4}-\d{2}-\d{2}$/', $value)) return false;
     $date = DateTimeImmutable::createFromFormat('!Y-m-d', $value);
@@ -47,12 +56,10 @@ if ($title !== '' && $validDate($start) && $validDate($end)) {
          FROM applications
          WHERE user_id = ?
            AND form_type = "BPL"
-           AND status NOT IN ("rejected","cancelled")
-           AND training_start <= ?
-           AND training_end >= ?';
+           AND status NOT IN ("rejected","cancelled")';
 
-    $params = [(int) $user['id'], $end, $start];
-    $types = 'iss';
+    $params = [(int) $user['id']];
+    $types = 'i';
 
     if ($excludeNo !== '') {
         $sql .= ' AND application_no <> ?';
@@ -60,7 +67,7 @@ if ($title !== '' && $validDate($start) && $validDate($end)) {
         $types .= 's';
     }
 
-    $sql .= ' ORDER BY training_start DESC LIMIT 20';
+    $sql .= ' ORDER BY submitted_at DESC,id DESC LIMIT 50';
 
     $stmt = db()->prepare($sql);
     $bind = [$types];
@@ -96,13 +103,26 @@ if ($title !== '' && $validDate($start) && $validDate($end)) {
             similar_text($wanted,$existingNormalized,$similarity);
         }
 
+        $existingStart = (string) ($row['training_start'] ?? '');
+        $existingEnd = (string) ($row['training_end'] ?? '');
+        $overlap = $existingStart !== ''
+            && $existingEnd !== ''
+            && $existingStart <= $end
+            && $existingEnd >= $start;
+        $similarTitle = $similarity >= 72;
+
+        if (!$overlap && !$similarTitle) {
+            continue;
+        }
+
         $conflicts[] = [
             'application_no'=>(string)$row['application_no'],
             'title'=>$existingTitle !== '' ? $existingTitle : (string)$row['title'],
-            'start'=>(string)$row['training_start'],
-            'end'=>(string)$row['training_end'],
+            'start'=>$existingStart,
+            'end'=>$existingEnd,
             'status'=>(string)$row['status'],
-            'similar_title'=>$similarity >= 72,
+            'similar_title'=>$similarTitle,
+            'date_overlap'=>$overlap,
             'similarity'=>round($similarity,1),
         ];
     }
@@ -117,9 +137,21 @@ if ($title !== '' && $validDate($start) && $validDate($end)) {
             }
         }
 
-        $warnings[] = $hasSimilar
-            ? 'A similar course overlaps with these dates. Check the existing BPL before submitting another one.'
-            : 'Another training record overlaps with these dates. Confirm the schedule before submitting.';
+        $hasOverlap = false;
+        foreach ($conflicts as $conflict) {
+            if (!empty($conflict['date_overlap'])) {
+                $hasOverlap = true;
+                break;
+            }
+        }
+
+        if ($hasSimilar && $hasOverlap) {
+            $warnings[] = 'A similar course or duplicate BPL overlaps with an existing training record. Check it before submitting.';
+        } elseif ($hasSimilar) {
+            $warnings[] = 'A very similar course already exists in your BPL history. Confirm this is not a duplicate application.';
+        } else {
+            $warnings[] = 'Another training record overlaps with these dates. Confirm the schedule before submitting.';
+        }
     }
 }
 
