@@ -198,7 +198,7 @@ $query=http_build_query(array_filter([
 <title>Smart Training System: Reports and Analytics</title>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-<link rel="stylesheet" href="sedco-saas.css?v=20261007-09"><link rel="stylesheet" href="sedco-shell.css?v=20261007-03">
+<link rel="stylesheet" href="sedco-saas.css?v=20261007-10"><link rel="stylesheet" href="sedco-shell.css?v=20261007-03">
 </head>
 <body class="app-page reports-page" data-page="reports" data-role="<?= e($role) ?>">
 <main class="sts-page-content"><div class="sts-page-shell">
