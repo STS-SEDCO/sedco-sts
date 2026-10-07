@@ -434,7 +434,7 @@ function sts_ensure_sla_escalations(): void
                     $days = max(1,(int) ceil($overdueSeconds / 86400));
                     sts_notify_once(
                         $reviewerId,
-                        'Approval overdue · ' . $applicationNo,
+                        'Approval overdue · ' . $applicationNo . ' · ' . date('d M', $dueAt),
                         $applicationNo . ' · ' . $application['title']
                             . ' is overdue at ' . stage_label($stage)
                             . ' by ' . $days . ' day' . ($days === 1 ? '' : 's')
@@ -446,7 +446,7 @@ function sts_ensure_sla_escalations(): void
                     $hours = max(1,(int) ceil($seconds / 3600));
                     sts_notify_once(
                         $reviewerId,
-                        'Approval due soon · ' . $applicationNo,
+                        'Approval due soon · ' . $applicationNo . ' · ' . date('d M', $dueAt),
                         $applicationNo . ' · ' . $application['title']
                             . ' is due at ' . stage_label($stage)
                             . ' within ' . $hours . ' hour' . ($hours === 1 ? '' : 's') . '.',
@@ -480,7 +480,7 @@ function sts_ensure_sla_escalations(): void
                 while ($recipient = $oversightResult->fetch_assoc()) {
                     sts_notify_once(
                         (int) $recipient['id'],
-                        'SLA escalation · ' . $applicationNo,
+                        'SLA escalation · ' . $applicationNo . ' · ' . date('d M', $dueAt),
                         $applicationNo . ' · ' . $application['title']
                             . ' has been overdue for ' . $escalationDays
                             . ' day' . ($escalationDays === 1 ? '' : 's')
