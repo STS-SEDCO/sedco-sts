@@ -45,11 +45,11 @@ if ($role === 'staff') {
     $params[] = $userId;
     $types .= 'i';
 } elseif ($role === 'head_of_department') {
-    $where[] = 'LOWER(TRIM(COALESCE(a.department,""))) = LOWER(TRIM(?))';
+    $where[] = 'LOWER(TRIM(COALESCE(NULLIF(a.department,""),NULLIF(u.department,"")))) = LOWER(TRIM(?))';
     $params[] = $userDepartment;
     $types .= 's';
 } elseif ($filterDepartment !== '') {
-    $where[] = 'a.department = ?';
+    $where[] = 'COALESCE(NULLIF(a.department,""),NULLIF(u.department,"")) = ?';
     $params[] = $filterDepartment;
     $types .= 's';
 }
@@ -65,7 +65,8 @@ if ($search !== '') {
 
 $sql =
     'SELECT a.id,a.application_no,a.title,a.department,a.training_start,a.training_end,
-            a.user_id,u.fullname
+            a.user_id,u.fullname,
+            COALESCE(NULLIF(a.department,""),NULLIF(u.department,"")) AS resolved_department
      FROM applications a
      INNER JOIN users u ON u.id = a.user_id
      WHERE ' . implode(' AND ',$where) . '
@@ -82,6 +83,7 @@ $result = $stmt->get_result();
 
 $trainings = [];
 while ($row = $result->fetch_assoc()) {
+    $row['department'] = (string) ($row['resolved_department'] ?? $row['department'] ?? '');
     $trainings[] = $row;
 }
 $stmt->close();
