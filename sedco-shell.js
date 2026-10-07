@@ -13,6 +13,7 @@
       : path.includes('profile') ? 'profile'
       : path.includes('notifications') ? 'notifications'
       : path.includes('reports') ? 'reports'
+      : path.includes('global-search') ? 'global-search'
       : path.includes('admin-users') ? 'admin-users'
       : path.includes('admin-settings') ? 'admin-settings'
       : path.includes('audit-log') ? 'audit-log'
@@ -94,6 +95,14 @@
           <span class="nav-link is-disabled" aria-disabled="true">Contact Us</span>
           <a class="nav-link" href="${logoutUrl}">
             <i class="bi bi-box-arrow-right me-1"></i>Log out
+          </a>
+          <a
+            class="sedco-top-search${activePage === 'global-search' ? ' active' : ''}"
+            href="${pageUrl('global-search')}"
+            aria-label="Search STS"
+            title="Search"
+          >
+            <i class="bi bi-search"></i>
           </a>
           <a
             class="sedco-top-notification${activePage === 'notifications' ? ' active' : ''}"
