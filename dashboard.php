@@ -641,7 +641,17 @@ $unreadNotifications = sts_unread_notifications($userId);
             <p><?= e($item['application_no']) ?> · Training ended <?= e(date('d M Y', strtotime((string) $item['training_end']))) ?></p>
           </div>
           <div class="dashboard-followup-footer">
-            <span><?= $late ? 'Overdue' : 'Due ' . e(date('d M Y', strtotime((string) $due))) ?></span>
+            <?php
+              $dueTimestamp = $due ? strtotime((string) $due) : false;
+              $todayStart = strtotime(date('Y-m-d 00:00:00'));
+              $daysToDue = $dueTimestamp ? (int) floor(($dueTimestamp - $todayStart) / 86400) : 0;
+              $deadlineLabel = $late
+                ? 'Overdue by ' . max(1, abs($daysToDue)) . ' day' . (abs($daysToDue) === 1 ? '' : 's')
+                : ($daysToDue <= 0
+                    ? 'Due today'
+                    : ($daysToDue === 1 ? 'Due tomorrow' : 'Due in ' . $daysToDue . ' days'));
+            ?>
+            <span title="<?= $due ? e(date('d M Y', strtotime((string) $due))) : '' ?>"><?= e($deadlineLabel) ?></span>
             <a href="<?= e($url) ?>">Complete <i class="bi bi-arrow-up-right"></i></a>
           </div>
         </article>
