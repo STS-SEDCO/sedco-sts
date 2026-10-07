@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Smart Training System: Notifications</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <link rel="stylesheet" href="sedco-saas.css?v=20261006-12">
+  <link rel="stylesheet" href="sedco-shell.css?v=20261007-02">
+</head>
+<body class="app-page notifications-page" data-page="notifications">
+<main class="sts-page-content">
+  <div class="sts-page-shell">
+    <header class="sts-page-heading">
+      <div>
+        <div class="sts-eyebrow">Inbox</div>
+        <h1>Notifications</h1>
+        <p>Approval updates, correction requests and training follow up reminders in one place.</p>
+      </div>
+      <button class="sts-secondary-btn" id="previewMarkAll" type="button" hidden>
+        <i class="bi bi-check2-all"></i> Mark all as read
+      </button>
+    </header>
+
+    <section class="notification-summary">
+      <div><span>Unread</span><strong id="previewUnread">0</strong></div>
+      <div><span>Total</span><strong id="previewTotal">0</strong></div>
+    </section>
+
+    <section class="notification-panel">
+      <div class="notification-list" id="previewNotificationList"></div>
+      <div class="sts-empty-state" id="previewNotificationEmpty">
+        <i class="bi bi-bell"></i>
+        <h3>No notifications yet</h3>
+        <p>Workflow updates will appear here automatically.</p>
+      </div>
+    </section>
+  </div>
+</main>
+
+<script>
+(() => {
+  const key = 'sedcoNotifications';
+  const list = document.getElementById('previewNotificationList');
+  const empty = document.getElementById('previewNotificationEmpty');
+  const unreadTarget = document.getElementById('previewUnread');
+  const totalTarget = document.getElementById('previewTotal');
+  const markAll = document.getElementById('previewMarkAll');
+
+  const read = () => {
+    try {
+      const value = JSON.parse(localStorage.getItem(key) || '[]');
+      return Array.isArray(value) ? value : [];
+    } catch {
+      return [];
+    }
+  };
+
+  const write = rows => localStorage.setItem(key, JSON.stringify(rows));
+
+  const escapeHtml = value => String(value ?? '')
+    .replaceAll('&','&amp;')
+    .replaceAll('<','&lt;')
+    .replaceAll('>','&gt;')
+    .replaceAll('"','&quot;')
+    .replaceAll("'",'&#039;');
+
+  const icon = type => ({
+    success:'bi-check2-circle',
+    warning:'bi-exclamation-triangle',
+    danger:'bi-x-octagon',
+    review:'bi-inbox'
+  })[String(type || '')] || 'bi-bell';
+
+  const render = () => {
+    const rows = read();
+    const unread = rows.filter(item => item && item.isRead !== true && item.is_read !== 1).length;
+
+    unreadTarget.textContent = String(unread);
+    totalTarget.textContent = String(rows.length);
+    markAll.hidden = unread === 0;
+    empty.hidden = rows.length > 0;
+    list.hidden = rows.length === 0;
+
+    list.innerHTML = rows.map((item,index) => {
+      const isUnread = item.isRead !== true && item.is_read !== 1;
+      const type = String(item.type || 'info');
+      const created = item.createdAt || item.created_at || new Date().toISOString();
+      const when = new Intl.DateTimeFormat('en-MY',{
+        day:'2-digit',month:'short',year:'numeric',hour:'numeric',minute:'2-digit'
+      }).format(new Date(created));
+
+      return `
+        <article class="notification-item${isUnread ? ' is-unread' : ''}">
+          <span class="notification-icon notification-${escapeHtml(type)}">
+            <i class="bi ${icon(type)}"></i>
+          </span>
+          <div class="notification-copy">
+            <div class="notification-title-row">
+              <strong>${escapeHtml(item.title || 'Notification')}</strong>
+              ${isUnread ? '<span class="notification-new">New</span>' : ''}
+            </div>
+            <p>${escapeHtml(item.message || '')}</p>
+            <time>${escapeHtml(when)}</time>
+          </div>
+          <div class="notification-actions">
+            <button type="button" class="notification-open-btn" data-preview-notification="${index}">
+              ${item.link ? 'Open <i class="bi bi-arrow-up-right"></i>' : 'Mark read'}
+            </button>
+          </div>
+        </article>
+      `;
+    }).join('');
+
+    list.querySelectorAll('[data-preview-notification]').forEach(button => {
+      button.addEventListener('click', () => {
+        const rows = read();
+        const index = Number(button.dataset.previewNotification);
+        if (!rows[index]) return;
+        rows[index].isRead = true;
+        const link = rows[index].link || '';
+        write(rows);
+        if (link) location.href = link.replace(/\.php([?#]|$)/i,'.html$1');
+        else render();
+      });
+    });
+  };
+
+  markAll.addEventListener('click', () => {
+    const rows = read().map(item => ({...item,isRead:true}));
+    write(rows);
+    render();
+  });
+
+  render();
+})();
+</script>
+<script src="sedco-shell.js?v=20261007-02"></script>
+</body>
+</html>
