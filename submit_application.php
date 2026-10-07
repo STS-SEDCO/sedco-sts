@@ -94,6 +94,38 @@ $requiredByType = [
 ];
 
 if ($type === 'BPL') {
+    $start = trim((string) ($payload['tarikh_mula'] ?? ''));
+    $end = trim((string) ($payload['tarikh_tamat'] ?? ''));
+    $feeRaw = trim((string) ($payload['yuran'] ?? ''));
+
+    $validDate = static function (string $value): bool {
+        if (!preg_match('/^\\d{4}-\\d{2}-\\d{2}$/', $value)) return false;
+        $date = DateTimeImmutable::createFromFormat('!Y-m-d', $value);
+        return $date !== false && $date->format('Y-m-d') === $value;
+    };
+
+    if (!$validDate($start) || !$validDate($end)) {
+        http_response_code(422);
+        exit('Please enter valid training start and end dates.');
+    }
+
+    if (strtotime($end) < strtotime($start)) {
+        http_response_code(422);
+        exit('Training end date cannot be earlier than the start date.');
+    }
+
+    $cleanFee = preg_replace('/[^0-9.]/', '', $feeRaw) ?? '';
+    if ($cleanFee === '' || !is_numeric($cleanFee)) {
+        http_response_code(422);
+        exit('Course fee must be a valid number.');
+    }
+
+    $fee = (float) $cleanFee;
+    if ($fee < 0 || $fee > 1000000) {
+        http_response_code(422);
+        exit('Course fee is outside the allowed range.');
+    }
+
     $vehicles = $payload['kenderaan'] ?? [];
     $vehicles = is_array($vehicles) ? array_map('strval', $vehicles) : [];
 
