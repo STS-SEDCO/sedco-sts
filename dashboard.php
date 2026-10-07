@@ -429,7 +429,7 @@ $unreadNotifications = sts_unread_notifications($userId);
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
   <link rel="stylesheet" href="sedco-saas.css?v=20261007-16">
-  <link rel="stylesheet" href="sedco-shell.css?v=20261007-06">
+  <link rel="stylesheet" href="sedco-shell.css?v=20261007-07">
 </head>
 <body class="app-page dashboard-page dashboard-v4" data-page="dashboard" data-role="<?= e($role) ?>">
 <main class="content">
@@ -592,14 +592,41 @@ $unreadNotifications = sts_unread_notifications($userId);
         <?php endif; ?>
       </section>
 
-      <aside class="dashboard-calendar-card-v4">
-        <div class="dashboard-card-heading-v4">
-          <div><span class="dashboard-card-kicker">Schedule</span><h2>Training calendar</h2><p>Approved training and company events.</p></div>
-          <a class="dashboard-calendar-open" href="training-calendar.php"><i class="bi bi-calendar3"></i> Open calendar</a>
+      <aside class="dashboard-calendar-card-v4 dashboard-calendar-reference">
+        <div class="dashboard-calendar-reference-head">
+          <div>
+            <span class="dashboard-card-kicker">Schedule</span>
+            <h2>Calendar</h2>
+            <p>Approved training and company events in one place.</p>
+          </div>
+          <a class="dashboard-calendar-open" href="training-calendar.php"><i class="bi bi-calendar3"></i> Open full calendar</a>
         </div>
-        <div class="calendar-header" id="calendar-header"></div>
-        <table class="calendar-table" id="calendar"></table>
-        <div id="selected-date" class="dashboard-calendar-detail"></div>
+
+        <div class="dashboard-calendar-reference-body">
+          <section class="dashboard-month-view">
+            <div class="dashboard-month-toolbar">
+              <div>
+                <span class="dashboard-calendar-overline">Month view</span>
+                <h3 id="calendar-month-label">Calendar</h3>
+                <p id="calendar-month-count">0 scheduled items this month</p>
+              </div>
+              <div class="calendar-header" id="calendar-header"></div>
+            </div>
+
+            <div class="dashboard-calendar-legend" aria-label="Calendar legend">
+              <span><i class="tone-training"></i>Training</span>
+              <span><i class="tone-company"></i>Company event</span>
+              <span><i class="tone-other"></i>Other event</span>
+            </div>
+
+            <div class="dashboard-calendar-weekdays" aria-hidden="true">
+              <span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span>
+            </div>
+            <div class="dashboard-calendar-grid" id="calendar"></div>
+          </section>
+
+          <aside id="selected-date" class="dashboard-selected-day" aria-live="polite"></aside>
+        </div>
       </aside>
     </div>
 
@@ -654,7 +681,7 @@ window.STS_CALENDAR_EVENTS = <?= json_encode(
     JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_HEX_TAG | JSON_HEX_AMP
 ) ?>;
 </script>
-<script src="dashboard.js?v=20261007-01"></script>
+<script src="dashboard.js?v=20261007-02"></script>
 <script src="sedco-shell.js?v=20261007-04"></script>
 </body>
 </html>
