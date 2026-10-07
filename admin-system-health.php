@@ -119,6 +119,47 @@ $checks = [
         'severity' => 'danger',
     ],
     [
+        'key' => 'invalid_training_dates',
+        'label' => 'Invalid training dates',
+        'description' => 'BPL records where the training end date is earlier than the start date.',
+        'count' => health_count(
+            $db,
+            'SELECT COUNT(*) AS total
+             FROM applications
+             WHERE form_type = "BPL"
+               AND training_start IS NOT NULL
+               AND training_end IS NOT NULL
+               AND training_end < training_start'
+        ),
+        'icon' => 'bi-calendar2-x',
+        'severity' => 'danger',
+    ],
+    [
+        'key' => 'schedule_conflicts',
+        'label' => 'Training schedule conflicts',
+        'description' => 'Active BPL pairs for the same employee whose training dates overlap.',
+        'count' => health_count(
+            $db,
+            'SELECT COUNT(*) AS total
+             FROM applications a
+             INNER JOIN applications b
+               ON b.user_id = a.user_id
+              AND b.id > a.id
+              AND b.form_type = "BPL"
+              AND b.status NOT IN ("rejected","cancelled")
+              AND b.training_start IS NOT NULL
+              AND b.training_end IS NOT NULL
+              AND b.training_start <= a.training_end
+              AND b.training_end >= a.training_start
+             WHERE a.form_type = "BPL"
+               AND a.status NOT IN ("rejected","cancelled")
+               AND a.training_start IS NOT NULL
+               AND a.training_end IS NOT NULL'
+        ),
+        'icon' => 'bi-calendar-week',
+        'severity' => 'warning',
+    ],
+    [
         'key' => 'overdue_approval',
         'label' => 'Overdue approvals',
         'description' => 'Pending BPL records that have passed their reviewer SLA.',
@@ -227,7 +268,7 @@ $overallTitle = $critical > 0
   <title>Smart Training System: System Health</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-  <link rel="stylesheet" href="sedco-saas.css?v=20261007-06">
+  <link rel="stylesheet" href="sedco-saas.css?v=20261007-16">
   <link rel="stylesheet" href="sedco-shell.css?v=20261007-02">
 </head>
 <body class="app-page admin-page system-health-page" data-page="admin-settings" data-role="admin">
@@ -296,7 +337,8 @@ $overallTitle = $critical > 0
         <div><strong>1. Routing</strong><p>Assign a HOD to every active department in System Settings.</p></div>
         <div><strong>2. Approval SLA</strong><p>Use Approval to clear overdue items. Overdue records remain visible until reviewed.</p></div>
         <div><strong>3. PKK compliance</strong><p>Staff with incomplete PKK are automatically blocked from submitting a new BPL.</p></div>
-        <div><strong>4. Data integrity</strong><p>Orphan PKK/TEA records should be reviewed before removing any data manually.</p></div>
+        <div><strong>4. Data integrity</strong><p>Review invalid dates and orphan PKK/TEA records before changing any data manually.</p></div>
+        <div><strong>5. Schedule conflicts</strong><p>Check overlapping training records to avoid duplicate or conflicting BPL schedules.</p></div>
       </div>
     </section>
   </div>
