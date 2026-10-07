@@ -15,6 +15,7 @@ $application = null;
 $payload = [];
 $currentStage = '';
 $applicationStatus = 'pending';
+$isOwner = false;
 $applicationNo = trim((string) ($_GET['application'] ?? ''));
 
 if ($applicationNo === '') {
@@ -112,7 +113,7 @@ $canReviewCurrentStage = $mode === 'review'
             window.print();
         }
     </script>
-    <link rel="stylesheet" href="sedco-saas.css?v=20261007-13">
+    <link rel="stylesheet" href="sedco-saas.css?v=20261007-14">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
   <link rel="stylesheet" href="sedco-shell.css?v=20261007-03">
 </head>
@@ -592,10 +593,11 @@ window.SEDCO_FORM_CONTEXT = {
   mode: <?= json_encode($mode) ?>,
   formType: 'BPL',
   currentStage: <?= json_encode($currentStage) ?>,
-  status: <?= json_encode($applicationStatus) ?>
+  status: <?= json_encode($applicationStatus) ?>,
+  isOwner: <?= json_encode($mode === 'new' ? true : $isOwner) ?>
 };
 </script>
-<script src="bpl-workflow.js?v=20261007-05"></script>
+<script src="bpl-workflow.js?v=20261007-06"></script>
 <script src="form-permissions.js?v=20261003-06"></script>
 <script src="digital-signature.js?v=20261006-03"></script>
 <script src="form-ux.js?v=20261006-06"></script>
