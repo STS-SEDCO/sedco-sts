@@ -24,6 +24,7 @@ if (!user_can_review_applications($user)) {
 }
 
 sts_repair_pending_bpl_stages();
+sts_ensure_sla_escalations();
 
 $stmt = db()->prepare(
     'SELECT a.id, a.application_no, a.user_id, a.form_type, a.title, a.payload, a.status,
