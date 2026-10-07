@@ -412,6 +412,6 @@ $generatedAt = new DateTimeImmutable('now',new DateTimeZone('Asia/Kuala_Lumpur')
     </article>
   </div>
 </main>
-<script src="sedco-shell.js?v=20261007-03"></script>
+<script src="sedco-shell.js?v=20261007-04"></script>
 </body>
 </html>
