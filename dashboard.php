@@ -12,6 +12,7 @@ if (!$user) {
 }
 
 sts_ensure_followup_notifications($user);
+sts_ensure_sla_escalations();
 
 $db = db();
 $userId = (int) $user['id'];
