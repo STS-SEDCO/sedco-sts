@@ -5341,3 +5341,147 @@ body.app-page > .sedco-navbar .sedco-top-notification-badge{
     }
   }
 }
+
+/* ===== DASHBOARD ABOVE THE FOLD COMPACT V6 2026-10-08 ===== */
+/* Desktop dashboard only: fit welcome, actions and KPIs without oversized blank space. */
+@media screen and (min-width:901px) {
+  body.dashboard-page.dashboard-v4 .dashboard-hero-v4{
+    min-height:174px !important;
+    gap:15px !important;
+    margin-bottom:12px !important;
+    padding:18px 24px !important;
+    border-radius:19px !important;
+  }
+
+  body.dashboard-page.dashboard-v4 .dashboard-role-chip{
+    min-height:23px !important;
+    margin-bottom:8px !important;
+    padding:0 9px !important;
+    font-size:9px !important;
+  }
+
+  body.dashboard-page.dashboard-v4 .dashboard-hero-v4 h1{
+    max-width:850px !important;
+    font-size:clamp(25px,2.25vw,32px) !important;
+    line-height:1.14 !important;
+    letter-spacing:-.035em !important;
+  }
+
+  body.dashboard-page.dashboard-v4 .dashboard-hero-v4 p{
+    max-width:720px !important;
+    margin-top:6px !important;
+    font-size:11.5px !important;
+    line-height:1.45 !important;
+  }
+
+  body.dashboard-page.dashboard-v4 .dashboard-hero-actions{
+    gap:7px !important;
+    margin-top:13px !important;
+  }
+
+  body.dashboard-page.dashboard-v4 .dashboard-primary-action,
+  body.dashboard-page.dashboard-v4 .dashboard-secondary-action,
+  body.dashboard-page.dashboard-v4 .dashboard-alert-chip{
+    min-height:35px !important;
+    padding:0 12px !important;
+    border-radius:9px !important;
+    font-size:10.5px !important;
+  }
+
+  body.dashboard-page.dashboard-v4 .dashboard-hero-visual{
+    width:190px !important;
+    height:114px !important;
+    flex:0 0 190px !important;
+  }
+
+  body.dashboard-page.dashboard-v4 .dashboard-hero-icon{
+    width:60px !important;
+    height:60px !important;
+    border-radius:17px !important;
+    font-size:24px !important;
+  }
+
+  body.dashboard-page.dashboard-v4 .dashboard-floating-chip{
+    padding:6px 9px !important;
+    font-size:10px !important;
+  }
+
+  body.dashboard-page.dashboard-v4 .dashboard-action-center{
+    margin-bottom:12px !important;
+    padding:14px 17px !important;
+    border-radius:16px !important;
+  }
+
+  body.dashboard-page.dashboard-v4 .dashboard-action-heading{
+    gap:10px !important;
+    margin-bottom:9px !important;
+    padding-bottom:9px !important;
+  }
+
+  body.dashboard-page.dashboard-v4 .dashboard-action-heading h2{
+    margin:2px 0 3px !important;
+    font-size:15px !important;
+    line-height:1.2 !important;
+  }
+
+  body.dashboard-page.dashboard-v4 .dashboard-action-heading p{
+    font-size:10.5px !important;
+    line-height:1.4 !important;
+  }
+
+  body.dashboard-page.dashboard-v4 .dashboard-action-count{
+    min-height:26px !important;
+    padding:0 10px !important;
+    font-size:9px !important;
+  }
+
+  body.dashboard-page.dashboard-v4 .dashboard-action-empty{
+    min-height:51px !important;
+    gap:10px !important;
+    padding:8px 12px !important;
+    border-radius:11px !important;
+  }
+
+  body.dashboard-page.dashboard-v4 .dashboard-action-empty>span{
+    width:31px !important;
+    height:31px !important;
+    flex:0 0 31px !important;
+    font-size:14px !important;
+  }
+
+  body.dashboard-page.dashboard-v4 .dashboard-action-empty strong{
+    font-size:11px !important;
+  }
+
+  body.dashboard-page.dashboard-v4 .dashboard-action-empty p{
+    margin:2px 0 0 !important;
+    font-size:10px !important;
+  }
+
+  body.dashboard-page.dashboard-v4 .dashboard-action-item{
+    min-height:57px !important;
+    padding:9px 10px !important;
+  }
+
+  body.dashboard-page.dashboard-v4 .dashboard-action-icon{
+    width:35px !important;
+    height:35px !important;
+  }
+
+  body.dashboard-page.dashboard-v4 .dashboard-stats-v4{
+    gap:11px !important;
+    margin-bottom:12px !important;
+  }
+
+  body.dashboard-page.dashboard-v4 .dashboard-stat-v4{
+    min-height:99px !important;
+    padding:14px !important;
+  }
+}
+
+/* Keep full hero detail legible when desktop is narrow. */
+@media screen and (min-width:901px) and (max-width:1120px) {
+  body.dashboard-page.dashboard-v4 .dashboard-hero-visual{
+    display:none !important;
+  }
+}
