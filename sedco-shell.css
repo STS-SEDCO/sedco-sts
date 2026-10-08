@@ -5485,3 +5485,109 @@ body.app-page > .sedco-navbar .sedco-top-notification-badge{
     display:none !important;
   }
 }
+
+/* ===== DASHBOARD COMPACT HERO AND ACTION 2026-10-08 ===== */
+@media screen and (min-width:761px){
+  body.dashboard-page .dashboard-hero-v4{
+    min-height:0 !important;
+    padding:22px 26px !important;
+    margin-bottom:13px !important;
+    border-radius:19px !important;
+  }
+  body.dashboard-page .dashboard-hero-v4 h1{
+    font-size:clamp(26px,2.05vw,34px) !important;
+    line-height:1.12 !important;
+    margin-top:11px !important;
+  }
+  body.dashboard-page .dashboard-hero-v4 p{
+    font-size:12px !important;
+    margin-top:7px !important;
+    line-height:1.45 !important;
+  }
+  body.dashboard-page .dashboard-role-chip{
+    min-height:24px !important;
+    font-size:9px !important;
+  }
+  body.dashboard-page .dashboard-hero-actions{
+    margin-top:14px !important;
+    gap:8px !important;
+  }
+  body.dashboard-page .dashboard-primary-action,
+  body.dashboard-page .dashboard-secondary-action,
+  body.dashboard-page .dashboard-alert-chip{
+    min-height:36px !important;
+    padding:0 13px !important;
+    font-size:10.5px !important;
+  }
+  body.dashboard-page .dashboard-hero-visual{
+    width:210px !important;
+    height:135px !important;
+    flex-basis:210px !important;
+    transform:scale(.87);
+    transform-origin:center right;
+  }
+  body.dashboard-page .dashboard-hero-icon{
+    width:68px !important;
+    height:68px !important;
+  }
+  body.dashboard-page .dashboard-action-center{
+    padding:15px 18px !important;
+    margin-bottom:13px !important;
+    border-radius:17px !important;
+  }
+  body.dashboard-page .dashboard-action-heading{
+    padding-bottom:10px !important;
+    margin-bottom:10px !important;
+  }
+  body.dashboard-page .dashboard-action-heading h2{
+    font-size:15.5px !important;
+  }
+  body.dashboard-page .dashboard-action-heading p{
+    font-size:10.5px !important;
+  }
+  body.dashboard-page .dashboard-action-empty{
+    min-height:58px !important;
+    padding:9px 12px !important;
+  }
+  body.dashboard-page .dashboard-action-empty>span{
+    width:34px !important;
+    height:34px !important;
+    flex:0 0 34px !important;
+    font-size:15px !important;
+  }
+  body.dashboard-page .dashboard-action-empty strong{
+    font-size:11px !important;
+  }
+  body.dashboard-page .dashboard-action-empty p{
+    font-size:10px !important;
+    margin:2px 0 0 !important;
+  }
+  body.dashboard-page .dashboard-action-item{
+    min-height:58px !important;
+  }
+}
+@media screen and (max-width:760px){
+  body.dashboard-page .dashboard-hero-v4{
+    padding:18px !important;
+    margin-bottom:12px !important;
+  }
+  body.dashboard-page .dashboard-hero-v4 h1{
+    font-size:26px !important;
+    margin-top:9px !important;
+  }
+  body.dashboard-page .dashboard-hero-v4 p{
+    font-size:11.5px !important;
+    margin-top:7px !important;
+  }
+  body.dashboard-page .dashboard-hero-actions{
+    margin-top:13px !important;
+  }
+  body.dashboard-page .dashboard-action-center{
+    padding:13px !important;
+    margin-bottom:12px !important;
+  }
+  body.dashboard-page .dashboard-action-empty{
+    min-height:60px !important;
+    padding:10px !important;
+  }
+}
