@@ -53,8 +53,8 @@
             </label>
             <label class="tea-system-field">
               <span><i class="bi bi-building-check"></i> Division / Section <b>*</b></span>
-              <input type="text" name="division" id="teaSelectedDivision" class="form-control tea-auto-field" required readonly placeholder="Auto-filled from BPL / PKK">
-              <small class="tea-source-hint"><i class="bi bi-link-45deg"></i> Auto-filled from the selected employee's BPL / PKK record.</small>
+              <input type="text" name="division" id="teaSelectedDivision" class="form-control tea-auto-field" required readonly placeholder="Filled automatically from BPL / PKK">
+              <small class="tea-source-hint"><i class="bi bi-link-45deg"></i> Filled automatically from the selected employee's BPL / PKK record.</small>
             </label>
           </div>
           <div class="tea-selected-training-meta" data-selected-training-meta hidden>
@@ -75,7 +75,7 @@
       <section class="tea-system-card">
         <div class="tea-system-section-heading">
           <span class="tea-system-section-number">02</span>
-          <div><strong>Rating Scale</strong><small>Reference only — enter a score from 1 to 4 in each assessment field</small></div>
+          <div><strong>Rating Scale</strong><small>Reference only • enter a score from 1 to 4 in each assessment field</small></div>
         </div>
         <div class="tea-system-card-body">
           <div class="tea-system-rating-grid" role="list" aria-label="Rating scale reference">
@@ -98,7 +98,7 @@
             <div class="tea-assessment-selected-icon"><i class="bi bi-person-check"></i></div>
             <div>
               <span>Employee selected</span>
-              <strong data-assessment-employee>—</strong>
+              <strong data-assessment-employee>Not selected</strong>
               <small data-assessment-course-count>0 courses ready for evaluation</small>
             </div>
           </div>
@@ -143,10 +143,10 @@
         </div>
         <div class="tea-system-card-body">
           <div class="tea-system-ranking-grid">
-            <article class="rank-fail"><span class="tea-system-rank-icon"><i class="bi bi-exclamation-circle"></i></span><span class="tea-system-rank-score">0–7</span><div><strong>Fail</strong><p>The employee has not shown progress. Re-training shall be provided on the particular topic.</p></div></article>
-            <article class="rank-probation"><span class="tea-system-rank-icon"><i class="bi bi-hourglass-split"></i></span><span class="tea-system-rank-score">8–12</span><div><strong>Probation</strong><p>Requires supervision for another 6 months and reassessment for the particular subject.</p></div></article>
-            <article class="rank-pass"><span class="tea-system-rank-icon"><i class="bi bi-check2-circle"></i></span><span class="tea-system-rank-score">13–17</span><div><strong>Pass</strong><p>Employee is able to execute the job with minimum supervision.</p></div></article>
-            <article class="rank-merit"><span class="tea-system-rank-icon"><i class="bi bi-stars"></i></span><span class="tea-system-rank-score">18–20</span><div><strong>Merit</strong><p>Employee can conduct training or guide others using the knowledge learnt.</p></div></article>
+            <article class="rank-fail"><span class="tea-system-rank-icon"><i class="bi bi-exclamation-circle"></i></span><span class="tea-system-rank-score">0 to 7</span><div><strong>Fail</strong><p>The employee has not shown progress. Additional training shall be provided on the particular topic.</p></div></article>
+            <article class="rank-probation"><span class="tea-system-rank-icon"><i class="bi bi-hourglass-split"></i></span><span class="tea-system-rank-score">8 to 12</span><div><strong>Probation</strong><p>Requires supervision for another 6 months and reassessment for the particular subject.</p></div></article>
+            <article class="rank-pass"><span class="tea-system-rank-icon"><i class="bi bi-check2-circle"></i></span><span class="tea-system-rank-score">13 to 17</span><div><strong>Pass</strong><p>Employee is able to execute the job with minimum supervision.</p></div></article>
+            <article class="rank-merit"><span class="tea-system-rank-icon"><i class="bi bi-stars"></i></span><span class="tea-system-rank-score">18 to 20</span><div><strong>Merit</strong><p>Employee can conduct training or guide others using the knowledge learnt.</p></div></article>
           </div>
         </div>
       </section>
@@ -159,18 +159,18 @@
         <div class="tea-system-card-body">
           <div class="tea-system-confirmation-note">
             <i class="bi bi-shield-check"></i>
-            <div><strong>Evaluated by</strong><span data-evaluator-note-name>—</span></div>
+            <div><strong>Evaluated by</strong><span data-evaluator-note-name>Not selected</span></div>
           </div>
           <div class="tea-system-confirmation-grid">
             <label class="tea-system-field">
               <span><i class="bi bi-person-check"></i> Evaluator Name <b>*</b></span>
               <input type="text" name="evaluated_by" class="form-control tea-auto-field" required readonly value="">
-              <small class="tea-source-hint"><i class="bi bi-person-vcard"></i> Auto-filled from Profile.</small>
+              <small class="tea-source-hint"><i class="bi bi-person-vcard"></i> Filled automatically from Profile.</small>
             </label>
             <label class="tea-system-field">
               <span><i class="bi bi-building-check"></i> Head of Division / Section <b>*</b></span>
               <input type="text" name="head_division" class="form-control tea-auto-field" required readonly value="">
-              <small class="tea-source-hint"><i class="bi bi-person-vcard"></i> Auto-filled from Profile.</small>
+              <small class="tea-source-hint"><i class="bi bi-person-vcard"></i> Filled automatically from Profile.</small>
             </label>
             <label class="tea-system-field tea-system-date-field">
               <span><i class="bi bi-calendar-check"></i> Submission Date <b>*</b></span>
@@ -253,9 +253,9 @@
     <table>
       <thead><tr><th>Ranking</th><th>Remarks</th></tr></thead>
       <tbody>
-        <tr><td>Fail</td><td>Scored 0 - 7 points. The employee has not shown any progress in his work. Re-training shall be provided on the particular topic.</td></tr>
-        <tr><td>Probation</td><td>Scored 8 - 12 points. Still requires to be supervised by their immediate supervisor for another 6 month. Re-assessment required for the particular subject.</td></tr>
-        <tr><td>Pass</td><td>Scored 13 - 17 points. Employee able to execute the job with minimum supervision.</td></tr>
+        <tr><td>Fail</td><td>Scored 0 to 7 points. The employee has not shown any progress in his work. Additional training shall be provided on the particular topic.</td></tr>
+        <tr><td>Probation</td><td>Scored 8 to 12 points. Still requires to be supervised by their immediate supervisor for another 6 month. Reassessment required for the particular subject.</td></tr>
+        <tr><td>Pass</td><td>Scored 13 to 17 points. Employee able to execute the job with minimum supervision.</td></tr>
         <tr><td>Merit</td><td>Scored 18 points. Employee to conduct training/guide other employees on the knowledge learnt on particular topic.</td></tr>
       </tbody>
     </table>
@@ -318,7 +318,7 @@
   const head = document.querySelector('input[name="head_division"]');
   const division = document.querySelector('select[name="division"]');
   if (evaluator) evaluator.value = user.fullname || '';
-  if (evaluatorNote) evaluatorNote.textContent = user.fullname || '—';
+  if (evaluatorNote) evaluatorNote.textContent = user.fullname || 'Not selected';
   if (head) head.value = user.department || '';
   if (division && user.department && [...division.options].some(option => option.value === user.department)) {
     division.value = user.department;
@@ -444,7 +444,7 @@
       const option = document.createElement('option');
       option.value = group.employee_name;
       option.dataset.userId = String(group.user_id);
-      option.textContent = group.employee_name + ' — ' + group.division + ' (' + group.courses.length + ' course' + (group.courses.length === 1 ? '' : 's') + ')';
+      option.textContent = group.employee_name + ' • ' + group.division + ' (' + group.courses.length + ' course' + (group.courses.length === 1 ? '' : 's') + ')';
       picker.appendChild(option);
     });
 
@@ -540,7 +540,7 @@
 
     const standardScoreCells = Array.from({ length: 5 }, (_, criterionIndex) =>
       '<td><select name="score_'+rowIndex+'[]" class="tea-score tea-score-standard" required aria-label="Criteria score '+(criterionIndex+1)+'">'+
-        '<option value="">—</option>'+
+        '<option value="">…</option>'+
         '<option value="1">1</option>'+
         '<option value="2">2</option>'+
         '<option value="3">3</option>'+
@@ -604,7 +604,7 @@
       if (meta) meta.hidden = true;
       if (courseCountOutput) courseCountOutput.textContent = '0';
       if (assessmentSelected) assessmentSelected.hidden = true;
-      if (assessmentEmployee) assessmentEmployee.textContent = '—';
+      if (assessmentEmployee) assessmentEmployee.textContent = 'Not selected';
       if (assessmentCourseCount) assessmentCourseCount.textContent = '0 courses ready for evaluation';
       return;
     }
@@ -618,7 +618,7 @@
     if (meta) meta.hidden = false;
     if (courseCountOutput) courseCountOutput.textContent = String(courses.length);
     if (assessmentSelected) assessmentSelected.hidden = false;
-    if (assessmentEmployee) assessmentEmployee.textContent = String(group?.employee_name || '—');
+    if (assessmentEmployee) assessmentEmployee.textContent = String(group?.employee_name || 'Not selected');
     if (assessmentCourseCount) assessmentCourseCount.textContent = String(courses.length) + ' course' + (courses.length === 1 ? '' : 's') + ' ready for evaluation';
   };
 

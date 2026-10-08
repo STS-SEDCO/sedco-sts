@@ -306,7 +306,7 @@ $generatedAt = new DateTimeImmutable('now',new DateTimeZone('Asia/Kuala_Lumpur')
         <article><span>BPL submitted</span><strong><?= $totalBpl ?></strong><small><?= e($periodLabel) ?></small></article>
         <article><span>Approval rate</span><strong><?= e((string) $approvalRate) ?>%</strong><small><?= (int) ($statusCounts['approved'] ?? 0) ?> approved</small></article>
         <article><span>Estimated fees</span><strong>RM <?= e(number_format($totalFees,2)) ?></strong><small>Submitted BPL value</small></article>
-        <article><span>Avg. processing</span><strong><?= $avgProcessing === null ? '—' : e((string) $avgProcessing) . ' d' ?></strong><small>Completed records</small></article>
+        <article><span>Avg. processing</span><strong><?= $avgProcessing === null ? 'No data' : e((string) $avgProcessing) . ' d' ?></strong><small>Completed records</small></article>
         <article class="<?= $pkkEligible > 0 && $pkkCompliance < 80 ? 'is-warning' : '' ?>"><span>PKK compliance</span><strong><?= e((string) $pkkCompliance) ?>%</strong><small><?= $pkkOnTime ?>/<?= $pkkEligible ?> within 7 days</small></article>
         <article class="<?= $overdueApprovals > 0 ? 'is-danger' : '' ?>"><span>Overdue approval</span><strong><?= $overdueApprovals ?></strong><small>Current SLA backlog</small></article>
       </section>
@@ -328,7 +328,7 @@ $generatedAt = new DateTimeImmutable('now',new DateTimeZone('Asia/Kuala_Lumpur')
         </section>
 
         <section class="monthly-report-section">
-          <div class="monthly-report-section-heading"><span>02</span><div><strong>Post-training follow up</strong><small>Forms submitted during <?= e($periodLabel) ?></small></div></div>
+          <div class="monthly-report-section-heading"><span>02</span><div><strong>Training follow up</strong><small>Forms submitted during <?= e($periodLabel) ?></small></div></div>
           <div class="monthly-report-followups">
             <div><span><i class="bi bi-clipboard2-check"></i></span><strong><?= $pkkSubmitted ?></strong><small>PKK submitted</small></div>
             <div><span><i class="bi bi-graph-up"></i></span><strong><?= $teaSubmitted ?></strong><small>TEA submitted</small></div>
@@ -385,13 +385,13 @@ $generatedAt = new DateTimeImmutable('now',new DateTimeZone('Asia/Kuala_Lumpur')
                 $fee = $feeText !== '' && is_numeric($feeText) ? (float) $feeText : 0.0;
                 $trainingDate = !empty($row['training_start'])
                   ? date('d M Y',strtotime((string) $row['training_start']))
-                  : '—';
+                  : 'Not recorded';
               ?>
               <tr>
                 <td><?= $index+1 ?></td>
                 <td><?= e((string) $row['application_no']) ?></td>
                 <td><?= e((string) $row['fullname']) ?></td>
-                <td><?= e((string) ($row['department'] ?: '—')) ?></td>
+                <td><?= e((string) ($row['department'] ?: 'Not specified')) ?></td>
                 <td><?= e($title) ?></td>
                 <td><?= e($trainingDate) ?></td>
                 <td>RM <?= e(number_format($fee,2)) ?></td>

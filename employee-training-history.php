@@ -391,7 +391,7 @@ if ($employee && training_history_can_view($viewer, $employee)) {
         <?php foreach ($records as $record): ?>
         <article class="employee-course-card tone-<?= e($record['tone']) ?>">
           <div class="employee-course-date">
-            <strong><?= $record['start'] ? e(date('d',strtotime($record['start']))) : '—' ?></strong>
+            <strong><?= $record['start'] ? e(date('d',strtotime($record['start']))) : 'N/A' ?></strong>
             <span><?= $record['start'] ? e(date('M Y',strtotime($record['start']))) : 'No date' ?></span>
           </div>
           <div class="employee-course-copy">

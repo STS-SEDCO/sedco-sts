@@ -460,7 +460,7 @@ if ($type === 'BPL') {
 $title = match ($type) {
     'BPL' => trim((string) ($payload['tajuk'] ?? $payload['kursus'] ?? 'Permohonan Latihan')),
     'PKK' => trim((string) ($payload['tajuk'] ?? 'Penilaian Keberkesanan Kursus')),
-    'TEA' => trim('Training Effectiveness Assessment - ' . (string) ($payload['employee_name'] ?? '')),
+    'TEA' => trim('Training Effectiveness Assessment: ' . (string) ($payload['employee_name'] ?? '')),
 };
 
 if ($title === '') {

@@ -332,7 +332,7 @@
         box.hidden = true;
         box.innerHTML = `
           <label>
-            <span>Nyatakan lain-lain <b>*</b></span>
+            <span>Nyatakan pilihan lain <b>*</b></span>
             <input type="text" name="${otherName}" maxlength="120" placeholder="Taip jawapan di sini..." disabled>
           </label>
         `;
@@ -427,7 +427,7 @@
           syncChoices(selectedRating);
         }
 
-        updateHelper('Score box selected. Choose 1–4 above to apply the rating.');
+        updateHelper('Score box selected. Choose a rating from 1 to 4 above.');
       });
 
       input.addEventListener('click', () => {
@@ -894,7 +894,7 @@
           const other = String(fieldByName('kenderaan_other')?.value || '').trim();
           if (other) {
             const index = values.indexOf('Lain-lain');
-            values[index] = 'Lain-lain: ' + other;
+            values[index] = 'Pilihan lain: ' + other;
           }
         }
 

@@ -312,7 +312,7 @@ $canReviewCurrentStage = $mode === 'review'
                         <label><input type="checkbox" name="kenderaan[]" value="Kapal Terbang"> Kapal Terbang</label>
                         <label><input type="checkbox" name="kenderaan[]" value="Kenderaan Pejabat"> Kenderaan Pejabat</label>
                         <label><input type="checkbox" name="kenderaan[]" value="Kenderaan Sendiri"> Kenderaan sendiri</label>
-                        <label><input type="checkbox" name="kenderaan[]" value="Lain-lain" data-other-trigger="kenderaan_other"> Lain-lain</label>
+                        <label><input type="checkbox" name="kenderaan[]" value="Lain-lain" data-other-trigger="kenderaan_other"> Pilihan lain</label>
 
                         <div class="sts-other-field sts-other-inline" data-other-field="kenderaan_other" hidden>
                             <label for="kenderaan_other">
@@ -600,7 +600,7 @@ window.SEDCO_FORM_CONTEXT = {
 <script src="bpl-workflow.js?v=20261007-07"></script>
 <script src="form-permissions.js?v=20261003-06"></script>
 <script src="digital-signature.js?v=20261006-03"></script>
-<script src="form-ux.js?v=20261006-06"></script>
+<script src="form-ux.js?v=20261008-07"></script>
 <script src="form-enhancements.js?v=20260930-59"></script>
 <script src="sedco-shell.js?v=20261007-06"></script>
 </body>

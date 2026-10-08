@@ -106,7 +106,7 @@ $checks = [
     [
         'key' => 'orphan',
         'label' => 'Orphan PKK / TEA records',
-        'description' => 'Follow-up forms whose linked BPL no longer exists or was not recorded.',
+        'description' => 'Linked PKK and TEA forms whose BPL record is missing.',
         'count' => health_count(
             $db,
             'SELECT COUNT(*) AS total
@@ -278,7 +278,7 @@ $overallTitle = $critical > 0
       <div>
         <div class="sts-eyebrow">Administration</div>
         <h1>System Health</h1>
-        <p>Quickly detect workflow, routing, PKK follow-up and data integrity issues.</p>
+        <p>Quickly detect workflow, routing, PKK follow up and data integrity issues.</p>
       </div>
       <div class="sts-heading-actions">
         <a class="sts-secondary-btn" href="admin-settings.php">
@@ -305,7 +305,7 @@ $overallTitle = $critical > 0
       <div>
         <small>Current status</small>
         <strong><?= e($overallTitle) ?></strong>
-        <p>Safe repair never deletes applications. It only repairs pending workflow stages, fills missing HOD routing when a department mapping exists, and restores missing 7-day PKK due dates.</p>
+        <p>Safe repair never deletes applications. It only repairs pending workflow stages, fills missing HOD routing when a department mapping exists, and restores missing PKK deadlines within seven days.</p>
       </div>
       <em><?= date('d M Y, g:i A') ?></em>
     </section>
@@ -320,7 +320,7 @@ $overallTitle = $critical > 0
         <span class="health-card-icon"><i class="bi <?= e($check['icon']) ?>"></i></span>
         <div>
           <span><?= e($check['label']) ?></span>
-          <strong><?= $count < 0 ? '—' : $count ?></strong>
+          <strong><?= $count < 0 ? 'Not checked' : $count ?></strong>
           <p><?= e($check['description']) ?></p>
         </div>
         <em><?= $count < 0 ? 'Check unavailable' : ($count === 0 ? 'Good' : 'Review') ?></em>

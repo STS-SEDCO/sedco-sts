@@ -216,7 +216,7 @@ $submissionDatePreview = (new DateTimeImmutable(
                   value="<?= e((string) $employeeGroup['employee_name']) ?>"
                   data-user-id="<?= (int) $employeeId ?>"
                   <?= $selectedEmployeeId === (int) $employeeId ? 'selected' : '' ?>
-                ><?= e((string) $employeeGroup['employee_name']) ?> — <?= e((string) $employeeGroup['division']) ?> (<?= count($employeeGroup['courses']) ?> course<?= count($employeeGroup['courses']) === 1 ? '' : 's' ?>)</option>
+                ><?= e((string) $employeeGroup['employee_name']) ?> • <?= e((string) $employeeGroup['division']) ?> (<?= count($employeeGroup['courses']) ?> course<?= count($employeeGroup['courses']) === 1 ? '' : 's' ?>)</option>
                 <?php endforeach; ?>
                 <?php if (!$eligibleByEmployee): ?>
                 <option value="" disabled>No employee pending TEA in your department</option>
@@ -237,9 +237,9 @@ $submissionDatePreview = (new DateTimeImmutable(
                 required
                 readonly
                 value="<?= e((string) ($selectedEmployeeId > 0 ? ($eligibleByEmployee[$selectedEmployeeId]['division'] ?? '') : '')) ?>"
-                placeholder="Auto-filled from BPL / PKK"
+                placeholder="Filled automatically from BPL / PKK"
               >
-              <small class="tea-source-hint"><i class="bi bi-link-45deg"></i> Auto-filled from the selected employee's department and training records.</small>
+              <small class="tea-source-hint"><i class="bi bi-link-45deg"></i> Filled automatically from the selected employee's department and training records.</small>
             </label>
           </div>
           <div class="tea-selected-training-meta" data-selected-training-meta <?= $selectedEmployeeId > 0 ? '' : 'hidden' ?>>
@@ -267,7 +267,7 @@ $submissionDatePreview = (new DateTimeImmutable(
       <section class="tea-system-card">
         <div class="tea-system-section-heading">
           <span class="tea-system-section-number">02</span>
-          <div><strong>Rating Scale</strong><small>Reference only — enter a score from 1 to 4 in each assessment field</small></div>
+          <div><strong>Rating Scale</strong><small>Reference only • enter a score from 1 to 4 in each assessment field</small></div>
         </div>
         <div class="tea-system-card-body">
           <div class="tea-system-rating-grid" role="list" aria-label="Rating scale reference">
@@ -290,7 +290,7 @@ $submissionDatePreview = (new DateTimeImmutable(
             <div class="tea-assessment-selected-icon"><i class="bi bi-person-check"></i></div>
             <div>
               <span>Employee selected</span>
-              <strong data-assessment-employee>—</strong>
+              <strong data-assessment-employee>Not selected</strong>
               <small data-assessment-course-count>0 courses ready for evaluation</small>
             </div>
           </div>
@@ -335,10 +335,10 @@ $submissionDatePreview = (new DateTimeImmutable(
         </div>
         <div class="tea-system-card-body">
           <div class="tea-system-ranking-grid">
-            <article class="rank-fail"><span class="tea-system-rank-icon"><i class="bi bi-exclamation-circle"></i></span><span class="tea-system-rank-score">0–7</span><div><strong>Fail</strong><p>The employee has not shown progress. Re-training shall be provided on the particular topic.</p></div></article>
-            <article class="rank-probation"><span class="tea-system-rank-icon"><i class="bi bi-hourglass-split"></i></span><span class="tea-system-rank-score">8–12</span><div><strong>Probation</strong><p>Requires supervision for another 6 months and reassessment for the particular subject.</p></div></article>
-            <article class="rank-pass"><span class="tea-system-rank-icon"><i class="bi bi-check2-circle"></i></span><span class="tea-system-rank-score">13–17</span><div><strong>Pass</strong><p>Employee is able to execute the job with minimum supervision.</p></div></article>
-            <article class="rank-merit"><span class="tea-system-rank-icon"><i class="bi bi-stars"></i></span><span class="tea-system-rank-score">18–20</span><div><strong>Merit</strong><p>Employee can conduct training or guide others using the knowledge learnt.</p></div></article>
+            <article class="rank-fail"><span class="tea-system-rank-icon"><i class="bi bi-exclamation-circle"></i></span><span class="tea-system-rank-score">0 to 7</span><div><strong>Fail</strong><p>The employee has not shown progress. Additional training shall be provided on the particular topic.</p></div></article>
+            <article class="rank-probation"><span class="tea-system-rank-icon"><i class="bi bi-hourglass-split"></i></span><span class="tea-system-rank-score">8 to 12</span><div><strong>Probation</strong><p>Requires supervision for another 6 months and reassessment for the particular subject.</p></div></article>
+            <article class="rank-pass"><span class="tea-system-rank-icon"><i class="bi bi-check2-circle"></i></span><span class="tea-system-rank-score">13 to 17</span><div><strong>Pass</strong><p>Employee is able to execute the job with minimum supervision.</p></div></article>
+            <article class="rank-merit"><span class="tea-system-rank-icon"><i class="bi bi-stars"></i></span><span class="tea-system-rank-score">18 to 20</span><div><strong>Merit</strong><p>Employee can conduct training or guide others using the knowledge learnt.</p></div></article>
           </div>
         </div>
       </section>
@@ -360,12 +360,12 @@ $submissionDatePreview = (new DateTimeImmutable(
             <label class="tea-system-field">
               <span><i class="bi bi-person-check"></i> Evaluator Name <b>*</b></span>
               <input type="text" name="evaluated_by" class="form-control tea-auto-field" required readonly value="<?= e((string) ($user['fullname'] ?? '')) ?>">
-              <small class="tea-source-hint"><i class="bi bi-person-vcard"></i> Auto-filled from Profile.</small>
+              <small class="tea-source-hint"><i class="bi bi-person-vcard"></i> Filled automatically from Profile.</small>
             </label>
             <label class="tea-system-field">
               <span><i class="bi bi-building-check"></i> Head of Division / Section <b>*</b></span>
               <input type="text" name="head_division" class="form-control tea-auto-field" required readonly value="<?= e((string) ($user['department'] ?? '')) ?>">
-              <small class="tea-source-hint"><i class="bi bi-person-vcard"></i> Auto-filled from Profile.</small>
+              <small class="tea-source-hint"><i class="bi bi-person-vcard"></i> Filled automatically from Profile.</small>
             </label>
             <label class="tea-system-field tea-system-date-field">
               <span><i class="bi bi-calendar-check"></i> Submission Date <b>*</b></span>
@@ -448,9 +448,9 @@ $submissionDatePreview = (new DateTimeImmutable(
     <table>
       <thead><tr><th>Ranking</th><th>Remarks</th></tr></thead>
       <tbody>
-        <tr><td>Fail</td><td>Scored 0 - 7 points. The employee has not shown any progress in his work. Re-training shall be provided on the particular topic.</td></tr>
-        <tr><td>Probation</td><td>Scored 8 - 12 points. Still requires to be supervised by their immediate supervisor for another 6 month. Re-assessment required for the particular subject.</td></tr>
-        <tr><td>Pass</td><td>Scored 13 - 17 points. Employee able to execute the job with minimum supervision.</td></tr>
+        <tr><td>Fail</td><td>Scored 0 to 7 points. The employee has not shown any progress in his work. Additional training shall be provided on the particular topic.</td></tr>
+        <tr><td>Probation</td><td>Scored 8 to 12 points. Still requires to be supervised by their immediate supervisor for another 6 month. Reassessment required for the particular subject.</td></tr>
+        <tr><td>Pass</td><td>Scored 13 to 17 points. Employee able to execute the job with minimum supervision.</td></tr>
         <tr><td>Merit</td><td>Scored 18 points. Employee to conduct training/guide other employees on the knowledge learnt on particular topic.</td></tr>
       </tbody>
     </table>
@@ -586,7 +586,7 @@ window.SEDCO_FORM_CONTEXT = { role: <?= json_encode($user['role'] ?? 'staff') ?>
 
     const standardScoreCells = Array.from({ length: 5 }, (_, criterionIndex) =>
       '<td><select name="score_'+rowIndex+'[]" class="tea-score tea-score-standard" required aria-label="Criteria score '+(criterionIndex+1)+'">'+
-        '<option value="">—</option>'+
+        '<option value="">…</option>'+
         '<option value="1">1</option>'+
         '<option value="2">2</option>'+
         '<option value="3">3</option>'+
@@ -644,7 +644,7 @@ window.SEDCO_FORM_CONTEXT = { role: <?= json_encode($user['role'] ?? 'staff') ?>
       if (meta) meta.hidden = true;
       if (courseCountOutput) courseCountOutput.textContent = '0';
       if (assessmentSelected) assessmentSelected.hidden = true;
-      if (assessmentEmployee) assessmentEmployee.textContent = '—';
+      if (assessmentEmployee) assessmentEmployee.textContent = 'Not selected';
       if (assessmentCourseCount) assessmentCourseCount.textContent = '0 courses ready for evaluation';
       return;
     }
@@ -658,7 +658,7 @@ window.SEDCO_FORM_CONTEXT = { role: <?= json_encode($user['role'] ?? 'staff') ?>
     if (meta) meta.hidden = false;
     if (courseCountOutput) courseCountOutput.textContent = String(courses.length);
     if (assessmentSelected) assessmentSelected.hidden = false;
-    if (assessmentEmployee) assessmentEmployee.textContent = String(group?.employee_name || '—');
+    if (assessmentEmployee) assessmentEmployee.textContent = String(group?.employee_name || 'Not selected');
     if (assessmentCourseCount) assessmentCourseCount.textContent = String(courses.length) + ' course' + (courses.length === 1 ? '' : 's') + ' ready for evaluation';
   };
 

@@ -284,7 +284,7 @@ $formAction = $isEditMode ? 'update_pkk.php' : 'submit_application.php?type=PKK'
 <tr><td class="text-start">ii. Penyampaian</td><td><input type="text" class="form-control text-center score-input" name="aspect1_p1" required></td><td><input type="text" class="form-control text-center score-input" name="aspect1_p2"></td><td><input type="text" class="form-control text-center score-input" name="aspect1_p3"></td><td><input type="text" class="form-control text-center score-input" name="aspect1_p4"></td><td><input type="text" class="form-control text-center score-input" name="aspect1_p5"></td></tr>
 <tr><td class="text-start">iii. Penyediaan bahan/slaid</td><td><input type="text" class="form-control text-center score-input" name="aspect2_p1" required></td><td><input type="text" class="form-control text-center score-input" name="aspect2_p2"></td><td><input type="text" class="form-control text-center score-input" name="aspect2_p3"></td><td><input type="text" class="form-control text-center score-input" name="aspect2_p4"></td><td><input type="text" class="form-control text-center score-input" name="aspect2_p5"></td></tr>
 <tr><td class="text-start">iv. Perhubungan dan penglibatan peserta</td><td><input type="text" class="form-control text-center score-input" name="aspect3_p1" required></td><td><input type="text" class="form-control text-center score-input" name="aspect3_p2"></td><td><input type="text" class="form-control text-center score-input" name="aspect3_p3"></td><td><input type="text" class="form-control text-center score-input" name="aspect3_p4"></td><td><input type="text" class="form-control text-center score-input" name="aspect3_p5"></td></tr>
-<tr><td class="text-start">v. Penggunaan contoh-contoh yang diselitkan dalam ceramah</td><td><input type="text" class="form-control text-center score-input" name="aspect4_p1" required></td><td><input type="text" class="form-control text-center score-input" name="aspect4_p2"></td><td><input type="text" class="form-control text-center score-input" name="aspect4_p3"></td><td><input type="text" class="form-control text-center score-input" name="aspect4_p4"></td><td><input type="text" class="form-control text-center score-input" name="aspect4_p5"></td></tr>
+<tr><td class="text-start">v. Penggunaan pelbagai contoh yang diselitkan dalam ceramah</td><td><input type="text" class="form-control text-center score-input" name="aspect4_p1" required></td><td><input type="text" class="form-control text-center score-input" name="aspect4_p2"></td><td><input type="text" class="form-control text-center score-input" name="aspect4_p3"></td><td><input type="text" class="form-control text-center score-input" name="aspect4_p4"></td><td><input type="text" class="form-control text-center score-input" name="aspect4_p5"></td></tr>
             </tbody>
           </table>
         </div>
@@ -384,7 +384,7 @@ window.SEDCO_FORM_CONTEXT = { role: <?= json_encode($user['role'] ?? 'staff') ?>
 </script>
 <script src="form-permissions.js?v=20261003-06"></script>
 <script src="digital-signature.js?v=20261006-03"></script>
-<script src="form-ux.js?v=20261006-06"></script>
+<script src="form-ux.js?v=20261008-07"></script>
 <script src="form-enhancements.js?v=20260930-59"></script>
 <script src="sedco-shell.js?v=20261007-06"></script>
 </body>
