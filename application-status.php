@@ -125,7 +125,7 @@ $stmt->close();
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
   <link rel="stylesheet" href="sedco-saas.css?v=20261007-06">
-  <link rel="stylesheet" href="sedco-shell.css?v=20261007-16">
+  <link rel="stylesheet" href="sedco-shell.css?v=20261008-04">
 </head>
 <body class="app-page status-page" data-page="application-status" data-role="<?= e(normalized_role($user['role'] ?? '')) ?>">
 

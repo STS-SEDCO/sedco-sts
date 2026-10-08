@@ -5534,3 +5534,24 @@ body.app-page > .sedco-navbar .sedco-top-notification-badge{
     padding:10px !important;
   }
 }
+
+/* ===== REPLACE DECORATIVE HEADING DASHES WITH DOTS 2026-10-08 ===== */
+@media screen {
+  /* Small circular marker instead of a horizontal dash before section titles. */
+  body.app-page .task-eyebrow::before,
+  body.app-page .status-eyebrow::before,
+  body.app-page .submissions-eyebrow::before,
+  body.app-page.tea-page .form-container > .center:first-child h5::before {
+    content:"" !important;
+    display:inline-block !important;
+    width:7px !important;
+    min-width:7px !important;
+    height:7px !important;
+    flex:0 0 7px !important;
+    border-radius:50% !important;
+    background:#981717 !important;
+    box-shadow:0 0 0 4px rgba(152,23,23,.085) !important;
+    vertical-align:middle !important;
+    transform:none !important;
+  }
+}
