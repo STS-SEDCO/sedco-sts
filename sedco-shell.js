@@ -101,7 +101,7 @@
           </button>
 
           <a class="navbar-brand sedco-brand" href="${pageUrl('dashboard')}">
-            <span class="brand-mark"><i class="bi bi-mortarboard-fill"></i></span>
+            <span class="brand-mark"><img class="sedco-brand-logo" src="assets/sedco-logo.png" alt="SEDCO" width="34" height="27"></span>
             <span>SMART TRAINING SYSTEM</span>
           </a>
         </div>

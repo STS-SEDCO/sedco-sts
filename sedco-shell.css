@@ -5555,3 +5555,58 @@ body.app-page > .sedco-navbar .sedco-top-notification-badge{
     transform:none !important;
   }
 }
+
+/* ===== SEDCO LOGO HEADING AND NAVBAR 2026-10-08 ===== */
+@media screen {
+  body.app-page > .sedco-navbar .brand-mark {
+    width:39px !important;
+    height:39px !important;
+    flex:0 0 39px !important;
+    padding:3px !important;
+    border-radius:9px !important;
+    background:#fff !important;
+    overflow:hidden !important;
+  }
+  body.app-page > .sedco-navbar .brand-mark img.sedco-brand-logo {
+    display:block !important;
+    width:100% !important;
+    height:100% !important;
+    max-width:100% !important;
+    max-height:100% !important;
+    object-fit:contain !important;
+    border-radius:3px !important;
+  }
+  /* Match the user supplied SEDCO logo to the Training Forms label. */
+  body.app-page.task-page .task-eyebrow {
+    display:inline-flex !important;
+    align-items:center !important;
+    gap:8px !important;
+  }
+  body.app-page.task-page .task-eyebrow::before {
+    content:"" !important;
+    display:inline-block !important;
+    width:27px !important;
+    min-width:27px !important;
+    height:21px !important;
+    flex:0 0 27px !important;
+    border-radius:2px !important;
+    background:transparent url("assets/sedco-logo.png") center / contain no-repeat !important;
+    box-shadow:none !important;
+    transform:none !important;
+  }
+  /* Remove the old decorative dash/dot on unrelated page headings. */
+  body.app-page .status-eyebrow::before,
+  body.app-page .submissions-eyebrow::before,
+  body.app-page.tea-page .form-container > .center:first-child h5::before {
+    content:none !important;
+    display:none !important;
+  }
+  @media(max-width:760px){
+    body.app-page > .sedco-navbar .brand-mark{
+      width:34px !important;
+      height:34px !important;
+      flex-basis:34px !important;
+      padding:2px !important;
+    }
+  }
+}
