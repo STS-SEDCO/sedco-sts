@@ -666,6 +666,10 @@ try {
         $userId
     );
 
+    if ($type !== 'BPL') {
+        sts_notify_training_activity($applicationNo, $type . ' submitted', null, $userId);
+    }
+
     sts_notify(
         $userId,
         $type . ' submitted',
