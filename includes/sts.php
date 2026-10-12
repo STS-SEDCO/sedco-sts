@@ -808,6 +808,54 @@ function sts_can_cancel_pkk(array $application, array $user): bool
         && sts_can_edit_pkk($application, $user);
 }
 
+/**
+ * Only system custodians and the applicant may see the full sequential
+ * approval history for this application.
+ * Roles are evaluated on the server, never from browser-supplied values.
+ */
+function sts_can_view_full_workflow(array $application, array $user): bool
+{
+    $role = normalized_role($user['role'] ?? '');
+
+    return in_array($role, ['admin', 'training_section'], true)
+        || (int) ($application['user_id'] ?? 0) === (int) ($user['id'] ?? 0);
+}
+
+/**
+ * BPL reviewers need the applicant's submitted fields and their own
+ * section. Do not expose any other reviewer's notes, signatures, decisions,
+ * or correction metadata inside embedded JSON, application detail, or print.
+ */
+function sts_visible_application_payload(
+    array $application,
+    array $user,
+    array $payload
+): array {
+    if (
+        strtoupper((string) ($application['form_type'] ?? '')) !== 'BPL'
+        || sts_can_view_full_workflow($application, $user)
+    ) {
+        return $payload;
+    }
+
+    $applicantFields = [
+        'nama', 'bahagian', 'jawatan', 'tarikh', 'kursus', 'tajuk',
+        'penganjur', 'tarikh_mula', 'tarikh_tamat', 'tempat',
+        'yuran', 'kandungan', 'tempat_tugas', 'kenderaan',
+        'kenderaan_other', 'masa_bertolak', 'masa_kembali', 'pendahuluan',
+    ];
+    $reviewFields = match (review_stage_for_role($user['role'] ?? '')) {
+        'training' => ['ulasan_latihan', 'tarikh_latihan', 'tt_latihan'],
+        'hod' => ['ulasan_bahagian', 'tarikh_bahagian', 'tt_bahagian'],
+        'gm' => ['kelulusan_pgs', 'tarikh_pgs', 'tt_pgs'],
+        'chairman' => ['kelulusan_sedco', 'tarikh_sedco', 'tt_sedco'],
+        'finance' => ['bayaran_kursus', 'pendahuluan_diterima', 'telah_didaftar', 'tarikh_didaftar'],
+        default => [],
+    };
+
+    return array_intersect_key($payload, array_flip(array_merge($applicantFields, $reviewFields)));
+}
+
 function sts_can_view_application(array $application, array $user): bool
 {
     $role = normalized_role($user['role'] ?? '');
