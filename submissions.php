@@ -201,10 +201,12 @@ $stmt->close();
       </div>
 
       <div class="submissions-heading-actions">
+        <?php if (in_array($normalizedRole, ['admin', 'training_section'], true)): ?>
         <a class="submissions-secondary-action" href="export_applications.php?type=BPL">
           <i class="bi bi-file-earmark-spreadsheet"></i>
           Export CSV
         </a>
+        <?php endif; ?>
         <a class="submissions-secondary-action" href="approval-history.php">
           <i class="bi bi-clock-history"></i>
           Approval History
