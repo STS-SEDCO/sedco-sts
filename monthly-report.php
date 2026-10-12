@@ -8,7 +8,7 @@ $user = current_user();
 
 if (!$user || !in_array(
     normalized_role($user['role'] ?? ''),
-    ['admin','training_section','general_manager','head_of_department','pengerusi_besar','finance'],
+    ['admin','training_section'],
     true
 )) {
     http_response_code(403);
