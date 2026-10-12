@@ -554,6 +554,57 @@ function sts_notify_role(
     }
 }
 
+/**
+ * Keep every active Training officer informed of workflow activity across
+ * departments. Notifications are private to each recipient, while the
+ * application audit trail remains the shared source of truth.
+ */
+function sts_notify_training_activity(
+    string $applicationNo,
+    string $actionLabel,
+    ?string $stage = null,
+    ?int $actorId = null
+): void {
+    try {
+        $actor = current_user();
+        $actorId ??= $actor ? (int) $actor['id'] : 0;
+        $actorName = $actor && (int) $actor['id'] === $actorId
+            ? (string) $actor['fullname']
+            : 'System';
+
+        $message = $applicationNo . ': ' . $actionLabel
+            . ($stage ? ' at ' . stage_label($stage) : '')
+            . ' by ' . $actorName . '.';
+
+        $stmt = db()->prepare(
+            'SELECT id FROM users WHERE is_active = 1 AND role = "training_section"'
+        );
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        while ($recipient = $result->fetch_assoc()) {
+            $recipientId = (int) $recipient['id'];
+
+            // The officer who made the change does not need a self-notification.
+            if ($recipientId === $actorId) {
+                continue;
+            }
+
+            sts_notify(
+                $recipientId,
+                'Training workflow update',
+                $message,
+                'application-detail.php?application=' . rawurlencode($applicationNo),
+                'info'
+            );
+        }
+
+        $stmt->close();
+    } catch (Throwable) {
+        // Observability notifications must never interfere with approvals.
+    }
+}
+
 function sts_notify_stage(
     string $stage,
     string $applicationNo,
