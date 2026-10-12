@@ -97,7 +97,7 @@ if ($role === 'staff') {
 } else {
     $dashboardTitle = match ($role) {
         'head_of_department' => 'Department review workspace',
-        'training_section' => 'Training review workspace',
+        'training_section' => 'Training operations workspace',
         'general_manager' => 'General Manager approval workspace',
         'pengerusi_besar' => 'Pengerusi approval workspace',
         'finance' => 'Kewangan processing workspace',
@@ -107,7 +107,7 @@ if ($role === 'staff') {
 
     $dashboardSubtitle = match ($role) {
         'head_of_department' => 'Review your department queue and complete post training assessments.',
-        'training_section' => 'Review the Training section before applications continue to the Head of Department.',
+        'training_section' => 'Monitor every BPL stage, approvals, follow ups and activity across SEDCO.',
         'general_manager' => 'Review applications approved by the Head of Department.',
         'pengerusi_besar' => 'Review applications approved by the General Manager.',
         'finance' => 'Complete the final financial processing for approved training applications.',
@@ -117,7 +117,7 @@ if ($role === 'staff') {
 
     $stage = review_stage_for_role($role);
 
-    if ($role === 'admin') {
+    if (in_array($role, ['admin', 'training_section'], true)) {
         $countStmt = $db->prepare(
             'SELECT
                COUNT(*) AS total,
@@ -134,8 +134,12 @@ if ($role === 'staff') {
         $stats[1] = ['label' => 'Pending review', 'value' => (int) ($counts['pending'] ?? 0), 'icon' => 'bi-clock-history', 'tone' => 'warning'];
         $stats[2] = ['label' => 'Approved', 'value' => (int) ($counts['approved'] ?? 0), 'icon' => 'bi-check2-circle', 'tone' => 'success'];
 
-        $userCount = $db->query('SELECT COUNT(*) AS total FROM users WHERE is_active = 1')->fetch_assoc();
-        $stats[3] = ['label' => 'Active users', 'value' => (int) ($userCount['total'] ?? 0), 'icon' => 'bi-people', 'tone' => 'brand'];
+        if ($role === 'admin') {
+            $userCount = $db->query('SELECT COUNT(*) AS total FROM users WHERE is_active = 1')->fetch_assoc();
+            $stats[3] = ['label' => 'Active users', 'value' => (int) ($userCount['total'] ?? 0), 'icon' => 'bi-people', 'tone' => 'brand'];
+        } else {
+            $stats[3] = ['label' => 'Needs attention', 'value' => (int) ($counts['attention'] ?? 0), 'icon' => 'bi-exclamation-circle', 'tone' => 'danger'];
+        }
 
         $queueResult = $db->query(
             'SELECT application_no, form_type, title, status, current_stage,
