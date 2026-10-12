@@ -54,6 +54,8 @@ while ($row = $result->fetch_assoc()) {
 
     $payload = json_decode((string) $row['payload'], true);
     $payload = is_array($payload) ? $payload : [];
+    $canSeeFullWorkflow = sts_can_view_full_workflow($row, $user);
+    $payload = sts_visible_application_payload($row, $user, $payload);
 
     $applicationId = (int) $row['id'];
 
@@ -73,9 +75,12 @@ while ($row = $result->fetch_assoc()) {
          FROM application_reviews r
          INNER JOIN users reviewer ON reviewer.id = r.reviewer_id
          WHERE r.application_id = ?
+           AND (? = 1 OR r.reviewer_id = ?)
          ORDER BY r.reviewed_at ASC,r.id ASC'
     );
-    $historyStmt->bind_param('i', $applicationId);
+    $fullHistoryFlag = $canSeeFullWorkflow ? 1 : 0;
+    $currentUserId = (int) $user['id'];
+    $historyStmt->bind_param('iii', $applicationId, $fullHistoryFlag, $currentUserId);
     $historyStmt->execute();
     $historyResult = $historyStmt->get_result();
 
@@ -149,8 +154,8 @@ while ($row = $result->fetch_assoc()) {
         'status' => $row['status'],
         'department' => $row['department'] ?: 'Unassigned',
         'currentStage' => $row['current_stage'],
-        'stageLabel' => stage_label($row['current_stage']),
-        'reviewNote' => $row['review_note'],
+        'stageLabel' => stage_label($canSeeFullWorkflow ? (string) $row['current_stage'] : (string) (review_stage_for_role($user['role'] ?? '') ?? '')),
+        'reviewNote' => $canSeeFullWorkflow ? $row['review_note'] : '',
         'slaDueAt' => $row['sla_due_at'],
         'overdue' => !empty($row['sla_due_at'])
             && strtotime((string) $row['sla_due_at']) < time()
@@ -231,6 +236,7 @@ $stmt->close();
     </div>
     <?php endif; ?>
 
+    <?php if (in_array($normalizedRole, ['admin', 'training_section'], true)): ?>
     <section class="approval-lifecycle" aria-label="BPL approval lifecycle">
       <div class="approval-lifecycle-intro">
         <span>Approval lifecycle</span>
@@ -291,6 +297,7 @@ $stmt->close();
       </div>
     </section>
 
+    <?php endif; ?>
     <div class="submissions-meta-row">
       <div>
         <span class="submissions-section-label">Approval queue</span>
