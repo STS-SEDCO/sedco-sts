@@ -856,48 +856,60 @@ function sts_visible_application_payload(
     return array_intersect_key($payload, array_flip(array_merge($applicantFields, $reviewFields)));
 }
 
+/**
+ * An HOD must be specifically assigned to the application, or belong to
+ * the application's department when no individual HOD is assigned.
+ */
+function sts_is_assigned_hod(array $application, array $user): bool
+{
+    $assignedHod = (int) ($application['assigned_hod_id'] ?? 0);
+    if ($assignedHod > 0) {
+        return $assignedHod === (int) ($user['id'] ?? 0);
+    }
+
+    $applicationDepartment = trim((string) ($application['department'] ?? ''));
+    $userDepartment = trim((string) ($user['department'] ?? ''));
+
+    return $applicationDepartment !== ''
+        && $userDepartment !== ''
+        && strcasecmp($applicationDepartment, $userDepartment) === 0;
+}
+
 function sts_can_view_application(array $application, array $user): bool
 {
     $role = normalized_role($user['role'] ?? '');
 
+    // Workflow custodians may inspect every stage.
     if (in_array($role, ['admin', 'training_section'], true)) {
         return true;
     }
 
-    if ((int) ($application['user_id'] ?? 0) === (int) $user['id']) {
+    // An applicant can always inspect their own application lifecycle.
+    if (
+        (int) ($application['user_id'] ?? 0) > 0
+        && (int) ($application['user_id'] ?? 0) === (int) ($user['id'] ?? 0)
+    ) {
         return true;
     }
 
-    if (!user_can_review_applications($user)) {
-        return false;
-    }
-
-    if ($role === 'head_of_department') {
-        $assignedHod = (int) ($application['assigned_hod_id'] ?? 0);
-
-        if ($assignedHod > 0) {
-            return $assignedHod === (int) $user['id'];
-        }
-
-        $applicationDepartment = trim((string) ($application['department'] ?? ''));
-        $userDepartment = trim((string) ($user['department'] ?? ''));
-
-        return $applicationDepartment !== ''
-            && $userDepartment !== ''
-            && strcasecmp($applicationDepartment, $userDepartment) === 0;
-    }
-
-    // Senior reviewers only see BPL records currently awaiting their stage
-    // or records for which they personally made a decision. They never gain
-    // blanket read access to other people's applications.
-    $reviewStage = review_stage_for_role($role);
     if (
-        $reviewStage === null
+        !user_can_review_applications($user)
         || strtoupper((string) ($application['form_type'] ?? '')) !== 'BPL'
     ) {
         return false;
     }
 
+    $reviewStage = review_stage_for_role($role);
+    if ($reviewStage === null) {
+        return false;
+    }
+
+    // HOD access is always constrained to its own assigned department.
+    if ($role === 'head_of_department' && !sts_is_assigned_hod($application, $user)) {
+        return false;
+    }
+
+    // Reviewers can open a pending application only at their exact stage.
     if (
         (string) ($application['status'] ?? '') === 'pending'
         && (string) ($application['current_stage'] ?? '') === $reviewStage
@@ -905,12 +917,14 @@ function sts_can_view_application(array $application, array $user): bool
         return true;
     }
 
+    // Historical access is limited to applications previously acted on by
+    // this specific reviewer. It never grants other departments' records.
     $applicationId = (int) ($application['id'] ?? 0);
-    if ($applicationId <= 0) {
+    $reviewerId = (int) ($user['id'] ?? 0);
+    if ($applicationId <= 0 || $reviewerId <= 0) {
         return false;
     }
 
-    $reviewerId = (int) ($user['id'] ?? 0);
     $stmt = db()->prepare(
         'SELECT id FROM application_reviews
          WHERE application_id = ? AND reviewer_id = ? LIMIT 1'
