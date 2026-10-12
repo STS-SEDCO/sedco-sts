@@ -8,7 +8,7 @@ $role=normalized_role($user['role']??'');
 
 if(!$user || !in_array(
     $role,
-    ['admin','training_section','general_manager','head_of_department','pengerusi_besar','finance'],
+    ['admin','training_section'],
     true
 )){
   http_response_code(403); exit('Report access is not available for this role.');
