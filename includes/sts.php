@@ -860,7 +860,7 @@ function sts_can_view_application(array $application, array $user): bool
 {
     $role = normalized_role($user['role'] ?? '');
 
-    if ($role === 'admin') {
+    if (in_array($role, ['admin', 'training_section'], true)) {
         return true;
     }
 
@@ -887,7 +887,40 @@ function sts_can_view_application(array $application, array $user): bool
             && strcasecmp($applicationDepartment, $userDepartment) === 0;
     }
 
-    return true;
+    // Senior reviewers only see BPL records currently awaiting their stage
+    // or records for which they personally made a decision. They never gain
+    // blanket read access to other people's applications.
+    $reviewStage = review_stage_for_role($role);
+    if (
+        $reviewStage === null
+        || strtoupper((string) ($application['form_type'] ?? '')) !== 'BPL'
+    ) {
+        return false;
+    }
+
+    if (
+        (string) ($application['status'] ?? '') === 'pending'
+        && (string) ($application['current_stage'] ?? '') === $reviewStage
+    ) {
+        return true;
+    }
+
+    $applicationId = (int) ($application['id'] ?? 0);
+    if ($applicationId <= 0) {
+        return false;
+    }
+
+    $reviewerId = (int) ($user['id'] ?? 0);
+    $stmt = db()->prepare(
+        'SELECT id FROM application_reviews
+         WHERE application_id = ? AND reviewer_id = ? LIMIT 1'
+    );
+    $stmt->bind_param('ii', $applicationId, $reviewerId);
+    $stmt->execute();
+    $reviewed = (bool) $stmt->get_result()->fetch_assoc();
+    $stmt->close();
+
+    return $reviewed;
 }
 
 function sts_bpl_applicant_role(array $application): string
