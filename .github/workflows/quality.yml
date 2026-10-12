@@ -25,6 +25,10 @@ jobs:
         shell: bash
         run: find . -type f -name '*.php' -print0 | xargs -0 -n1 php -l
 
+      - name: Workflow role and data visibility regression checks
+        shell: bash
+        run: php tests/workflow-permissions.php
+
       - name: JavaScript syntax check
         shell: bash
         run: |
