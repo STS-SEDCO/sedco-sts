@@ -77,7 +77,7 @@
     if (['submissions','approval-history'].includes(key)) {
       return ['admin','training_section','general_manager','head_of_department','pengerusi_besar','finance'].includes(userRole);
     }
-    if (key === 'reports') return ['admin','training_section','general_manager','head_of_department','pengerusi_besar','finance'].includes(userRole);
+    if (key === 'reports') return ['admin','training_section'].includes(userRole);
     if (['admin-users','admin-settings','audit-log'].includes(key)) return userRole === 'admin';
     return true;
   });
