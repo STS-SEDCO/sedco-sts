@@ -26,6 +26,8 @@ if (!$user || !$app || !sts_can_view_application($app, $user)) {
 
 $payload = json_decode((string) $app['payload'], true);
 $payload = is_array($payload) ? $payload : [];
+$canSeeFullWorkflow = sts_can_view_full_workflow($app, $user);
+$payload = sts_visible_application_payload($app, $user, $payload);
 
 $reviewsStmt = db()->prepare(
     'SELECT r.review_stage, r.decision, r.note, r.reviewed_at, u.fullname
@@ -75,6 +77,7 @@ $reviewsStmt->close();
 </div>
 <?php endforeach; ?>
 </div>
+<?php if ($canSeeFullWorkflow): ?>
 <h2 class="print-section-title">Approval History</h2>
 <?php if (!$reviews): ?><p>No approval history recorded.</p><?php endif; ?>
 <?php foreach ($reviews as $review): ?>
@@ -84,6 +87,7 @@ $reviewsStmt->close();
   <?php if (!empty($review['note'])): ?><br><?= e($review['note']) ?><?php endif; ?>
 </div>
 <?php endforeach; ?>
+<?php endif; ?>
 <script>if(new URLSearchParams(location.search).get('print')==='1')window.print();</script>
 </body>
 </html>
