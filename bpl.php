@@ -64,6 +64,7 @@ if ($applicationNo !== '') {
     $mode = 'review';
     $payload = json_decode((string) $application['payload'], true);
     $payload = is_array($payload) ? $payload : [];
+    $payload = sts_visible_application_payload($application, $user, $payload);
     $currentStage = (string) $application['current_stage'];
     $applicationStatus = (string) $application['status'];
 }
@@ -92,6 +93,9 @@ $canResubmitCorrection = $mode === 'review'
 $formAction = $mode === 'new'
     ? 'submit_application.php?type=BPL'
     : ($canResubmitCorrection ? 'resubmit_application.php' : 'review_application.php');
+
+$showAllReviewSections = $mode === 'new' || ($application !== null && sts_can_view_full_workflow($application, $user));
+$viewerReviewStage = review_stage_for_role($user['role'] ?? '');
 
 $canReviewCurrentStage = $mode === 'review'
     && !$canResubmitCorrection
@@ -135,7 +139,7 @@ $canReviewCurrentStage = $mode === 'review'
           </span>
           <?php endif; ?>
           <a href="application-detail.php?application=<?= rawurlencode((string) $application['application_no']) ?>">
-            <i class="bi bi-clock-history"></i> History
+            <i class="bi bi-clock-history"></i> <?= $showAllReviewSections ? 'History' : 'Application detail' ?>
           </a>
         </div>
         <?php endif; ?>
@@ -345,6 +349,7 @@ $canReviewCurrentStage = $mode === 'review'
             </table>
 
             <!-- ULASAN D - H -->
+            <?php if ($showAllReviewSections || $viewerReviewStage === 'training'): ?>
             <table class="bpl-section-card bpl-review-card bpl-section-training-review form-section-locked" data-form-owner="training_section" inert aria-disabled="true">
                 <tr><th colspan="2"><div class="bpl-table-heading"><span class="bpl-table-heading-icon"><i class="bi bi-chat-square-text"></i></span><div class="bpl-table-heading-copy"><strong>D. ULASAN PENGURUS SEKSYEN LATIHAN</strong><small>Semakan dan ulasan oleh Seksyen Latihan</small></div></div></th></tr>
                 <tr>
@@ -377,7 +382,9 @@ $canReviewCurrentStage = $mode === 'review'
                     </td>
                 </tr>
             </table>
+            <?php endif; ?>
 
+            <?php if ($showAllReviewSections || $viewerReviewStage === 'hod'): ?>
             <table class="bpl-section-card bpl-review-card bpl-section-hod-review form-section-locked" data-form-owner="head_of_department" inert aria-disabled="true">
                 <tr><th colspan="2"><div class="bpl-table-heading"><span class="bpl-table-heading-icon"><i class="bi bi-person-check"></i></span><div class="bpl-table-heading-copy"><strong>E. ULASAN KETUA / PENGURUS BAHAGIAN</strong><small>Semakan dan ulasan Ketua / Pengurus Bahagian</small></div></div></th></tr>
                 <tr>
@@ -410,7 +417,9 @@ $canReviewCurrentStage = $mode === 'review'
                     </td>
                 </tr>
             </table>
+            <?php endif; ?>
 
+            <?php if ($showAllReviewSections || $viewerReviewStage === 'gm'): ?>
             <table class="bpl-section-card bpl-review-card bpl-section-gm-review form-section-locked" data-form-owner="general_manager" inert aria-disabled="true">
                 <tr><th colspan="2"><div class="bpl-table-heading"><span class="bpl-table-heading-icon"><i class="bi bi-patch-check"></i></span><div class="bpl-table-heading-copy"><strong>F. ULASAN PENGURUS BESAR KUMPULAN SEDCO</strong><small>Keputusan Pengurus Besar Kumpulan SEDCO</small></div></div></th></tr>
                 <tr>
@@ -446,7 +455,9 @@ $canReviewCurrentStage = $mode === 'review'
                     </td>
                 </tr>
             </table>
+            <?php endif; ?>
 
+            <?php if ($showAllReviewSections || $viewerReviewStage === 'chairman'): ?>
             <table class="bpl-section-card bpl-review-card bpl-section-admin-review form-section-locked" data-form-owner="pengerusi_besar" inert aria-disabled="true">
                 <tr><th colspan="2"><div class="bpl-table-heading"><span class="bpl-table-heading-icon"><i class="bi bi-shield-check"></i></span><div class="bpl-table-heading-copy"><strong>G. ULASAN PENGERUSI SEDCO</strong><small>Keputusan dan pengesahan oleh Pengerusi SEDCO</small></div></div></th></tr>
                 <tr>
@@ -482,8 +493,10 @@ $canReviewCurrentStage = $mode === 'review'
                     </td>
                 </tr>
             </table>
+            <?php endif; ?>
 
             <!-- FINAL CHECKLIST -->
+            <?php if ($showAllReviewSections || $viewerReviewStage === 'finance'): ?>
             <table class="bpl-section-card bpl-review-card bpl-section-finance form-section-locked" data-form-owner="finance" inert aria-disabled="true">
                 <tr><th colspan="2"><div class="bpl-table-heading"><span class="bpl-table-heading-icon"><i class="bi bi-cash-stack"></i></span><div class="bpl-table-heading-copy"><strong>H. ULASAN KEWANGAN</strong><small>Rekod bayaran, pendahuluan dan pendaftaran</small></div></div></th></tr>
                 <tr>
@@ -513,6 +526,7 @@ $canReviewCurrentStage = $mode === 'review'
                     </td>
                 </tr>
             </table>
+            <?php endif; ?>
 
             <?php if ($canReviewCurrentStage && in_array($currentStage, ['training', 'hod'], true)): ?>
             <section class="sts-correction-target-panel no-print" data-correction-target-panel hidden>
