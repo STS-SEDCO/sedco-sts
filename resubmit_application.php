@@ -196,6 +196,15 @@ try {
         (int) $user['id']
     );
 
+    if ((string) $application['current_stage'] !== 'training') {
+        sts_notify_training_activity(
+            $applicationNo,
+            'Application resubmitted',
+            (string) $application['current_stage'],
+            (int) $user['id']
+        );
+    }
+
     sts_notify_stage(
         (string) $application['current_stage'],
         $applicationNo,

@@ -37,6 +37,8 @@ if (!$application || !sts_can_view_application($application, $user)) {
 
 $payload = json_decode((string) $application['payload'], true);
 $payload = is_array($payload) ? $payload : [];
+$canSeeFullWorkflow = sts_can_view_full_workflow($application, $user);
+$payload = sts_visible_application_payload($application, $user, $payload);
 
 $reviewStmt = db()->prepare(
     'SELECT r.review_stage, r.decision, r.note, r.reviewed_at, u.fullname
@@ -168,7 +170,7 @@ function detail_value_label(string $key): string
       <div>
         <div class="sts-eyebrow"><?= e($application['form_type']) ?> · <?= e($applicationNo) ?></div>
         <h1><?= e($application['title']) ?></h1>
-        <p>Complete workflow history, linked forms, attachments and application information.</p>
+        <p><?= $canSeeFullWorkflow ? 'Complete workflow history, linked forms, attachments and application information.' : 'Application information for your assigned review responsibility.' ?></p>
       </div>
       <div class="sts-heading-actions">
         <?php if ($application['form_type'] === 'BPL'): ?>
@@ -202,7 +204,7 @@ function detail_value_label(string $key): string
       </div>
       <div>
         <span>Current stage</span>
-        <strong><?= e(stage_label((string) $application['current_stage'])) ?></strong>
+        <strong><?= e(stage_label($canSeeFullWorkflow ? (string) $application['current_stage'] : (string) (review_stage_for_role($user['role'] ?? '') ?? ''))) ?></strong>
       </div>
       <div>
         <span>Department</span>
@@ -218,6 +220,7 @@ function detail_value_label(string $key): string
       </div>
     </section>
 
+    <?php if ($canSeeFullWorkflow): ?>
     <div class="application-detail-grid">
       <section class="sts-card">
         <div class="sts-card-heading">
@@ -321,6 +324,16 @@ function detail_value_label(string $key): string
       </aside>
     </div>
 
+    <?php else: ?>
+    <section class="sts-card">
+      <div class="sts-card-heading">
+        <div><span>Assigned review</span><h2><?= e(stage_label((string)(review_stage_for_role($user['role'] ?? '') ?? ''))) ?></h2></div>
+        <i class="bi bi-shield-lock"></i>
+      </div>
+      <p>Your access is limited to your assigned approval responsibility. The complete workflow, other reviewers' decisions, notes and timestamps are available only to the applicant, Training Department and System Admin.</p>
+    </section>
+    <?php endif; ?>
+
     <div class="application-detail-grid">
       <section class="sts-card">
         <div class="sts-card-heading">
@@ -366,6 +379,7 @@ function detail_value_label(string $key): string
         <p class="sts-muted-copy">No supporting files attached.</p>
         <?php endif; ?>
 
+        <?php if ($canSeeFullWorkflow): ?>
         <div class="version-history">
           <span class="version-heading">Change history</span>
           <?php foreach ($versions as $version): ?>
@@ -375,6 +389,7 @@ function detail_value_label(string $key): string
           </div>
           <?php endforeach; ?>
         </div>
+        <?php endif; ?>
       </aside>
     </div>
   </div>

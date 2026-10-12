@@ -243,6 +243,8 @@ try {
         $userId
     );
 
+    sts_notify_training_activity($applicationNo, 'PKK updated', null, $userId);
+
     sts_notify(
         $userId,
         'PKK updated',

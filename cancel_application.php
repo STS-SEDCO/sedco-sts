@@ -118,6 +118,15 @@ try {
         $userId
     );
 
+    if ((string) $application['current_stage'] !== 'training') {
+        sts_notify_training_activity(
+            $applicationNo,
+            'Application cancelled',
+            (string) $application['current_stage'],
+            $userId
+        );
+    }
+
     sts_notify(
         $userId,
         'Application cancelled',

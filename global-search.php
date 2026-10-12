@@ -189,7 +189,9 @@ if ($query !== '') {
         </div>
         <div class="global-search-result-meta">
           <span class="status-pill status-<?= e($itemStatus) ?>"><?= e(ucfirst($itemStatus)) ?></span>
+          <?php if (sts_can_view_full_workflow($item, $user)): ?>
           <small><?= e(stage_label((string) $item['current_stage'])) ?></small>
+          <?php endif; ?>
           <?php if ($updated): ?><time><?= e(date('d M Y', $updated)) ?></time><?php endif; ?>
         </div>
         <i class="bi bi-chevron-right"></i>

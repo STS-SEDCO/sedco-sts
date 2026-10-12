@@ -60,6 +60,7 @@
 
   const items = [
     ['dashboard', 'Dashboard', 'bi-grid-1x2-fill', pageUrl('dashboard')],
+    ...(isPhp ? [['training-operations', 'Training Overview', 'bi-diagram-3', 'training-operations.php']] : []),
     ['task', 'Training Forms', 'bi-file-earmark-text', pageUrl('task')],
     ['training-calendar', 'Training Calendar', 'bi-calendar3', pageUrl('training-calendar')],
     ['application-status', 'Application status', 'bi-clipboard-check', pageUrl('application-status')],
@@ -72,10 +73,11 @@
   ];
 
   const visibleItems = items.filter(([key]) => {
+    if (key === 'training-operations') return ['admin', 'training_section'].includes(userRole);
     if (['submissions','approval-history'].includes(key)) {
       return ['admin','training_section','general_manager','head_of_department','pengerusi_besar','finance'].includes(userRole);
     }
-    if (key === 'reports') return ['admin','training_section','general_manager','head_of_department','pengerusi_besar','finance'].includes(userRole);
+    if (key === 'reports') return ['admin','training_section'].includes(userRole);
     if (['admin-users','admin-settings','audit-log'].includes(key)) return userRole === 'admin';
     return true;
   });

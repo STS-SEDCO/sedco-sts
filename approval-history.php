@@ -29,7 +29,7 @@ try {
         WHERE a.form_type = "BPL"
     ';
 
-    if ($role === 'admin') {
+    if (in_array($role, ['admin', 'training_section'], true)) {
         $stmt = db()->prepare($baseSql . ' ORDER BY r.reviewed_at DESC, r.id DESC');
     } else {
         $stmt = db()->prepare(
@@ -104,7 +104,7 @@ function approval_status_label(string $status): string
       <div>
         <div class="submissions-eyebrow">Review records</div>
         <h1>Approval History</h1>
-        <p>Search and audit every approval, correction request and rejection made from your review workspace.</p>
+        <p>Search approvals, correction requests and rejections across the stages you are authorised to oversee.</p>
       </div>
       <div class="submissions-heading-actions">
         <a class="submissions-primary-action" href="submissions.php">
@@ -184,7 +184,7 @@ function approval_status_label(string $status): string
         </div>
 
         <div class="submissions-advanced-filters approval-history-advanced">
-          <?php if ($role === 'admin'): ?>
+          <?php if (in_array($role, ['admin', 'training_section'], true)): ?>
           <select id="historyStage" aria-label="Filter by approval stage">
             <option value="all">All stages</option>
             <option value="training">Training Department</option>

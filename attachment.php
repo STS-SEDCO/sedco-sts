@@ -14,8 +14,8 @@ if (!$user || $attachmentId <= 0) {
 }
 
 $stmt = db()->prepare(
-    'SELECT att.id, att.application_id, att.original_name, att.stored_name,
-            att.mime_type, app.user_id, app.department, app.assigned_hod_id,
+    'SELECT att.id AS attachment_id, att.application_id, att.original_name, att.stored_name,
+            att.mime_type, app.id, app.form_type, app.user_id, app.department, app.assigned_hod_id,
             app.current_stage, app.status
      FROM application_attachments att
      INNER JOIN applications app ON app.id = att.application_id

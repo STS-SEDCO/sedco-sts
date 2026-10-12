@@ -328,6 +328,18 @@ try {
         $reviewerId
     );
 
+    sts_notify_training_activity(
+        $applicationNo,
+        match ($decision) {
+            'approved' => 'Approved',
+            'rejected' => 'Rejected',
+            'correction' => 'Requested correction',
+            default => 'Reviewed',
+        },
+        $stage,
+        $reviewerId
+    );
+
     $applicantId = (int) $application['user_id'];
     $applicantLink = 'application-detail.php?application=' . rawurlencode($applicationNo);
 
