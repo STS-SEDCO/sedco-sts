@@ -71,7 +71,7 @@ $rememberedEmail = (string) ($_COOKIE['sedco_email'] ?? '');
   <meta name="theme-color" content="#7b161c">
   <title>Sign In | SEDCO Smart Training System</title>
   <link rel="stylesheet" href="sedco-saas.css?v=20260930-46">
-  <link rel="stylesheet" href="login.css?v=20261013-01">
+  <link rel="stylesheet" href="login.css?v=20261013-02">
 </head>
 <body class="auth-page login-page">
   <main class="sts-login-shell">
@@ -90,23 +90,22 @@ $rememberedEmail = (string) ($_COOKIE['sedco_email'] ?? '');
         </header>
 
         <div class="sts-login-brand-main">
-          <span class="sts-login-brand-kicker"><span class="sts-login-status-dot"></span> Your training management workspace</span>
-          <h2>Smarter training.<br><span>Stronger teams.</span></h2>
-          <p>Manage training requests, approvals and evaluations together in one streamlined experience.</p>
-
-          <div class="sts-login-flow" aria-label="Training management workflow">
-            <div class="sts-login-flow-title">Simple. Connected. Accountable.</div>
+          <span class="sts-login-brand-kicker"><span class="sts-login-status-dot"></span> LEARNING & DEVELOPMENT</span>
+          <h2>Training, made<br><span>simpler.</span></h2>
+          <p>A single, streamlined workspace for training requests, approvals and evaluations.</p>
+          <div class="sts-login-flow" aria-label="Training workflow">
+            <div class="sts-login-flow-title">Your training journey</div>
             <div class="sts-login-flow-steps">
-              <div><span>01</span><strong>Apply</strong><small>Training requests</small></div>
-              <div><span>02</span><strong>Approve</strong><small>Clear review flow</small></div>
-              <div><span>03</span><strong>Evaluate</strong><small>Track outcomes</small></div>
+              <div><span>01</span><strong>Apply</strong><small>Request</small></div>
+              <div><span>02</span><strong>Review</strong><small>Approve</small></div>
+              <div><span>03</span><strong>Evaluate</strong><small>Improve</small></div>
             </div>
           </div>
         </div>
 
         <footer class="sts-login-brand-footer">
           <span class="sts-login-brand-footer-mark" aria-hidden="true"></span>
-          A smarter way to manage learning at SEDCO.
+          SEDCO Smart Training System
         </footer>
       </aside>
 
@@ -117,9 +116,9 @@ $rememberedEmail = (string) ($_COOKIE['sedco_email'] ?? '');
         </div>
 
         <div class="sts-login-form-wrap">
-          <div class="sts-login-eyebrow"><span></span> WELCOME BACK</div>
-          <h1>Sign in to your<br class="sts-login-desktop-break"> account</h1>
-          <p class="sts-login-intro">Please enter your work account details to continue to your workspace.</p>
+          <div class="sts-login-eyebrow"><span></span> STAFF PORTAL</div>
+          <h1>Welcome back.</h1>
+          <p class="sts-login-intro">Sign in with your SEDCO account to access your workspace.</p>
 
           <?php if ($error): ?>
             <div class="sts-login-alert sts-login-alert-error" id="sts-login-error" role="alert">
@@ -179,7 +178,7 @@ $rememberedEmail = (string) ($_COOKIE['sedco_email'] ?? '');
           </form>
 
           <div class="sts-login-register">
-            New to Smart Training System? <a href="signup.php">Create an account <span aria-hidden="true">↗</span></a>
+            Don't have an account? <a href="signup.php">Create an account <span aria-hidden="true">↗</span></a>
           </div>
         </div>
 
