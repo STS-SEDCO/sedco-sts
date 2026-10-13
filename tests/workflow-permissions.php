@@ -30,6 +30,14 @@ function user_can_review_applications(?array $user = null): bool
     ], true);
 }
 
+function user_can_review_stage(string $stage, ?array $user = null): bool
+{
+    if (normalized_role($user['role'] ?? '') === 'admin') {
+        return in_array($stage, ['training', 'hod', 'gm', 'chairman', 'finance'], true);
+    }
+    return review_stage_for_role($user['role'] ?? '') === $stage;
+}
+
 require_once dirname(__DIR__) . '/includes/sts.php';
 
 function check_permission(bool $condition, string $message): void
