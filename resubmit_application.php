@@ -211,7 +211,8 @@ try {
         $application['department'] ?? null,
         !empty($application['assigned_hod_id'])
             ? (int) $application['assigned_hod_id']
-            : null
+            : null,
+        (int) $application['user_id']
     );
 
     header(

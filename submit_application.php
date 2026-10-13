@@ -683,7 +683,8 @@ try {
             'training',
             $applicationNo,
             $departmentValue,
-            $assignedHodId
+            $assignedHodId,
+            $userId
         );
     } elseif ($parent) {
         $parentOwnerId = (int) $parent['user_id'];

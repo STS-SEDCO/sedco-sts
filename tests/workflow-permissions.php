@@ -86,6 +86,27 @@ $financeStage = $app;
 $financeStage['current_stage'] = 'finance';
 check_permission(sts_can_view_application($financeStage, $finance), 'Finance can open its active stage');
 
+// Training officers can apply but cannot review their own BPL.
+$trainingApplication = [
+    'id' => 0,
+    'user_id' => 2,
+    'applicant_role' => 'training_section',
+    'form_type' => 'BPL',
+    'status' => 'pending',
+    'current_stage' => 'training',
+    'department' => 'Finance Department',
+];
+check_permission(!sts_can_review_application($trainingApplication, $trainingA), 'Training applicant cannot self-approve');
+check_permission(sts_can_review_application($trainingApplication, $trainingB), 'Other Training officer may review');
+check_permission(!sts_can_review_application($trainingApplication, $admin), 'Admin cannot bypass another Training reviewer');
+check_permission(!sts_can_review_application($trainingApplication, $applicant), 'Staff cannot approve Training stage');
+
+$adminApplication = $trainingApplication;
+$adminApplication['user_id'] = 1;
+$adminApplication['applicant_role'] = 'admin';
+check_permission(!sts_can_review_application($adminApplication, $admin), 'Admin cannot self-approve');
+check_permission(sts_can_review_application($adminApplication, $trainingB), 'Training may review Admin applicant');
+
 $payload = [
     'nama' => 'Example Applicant',
     'tajuk' => 'Example Course',

@@ -36,8 +36,13 @@
     const normalizedOwner = aliases[owner] || owner;
 
     if (mode === 'new' && formType === 'BPL') {
-      if (normalizedRole === 'admin') return normalizedOwner === 'staff';
-      return normalizedRole === 'staff' && normalizedOwner === 'staff';
+      // PHP provides the authenticated authorization decision.
+      // Static previews use a role-based fallback without a server session.
+      const canSubmit = context.canSubmitBpl === true
+        || (context.canSubmitBpl === undefined
+          && ['staff', 'training_section', 'head_of_department',
+              'general_manager', 'pengerusi_besar', 'admin'].includes(normalizedRole));
+      return canSubmit && normalizedOwner === 'staff';
     }
 
     if (mode === 'review' && formType === 'BPL') {
@@ -46,16 +51,14 @@
       }
 
       if (applicationStatus === 'correction') {
-        return normalizedRole === 'staff' && normalizedOwner === 'staff';
+        // Reviewers who applied for training may also correct their own BPL.
+        return context.canResubmitCorrection === true && normalizedOwner === 'staff';
       }
 
-      const ownerForStage = stageOwner(currentStage);
-
-      if (normalizedRole === 'admin') {
-        return normalizedOwner === ownerForStage;
-      }
-
-      return normalizedRole === ownerForStage && normalizedOwner === ownerForStage;
+      // Do not infer approval rights from a role: Training applicants and
+      // administrators cannot review their own requests.
+      return context.canReviewCurrentStage === true
+        && normalizedOwner === stageOwner(currentStage);
     }
 
     if (normalizedRole === 'admin') return true;
@@ -138,7 +141,7 @@
 
         if (['approved', 'rejected'].includes(applicationStatus) || currentStage === 'completed') {
           notice.innerHTML = '<i class="bi bi-check2-circle"></i><span><strong>Workflow completed.</strong> This form can only be viewed.</span>';
-        } else if (applicationStatus === 'correction' && normalizedRole === 'staff') {
+        } else if (applicationStatus === 'correction' && context.canResubmitCorrection === true) {
           notice.innerHTML = '<i class="bi bi-exclamation-circle"></i><span><strong>Correction requested.</strong> Update the applicant sections highlighted for you, then resubmit. Approval sections remain locked.</span>';
         } else if (editableNow) {
           notice.innerHTML = '<i class="bi bi-pencil-square"></i><span><strong>' + label + '</strong>. Current stage: ' + stageLabel + '. Only your review section is editable; all other sections can only be viewed.</span>';

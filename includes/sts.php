@@ -505,10 +505,14 @@ function sts_notify_role(
     ?string $link = null,
     string $type = 'info',
     ?string $department = null,
-    ?int $onlyUserId = null
+    ?int $onlyUserId = null,
+    ?int $excludeUserId = null
 ): void {
     try {
         if ($onlyUserId !== null) {
+            if ($onlyUserId === $excludeUserId) {
+                return;
+            }
             sts_notify($onlyUserId, $title, $message, $link, $type);
             return;
         }
@@ -537,6 +541,9 @@ function sts_notify_role(
         $result = $stmt->get_result();
 
         while ($row = $result->fetch_assoc()) {
+            if ((int) $row['id'] === $excludeUserId) {
+                continue;
+            }
             if ($department !== null && $department !== '') {
                 $recipientDepartment = trim((string) ($row['department'] ?? ''));
 
@@ -609,19 +616,24 @@ function sts_notify_stage(
     string $stage,
     string $applicationNo,
     ?string $department = null,
-    ?int $assignedHodId = null
+    ?int $assignedHodId = null,
+    ?int $applicantUserId = null
 ): void {
     $link = 'submissions.php';
     $title = 'Application ready for review';
     $message = $applicationNo . ' is waiting for your review.';
 
     if ($stage === 'training') {
+        // Exclude the applicant and notify the other active Training officer.
         sts_notify_role(
             ['training_section'],
             $title,
             $message,
             $link,
-            'review'
+            'review',
+            null,
+            null,
+            $applicantUserId
         );
         return;
     }
@@ -1147,10 +1159,21 @@ function sts_can_review_application(array $application, array $user): bool
     }
 
     $stage = (string) ($application['current_stage'] ?? '');
+    $applicantId = (int) ($application['user_id'] ?? 0);
+    $reviewerId = (int) ($user['id'] ?? 0);
 
+    // No user, including Admin or the Training system owner, can approve
+    // or reject their own BPL or request corrections on it.
+    if ($applicantId <= 0 || $reviewerId <= 0 || $applicantId === $reviewerId) {
+        return false;
+    }
+
+    // Training staff submissions must pass through a *different* Training
+    // officer. Admin remains a custodian, not a bypass for this stage.
     if (
-        (int) ($application['user_id'] ?? 0) === (int) ($user['id'] ?? 0)
-        && normalized_role($user['role'] ?? '') !== 'admin'
+        $stage === 'training'
+        && sts_bpl_applicant_role($application) === 'training_section'
+        && normalized_role($user['role'] ?? '') !== 'training_section'
     ) {
         return false;
     }

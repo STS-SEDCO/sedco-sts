@@ -84,7 +84,7 @@
   const role = String(user.role || 'staff').toLowerCase();
   document.body.dataset.role = role;
 
-  const applicantRoles = ['staff','head_of_department','general_manager','pengerusi_besar','admin'];
+  const applicantRoles = ['staff','training_section','head_of_department','general_manager','pengerusi_besar','admin'];
   const canApplicantForms = applicantRoles.includes(role);
   const canTea = role === 'head_of_department';
 

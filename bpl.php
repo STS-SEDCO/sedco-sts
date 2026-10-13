@@ -18,6 +18,11 @@ $applicationStatus = 'pending';
 $isOwner = false;
 $applicationNo = trim((string) ($_GET['application'] ?? ''));
 
+if ($applicationNo === '' && !user_can_submit_form_type('BPL', $user)) {
+    http_response_code(403);
+    exit('You do not have permission to create a BPL application.');
+}
+
 if ($applicationNo === '') {
     $pendingPkkRequirement = sts_pending_pkk_requirement((int) ($user['id'] ?? 0));
 
@@ -608,11 +613,14 @@ window.SEDCO_FORM_CONTEXT = {
   formType: 'BPL',
   currentStage: <?= json_encode($currentStage) ?>,
   status: <?= json_encode($applicationStatus) ?>,
-  isOwner: <?= json_encode($mode === 'new' ? true : $isOwner) ?>
+  isOwner: <?= json_encode($mode === 'new' ? true : $isOwner) ?>,
+  canSubmitBpl: <?= json_encode(user_can_submit_form_type('BPL', $user)) ?>,
+  canReviewCurrentStage: <?= json_encode($canReviewCurrentStage) ?>,
+  canResubmitCorrection: <?= json_encode($canResubmitCorrection) ?>
 };
 </script>
 <script src="bpl-workflow.js?v=20261007-07"></script>
-<script src="form-permissions.js?v=20261003-06"></script>
+<script src="form-permissions.js?v=20261013-01"></script>
 <script src="digital-signature.js?v=20261006-03"></script>
 <script src="form-ux.js?v=20261008-07"></script>
 <script src="form-enhancements.js?v=20260930-59"></script>

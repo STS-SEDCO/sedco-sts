@@ -8,7 +8,7 @@ sts_ensure_followup_notifications($user);
 $role = normalized_role($user['role'] ?? '');
 $canStaffForms = in_array(
     $role,
-    ['staff', 'head_of_department', 'general_manager', 'pengerusi_besar', 'admin'],
+    ['staff', 'training_section', 'head_of_department', 'general_manager', 'pengerusi_besar', 'admin'],
     true
 );
 $teaEvaluationMonth = (int) (
@@ -24,7 +24,7 @@ $canNewBpl = $canStaffForms && $pendingPkkRequirement === null;
 $department = trim((string) ($user['department'] ?? ''));
 $followupItems = [];
 
-$applicantRoles = ['staff', 'head_of_department', 'general_manager', 'pengerusi_besar'];
+$applicantRoles = ['staff', 'training_section', 'head_of_department', 'general_manager', 'pengerusi_besar'];
 
 if (in_array($role, $applicantRoles, true)) {
     $ownStmt = db()->prepare(
@@ -119,7 +119,7 @@ if ($role === 'head_of_department') {
       </div>
       <div class="task-count-chip">
         <span class="task-count-dot"></span>
-        3 forms available
+        <?= (int) $canNewBpl + (int) $canPkk + (int) $canTea ?> forms available
       </div>
     </header>
 
