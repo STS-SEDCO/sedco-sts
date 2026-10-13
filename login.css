@@ -47,25 +47,9 @@ body.auth-page.login-page {
   background: linear-gradient(154deg, #851f29 0%, #751720 51%, #591018 100%);
   overflow: hidden;
 }
-.login-page .sts-login-brand::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  z-index: -1;
-  background: repeating-linear-gradient(135deg, transparent 0px,transparent 73px,
-               rgba(255,255,255,.018) 74px,rgba(255,255,255,.018) 75px);
-}
+.login-page .sts-login-brand::before,
 .login-page .sts-login-brand::after {
-  content: "";
-  position: absolute;
-  width: 160px;
-  height: 2px;
-  right: -55px;
-  bottom: 110px;
-  background: rgba(228,183,151,.6);
-  transform: rotate(-42deg);
-  pointer-events: none;
+  content: none;
 }
 .login-page .sts-login-brand-orbit { display: none; }
 .login-page .sts-login-brand-header,
@@ -86,7 +70,7 @@ body.auth-page.login-page {
 .login-page .sts-login-brand-logo img { width: 36px; height: 36px; object-fit: contain; }
 .login-page .sts-login-brand-name { display: flex; flex-direction: column; gap: 4px; }
 .login-page .sts-login-brand-name strong {
-  font-weight: 780; font-size: 16px; letter-spacing: .06em; line-height: 1;
+  font-weight: 750; font-size: 14px; letter-spacing: .035em; line-height: 1.15;
 }
 .login-page .sts-login-brand-name small {
   font-size: 11px; color: rgba(255,255,255,.76); letter-spacing: .012em;
@@ -128,14 +112,16 @@ body.auth-page.login-page {
   line-height: 1.8;
 }
 .login-page .sts-login-flow {
-  margin-top: 38px;
+  margin-top: 32px;
   border: none;
-  border-top: 1px solid rgba(255,255,255,.2);
   background: none;
-  padding: 22px 0 0;
+  padding: 0;
   border-radius: 0;
 }
 .login-page .sts-login-flow-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
   margin: 0 0 15px;
   color: rgba(255,255,255,.67);
   font-size: 10px;
@@ -162,7 +148,8 @@ body.auth-page.login-page {
   color: rgba(255,255,255,.58);
   font-size: 10px; letter-spacing: .02em;
 }
-.login-page .sts-login-brand-footer-mark { width: 18px; height: 1px; display: block; background: #e7b4a9; }
+/* The footer shield replaces the decorative line. */
+.login-page .sts-login-brand-footer-mark { display: none; }
 .login-page .sts-login-panel {
   display: flex;
   flex-direction: column;
@@ -188,7 +175,8 @@ body.auth-page.login-page {
   gap: 9px;
   margin-bottom: 17px;
 }
-.login-page .sts-login-eyebrow span { display: block; width: 19px; height: 2px; background: #b97a72; }
+/* The staff portal title uses an icon instead of a decorative dash. */
+.login-page .sts-login-eyebrow > span { display: inline; width: auto; height: auto; background: none; }
 .login-page .sts-login-form-wrap h1 {
   margin: 0 0 10px;
   font-size: clamp(28px, 3.2vw, 33px);
@@ -369,4 +357,24 @@ body.auth-page.login-page {
 }
 @media (prefers-reduced-motion: reduce) {
   .login-page .sts-login-input-wrap, .login-page .sts-login-submit { transition: none; }
+}
+
+/* Unified icon treatment for login section labels, without decorative dashes. */
+.login-page .sts-login-brand-kicker .sts-login-status-dot { display: none; }
+.login-page .sts-login-brand-kicker .sts-login-icon,
+.login-page .sts-login-flow-title .sts-login-icon,
+.login-page .sts-login-brand-footer .sts-login-icon {
+  width: 15px; height: 15px; flex: 0 0 15px;
+  color: #f0c3b7;
+}
+.login-page .sts-login-eyebrow .sts-login-icon {
+  width: 14px; height: 14px; flex: 0 0 14px;
+  color: var(--sedco-maroon);
+}
+.login-page .sts-login-brand-kicker { gap: 8px; }
+.login-page .sts-login-eyebrow { gap: 9px; }
+.login-page .sts-login-brand-footer { gap: 8px; }
+.login-page .sts-login-brand-name { min-width: 0; }
+@media (max-width: 760px) and (min-width: 631px) {
+  .login-page .sts-login-brand-name strong { font-size: 12px; }
 }

@@ -71,7 +71,7 @@ $rememberedEmail = (string) ($_COOKIE['sedco_email'] ?? '');
   <meta name="theme-color" content="#7b161c">
   <title>Sign In | SEDCO Smart Training System</title>
   <link rel="stylesheet" href="sedco-saas.css?v=20260930-46">
-  <link rel="stylesheet" href="login.css?v=20261013-02">
+  <link rel="stylesheet" href="login.css?v=20261013-03">
 </head>
 <body class="auth-page login-page">
   <main class="sts-login-shell">
@@ -84,17 +84,17 @@ $rememberedEmail = (string) ($_COOKIE['sedco_email'] ?? '');
             <img src="assets/sedco-logo.png" alt="SEDCO logo" width="38" height="38">
           </span>
           <span class="sts-login-brand-name">
-            <strong>SEDCO</strong>
-            <small>Smart Training System</small>
+            <strong>SMART TRAINING SYSTEM</strong>
+            <small>SEDCO Learning &amp; Development</small>
           </span>
         </header>
 
         <div class="sts-login-brand-main">
-          <span class="sts-login-brand-kicker"><span class="sts-login-status-dot"></span> LEARNING & DEVELOPMENT</span>
+          <span class="sts-login-brand-kicker"><svg class="sts-login-icon" viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5.5c2.7-1.3 5.3-1.3 8 0v14c-2.7-1.3-5.3-1.3-8 0V5.5Z"></path><path d="M20 5.5c-2.7-1.3-5.3-1.3-8 0v14c2.7-1.3 5.3-1.3 8 0V5.5Z"></path></svg> <span>LEARNING &amp; DEVELOPMENT</span></span>
           <h2>Training, made<br><span>simpler.</span></h2>
           <p>A single, streamlined workspace for training requests, approvals and evaluations.</p>
           <div class="sts-login-flow" aria-label="Training workflow">
-            <div class="sts-login-flow-title">Your training journey</div>
+            <div class="sts-login-flow-title"><svg class="sts-login-icon" viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="5" cy="12" r="2"></circle><circle cx="19" cy="5" r="2"></circle><circle cx="19" cy="19" r="2"></circle><path d="M7 12h5a4 4 0 0 0 4-4V7M12 12a4 4 0 0 1 4 4v1"></path></svg> <span>Your training journey</span></div>
             <div class="sts-login-flow-steps">
               <div><span>01</span><strong>Apply</strong><small>Request</small></div>
               <div><span>02</span><strong>Review</strong><small>Approve</small></div>
@@ -104,19 +104,19 @@ $rememberedEmail = (string) ($_COOKIE['sedco_email'] ?? '');
         </div>
 
         <footer class="sts-login-brand-footer">
-          <span class="sts-login-brand-footer-mark" aria-hidden="true"></span>
-          SEDCO Smart Training System
+          <svg class="sts-login-icon" viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2.5 4.5 5.5v6.4c0 4.7 2.8 7.8 7.5 9.6 4.7-1.8 7.5-4.9 7.5-9.6V5.5L12 2.5Z"></path><path d="m8.7 12 2.2 2.2 4.4-4.4"></path></svg>
+          <span>SEDCO Smart Training System</span>
         </footer>
       </aside>
 
       <div class="sts-login-panel">
         <div class="sts-login-mobile-brand">
           <img src="assets/sedco-logo.png" alt="SEDCO logo" width="36" height="36">
-          <span><strong>SEDCO</strong><small>Smart Training System</small></span>
+          <span><strong>SMART TRAINING SYSTEM</strong><small>SEDCO</small></span>
         </div>
 
         <div class="sts-login-form-wrap">
-          <div class="sts-login-eyebrow"><span></span> STAFF PORTAL</div>
+          <div class="sts-login-eyebrow"><svg class="sts-login-icon" viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="3.5" width="7" height="7" rx="1.5"></rect><rect x="13.5" y="3.5" width="7" height="7" rx="1.5"></rect><rect x="3.5" y="13.5" width="7" height="7" rx="1.5"></rect><rect x="13.5" y="13.5" width="7" height="7" rx="1.5"></rect></svg> <span>STAFF PORTAL</span></div>
           <h1>Welcome back.</h1>
           <p class="sts-login-intro">Sign in with your SEDCO account to access your workspace.</p>
 
