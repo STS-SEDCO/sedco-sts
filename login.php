@@ -67,113 +67,146 @@ $rememberedEmail = (string) ($_COOKIE['sedco_email'] ?? '');
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Smart Training System: Login</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#7b161c">
+  <title>Sign In | SEDCO Smart Training System</title>
   <link rel="stylesheet" href="sedco-saas.css?v=20260930-46">
+  <link rel="stylesheet" href="login.css?v=20261013-01">
 </head>
 <body class="auth-page login-page">
-  <section class="vh-100 d-flex align-items-center">
-    <div class="container">
-      <div class="row justify-content-center">
-        <div class="col-lg-10">
-          <div class="card text-black">
-            <div class="card-body p-md-5">
-              <div class="row align-items-center justify-content-center">
-                <div class="col-md-10 col-lg-6">
-                  <p class="text-center h1 fw-bold mb-4">SMART TRAINING SYSTEM</p>
-                  <p class="text-center text-muted mb-4">Sign in to continue to your workspace.</p>
+  <main class="sts-login-shell">
+    <div class="sts-login-card">
 
-                  <?php if ($error): ?>
-                    <div class="alert alert-danger" role="alert"><?= e($error) ?></div>
-                  <?php elseif (isset($_GET['registered'])): ?>
-                    <div class="alert alert-success" role="alert">
-                      Registration successful. You can sign in now.
-                    </div>
-                  <?php endif; ?>
+      <aside class="sts-login-brand" aria-label="About Smart Training System">
+        <div class="sts-login-brand-orbit" aria-hidden="true"></div>
+        <header class="sts-login-brand-header">
+          <span class="sts-login-brand-logo">
+            <img src="assets/sedco-logo.png" alt="SEDCO logo" width="38" height="38">
+          </span>
+          <span class="sts-login-brand-name">
+            <strong>SEDCO</strong>
+            <small>Smart Training System</small>
+          </span>
+        </header>
 
-                  <form method="post" action="login.php">
-                    <?= csrf_field() ?>
-                    <div class="form-outline mb-3">
-                      <input
-                        type="email"
-                        name="email"
-                        class="form-control bg-light"
-                        placeholder="Email address"
-                        autocomplete="email"
-                        required
-                        value="<?= e($rememberedEmail) ?>"
-                      >
-                    </div>
+        <div class="sts-login-brand-main">
+          <span class="sts-login-brand-kicker"><span class="sts-login-status-dot"></span> Your training management workspace</span>
+          <h2>Smarter training.<br><span>Stronger teams.</span></h2>
+          <p>Manage training requests, approvals and evaluations together in one streamlined experience.</p>
 
-                    <div class="form-outline mb-3 password-container position-relative">
-                      <input
-                        type="password"
-                        id="password"
-                        name="password"
-                        class="form-control bg-light"
-                        placeholder="Password"
-                        autocomplete="current-password"
-                        required
-                      >
-                      <button
-                        class="btn border-0 position-absolute top-50 end-0 translate-middle-y me-1"
-                        type="button"
-                        id="togglePassword"
-                        aria-label="Show or hide password"
-                      >
-                        <i class="fa fa-eye"></i>
-                      </button>
-                    </div>
-
-                    <div class="form-check mb-4">
-                      <input
-                        class="form-check-input"
-                        type="checkbox"
-                        name="remember"
-                        id="remember"
-                        <?= $rememberedEmail !== '' ? 'checked' : '' ?>
-                      >
-                      <label class="form-check-label" for="remember">Remember me</label>
-                    </div>
-
-                    <button type="submit" class="btn btn-primary w-100 mb-3">Login</button>
-
-                    <div class="text-center">
-                      <small>
-                        New to Smart Training System?
-                        <a href="signup.php" class="text-primary text-decoration-none fw-bold">Sign up</a>
-                      </small>
-                    </div>
-                  </form>
-                </div>
-
-                <div class="col-lg-6 d-none d-lg-flex align-items-center justify-content-center">
-                  <img
-                    src="https://tmr.scione.com/login-assetts/images/scione-login-.svg"
-                    class="img-fluid"
-                    alt=""
-                  >
-                </div>
-              </div>
+          <div class="sts-login-flow" aria-label="Training management workflow">
+            <div class="sts-login-flow-title">Simple. Connected. Accountable.</div>
+            <div class="sts-login-flow-steps">
+              <div><span>01</span><strong>Apply</strong><small>Training requests</small></div>
+              <div><span>02</span><strong>Approve</strong><small>Clear review flow</small></div>
+              <div><span>03</span><strong>Evaluate</strong><small>Track outcomes</small></div>
             </div>
           </div>
         </div>
+
+        <footer class="sts-login-brand-footer">
+          <span class="sts-login-brand-footer-mark" aria-hidden="true"></span>
+          A smarter way to manage learning at SEDCO.
+        </footer>
+      </aside>
+
+      <div class="sts-login-panel">
+        <div class="sts-login-mobile-brand">
+          <img src="assets/sedco-logo.png" alt="SEDCO logo" width="36" height="36">
+          <span><strong>SEDCO</strong><small>Smart Training System</small></span>
+        </div>
+
+        <div class="sts-login-form-wrap">
+          <div class="sts-login-eyebrow"><span></span> WELCOME BACK</div>
+          <h1>Sign in to your<br class="sts-login-desktop-break"> account</h1>
+          <p class="sts-login-intro">Please enter your work account details to continue to your workspace.</p>
+
+          <?php if ($error): ?>
+            <div class="sts-login-alert sts-login-alert-error" id="sts-login-error" role="alert">
+              <svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M12 7.5v5.5M12 16.5h.01" stroke-linecap="round"></path></svg>
+              <span><?= e($error) ?></span>
+            </div>
+          <?php elseif (isset($_GET['registered'])): ?>
+            <div class="sts-login-alert sts-login-alert-success" role="status">
+              <svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="m8 12 2.5 2.5L16 9" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+              <span>Registration successful. You can sign in now.</span>
+            </div>
+          <?php endif; ?>
+
+          <form method="post" action="login.php" class="sts-login-form" aria-label="Sign in to SEDCO">
+            <?= csrf_field() ?>
+            <div class="sts-login-field">
+              <label for="loginEmail">Email address</label>
+              <div class="sts-login-input-wrap">
+                <svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="3"></rect><path d="m4 7 8 6 8-6" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                <input id="loginEmail" type="email" name="email" placeholder="name@sedco.com.my"
+                  value="<?= e($rememberedEmail) ?>" autocomplete="username" autocapitalize="none"
+                  spellcheck="false" required>
+              </div>
+            </div>
+
+            <div class="sts-login-field">
+              <label for="password">Password</label>
+              <div class="sts-login-input-wrap sts-login-password-wrap">
+                <svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="5" y="10" width="14" height="11" rx="2.5"></rect><path d="M8 10V7a4 4 0 0 1 8 0v3" stroke-linecap="round"></path></svg>
+                <input id="password" type="password" name="password" placeholder="Enter your password"
+                  autocomplete="current-password" required>
+                <button id="togglePassword" class="sts-login-visibility" type="button"
+                  aria-label="Show password" aria-controls="password" aria-pressed="false" title="Show password">
+                  <svg class="sts-login-eye-show" viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="M2 12s3.6-6 10-6 10 6 10 6-3.6 6-10 6-10-6-10-6Z"></path>
+                    <circle cx="12" cy="12" r="3"></circle>
+                  </svg>
+                  <svg class="sts-login-eye-hide" viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="M10.6 6.1A12.4 12.4 0 0 1 12 6c6.4 0 10 6 10 6a16 16 0 0 1-3.2 3.6M6.2 7.6C3.4 9.3 2 12 2 12s3.6 6 10 6c1.7 0 3.2-.4 4.5-1.1"></path>
+                    <path d="M9.9 9.9a3 3 0 0 0 4.2 4.2M3 3l18 18"></path>
+                  </svg>
+                </button>
+              </div>
+            </div>
+
+            <div class="sts-login-options">
+              <label class="sts-login-remember" for="remember">
+                <input type="checkbox" name="remember" id="remember" <?= $rememberedEmail !== '' ? 'checked' : '' ?>>
+                <span>Remember my email</span>
+              </label>
+            </div>
+
+            <button type="submit" class="sts-login-submit">
+              <span>Sign in</span>
+              <svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6"></path></svg>
+            </button>
+          </form>
+
+          <div class="sts-login-register">
+            New to Smart Training System? <a href="signup.php">Create an account <span aria-hidden="true">↗</span></a>
+          </div>
+        </div>
+
+        <footer class="sts-login-panel-footer">
+          <span>© <?= date('Y') ?> SEDCO Smart Training System</span>
+          <span class="sts-login-secure"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M12 2 4 5v7c0 5 3.3 8.1 8 10 4.7-1.9 8-5 8-10V5l-8-3Z"></path><path d="m9 12 2 2 4-4" stroke-linecap="round"></path></svg> Role based access</span>
+        </footer>
       </div>
     </div>
-  </section>
+  </main>
 
   <script>
-    document.getElementById('togglePassword').addEventListener('click', () => {
+    (() => {
       const input = document.getElementById('password');
-      const icon = document.querySelector('#togglePassword i');
-      const show = input.type === 'password';
+      const toggle = document.getElementById('togglePassword');
+      if (!input || !toggle) return;
 
-      input.type = show ? 'text' : 'password';
-      icon.classList.toggle('fa-eye', !show);
-      icon.classList.toggle('fa-eye-slash', show);
-    });
+      toggle.addEventListener('click', () => {
+        const showing = input.type === 'password';
+        input.type = showing ? 'text' : 'password';
+        toggle.classList.toggle('is-visible', showing);
+        toggle.setAttribute('aria-pressed', showing ? 'true' : 'false');
+        toggle.setAttribute('aria-label', showing ? 'Hide password' : 'Show password');
+        toggle.title = showing ? 'Hide password' : 'Show password';
+        input.focus({ preventScroll: true });
+      });
+    })();
   </script>
 </body>
 </html>
