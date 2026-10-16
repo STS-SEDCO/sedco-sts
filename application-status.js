@@ -65,7 +65,7 @@
       case 'training': return 'Training Department';
       case 'gm': return 'General Manager';
       case 'chairman': return 'Pengerusi';
-      case 'finance': return 'Kewangan';
+      case 'training_final': return 'Training (Final Action)';
       case 'completed': return 'Completed';
       default: return 'Pending';
     }
@@ -121,7 +121,7 @@
 
     const required = Array.isArray(application.requiredStages) && application.requiredStages.length
       ? application.requiredStages
-      : ['training','hod','gm','chairman','finance'];
+      : ['training','hod','gm','chairman','training_final'];
 
     const steps = required.map(stage => workflowStepMeta(application, stage));
     const completed = String(application.status || '').toLowerCase() === 'approved';
