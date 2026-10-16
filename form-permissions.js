@@ -28,7 +28,7 @@
       hod: 'head_of_department',
       gm: 'general_manager',
       chairman: 'pengerusi_besar',
-      finance: 'finance'
+      training_final: 'training_section'
     }[stage] || null;
   }
 

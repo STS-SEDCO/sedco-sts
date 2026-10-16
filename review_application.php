@@ -68,7 +68,7 @@ try {
         'hod' => ['ulasan_bahagian', 'tarikh_bahagian', 'tt_bahagian'],
         'gm' => ['kelulusan_pgs', 'tarikh_pgs', 'tt_pgs'],
         'chairman' => ['kelulusan_sedco', 'tarikh_sedco', 'tt_sedco'],
-        'finance' => ['bayaran_kursus', 'pendahuluan_diterima', 'telah_didaftar', 'tarikh_didaftar'],
+        'training_final' => ['ulasan_latihan_final', 'tarikh_latihan_final', 'tt_latihan_final', 'bayaran_kursus', 'pendahuluan_diterima', 'telah_didaftar', 'tarikh_didaftar'],
     ];
 
     $payload = json_decode((string) $application['payload'], true);
@@ -93,7 +93,7 @@ try {
             : ['ulasan_bahagian', 'tt_bahagian'],
         'gm' => ['tt_pgs'],
         'chairman' => ['tt_sedco'],
-        'finance' => ['bayaran_kursus', 'pendahuluan_diterima', 'telah_didaftar'],
+        'training_final' => ['ulasan_latihan_final', 'tt_latihan_final', 'bayaran_kursus', 'pendahuluan_diterima', 'telah_didaftar'],
         default => [],
     };
 
@@ -112,6 +112,7 @@ try {
             'hod' => 'tt_bahagian',
             'gm' => 'tt_pgs',
             'chairman' => 'tt_sedco',
+            'training_final' => 'tt_latihan_final',
             default => null,
         };
 
@@ -153,6 +154,7 @@ try {
         'hod' => 'tarikh_bahagian',
         'gm' => 'tarikh_pgs',
         'chairman' => 'tarikh_sedco',
+        'training_final' => 'tarikh_latihan_final',
         default => null,
     };
 
@@ -160,7 +162,7 @@ try {
         $payload[$reviewDateField] = $decisionDate;
     }
 
-    if ($stage === 'finance') {
+    if ($stage === 'training_final') {
         $payload['tarikh_didaftar'] = trim((string) ($payload['telah_didaftar'] ?? '')) === 'Ya'
             ? $decisionDate
             : '';
@@ -199,6 +201,9 @@ try {
         'masa_bertolak' => 'Masa Bertolak',
         'masa_kembali' => 'Masa Kembali',
         'pendahuluan' => 'Pendahuluan',
+        'pendahuluan_nyatakan' => 'Nyatakan Pendahuluan',
+        'tarikh_tutup' => 'Tarikh Tutup Pendaftaran',
+        'kaitan_kursus' => 'Kaitan Kursus dengan Tugas',
     ];
 
     if ($decision === 'correction') {
@@ -237,7 +242,7 @@ try {
             'hod' => trim((string) ($payload['ulasan_bahagian'] ?? '')),
             'gm' => trim((string) ($payload['kelulusan_pgs'] ?? '')),
             'chairman' => trim((string) ($payload['kelulusan_sedco'] ?? '')),
-            'finance' => 'Financial processing completed',
+            'training_final' => trim((string) ($payload['ulasan_latihan_final'] ?? '')),
             default => '',
         };
     }

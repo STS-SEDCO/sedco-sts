@@ -191,7 +191,8 @@ function approval_status_label(string $status): string
             <option value="hod">Head of Department</option>
             <option value="gm">General Manager</option>
             <option value="chairman">Pengerusi</option>
-            <option value="finance">Kewangan</option>
+            <option value="training_final">Training (Final)</option>
+            <option value="finance">Kewangan (Legacy)</option>
           </select>
           <?php endif; ?>
 

@@ -321,7 +321,8 @@
       training: 'tarikh_latihan',
       hod: 'tarikh_bahagian',
       gm: 'tarikh_pgs',
-      chairman: 'tarikh_sedco'
+      chairman: 'tarikh_sedco',
+      training_final: 'tarikh_latihan_final'
     };
 
     const activeDateName = dateByStage[String(context.currentStage || '').toLowerCase()];
@@ -344,7 +345,7 @@
 
       if (
         isActiveReview
-        && String(context.currentStage || '').toLowerCase() === 'finance'
+        && String(context.currentStage || '').toLowerCase() === 'training_final'
         && selected === 'Ya'
       ) {
         registrationDate.value = malaysiaDate();

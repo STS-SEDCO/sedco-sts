@@ -17,7 +17,6 @@ function review_stage_for_role(?string $role): ?string
         'head_of_department' => 'hod',
         'general_manager' => 'gm',
         'pengerusi_besar' => 'chairman',
-        'finance' => 'finance',
         default => null,
     };
 }
@@ -26,14 +25,17 @@ function user_can_review_applications(?array $user = null): bool
 {
     return in_array(normalized_role($user['role'] ?? ''), [
         'admin', 'training_section', 'head_of_department', 'general_manager',
-        'pengerusi_besar', 'finance',
+        'pengerusi_besar',
     ], true);
 }
 
 function user_can_review_stage(string $stage, ?array $user = null): bool
 {
     if (normalized_role($user['role'] ?? '') === 'admin') {
-        return in_array($stage, ['training', 'hod', 'gm', 'chairman', 'finance'], true);
+        return in_array($stage, ['training', 'hod', 'gm', 'chairman', 'training_final'], true);
+    }
+    if (normalized_role($user['role'] ?? '') === 'training_section') {
+        return in_array($stage, ['training', 'training_final'], true);
     }
     return review_stage_for_role($user['role'] ?? '') === $stage;
 }
@@ -92,7 +94,12 @@ check_permission(!sts_can_view_application($otherStage, $chairman), 'Pengerusi c
 
 $financeStage = $app;
 $financeStage['current_stage'] = 'finance';
-check_permission(sts_can_view_application($financeStage, $finance), 'Finance can open its active stage');
+check_permission(!sts_can_view_application($financeStage, $finance), 'Finance no longer has an active approval queue');
+check_permission(user_can_review_stage('training_final', $trainingA), 'Training can review final stage');
+check_permission(!user_can_review_stage('training_final', $finance), 'Finance cannot review final stage');
+check_permission(!user_can_review_stage('training_final', $hod), 'HOD cannot review final stage');
+check_permission(user_can_review_stage('training_final', $admin), 'Admin has authorized access to final stage');
+check_permission(sts_bpl_required_stages(['applicant_role' => 'staff']) === ['training','hod','gm','chairman','training_final'], 'New BPL stage list ends at Training Final');
 
 // Training officers can apply but cannot review their own BPL.
 $trainingApplication = [
