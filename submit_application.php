@@ -134,6 +134,19 @@ if ($type === 'BPL') {
         exit('Course fee is outside the allowed range.');
     }
 
+    if (($payload['pendahuluan'] ?? '') === 'Ya' && trim((string) ($payload['pendahuluan_nyatakan'] ?? '')) === '') {
+        http_response_code(422);
+        exit('Sila nyatakan maklumat pendahuluan apabila memilih Ya.');
+    }
+    if (($payload['pendahuluan'] ?? '') !== 'Ya') {
+        $payload['pendahuluan_nyatakan'] = '';
+    }
+    $closingDate = trim((string) ($payload['tarikh_tutup'] ?? ''));
+    if ($closingDate !== '' && !$validDate($closingDate)) {
+        http_response_code(422);
+        exit('Tarikh tutup pendaftaran tidak sah.');
+    }
+
     $vehicles = $payload['kenderaan'] ?? [];
     $vehicles = is_array($vehicles) ? array_map('strval', $vehicles) : [];
 
@@ -434,9 +447,9 @@ if ($type === 'TEA') {
 if ($type === 'BPL') {
     $allowedKeys = [
         'nama', 'bahagian', 'jawatan', 'kursus', 'tarikh',
-        'tajuk', 'penganjur', 'tarikh_mula', 'tarikh_tamat',
+        'tajuk', 'penganjur', 'tarikh_mula', 'tarikh_tamat', 'tarikh_tutup', 'kaitan_kursus',
         'tempat', 'yuran', 'kandungan', 'tempat_tugas',
-        'kenderaan', 'kenderaan_other', 'masa_bertolak', 'masa_kembali', 'pendahuluan'
+        'kenderaan', 'kenderaan_other', 'masa_bertolak', 'masa_kembali', 'pendahuluan', 'pendahuluan_nyatakan'
     ];
 
     $payload = array_intersect_key($payload, array_flip($allowedKeys));
