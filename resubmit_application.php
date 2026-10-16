@@ -58,9 +58,9 @@ try {
 
     $allowedKeys = [
         'nama', 'bahagian', 'jawatan', 'kursus', 'tarikh',
-        'tajuk', 'penganjur', 'tarikh_mula', 'tarikh_tamat',
+        'tajuk', 'penganjur', 'tarikh_mula', 'tarikh_tamat', 'tarikh_tutup', 'kaitan_kursus',
         'tempat', 'yuran', 'kandungan', 'tempat_tugas',
-        'kenderaan', 'kenderaan_other', 'masa_bertolak', 'masa_kembali', 'pendahuluan'
+        'kenderaan', 'kenderaan_other', 'masa_bertolak', 'masa_kembali', 'pendahuluan', 'pendahuluan_nyatakan'
     ];
 
     $payload = json_decode((string) $application['payload'], true);
@@ -100,6 +100,13 @@ try {
         throw new RuntimeException(
             'Your department does not have an assigned HOD yet. Please ask the STS administrator to configure the HOD before resubmitting BPL.'
         );
+    }
+
+    if (($payload['pendahuluan'] ?? '') === 'Ya' && trim((string) ($payload['pendahuluan_nyatakan'] ?? '')) === '') {
+        throw new RuntimeException('Sila nyatakan maklumat pendahuluan apabila memilih Ya.');
+    }
+    if (($payload['pendahuluan'] ?? '') !== 'Ya') {
+        $payload['pendahuluan_nyatakan'] = '';
     }
 
     $start = trim((string) ($payload['tarikh_mula'] ?? ''));
