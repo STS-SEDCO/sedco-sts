@@ -59,16 +59,18 @@ try {
 
     $stage = (string) $application['current_stage'];
 
-    if ($decision === 'correction' && !in_array($stage, ['training', 'hod'], true)) {
+    // Correction is available at Training (initial), HOD, and Training Final stages.
+    if ($decision === 'correction' && !in_array($stage, ['training', 'hod', 'training_final'], true)) {
         http_response_code(403);
         throw new RuntimeException('Correction requests are available only at the Training Department or Head of Department stage.');
     }
     $allowedByStage = [
-        'training' => ['ulasan_latihan', 'tarikh_latihan', 'tt_latihan'],
-        'hod' => ['ulasan_bahagian', 'tarikh_bahagian', 'tt_bahagian'],
-        'gm' => ['kelulusan_pgs', 'tarikh_pgs', 'tt_pgs'],
-        'chairman' => ['kelulusan_sedco', 'tarikh_sedco', 'tt_sedco'],
-        'finance' => ['bayaran_kursus', 'pendahuluan_diterima', 'telah_didaftar', 'tarikh_didaftar'],
+        'training'       => ['ulasan_latihan', 'tarikh_latihan', 'tt_latihan'],
+        'hod'            => ['ulasan_bahagian', 'tarikh_bahagian', 'tt_bahagian'],
+        'gm'             => ['kelulusan_pgs', 'tarikh_pgs', 'tt_pgs'],
+        'chairman'       => ['kelulusan_sedco', 'tarikh_sedco', 'tt_sedco'],
+        'training_final' => ['ulasan_final', 'tarikh_final', 'tt_final',
+                             'bayaran_kursus', 'pendahuluan_diterima', 'telah_didaftar', 'tarikh_didaftar'],
     ];
 
     $payload = json_decode((string) $application['payload'], true);
@@ -91,9 +93,11 @@ try {
         'hod' => $decision === 'correction'
             ? ['ulasan_bahagian']
             : ['ulasan_bahagian', 'tt_bahagian'],
-        'gm' => ['tt_pgs'],
-        'chairman' => ['tt_sedco'],
-        'finance' => ['bayaran_kursus', 'pendahuluan_diterima', 'telah_didaftar'],
+        'gm'             => ['tt_pgs'],
+        'chairman'       => ['tt_sedco'],
+        'training_final' => $decision === 'correction'
+            ? ['ulasan_final']
+            : ['ulasan_final', 'tt_final', 'bayaran_kursus', 'pendahuluan_diterima', 'telah_didaftar'],
         default => [],
     };
 
@@ -108,11 +112,12 @@ try {
 
     if ($decision !== 'correction') {
         $signatureField = match ($stage) {
-            'training' => 'tt_latihan',
-            'hod' => 'tt_bahagian',
-            'gm' => 'tt_pgs',
-            'chairman' => 'tt_sedco',
-            default => null,
+            'training'       => 'tt_latihan',
+            'hod'            => 'tt_bahagian',
+            'gm'             => 'tt_pgs',
+            'chairman'       => 'tt_sedco',
+            'training_final' => 'tt_final',
+            default          => null,
         };
 
         if ($signatureField !== null) {
@@ -149,18 +154,20 @@ try {
     ))->format('Y-m-d');
 
     $reviewDateField = match ($stage) {
-        'training' => 'tarikh_latihan',
-        'hod' => 'tarikh_bahagian',
-        'gm' => 'tarikh_pgs',
-        'chairman' => 'tarikh_sedco',
-        default => null,
+        'training'       => 'tarikh_latihan',
+        'hod'            => 'tarikh_bahagian',
+        'gm'             => 'tarikh_pgs',
+        'chairman'       => 'tarikh_sedco',
+        'training_final' => 'tarikh_final',
+        default          => null,
     };
 
     if ($reviewDateField !== null) {
         $payload[$reviewDateField] = $decisionDate;
     }
 
-    if ($stage === 'finance') {
+    // Training Final: auto-fill registration date if the course was registered.
+    if ($stage === 'training_final') {
         $payload['tarikh_didaftar'] = trim((string) ($payload['telah_didaftar'] ?? '')) === 'Ya'
             ? $decisionDate
             : '';
@@ -185,20 +192,23 @@ try {
     $note = trim((string) ($_POST['review_comment'] ?? ''));
 
     $correctionFieldLabels = [
-        'kursus' => 'Kursus / Seminar',
-        'tajuk' => 'Tajuk Kursus',
-        'penganjur' => 'Penganjur',
-        'tarikh_mula' => 'Tarikh Mula',
-        'tarikh_tamat' => 'Tarikh Tamat',
-        'tempat' => 'Tempat Kursus',
-        'yuran' => 'Yuran',
-        'kandungan' => 'Kandungan Kursus',
-        'tempat_tugas' => 'Tempat Bertugas',
-        'kenderaan' => 'Kenderaan',
-        'kenderaan_other' => 'Kenderaan Lain',
-        'masa_bertolak' => 'Masa Bertolak',
-        'masa_kembali' => 'Masa Kembali',
-        'pendahuluan' => 'Pendahuluan',
+        'kursus'               => 'Kursus / Seminar',
+        'kaitan_kursus'        => 'Kaitan Kursus dengan Tugas',
+        'tajuk'                => 'Tajuk Kursus',
+        'penganjur'            => 'Penganjur',
+        'tarikh_mula'          => 'Tarikh Mula',
+        'tarikh_tamat'         => 'Tarikh Tamat',
+        'tarikh_tutup'         => 'Tarikh Tutup Pendaftaran',
+        'tempat'               => 'Tempat Kursus',
+        'yuran'                => 'Yuran',
+        'kandungan'            => 'Kandungan Kursus',
+        'tempat_tugas'         => 'Tempat Bertugas',
+        'kenderaan'            => 'Kenderaan',
+        'kenderaan_other'      => 'Kenderaan Lain',
+        'masa_bertolak'        => 'Masa Bertolak',
+        'masa_kembali'         => 'Masa Kembali',
+        'pendahuluan'          => 'Pendahuluan',
+        'pendahuluan_nyatakan' => 'Pendahuluan — Nyatakan',
     ];
 
     if ($decision === 'correction') {
@@ -233,28 +243,32 @@ try {
 
     if ($note === '') {
         $note = match ($stage) {
-            'training' => trim((string) ($payload['ulasan_latihan'] ?? '')),
-            'hod' => trim((string) ($payload['ulasan_bahagian'] ?? '')),
-            'gm' => trim((string) ($payload['kelulusan_pgs'] ?? '')),
-            'chairman' => trim((string) ($payload['kelulusan_sedco'] ?? '')),
-            'finance' => 'Financial processing completed',
-            default => '',
+            'training'       => trim((string) ($payload['ulasan_latihan'] ?? '')),
+            'hod'            => trim((string) ($payload['ulasan_bahagian'] ?? '')),
+            'gm'             => trim((string) ($payload['kelulusan_pgs'] ?? '')),
+            'chairman'       => trim((string) ($payload['kelulusan_sedco'] ?? '')),
+            'training_final' => trim((string) ($payload['ulasan_final'] ?? '')),
+            default          => '',
         };
     }
 
     if ($decision === 'correction') {
         $correctionNote = match ($stage) {
-            'training' => trim((string) ($payload['ulasan_latihan'] ?? '')),
-            'hod' => trim((string) ($payload['ulasan_bahagian'] ?? '')),
-            default => '',
+            'training'       => trim((string) ($payload['ulasan_latihan'] ?? '')),
+            'hod'            => trim((string) ($payload['ulasan_bahagian'] ?? '')),
+            'training_final' => trim((string) ($payload['ulasan_final'] ?? '')),
+            default          => '',
         };
 
         if ($correctionNote === '') {
             http_response_code(422);
             throw new RuntimeException(
-                $stage === 'training'
-                    ? 'Please write the correction instructions in Section D before sending the form back to the applicant.'
-                    : 'Please write the correction instructions in Section E before sending the form back to the applicant.'
+                match ($stage) {
+                    'training'       => 'Please write the correction instructions in Section D before sending the form back to the applicant.',
+                    'hod'            => 'Please write the correction instructions in Section E before sending the form back to the applicant.',
+                    'training_final' => 'Please write the correction instructions in Section H before sending the form back to the applicant.',
+                    default          => 'Please provide correction instructions before sending the form back to the applicant.',
+                }
             );
         }
     }

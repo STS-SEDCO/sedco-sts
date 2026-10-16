@@ -331,12 +331,11 @@ function sts_stage_reviewer_ids(
         }
 
         $roles = match ($stage) {
-            'training' => ['training_section'],
-            'hod' => ['head_of_department','head_of_division'],
-            'gm' => ['general_manager'],
-            'chairman' => ['pengerusi_besar'],
-            'finance' => ['finance'],
-            default => [],
+            'training', 'training_final' => ['training_section'],
+            'hod'            => ['head_of_department','head_of_division'],
+            'gm'             => ['general_manager'],
+            'chairman'       => ['pengerusi_besar'],
+            default          => [],
         };
 
         if (!$roles) {
@@ -673,13 +672,17 @@ function sts_notify_stage(
         return;
     }
 
-    if ($stage === 'finance') {
+    if ($stage === 'training_final') {
+        // Training Final Action — exclude the applicant (same logic as initial training stage).
         sts_notify_role(
-            ['finance'],
+            ['training_section'],
             $title,
             $message,
             $link,
-            'review'
+            'review',
+            null,
+            null,
+            $applicantUserId
         );
     }
 }
@@ -855,14 +858,26 @@ function sts_visible_application_payload(
         'penganjur', 'tarikh_mula', 'tarikh_tamat', 'tempat',
         'yuran', 'kandungan', 'tempat_tugas', 'kenderaan',
         'kenderaan_other', 'masa_bertolak', 'masa_kembali', 'pendahuluan',
+        // P0 new applicant fields
+        'kaitan_kursus', 'tarikh_tutup', 'pendahuluan_nyatakan',
     ];
-    $reviewFields = match (review_stage_for_role($user['role'] ?? '')) {
-        'training' => ['ulasan_latihan', 'tarikh_latihan', 'tt_latihan'],
-        'hod' => ['ulasan_bahagian', 'tarikh_bahagian', 'tt_bahagian'],
-        'gm' => ['kelulusan_pgs', 'tarikh_pgs', 'tt_pgs'],
-        'chairman' => ['kelulusan_sedco', 'tarikh_sedco', 'tt_sedco'],
-        'finance' => ['bayaran_kursus', 'pendahuluan_diterima', 'telah_didaftar', 'tarikh_didaftar'],
-        default => [],
+
+    $role = normalized_role($user['role'] ?? '');
+    $currentStage = (string) ($application['current_stage'] ?? '');
+
+    // training_section sees their own section based on the current stage.
+    $effectiveStage = ($role === 'training_section' && $currentStage === 'training_final')
+        ? 'training_final'
+        : review_stage_for_role($user['role'] ?? '');
+
+    $reviewFields = match ($effectiveStage) {
+        'training'       => ['ulasan_latihan', 'tarikh_latihan', 'tt_latihan'],
+        'hod'            => ['ulasan_bahagian', 'tarikh_bahagian', 'tt_bahagian'],
+        'gm'             => ['kelulusan_pgs', 'tarikh_pgs', 'tt_pgs'],
+        'chairman'       => ['kelulusan_sedco', 'tarikh_sedco', 'tt_sedco'],
+        'training_final' => ['ulasan_final', 'tarikh_final', 'tt_final',
+                             'bayaran_kursus', 'pendahuluan_diterima', 'telah_didaftar', 'tarikh_didaftar'],
+        default          => [],
     };
 
     return array_intersect_key($payload, array_flip(array_merge($applicantFields, $reviewFields)));
@@ -989,13 +1004,17 @@ function sts_bpl_applicant_role(array $application): string
 
 function sts_bpl_required_stages(array $application): array
 {
-    $stages = ['training', 'hod', 'gm', 'chairman', 'finance'];
+    // P0 workflow update: Finance removed; Training section acts twice —
+    // initial review (training) and final action (training_final).
+    $stages = ['training', 'hod', 'gm', 'chairman', 'training_final'];
     $applicantRole = sts_bpl_applicant_role($application);
 
+    // Applicants who hold a review role skip their own review stage.
+    // training_final is always required — no applicant role bypasses it.
     $skipByRole = [
         'head_of_department' => ['hod'],
-        'general_manager' => ['hod', 'gm'],
-        'pengerusi_besar' => ['hod', 'gm', 'chairman'],
+        'general_manager'    => ['hod', 'gm'],
+        'pengerusi_besar'    => ['hod', 'gm', 'chairman'],
     ];
 
     $skipStages = $skipByRole[$applicantRole] ?? [];
@@ -1169,9 +1188,10 @@ function sts_can_review_application(array $application, array $user): bool
     }
 
     // Training staff submissions must pass through a *different* Training
-    // officer. Admin remains a custodian, not a bypass for this stage.
+    // officer at both the initial and final stage.
+    // Admin is a custodian and cannot bypass this restriction.
     if (
-        $stage === 'training'
+        in_array($stage, ['training', 'training_final'], true)
         && sts_bpl_applicant_role($application) === 'training_section'
         && normalized_role($user['role'] ?? '') !== 'training_section'
     ) {

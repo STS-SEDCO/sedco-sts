@@ -100,7 +100,18 @@ $formAction = $mode === 'new'
     : ($canResubmitCorrection ? 'resubmit_application.php' : 'review_application.php');
 
 $showAllReviewSections = $mode === 'new' || ($application !== null && sts_can_view_full_workflow($application, $user));
+
+// Determine which review section this viewer should see.
+// training_section handles both 'training' (initial) and 'training_final';
+// we show the section that matches the application's current stage.
 $viewerReviewStage = review_stage_for_role($user['role'] ?? '');
+if (
+    normalized_role($user['role'] ?? '') === 'training_section'
+    && $application !== null
+    && (string) ($application['current_stage'] ?? '') === 'training_final'
+) {
+    $viewerReviewStage = 'training_final';
+}
 
 $canReviewCurrentStage = $mode === 'review'
     && !$canResubmitCorrection
@@ -254,7 +265,14 @@ $canReviewCurrentStage = $mode === 'review'
                     <label class="bpl-applicant-field bpl-applicant-field-wide">
                         <span class="bpl-applicant-label"><i class="bi bi-mortarboard"></i>04. Kursus / Seminar</span>
                         <div class="bpl-applicant-control">
-                            <input type="text" name="kursus" class="input-field" required placeholder="Masukkan nama kursus atau seminar">
+                            <input type="text" name="kursus" class="input-field" required placeholder="Masukkan nama kursus atau seminar" value="<?= e((string) ($payload['kursus'] ?? '')) ?>">
+                        </div>
+                    </label>
+
+                    <label class="bpl-applicant-field bpl-applicant-field-wide">
+                        <span class="bpl-applicant-label"><i class="bi bi-link-45deg"></i>05. Kaitan Kursus / Seminar dengan Tugas</span>
+                        <div class="bpl-applicant-control">
+                            <textarea name="kaitan_kursus" class="input-field" rows="3" required placeholder="Terangkan kaitan kursus atau seminar ini dengan tugas harian anda"><?= e((string) ($payload['kaitan_kursus'] ?? '')) ?></textarea>
                         </div>
                     </label>
                 </div>
@@ -289,10 +307,14 @@ $canReviewCurrentStage = $mode === 'review'
                     <td colspan="3"><input type="text" name="penganjur" class="input-field" required></td>
                 </tr>
                 <tr>
-                    <td>03. Tarikh Mula</td>
-                    <td><input type="date" name="tarikh_mula" required></td>
-                    <td>04. Tarikh Tamat</td>
-                    <td><input type="date" name="tarikh_tamat" required></td>
+                    <td>03. Tarikh Kursus — Mula</td>
+                    <td><input type="date" name="tarikh_mula" required value="<?= e((string) ($payload['tarikh_mula'] ?? '')) ?>"></td>
+                    <td>Tarikh Tamat</td>
+                    <td><input type="date" name="tarikh_tamat" required value="<?= e((string) ($payload['tarikh_tamat'] ?? '')) ?>"></td>
+                </tr>
+                <tr>
+                    <td>04. Tarikh Tutup Pendaftaran</td>
+                    <td colspan="3"><input type="date" name="tarikh_tutup" class="input-field" value="<?= e((string) ($payload['tarikh_tutup'] ?? '')) ?>" placeholder="Tarikh tutup pendaftaran kursus"></td>
                 </tr>
                 <tr>
                     <td>05. Tempat Kursus</td>
@@ -347,8 +369,21 @@ $canReviewCurrentStage = $mode === 'review'
                 <tr>
                     <td>09. Pendahuluan</td>
                     <td colspan="3">
-                        <label><input type="radio" name="pendahuluan" value="Ya"> Ya</label>
-                        <label><input type="radio" name="pendahuluan" value="Tidak"> Tidak</label>
+                        <label><input type="radio" name="pendahuluan" value="Ya" data-other-trigger="pendahuluan_nyatakan" <?= ($payload['pendahuluan'] ?? '') === 'Ya' ? 'checked' : '' ?>> Ya</label>
+                        <label><input type="radio" name="pendahuluan" value="Tidak" <?= ($payload['pendahuluan'] ?? '') === 'Tidak' ? 'checked' : '' ?>> Tidak</label>
+
+                        <div class="sts-other-field sts-other-inline" data-other-field="pendahuluan_nyatakan" <?= ($payload['pendahuluan'] ?? '') !== 'Ya' ? 'hidden' : '' ?>>
+                            <label for="pendahuluan_nyatakan">
+                                <span>*Nyatakan <b>*</b></span>
+                                <textarea
+                                    id="pendahuluan_nyatakan"
+                                    name="pendahuluan_nyatakan"
+                                    class="input-field"
+                                    rows="2"
+                                    placeholder="Nyatakan maklumat pendahuluan yang diperlukan..."
+                                ><?= e((string) ($payload['pendahuluan_nyatakan'] ?? '')) ?></textarea>
+                            </label>
+                        </div>
                     </td>
                 </tr>
             </table>
@@ -466,6 +501,14 @@ $canReviewCurrentStage = $mode === 'review'
             <table class="bpl-section-card bpl-review-card bpl-section-admin-review form-section-locked" data-form-owner="pengerusi_besar" inert aria-disabled="true">
                 <tr><th colspan="2"><div class="bpl-table-heading"><span class="bpl-table-heading-icon"><i class="bi bi-shield-check"></i></span><div class="bpl-table-heading-copy"><strong>G. ULASAN PENGERUSI SEDCO</strong><small>Keputusan dan pengesahan oleh Pengerusi SEDCO</small></div></div></th></tr>
                 <tr>
+                    <td colspan="2">
+                        <div class="bpl-pengerusi-note">
+                            <i class="bi bi-info-circle-fill"></i>
+                            <span>Kelulusan perlu dibuat oleh Pengerusi, jika kursus/seminar/konferen dihadiri oleh Pengerusi Besar Kumpulan SEDCO.</span>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
                     <td>Kelulusan</td>
                     <td>
                         <label><input type="radio" name="kelulusan_sedco" value="Diluluskan"> Diluluskan</label>
@@ -500,19 +543,23 @@ $canReviewCurrentStage = $mode === 'review'
             </table>
             <?php endif; ?>
 
-            <!-- FINAL CHECKLIST -->
-            <?php if ($showAllReviewSections || $viewerReviewStage === 'finance'): ?>
-            <table class="bpl-section-card bpl-review-card bpl-section-finance form-section-locked" data-form-owner="finance" inert aria-disabled="true">
-                <tr><th colspan="2"><div class="bpl-table-heading"><span class="bpl-table-heading-icon"><i class="bi bi-cash-stack"></i></span><div class="bpl-table-heading-copy"><strong>H. ULASAN KEWANGAN</strong><small>Rekod bayaran, pendahuluan dan pendaftaran</small></div></div></th></tr>
+            <!-- H. TINDAKAN SEKSYEN LATIHAN (FINAL ACTION) -->
+            <?php if ($showAllReviewSections || $viewerReviewStage === 'training_final'): ?>
+            <table class="bpl-section-card bpl-review-card bpl-section-training-final form-section-locked" data-form-owner="training_section" inert aria-disabled="true">
+                <tr><th colspan="2"><div class="bpl-table-heading"><span class="bpl-table-heading-icon"><i class="bi bi-check2-all"></i></span><div class="bpl-table-heading-copy"><strong>H. TINDAKAN SEKSYEN LATIHAN</strong><small>Tindakan akhir dan rekod kewangan oleh Seksyen Latihan</small></div></div></th></tr>
+                <tr>
+                    <td>Ulasan / Tindakan</td>
+                    <td><textarea name="ulasan_final" class="input-field" rows="4" required value="<?= e((string) ($payload['ulasan_final'] ?? '')) ?>"><?= e((string) ($payload['ulasan_final'] ?? '')) ?></textarea></td>
+                </tr>
                 <tr>
                     <td>a) Bayaran Kursus</td>
-                    <td><div class="bpl-money-field"><span class="bpl-money-prefix">RM</span><input type="text" name="bayaran_kursus" required inputmode="decimal" aria-label="Bayaran kursus dalam Ringgit Malaysia"></div></td>
+                    <td><div class="bpl-money-field"><span class="bpl-money-prefix">RM</span><input type="text" name="bayaran_kursus" required inputmode="decimal" aria-label="Bayaran kursus dalam Ringgit Malaysia" value="<?= e((string) ($payload['bayaran_kursus'] ?? '')) ?>"></div></td>
                 </tr>
                 <tr>
                     <td>b) Permohonan Pendahuluan Diterima</td>
                     <td>
-                        <label><input type="radio" name="pendahuluan_diterima" value="Ya" required> Ya</label>
-                        <label><input type="radio" name="pendahuluan_diterima" value="Tidak"> Tidak</label>
+                        <label><input type="radio" name="pendahuluan_diterima" value="Ya" required <?= ($payload['pendahuluan_diterima'] ?? '') === 'Ya' ? 'checked' : '' ?>> Ya</label>
+                        <label><input type="radio" name="pendahuluan_diterima" value="Tidak" <?= ($payload['pendahuluan_diterima'] ?? '') === 'Tidak' ? 'checked' : '' ?>> Tidak</label>
                     </td>
                 </tr>
                 <tr>
@@ -520,8 +567,8 @@ $canReviewCurrentStage = $mode === 'review'
                     <td>
                         <div class="bpl-registration-review">
                             <div class="bpl-registration-choice">
-                                <label><input type="radio" name="telah_didaftar" value="Ya" required> Ya</label>
-                                <label><input type="radio" name="telah_didaftar" value="Tidak"> Tidak</label>
+                                <label><input type="radio" name="telah_didaftar" value="Ya" required <?= ($payload['telah_didaftar'] ?? '') === 'Ya' ? 'checked' : '' ?>> Ya</label>
+                                <label><input type="radio" name="telah_didaftar" value="Tidak" <?= ($payload['telah_didaftar'] ?? '') === 'Tidak' ? 'checked' : '' ?>> Tidak</label>
                             </div>
                             <label class="bpl-registration-date">
                                 <span>Tarikh Didaftarkan</span>
@@ -530,10 +577,35 @@ $canReviewCurrentStage = $mode === 'review'
                         </div>
                     </td>
                 </tr>
+                <tr>
+                    <td>Tarikh</td>
+                    <td>
+                        <div class="bpl-auto-date-field">
+                            <input type="date" name="tarikh_final" readonly data-auto-review-date value="<?= e((string) ($payload['tarikh_final'] ?? '')) ?>">
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Tandatangan</td>
+                    <td>
+                        <div class="sts-digital-signature" data-digital-signature data-signature-required="1">
+                            <div class="sts-signature-pad" data-signature-pad tabindex="0" aria-label="Tandatangan">
+                                <canvas width="900" height="220" data-signature-canvas></canvas>
+                                <div class="sts-signature-placeholder" data-signature-placeholder>Tandatangan di sini</div>
+                            </div>
+                            <input type="hidden" name="tt_final" data-signature-value>
+                            <div class="sts-signature-actions no-print">
+                                <span><i class="bi bi-shield-check"></i> Digital signature</span>
+                                <button type="button" data-signature-clear><i class="bi bi-eraser"></i> Clear</button>
+                            </div>
+                            <div class="sts-signature-error" data-signature-error hidden>Sila tandatangan sebelum hantar.</div>
+                        </div>
+                    </td>
+                </tr>
             </table>
             <?php endif; ?>
 
-            <?php if ($canReviewCurrentStage && in_array($currentStage, ['training', 'hod'], true)): ?>
+            <?php if ($canReviewCurrentStage && in_array($currentStage, ['training', 'hod', 'training_final'], true)): ?>
             <section class="sts-correction-target-panel no-print" data-correction-target-panel hidden>
               <div class="sts-correction-target-heading">
                 <span><i class="bi bi-bullseye"></i></span>
@@ -544,19 +616,22 @@ $canReviewCurrentStage = $mode === 'review'
               </div>
               <div class="sts-correction-target-grid">
                 <?php foreach ([
-                  'kursus' => 'Kursus / Seminar',
-                  'tajuk' => 'Tajuk Kursus',
-                  'penganjur' => 'Penganjur',
-                  'tarikh_mula' => 'Tarikh Mula',
-                  'tarikh_tamat' => 'Tarikh Tamat',
-                  'tempat' => 'Tempat Kursus',
-                  'yuran' => 'Yuran',
-                  'kandungan' => 'Kandungan Kursus',
-                  'tempat_tugas' => 'Tempat Bertugas',
-                  'kenderaan' => 'Kenderaan',
-                  'masa_bertolak' => 'Masa Bertolak',
-                  'masa_kembali' => 'Masa Kembali',
-                  'pendahuluan' => 'Pendahuluan',
+                  'kursus'               => 'Kursus / Seminar',
+                  'kaitan_kursus'        => 'Kaitan Kursus dengan Tugas',
+                  'tajuk'                => 'Tajuk Kursus',
+                  'penganjur'            => 'Penganjur',
+                  'tarikh_mula'          => 'Tarikh Mula',
+                  'tarikh_tamat'         => 'Tarikh Tamat',
+                  'tarikh_tutup'         => 'Tarikh Tutup Pendaftaran',
+                  'tempat'               => 'Tempat Kursus',
+                  'yuran'                => 'Yuran',
+                  'kandungan'            => 'Kandungan Kursus',
+                  'tempat_tugas'         => 'Tempat Bertugas',
+                  'kenderaan'            => 'Kenderaan',
+                  'masa_bertolak'        => 'Masa Bertolak',
+                  'masa_kembali'         => 'Masa Kembali',
+                  'pendahuluan'          => 'Pendahuluan',
+                  'pendahuluan_nyatakan' => 'Pendahuluan — Nyatakan',
                 ] as $fieldName => $fieldLabel): ?>
                 <label>
                   <input type="checkbox" name="correction_fields[]" value="<?= e($fieldName) ?>">

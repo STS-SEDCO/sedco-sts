@@ -24,11 +24,12 @@
 
   function stageOwner(stage) {
     return {
-      training: 'training_section',
-      hod: 'head_of_department',
-      gm: 'general_manager',
-      chairman: 'pengerusi_besar',
-      finance: 'finance'
+      training:       'training_section',
+      hod:            'head_of_department',
+      gm:             'general_manager',
+      chairman:       'pengerusi_besar',
+      training_final: 'training_section'
+      // finance removed from active workflow (kept for legacy display only)
     }[stage] || null;
   }
 

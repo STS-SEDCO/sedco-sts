@@ -57,10 +57,11 @@ try {
     }
 
     $allowedKeys = [
-        'nama', 'bahagian', 'jawatan', 'kursus', 'tarikh',
-        'tajuk', 'penganjur', 'tarikh_mula', 'tarikh_tamat',
+        'nama', 'bahagian', 'jawatan', 'kursus', 'kaitan_kursus', 'tarikh',
+        'tajuk', 'penganjur', 'tarikh_mula', 'tarikh_tamat', 'tarikh_tutup',
         'tempat', 'yuran', 'kandungan', 'tempat_tugas',
-        'kenderaan', 'kenderaan_other', 'masa_bertolak', 'masa_kembali', 'pendahuluan'
+        'kenderaan', 'kenderaan_other', 'masa_bertolak', 'masa_kembali',
+        'pendahuluan', 'pendahuluan_nyatakan'
     ];
 
     $payload = json_decode((string) $application['payload'], true);
