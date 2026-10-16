@@ -335,7 +335,7 @@ function sts_stage_reviewer_ids(
             'hod' => ['head_of_department','head_of_division'],
             'gm' => ['general_manager'],
             'chairman' => ['pengerusi_besar'],
-            'finance' => ['finance'],
+            'training_final' => ['training_section'],
             default => [],
         };
 
@@ -623,7 +623,7 @@ function sts_notify_stage(
     $title = 'Application ready for review';
     $message = $applicationNo . ' is waiting for your review.';
 
-    if ($stage === 'training') {
+    if (in_array($stage, ['training', 'training_final'], true)) {
         // Exclude the applicant and notify the other active Training officer.
         sts_notify_role(
             ['training_section'],
@@ -673,15 +673,6 @@ function sts_notify_stage(
         return;
     }
 
-    if ($stage === 'finance') {
-        sts_notify_role(
-            ['finance'],
-            $title,
-            $message,
-            $link,
-            'review'
-        );
-    }
 }
 
 function sts_save_version(
@@ -852,16 +843,16 @@ function sts_visible_application_payload(
 
     $applicantFields = [
         'nama', 'bahagian', 'jawatan', 'tarikh', 'kursus', 'tajuk',
-        'penganjur', 'tarikh_mula', 'tarikh_tamat', 'tempat',
+        'penganjur', 'tarikh_mula', 'tarikh_tamat', 'tarikh_tutup', 'kaitan_kursus', 'tempat',
         'yuran', 'kandungan', 'tempat_tugas', 'kenderaan',
-        'kenderaan_other', 'masa_bertolak', 'masa_kembali', 'pendahuluan',
+        'kenderaan_other', 'masa_bertolak', 'masa_kembali', 'pendahuluan', 'pendahuluan_nyatakan',
     ];
     $reviewFields = match (review_stage_for_role($user['role'] ?? '')) {
         'training' => ['ulasan_latihan', 'tarikh_latihan', 'tt_latihan'],
         'hod' => ['ulasan_bahagian', 'tarikh_bahagian', 'tt_bahagian'],
         'gm' => ['kelulusan_pgs', 'tarikh_pgs', 'tt_pgs'],
         'chairman' => ['kelulusan_sedco', 'tarikh_sedco', 'tt_sedco'],
-        'finance' => ['bayaran_kursus', 'pendahuluan_diterima', 'telah_didaftar', 'tarikh_didaftar'],
+        'training_final' => ['ulasan_latihan_final', 'tarikh_latihan_final', 'tt_latihan_final', 'bayaran_kursus', 'pendahuluan_diterima', 'telah_didaftar', 'tarikh_didaftar'],
         default => [],
     };
 
@@ -989,7 +980,7 @@ function sts_bpl_applicant_role(array $application): string
 
 function sts_bpl_required_stages(array $application): array
 {
-    $stages = ['training', 'hod', 'gm', 'chairman', 'finance'];
+    $stages = ['training', 'hod', 'gm', 'chairman', 'training_final'];
     $applicantRole = sts_bpl_applicant_role($application);
 
     $skipByRole = [
@@ -1171,7 +1162,7 @@ function sts_can_review_application(array $application, array $user): bool
     // Training staff submissions must pass through a *different* Training
     // officer. Admin remains a custodian, not a bypass for this stage.
     if (
-        $stage === 'training'
+        in_array($stage, ['training', 'training_final'], true)
         && sts_bpl_applicant_role($application) === 'training_section'
         && normalized_role($user['role'] ?? '') !== 'training_section'
     ) {
