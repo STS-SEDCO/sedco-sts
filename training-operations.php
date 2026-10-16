@@ -191,7 +191,8 @@ function operations_time(?string $date): string
           'hod'=>'Head of Department',
           'gm'=>'General Manager',
           'chairman'=>'Pengerusi',
-          'finance'=>'Kewangan'
+          'training_final'=>'Training (Final Action)',
+          'finance'=>'Kewangan (Legacy)'
         ] as $stage => $label): ?>
           <div class="training-owner-stage"><span><?= e($label) ?></span>
             <span class="training-owner-pill"><?= (int) ($stages[$stage] ?? 0) ?> pending</span>
