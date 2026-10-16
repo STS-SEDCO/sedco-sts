@@ -257,6 +257,12 @@ $canReviewCurrentStage = $mode === 'review'
                             <input type="text" name="kursus" class="input-field" required placeholder="Masukkan nama kursus atau seminar">
                         </div>
                     </label>
+                    <label class="bpl-applicant-field bpl-applicant-field-wide">
+                        <span class="bpl-applicant-label"><i class="bi bi-link-45deg"></i>Kaitan kursus/seminar dengan tugas</span>
+                        <div class="bpl-applicant-control">
+                            <textarea name="kaitan_kursus" class="input-field" rows="2" placeholder="Nyatakan kaitan kursus dengan tugas semasa"></textarea>
+                        </div>
+                    </label>
                 </div>
 
                 <div class="bpl-applicant-footer-note">
@@ -293,6 +299,10 @@ $canReviewCurrentStage = $mode === 'review'
                     <td><input type="date" name="tarikh_mula" required></td>
                     <td>04. Tarikh Tamat</td>
                     <td><input type="date" name="tarikh_tamat" required></td>
+                </tr>
+                <tr>
+                    <td>Tarikh Tutup Pendaftaran</td>
+                    <td colspan="3"><input type="date" name="tarikh_tutup" class="input-field"></td>
                 </tr>
                 <tr>
                     <td>05. Tempat Kursus</td>
@@ -349,6 +359,10 @@ $canReviewCurrentStage = $mode === 'review'
                     <td colspan="3">
                         <label><input type="radio" name="pendahuluan" value="Ya"> Ya</label>
                         <label><input type="radio" name="pendahuluan" value="Tidak"> Tidak</label>
+                        <div data-pendahuluan-details hidden style="margin-top:12px">
+                            <label for="pendahuluan_nyatakan">* Nyatakan pendahuluan</label>
+                            <textarea id="pendahuluan_nyatakan" name="pendahuluan_nyatakan" class="input-field" rows="2" disabled placeholder="Nyatakan tujuan atau butiran pendahuluan"></textarea>
+                        </div>
                     </td>
                 </tr>
             </table>
@@ -465,6 +479,7 @@ $canReviewCurrentStage = $mode === 'review'
             <?php if ($showAllReviewSections || $viewerReviewStage === 'chairman'): ?>
             <table class="bpl-section-card bpl-review-card bpl-section-admin-review form-section-locked" data-form-owner="pengerusi_besar" inert aria-disabled="true">
                 <tr><th colspan="2"><div class="bpl-table-heading"><span class="bpl-table-heading-icon"><i class="bi bi-shield-check"></i></span><div class="bpl-table-heading-copy"><strong>G. ULASAN PENGERUSI SEDCO</strong><small>Keputusan dan pengesahan oleh Pengerusi SEDCO</small></div></div></th></tr>
+                <tr><td colspan="2"><small><strong>Nota:</strong> Kelulusan perlu dibuat oleh Pengerusi, jika kursus/seminar/konferen dihadiri oleh Pengerusi Besar Kumpulan SEDCO.</small></td></tr>
                 <tr>
                     <td>Kelulusan</td>
                     <td>
@@ -501,9 +516,11 @@ $canReviewCurrentStage = $mode === 'review'
             <?php endif; ?>
 
             <!-- FINAL CHECKLIST -->
-            <?php if ($showAllReviewSections || $viewerReviewStage === 'finance'): ?>
-            <table class="bpl-section-card bpl-review-card bpl-section-finance form-section-locked" data-form-owner="finance" inert aria-disabled="true">
-                <tr><th colspan="2"><div class="bpl-table-heading"><span class="bpl-table-heading-icon"><i class="bi bi-cash-stack"></i></span><div class="bpl-table-heading-copy"><strong>H. ULASAN KEWANGAN</strong><small>Rekod bayaran, pendahuluan dan pendaftaran</small></div></div></th></tr>
+            <?php if ($showAllReviewSections || $viewerReviewStage === 'training' || $currentStage === 'training_final'): ?>
+            <table class="bpl-section-card bpl-review-card bpl-section-training-final form-section-locked" data-form-owner="training_section" inert aria-disabled="true">
+                <tr><th colspan="2"><div class="bpl-table-heading"><span class="bpl-table-heading-icon"><i class="bi bi-cash-stack"></i></span><div class="bpl-table-heading-copy"><strong>H. TINDAKAN AKHIR SEKSYEN LATIHAN</strong><small>Semakan akhir, bayaran, pendahuluan dan pendaftaran</small></div></div></th></tr>
+                <tr><td>Ulasan Akhir Latihan</td><td><textarea name="ulasan_latihan_final" class="input-field" rows="3" required></textarea></td></tr>
+                <tr><td>Tarikh Tindakan Akhir</td><td><input type="date" name="tarikh_latihan_final" readonly data-auto-review-date value="<?= e((string) ($payload['tarikh_latihan_final'] ?? '')) ?>"></td></tr>
                 <tr>
                     <td>a) Bayaran Kursus</td>
                     <td><div class="bpl-money-field"><span class="bpl-money-prefix">RM</span><input type="text" name="bayaran_kursus" required inputmode="decimal" aria-label="Bayaran kursus dalam Ringgit Malaysia"></div></td>
@@ -530,6 +547,15 @@ $canReviewCurrentStage = $mode === 'review'
                         </div>
                     </td>
                 </tr>
+                <tr><td colspan="2"><small>Untuk pembayaran, disalinkan kepada: Bahagian Kewangan.</small></td></tr>
+                <tr><td>Tandatangan Pegawai Latihan</td><td>
+                    <div class="sts-digital-signature" data-digital-signature data-signature-required="1">
+                        <div class="sts-signature-pad" data-signature-pad tabindex="0" aria-label="Tandatangan tindakan akhir"><canvas width="900" height="220" data-signature-canvas></canvas><div class="sts-signature-placeholder" data-signature-placeholder>Tandatangan di sini</div></div>
+                        <input type="hidden" name="tt_latihan_final" data-signature-value>
+                        <div class="sts-signature-actions no-print"><span><i class="bi bi-shield-check"></i> Digital signature</span><button type="button" data-signature-clear><i class="bi bi-eraser"></i> Clear</button></div>
+                        <div class="sts-signature-error" data-signature-error hidden>Sila tandatangan sebelum hantar.</div>
+                    </div>
+                </td></tr>
             </table>
             <?php endif; ?>
 
@@ -579,7 +605,7 @@ $canReviewCurrentStage = $mode === 'review'
                 </button>
                 <?php elseif ($canReviewCurrentStage): ?>
                 <button type="submit" name="decision" value="approved" class="btn-maroon btn-review-approve">
-                  <i class="bi bi-check2"></i> <?= $currentStage === 'finance' ? 'Approve & Complete' : 'Approve & Continue' ?>
+                  <i class="bi bi-check2"></i> <?= $currentStage === 'training_final' ? 'Complete Training Action' : 'Approve & Continue' ?>
                 </button>
                 <?php if (in_array($currentStage, ['training', 'hod'], true)): ?>
                 <button type="submit" name="decision" value="correction" class="btn-review-secondary" formnovalidate>
@@ -625,5 +651,23 @@ window.SEDCO_FORM_CONTEXT = {
 <script src="form-ux.js?v=20261008-07"></script>
 <script src="form-enhancements.js?v=20260930-59"></script>
 <script src="sedco-shell.js?v=20261008-08"></script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const details = document.querySelector('[data-pendahuluan-details]');
+  const field = document.querySelector('[name="pendahuluan_nyatakan"]');
+  const radios = [...document.querySelectorAll('[name="pendahuluan"]')];
+  const sync = () => {
+    if (!details || !field) return;
+    const yes = radios.some(radio => radio.checked && radio.value === 'Ya');
+    const editable = details.closest('[data-form-owner]')?.classList.contains('form-section-editable');
+    details.hidden = !yes;
+    field.disabled = !yes || !editable;
+    field.required = Boolean(yes && editable);
+    if (!yes && editable) field.value = '';
+  };
+  radios.forEach(radio => radio.addEventListener('change', sync));
+  sync();
+});
+</script>
 </body>
 </html>
