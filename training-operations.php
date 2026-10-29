@@ -187,11 +187,11 @@ function operations_time(?string $date): string
           <a href="approval-history.php">View decisions <i class="bi bi-arrow-right"></i></a>
         </div>
         <?php foreach ([
-          'training'=>'Training',
-          'hod'=>'Head of Department',
-          'gm'=>'General Manager',
-          'chairman'=>'Pengerusi',
-          'finance'=>'Kewangan'
+          'training'       => 'Training (Initial)',
+          'hod'            => 'Head of Department',
+          'gm'             => 'General Manager',
+          'chairman'       => 'Pengerusi',
+          'training_final' => 'Training (Final Action)',
         ] as $stage => $label): ?>
           <div class="training-owner-stage"><span><?= e($label) ?></span>
             <span class="training-owner-pill"><?= (int) ($stages[$stage] ?? 0) ?> pending</span>

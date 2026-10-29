@@ -63,9 +63,11 @@ function user_can_review_applications(?array $user = null): bool
         return false;
     }
 
+    // Finance is no longer an approval stage (P0 workflow update).
+    // Finance role accounts can still log in but will not see the approval queue.
     return in_array(
         $user['role'],
-        ['admin', 'training_section', 'head_of_department', 'head_of_division', 'general_manager', 'pengerusi_besar', 'finance'],
+        ['admin', 'training_section', 'head_of_department', 'head_of_division', 'general_manager', 'pengerusi_besar'],
         true
     );
 }
@@ -138,12 +140,16 @@ function user_can_submit_form_type(string $formType, ?array $user = null): bool
 
 function review_stage_for_role(?string $role): ?string
 {
+    // Returns the PRIMARY review stage for a role.
+    // training_section is special: they handle both 'training' (initial) and
+    // 'training_final'. This function returns their primary stage; use
+    // user_can_review_stage() to check access to training_final.
+    // Finance is no longer an approval stage — returns null.
     return match (normalized_role($role)) {
         'training_section' => 'training',
         'head_of_department' => 'hod',
         'general_manager' => 'gm',
         'pengerusi_besar' => 'chairman',
-        'finance' => 'finance',
         default => null,
     };
 }
@@ -165,13 +171,14 @@ function role_label(?string $role): string
 function stage_label(?string $stage): string
 {
     return match ($stage) {
-        'training' => 'Training Department',
-        'hod' => 'Head of Department',
-        'gm' => 'General Manager',
-        'chairman' => 'Pengerusi',
-        'finance' => 'Kewangan',
-        'completed' => 'Completed',
-        default => 'Pending',
+        'training'       => 'Training Department',
+        'hod'            => 'Head of Department',
+        'gm'             => 'General Manager',
+        'chairman'       => 'Pengerusi',
+        'training_final' => 'Training Department (Final Action)',
+        'finance'        => 'Kewangan',        // kept for legacy display only
+        'completed'      => 'Completed',
+        default          => 'Pending',
     };
 }
 
@@ -183,8 +190,15 @@ function user_can_review_stage(string $stage, ?array $user = null): bool
         return false;
     }
 
-    if (normalized_role($user['role'] ?? '') === 'admin') {
-        return in_array($stage, ['training', 'hod', 'gm', 'chairman', 'finance'], true);
+    $role = normalized_role($user['role'] ?? '');
+
+    if ($role === 'admin') {
+        return in_array($stage, ['training', 'hod', 'gm', 'chairman', 'training_final'], true);
+    }
+
+    // Training section handles both the initial review and the final action stage.
+    if ($role === 'training_section') {
+        return in_array($stage, ['training', 'training_final'], true);
     }
 
     return review_stage_for_role($user['role'] ?? '') === $stage;

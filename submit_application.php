@@ -87,7 +87,7 @@ if ($type === 'BPL') {
 
 $requiredByType = [
     'BPL' => [
-        'nama', 'bahagian', 'jawatan', 'kursus', 'tarikh',
+        'nama', 'bahagian', 'jawatan', 'kursus', 'kaitan_kursus', 'tarikh',
         'tajuk', 'penganjur', 'tarikh_mula', 'tarikh_tamat',
         'tempat', 'yuran', 'kandungan'
     ],
@@ -143,6 +143,14 @@ if ($type === 'BPL') {
     ) {
         http_response_code(422);
         exit('Please specify the other vehicle.');
+    }
+
+    // Pendahuluan conditional: if "Ya" is selected, Nyatakan is required.
+    if (trim((string) ($payload['pendahuluan'] ?? '')) === 'Ya'
+        && trim((string) ($payload['pendahuluan_nyatakan'] ?? '')) === ''
+    ) {
+        http_response_code(422);
+        exit('Please provide details in the "Nyatakan" field when Pendahuluan is selected as Ya.');
     }
 }
 
@@ -433,10 +441,11 @@ if ($type === 'TEA') {
 
 if ($type === 'BPL') {
     $allowedKeys = [
-        'nama', 'bahagian', 'jawatan', 'kursus', 'tarikh',
-        'tajuk', 'penganjur', 'tarikh_mula', 'tarikh_tamat',
+        'nama', 'bahagian', 'jawatan', 'kursus', 'kaitan_kursus', 'tarikh',
+        'tajuk', 'penganjur', 'tarikh_mula', 'tarikh_tamat', 'tarikh_tutup',
         'tempat', 'yuran', 'kandungan', 'tempat_tugas',
-        'kenderaan', 'kenderaan_other', 'masa_bertolak', 'masa_kembali', 'pendahuluan'
+        'kenderaan', 'kenderaan_other', 'masa_bertolak', 'masa_kembali',
+        'pendahuluan', 'pendahuluan_nyatakan'
     ];
 
     $payload = array_intersect_key($payload, array_flip($allowedKeys));
